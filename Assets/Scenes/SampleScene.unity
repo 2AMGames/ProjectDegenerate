@@ -361,7 +361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useGravity: 1
   useTerminalVelocity: 1
-  gravityVector: {x: 0, y: 1}
+  gravityVector: {x: 0, y: -1}
   gravityScale: 0.20408162
   terminalVelocity: 10
 --- !u!95 &1585544853
