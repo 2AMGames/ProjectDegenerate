@@ -151,7 +151,6 @@ public class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
         float highestYValue = tileCollidersThatWeHit[0].GetPointToTop(transform.position).y;
         foreach (TileCollider tile in tileCollidersThatWeHit)
         {

@@ -248,6 +248,7 @@ GameObject:
   - component: {fileID: 1585544850}
   - component: {fileID: 1585544848}
   - component: {fileID: 1585544853}
+  - component: {fileID: 1585544854}
   m_Layer: 8
   m_Name: Elena
   m_TagString: Untagged
@@ -267,10 +268,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe57b4ea7b84b14f8ebfccfd5a12630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalBuffer: 0.02
-  verticalBuffer: 0.02
-  horizontalRayCount: 4
-  verticalRayCount: 4
+  horizontalBuffer: 0.1
+  verticalBuffer: 0.1
+  horizontalRayCount: 8
+  verticalRayCount: 8
 --- !u!4 &1585544849
 Transform:
   m_ObjectHideFlags: 0
@@ -280,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 1585544847}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.52, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1639311405}
   - {fileID: 1149324397}
@@ -332,7 +333,7 @@ MonoBehaviour:
   maximumAirSpeed: 8
   airAcceleration: 20
   isFacingRight: 0
-  timeToReachJumpApex: 1
+  timeToReachJumpApex: 0.2
   heightOfJump: 1
   fastFallScale: 1.7
   maxAvailableJumps: 1
@@ -362,7 +363,7 @@ MonoBehaviour:
   useGravity: 1
   useTerminalVelocity: 1
   gravityVector: {x: 0, y: -1}
-  gravityScale: 0.20408162
+  gravityScale: 5.1020403
   terminalVelocity: 10
 --- !u!95 &1585544853
 Animator:
@@ -383,6 +384,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!50 &1585544854
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585544847}
+  m_BodyType: 1
+  m_Simulated: 0
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1639311404
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1833436019
 Transform:
   m_ObjectHideFlags: 0
@@ -487,7 +509,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1833436018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: -0.28, z: 0}
+  m_LocalPosition: {x: 0.14, y: -5.16, z: 0}
   m_LocalScale: {x: 1.18, y: 0.18, z: 1}
   m_Children: []
   m_Father: {fileID: 1149324397}
