@@ -137,7 +137,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// <summary>
     /// Used to activate our character airborne trigger
     /// </summary>
-    public void OnPhysicsOjbectAirborne()
+    public void OnPhysicsObjectAirborne()
     {
         if (OnAirborneEvent == null) return;
         OnAirborneEvent();
