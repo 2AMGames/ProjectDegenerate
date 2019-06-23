@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public MovementMechanics MovementMechanics { get; private set; }
+
+    private void Awake()
     {
-        
+        MovementMechanics = GetComponent<MovementMechanics>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
