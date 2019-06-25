@@ -1,18 +1,65 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Overseer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    #region member variables
+
+    private static Overseer instance;
+    public static Overseer Instance
     {
-        
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<Overseer>();
+            }
+            if (instance == null)
+            {
+                GameObject container = new GameObject("Overseer");
+                instance = container.AddComponent<Overseer>();
+            }
+            return instance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public PlayerController[] players;
+
+    #endregion
+
+    #region monobehaviour methods
+    void Awake()
     {
-        
+        instance = this;
+        AssignPlayerIndices();
+
     }
+
+    #endregion
+
+    #region public interface
+
+    public PlayerController GetOpponentCharacter(int index)
+    {
+        int indexToGet = (index + 1) % players.Length;
+        return players[indexToGet];
+    }
+
+    #endregion
+
+    #region private interface
+
+    private void AssignPlayerIndices()
+    {
+        for(int index = 0; index < players.Length; ++index)
+        {
+            PlayerController controller = players[index];
+            if (controller != null)
+            {
+                controller.SetPlayerIndex(index);
+            }
+        }
+    }
+
+    #endregion
 }

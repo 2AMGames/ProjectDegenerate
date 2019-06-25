@@ -17,7 +17,20 @@ public class PlayerController : MonoBehaviour
 
     public CharacterStats CharacterStats;
 
+    [HideInInspector]
+    public int PlayerIndex;
+
+    private PlayerController Opponent
+    {
+        get
+        {
+            return Overseer.Instance.GetOpponentCharacter(PlayerIndex);
+        }
+    }
+
     #endregion
+
+    #region monobehaviour methods
 
     private void Update()
     {
@@ -29,6 +42,20 @@ public class PlayerController : MonoBehaviour
             CharacterStats.MovementMechanics.Jump();
         }
 
+        CharacterStats.MovementMechanics.FlipSpriteBasedOnOpponentDirection(Opponent.CharacterStats.transform);
+
     }
+
+    #endregion
+
+    #region public interface
+
+    public void SetPlayerIndex(int index)
+    {
+        PlayerIndex = index;
+        CharacterStats.PlayerIndex = index;
+    }
+
+    #endregion
 
 }

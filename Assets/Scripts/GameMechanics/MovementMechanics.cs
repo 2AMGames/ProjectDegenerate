@@ -127,13 +127,19 @@ public class MovementMechanics : MonoBehaviour {
         }
         if (rigid.isInAir)
         {
-            anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.velocity.y);
+            if (anim && anim.runtimeAnimatorController)
+            {
+                anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.velocity.y);
+            }
         }
 
         if (!isCrouching && verticalInput <= -CROUCHING_THRESHOLD)
         {
             isCrouching = true;
-            anim.SetBool(IS_CROUCHING_PARAMETER, isCrouching);
+            if (anim && anim.runtimeAnimatorController)
+            {
+                anim.SetBool(IS_CROUCHING_PARAMETER, isCrouching);
+            }
         }
         else if(isCrouching && verticalInput > -CROUCHING_THRESHOLD)
         {
@@ -185,9 +191,11 @@ public class MovementMechanics : MonoBehaviour {
         }
 
         this.horizontalInput = horizontalInput;
-        FlipSpriteBasedOnInput(this.horizontalInput);
-        if (anim)
+       //FlipSpriteBasedOnInput(this.horizontalInput);
+        if (anim && anim.runtimeAnimatorController)
+        {
             anim.SetFloat(SPEED_ANIMATION_PARAMETER, Mathf.Abs(horizontalInput));
+        }
     }
 
     /// <summary>
@@ -220,6 +228,26 @@ public class MovementMechanics : MonoBehaviour {
     public float GetHorizontalInput()
     {
         return this.horizontalInput;
+    }
+
+    /// <summary>
+    /// Flips sprite depending on direction of opponent.
+    /// If opponent is in the air, should not rotate sprite until grounded
+    /// </summary>
+    ///   /// <param name="opponentPosition"></param>
+
+    public void FlipSpriteBasedOnOpponentDirection(Transform opponentPosition)
+    {
+        if (rigid.isInAir)
+        {
+            return;
+        }
+
+        Vector2 facingDirection = transform.right.normalized;
+        Vector2 opponentDirection = (opponentPosition.position - transform.position).normalized;
+        float dotProduct = Vector2.Dot(facingDirection, opponentDirection);
+        SetSpriteFlipped(dotProduct >= 0.0f);
+
     }
 
     /// <summary>
@@ -275,6 +303,8 @@ public class MovementMechanics : MonoBehaviour {
             return;
         }
 
+        /*
+
         if (horizontalInput < 0 && isFacingRight)
         {
             SetSpriteFlipped(false);
@@ -283,6 +313,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             SetSpriteFlipped(true);
         }
+        */
     }
 
     /// <summary>
@@ -290,6 +321,7 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void SetSpriteFlipped(bool spriteFacingright)
     {
+
         if (!spriteRenderer)
         {
             return;
@@ -298,13 +330,13 @@ public class MovementMechanics : MonoBehaviour {
         if (spriteFacingright)
         {
             Vector3 currentScale = spriteRenderer.transform.parent.localScale;
-            currentScale.x = Mathf.Abs(currentScale.x);
+            currentScale.x = -Mathf.Abs(currentScale.x);
             spriteRenderer.transform.parent.localScale = currentScale;
         }
         else
         {
             Vector3 currentScale = spriteRenderer.transform.parent.localScale;
-            currentScale.x = -Mathf.Abs(currentScale.x); ;
+            currentScale.x = Mathf.Abs(currentScale.x); ;
             spriteRenderer.transform.parent.localScale = currentScale;
         }
     }
@@ -332,7 +364,7 @@ public class MovementMechanics : MonoBehaviour {
             return false;
         }
         
-        FlipSpriteBasedOnInput(this.horizontalInput, true);
+        //FlipSpriteBasedOnInput(this.horizontalInput, true);
 
         rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
         SetCharacterFastFalling(false);
@@ -362,7 +394,10 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     public void OnGroundedEvent()
     {
-        anim.SetBool(IN_AIR_ANIMATION_PARAMETER, false);
+        if (anim && anim.runtimeAnimatorController)
+        {
+            anim.SetBool(IN_AIR_ANIMATION_PARAMETER, false);
+        }
         this.currentJumpsAvailable = maxAvailableJumps;
     }
 
@@ -371,7 +406,10 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     public void OnAirborneEvent()
     {
-        anim.SetBool(IN_AIR_ANIMATION_PARAMETER, true);
+        if (anim && anim.runtimeAnimatorController)
+        {
+            anim.SetBool(IN_AIR_ANIMATION_PARAMETER, true);
+        }
         SetCharacterFastFalling(false);
         this.currentJumpsAvailable--;
     }
