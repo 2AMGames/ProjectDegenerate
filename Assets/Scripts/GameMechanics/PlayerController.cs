@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return Overseer.Instance.GetOpponentCharacter(PlayerIndex);
+            return Overseer.Instance.GetCharacterByIndex(PlayerIndex);
         }
     }
 
