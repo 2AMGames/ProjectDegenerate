@@ -7,10 +7,8 @@ using UnityEngine;
 /// This class is specifically used do detect collisions of kinematic objects in their environemnt. It will only 
 /// ensure that an object does not pass through a InteractableTIle object
 /// </summary>
-[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(CustomPhysics2D))]
 public class CustomCollider2D : MonoBehaviour {
-    public Collider2D associatedCollider { get; private set; }
     public float horizontalBuffer = .02f;
     public float verticalBuffer = .02f;
 
@@ -20,9 +18,15 @@ public class CustomCollider2D : MonoBehaviour {
     [Tooltip("The number of rays we will fire in the vertical direction")]
     public int verticalRayCount = 4;
 
+    [Header("Collider Values")]
+    public Vector2 centerPoint;
+    public Vector2 colliderSize;
+
+
 
     private CustomPhysics2D rigid;
     private ColliderBounds currentColliderBounds;
+
     
 
 
@@ -30,7 +34,6 @@ public class CustomCollider2D : MonoBehaviour {
     private void Awake()
     {
         rigid = GetComponent<CustomPhysics2D>();
-        associatedCollider = GetComponent<Collider2D>();
     }
 
     private void Start()
@@ -39,6 +42,16 @@ public class CustomCollider2D : MonoBehaviour {
         {
             rigid.allCustomColliders.Add(this);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        UpdateColliderBounds();
+        DebugSettings.DrawLine(currentColliderBounds.bottomLeft, currentColliderBounds.bottomRight, Color.green);
+        DebugSettings.DrawLine(currentColliderBounds.bottomLeft, currentColliderBounds.topLeft, Color.green);
+        DebugSettings.DrawLine(currentColliderBounds.topLeft, currentColliderBounds.topRight, Color.green);
+        DebugSettings.DrawLine(currentColliderBounds.bottomRight, currentColliderBounds.topRight, Color.green);
+
     }
 
     private void OnValidate()
@@ -115,9 +128,9 @@ public class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
-        List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            currentColliderBounds.topLeft + Vector2.right * horizontalBuffer, currentColliderBounds.topRight + Vector2.left * horizontalBuffer, Vector2.up, 
+        Vector2 adjustedPoint1 = currentColliderBounds.topLeft + Vector2.right * horizontalBuffer - verticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = currentColliderBounds.topRight + Vector2.left * horizontalBuffer - verticalBuffer * Vector2.up;
+        List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up, 
             Mathf.Abs(rigid.velocity.y * Time.deltaTime) + verticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
@@ -134,6 +147,7 @@ public class CustomCollider2D : MonoBehaviour {
         }
 
         transform.position = new Vector3(transform.position.x, lowestYValue + (transform.position.y - currentColliderBounds.topLeft.y), transform.position.z);
+        UpdateColliderBounds();
         return true;
     }
 
@@ -144,8 +158,9 @@ public class CustomCollider2D : MonoBehaviour {
             return false;
         }
 
-        List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            currentColliderBounds.bottomLeft + Vector2.right * horizontalBuffer, currentColliderBounds.bottomRight + Vector2.left * horizontalBuffer, Vector2.down, 
+        Vector2 adjustedPoint1 = currentColliderBounds.bottomLeft + Vector2.right * horizontalBuffer + verticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = currentColliderBounds.bottomRight + Vector2.left * horizontalBuffer + verticalBuffer * Vector2.up;
+        List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down, 
             Mathf.Abs(rigid.velocity.y * Time.deltaTime) + verticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
@@ -161,8 +176,8 @@ public class CustomCollider2D : MonoBehaviour {
             }
         }
 
-        transform.position = new Vector3(transform.position.x, highestYValue, transform.position.z);
-
+        transform.position = new Vector3(transform.position.x, highestYValue + (transform.position.y - currentColliderBounds.bottomLeft.y), transform.position.z);
+        UpdateColliderBounds();//If we made it to the end, we wil need to update the collider bounds
         return true;
     }
 
@@ -180,7 +195,7 @@ public class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
+        print(tileCollidersThatWeHit[0].name);
         float lowestXValue = tileCollidersThatWeHit[0].GetPointToLeft(transform.position).x;
         foreach (TileCollider tile in tileCollidersThatWeHit)
         {
@@ -192,6 +207,9 @@ public class CustomCollider2D : MonoBehaviour {
         }
 
         transform.position = new Vector3(lowestXValue + (transform.position.x - currentColliderBounds.topRight.x), transform.position.y, transform.position.z);
+        print(currentColliderBounds);
+        UpdateColliderBounds();
+        print(currentColliderBounds);
 
         return true;
     }
@@ -210,7 +228,7 @@ public class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
+        print(tileCollidersThatWeHit[0].name);
         float highestXValue = tileCollidersThatWeHit[0].GetPointToRight(transform.position).x;
         foreach (TileCollider tile in tileCollidersThatWeHit)
         {
@@ -222,7 +240,9 @@ public class CustomCollider2D : MonoBehaviour {
         }
 
         transform.position = new Vector3(highestXValue + (transform.position.x - currentColliderBounds.topLeft.x), transform.position.y, transform.position.z);
-
+        print(currentColliderBounds);
+        UpdateColliderBounds();
+        print(currentColliderBounds);
         return true;
 
     }
@@ -267,11 +287,12 @@ public class CustomCollider2D : MonoBehaviour {
 
     private void UpdateColliderBounds()
     {
+        Vector2 originPoint = transform.position + new Vector3(centerPoint.x, centerPoint.y, 0);
         currentColliderBounds = new ColliderBounds();
-        currentColliderBounds.bottomLeft = associatedCollider.bounds.min;
-        currentColliderBounds.topRight = associatedCollider.bounds.max;
-        currentColliderBounds.bottomRight = new Vector3(associatedCollider.bounds.max.x, associatedCollider.bounds.min.y);
-        currentColliderBounds.topLeft = new Vector3(associatedCollider.bounds.min.x, associatedCollider.bounds.max.y);
+        currentColliderBounds.bottomLeft = originPoint - Vector2.right * colliderSize.x - Vector2.up * colliderSize.y;
+        currentColliderBounds.topRight = originPoint + Vector2.right * colliderSize.x + Vector2.up * colliderSize.y;
+        currentColliderBounds.bottomRight = originPoint + Vector2.right * colliderSize.x - Vector2.up * colliderSize.y;
+        currentColliderBounds.topLeft = originPoint - Vector2.right * colliderSize.x + Vector2.up * colliderSize.y;
     }
 
 
@@ -282,6 +303,12 @@ public class CustomCollider2D : MonoBehaviour {
         public Vector2 topRight;
         public Vector2 bottomLeft;
         public Vector2 bottomRight;
+
+        public override string ToString()
+        {
+
+            return topLeft.ToString() + " | " + topRight + " | " + bottomLeft.ToString() +  " | "  + bottomRight.ToString();
+        }
     }
     #endregion structs
 }
