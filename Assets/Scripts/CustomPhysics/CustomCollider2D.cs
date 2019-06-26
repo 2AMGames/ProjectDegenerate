@@ -289,10 +289,10 @@ public class CustomCollider2D : MonoBehaviour {
     {
         Vector2 originPoint = transform.position + new Vector3(centerPoint.x, centerPoint.y, 0);
         currentColliderBounds = new ColliderBounds();
-        currentColliderBounds.bottomLeft = originPoint - Vector2.right * colliderSize.x - Vector2.up * colliderSize.y;
-        currentColliderBounds.topRight = originPoint + Vector2.right * colliderSize.x + Vector2.up * colliderSize.y;
-        currentColliderBounds.bottomRight = originPoint + Vector2.right * colliderSize.x - Vector2.up * colliderSize.y;
-        currentColliderBounds.topLeft = originPoint - Vector2.right * colliderSize.x + Vector2.up * colliderSize.y;
+        currentColliderBounds.bottomLeft = originPoint - Vector2.right * colliderSize.x / 2 - Vector2.up * colliderSize.y / 2;
+        currentColliderBounds.topRight = originPoint + Vector2.right * colliderSize.x / 2 + Vector2.up * colliderSize.y / 2;
+        currentColliderBounds.bottomRight = originPoint + Vector2.right * colliderSize.x / 2 - Vector2.up * colliderSize.y / 2;
+        currentColliderBounds.topLeft = originPoint - Vector2.right * colliderSize.x / 2 + Vector2.up * colliderSize.y / 2;
     }
 
 
