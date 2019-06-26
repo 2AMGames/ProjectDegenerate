@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 489040385781029628}
   - component: {fileID: 489040385781029625}
   - component: {fileID: 489040385781029630}
-  - component: {fileID: 489040385781029631}
   - component: {fileID: 489040385781029629}
   - component: {fileID: 489040385781029624}
   - component: {fileID: 489040385781029627}
@@ -90,32 +89,6 @@ MonoBehaviour:
   delayBeforeDashing: 0.15
   ignoreJoystickInputs: 0
   ignoreJumpButton: 0
---- !u!61 &489040385781029631
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.07, y: 0.5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.2, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &489040385781029629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +105,8 @@ MonoBehaviour:
   verticalBuffer: 0.1
   horizontalRayCount: 8
   verticalRayCount: 8
+  centerPoint: {x: 0, y: 0.72}
+  colliderSize: {x: 0.81, y: 0.77}
 --- !u!95 &489040385781029624
 Animator:
   serializedVersion: 3
@@ -142,7 +117,7 @@ Animator:
   m_GameObject: {fileID: 489040385781029602}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2a78c40cb7075474eaa49eef82a9657d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
