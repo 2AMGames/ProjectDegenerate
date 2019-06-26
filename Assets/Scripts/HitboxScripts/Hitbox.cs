@@ -10,8 +10,8 @@ using UnityEngine;
 public class Hitbox : MonoBehaviour
 {
     #region const variables
-    private Color GIZMO_COLOR = Color.red;
-    private Color GIZMO_HURTBOX_COLOR = Color.blue;
+    private static Color GIZMO_COLOR = new Color(204f / 255f, 0, 0);
+    private static Color GIZMO_HURTBOX_COLOR = new Color(51f / 255f, 1, 1);
     #endregion const variables
 
     public enum HitboxType
@@ -22,47 +22,69 @@ public class Hitbox : MonoBehaviour
 
     public HitboxType hitboxType = HitboxType.Hurtbox;
 
-    public Vector2 boxColliderSize;
+    public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
 
-    private BoxColliderPoints currentColliderPoints;
+    public HitboxBounds hitboxColliderBounds;
 
 
     #region monobehaviour methods
     private void Awake()
     {
-        
+        Overseer.Instance.hitboxManager.AddHitboxToList(this);
     }
 
     private void OnDestroy()
     {
+        Overseer.Instance.hitboxManager.RemoveHitboxFromList(this);
+    }
+
+    private void OnEnable()
+    {
         
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDisable()
+    {
+        
+    }
+
+    private void OnDrawGizmos()
     {
         UpdateBoxColliderPoints();
-
-        Debug.DrawLine(currentColliderPoints.topRight, currentColliderPoints.topLeft, GIZMO_COLOR);
-        Debug.DrawLine(currentColliderPoints.topRight, currentColliderPoints.bottomRight, GIZMO_COLOR);
-        Debug.DrawLine(currentColliderPoints.topLeft, currentColliderPoints.bottomLeft, GIZMO_COLOR);
-        Debug.DrawLine(currentColliderPoints.bottomLeft, currentColliderPoints.bottomRight, GIZMO_COLOR);
+        Color colorToDraw = Color.white;
+        switch (hitboxType)
+        {
+            case HitboxType.Hitbox:
+                colorToDraw = GIZMO_COLOR;
+                break;
+            case HitboxType.Hurtbox:
+                colorToDraw = GIZMO_HURTBOX_COLOR;
+                break;
+        }
+        DebugSettings.DrawLine(hitboxColliderBounds.topRight, hitboxColliderBounds.topLeft, colorToDraw);
+        DebugSettings.DrawLine(hitboxColliderBounds.topRight, hitboxColliderBounds.bottomRight, colorToDraw);
+        DebugSettings.DrawLine(hitboxColliderBounds.topLeft, hitboxColliderBounds.bottomLeft, colorToDraw);
+        DebugSettings.DrawLine(hitboxColliderBounds.bottomLeft, hitboxColliderBounds.bottomRight, colorToDraw);
     }
     #endregion monobehaviour methods
 
-    private void UpdateBoxColliderPoints()
+    /// <summary>
+    /// This should be called by our HitboxManager
+    /// </summary>
+    public void UpdateBoxColliderPoints()
     {
-        currentColliderPoints = new BoxColliderPoints();
+        hitboxColliderBounds = new HitboxBounds();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
-        currentColliderPoints.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        currentColliderPoints.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-        currentColliderPoints.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        currentColliderPoints.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
+        hitboxColliderBounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
+        hitboxColliderBounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
+        hitboxColliderBounds.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
+        hitboxColliderBounds.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
 
     }
 
-    private struct BoxColliderPoints
+    public struct HitboxBounds
     {
         public Vector2 topLeft;
         public Vector2 topRight;
