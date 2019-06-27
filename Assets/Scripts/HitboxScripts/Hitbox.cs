@@ -36,7 +36,8 @@ public class Hitbox : MonoBehaviour
 
     private void OnDestroy()
     {
-        Overseer.Instance.hitboxManager.RemoveHitboxFromList(this);
+        if (Overseer.Instance && Overseer.Instance.hitboxManager)
+            Overseer.Instance.hitboxManager.RemoveHitboxFromList(this);
     }
 
     private void OnEnable()
@@ -57,15 +58,18 @@ public class Hitbox : MonoBehaviour
         {
             case HitboxType.Hitbox:
                 colorToDraw = GIZMO_COLOR;
+                
                 break;
             case HitboxType.Hurtbox:
                 colorToDraw = GIZMO_HURTBOX_COLOR;
                 break;
         }
-        DebugSettings.DrawLine(hitboxColliderBounds.topRight, hitboxColliderBounds.topLeft, colorToDraw);
-        DebugSettings.DrawLine(hitboxColliderBounds.topRight, hitboxColliderBounds.bottomRight, colorToDraw);
-        DebugSettings.DrawLine(hitboxColliderBounds.topLeft, hitboxColliderBounds.bottomLeft, colorToDraw);
-        DebugSettings.DrawLine(hitboxColliderBounds.bottomLeft, hitboxColliderBounds.bottomRight, colorToDraw);
+        Color colorWithTransparency = colorToDraw;
+        colorWithTransparency.a = .2f;
+        #if UNITY_EDITOR
+        UnityEditor.Handles.DrawSolidRectangleWithOutline(hitboxColliderBounds.GetVertices(), colorWithTransparency, colorToDraw);
+        #endif
+
     }
     #endregion monobehaviour methods
 
@@ -90,5 +94,16 @@ public class Hitbox : MonoBehaviour
         public Vector2 topRight;
         public Vector2 bottomLeft;
         public Vector2 bottomRight;
+
+        public Vector3[] GetVertices()
+        {
+            return new Vector3[]
+            {
+                topLeft,
+                topRight,
+                bottomRight,
+                bottomLeft,
+            };
+        }
     }
 }
