@@ -12,6 +12,10 @@ public class HitboxManager : MonoBehaviour
         Overseer.Instance.hitboxManager = this;
     }
 
+    /// <summary>
+    /// Adds a new hitbox to the list of all available hitboxes
+    /// </summary>
+    /// <param name="hitboxToAdd"></param>
     public void AddHitboxToList(Hitbox hitboxToAdd)
     {
         allActiveHitboxes.Add(hitboxToAdd);
@@ -24,6 +28,27 @@ public class HitboxManager : MonoBehaviour
         allHitboxes.Remove(hitboxToRemove);
     }
 
+    public void SetHitboxEnabled(Hitbox hitbox, bool hitboxEnabled)
+    {
+        if (hitboxEnabled)
+        {
+            
+            if (!allActiveHitboxes.Contains(hitbox))
+            {
+                allActiveHitboxes.Add(hitbox);
+            }
+        }
+        else
+        {
+            if (allActiveHitboxes.Contains(hitbox))
+            {
+                allActiveHitboxes.Remove(hitbox);
+            }
+        }
+    }
+
+
+
     /// <summary>
     /// This will be one of the last things that we check. We want to wait for everything to move before checking whether or not we have collided with anything
     /// </summary>
@@ -31,6 +56,10 @@ public class HitboxManager : MonoBehaviour
     {
         Hitbox h1 = null;
         Hitbox h2 = null;
+        foreach (Hitbox hBox in allActiveHitboxes)
+        {
+            hBox.UpdateBoxColliderPoints();
+        }
         for (int i = 0; i < allActiveHitboxes.Count - 1; i++)
         {
             for (int j = i + 1; j < allActiveHitboxes.Count; j++)
@@ -42,6 +71,10 @@ public class HitboxManager : MonoBehaviour
                 if (CheckHitboxIntersect(h1, h2))
                 {
                     //print(h1.name + "  " + h2.name + " collided!");
+                }
+                else
+                {
+
                 }
             }
         }
@@ -55,6 +88,10 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool CheckHitboxIntersect(Hitbox h1, Hitbox h2)
     {
+        if (h1.associatedCharacterStats == h2.associatedCharacterStats)//If they are both from the same character, we will ignore
+        {
+            return false;
+        }
         Vector2 tl1 = h1.hitboxColliderBounds.topLeft;
         Vector2 br1 = h1.hitboxColliderBounds.bottomRight;
         Vector2 tl2 = h2.hitboxColliderBounds.topLeft;

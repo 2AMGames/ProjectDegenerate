@@ -27,11 +27,20 @@ public class Hitbox : MonoBehaviour
 
     public HitboxBounds hitboxColliderBounds;
 
+    public CharacterStats associatedCharacterStats { get; set; }
+    /// <summary>
+    /// Hitboxes that we are currently intersecting
+    /// </summary>
+    public List<Hitbox> currentIntersectingHitboxes = new List<Hitbox>();
 
     #region monobehaviour methods
     private void Awake()
     {
         Overseer.Instance.hitboxManager.AddHitboxToList(this);
+        if (associatedCharacterStats == null)
+        {
+            associatedCharacterStats = GetComponentInParent<CharacterStats>();
+        }
     }
 
     private void OnDestroy()
@@ -42,17 +51,36 @@ public class Hitbox : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        Overseer.Instance.hitboxManager.SetHitboxEnabled(this, true);
     }
 
     private void OnDisable()
     {
-        
+        if (Overseer.Instance && Overseer.Instance.hitboxManager)
+        {
+            Overseer.Instance.hitboxManager.SetHitboxEnabled(this, false);
+        }
+        foreach (Hitbox hbox in currentIntersectingHitboxes)
+        {
+            if (hbox)
+            {
+                hbox.currentIntersectingHitboxes.Remove(this);
+            }
+        }
+        currentIntersectingHitboxes.Clear();
+    }
+
+    private void OnValidate()
+    {
+        UpdateBoxColliderPoints();
     }
 
     private void OnDrawGizmos()
     {
-        UpdateBoxColliderPoints();
+        if (!Application.isPlaying)
+        {
+            UpdateBoxColliderPoints();
+        }
         Color colorToDraw = Color.white;
         switch (hitboxType)
         {
@@ -69,7 +97,6 @@ public class Hitbox : MonoBehaviour
         #if UNITY_EDITOR
         UnityEditor.Handles.DrawSolidRectangleWithOutline(hitboxColliderBounds.GetVertices(), colorWithTransparency, colorToDraw);
         #endif
-
     }
     #endregion monobehaviour methods
 
