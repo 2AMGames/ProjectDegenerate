@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum CharacterTeam
+    {
+        PLAYER_1,
+        PLAYER_2,
+        NEUTRAL,
+    }
     public MovementMechanics MovementMechanics { get; private set; }
 
     [HideInInspector]

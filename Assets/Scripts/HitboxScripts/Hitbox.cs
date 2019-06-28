@@ -60,11 +60,15 @@ public class Hitbox : MonoBehaviour
         {
             Overseer.Instance.hitboxManager.SetHitboxEnabled(this, false);
         }
-        foreach (Hitbox hbox in currentIntersectingHitboxes)
+        else
+        {
+            return;
+        }
+        foreach (Hitbox hbox in currentIntersectingHitboxes.ToArray())
         {
             if (hbox)
             {
-                hbox.currentIntersectingHitboxes.Remove(this);
+                Overseer.Instance.hitboxManager.DetermineHitboxExitHitboxEvent(this, hbox);
             }
         }
         currentIntersectingHitboxes.Clear();
@@ -99,6 +103,38 @@ public class Hitbox : MonoBehaviour
         #endif
     }
     #endregion monobehaviour methods
+    /// <summary>
+    /// Returns true if we successfully added the hitbox to the list
+    /// </summary>
+    /// <param name="hitboxToAdd"></param>
+    /// <returns></returns>
+    public bool AddIntersectingHitbox(Hitbox hitboxToAdd)
+    {
+        if (currentIntersectingHitboxes.Contains(hitboxToAdd))
+        {
+            return false;
+        }
+
+        currentIntersectingHitboxes.Add(hitboxToAdd);
+        return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitboxToRemove"></param>
+    /// <returns></returns>
+    public bool RemoveIntersectingHitbox(Hitbox hitboxToRemove)
+    {
+        if (currentIntersectingHitboxes.Count == 0) return false;
+
+        if (currentIntersectingHitboxes.Contains(hitboxToRemove))
+        {
+            currentIntersectingHitboxes.Remove(hitboxToRemove);
+            return true;
+        }
+        return false;
+    }
 
     /// <summary>
     /// This should be called by our HitboxManager
