@@ -66,7 +66,6 @@ public class HitboxManager : MonoBehaviour
             for (int j = i + 1; j < allActiveHitboxes.Count; j++)
             {
                 h2 = allActiveHitboxes[j];
-
                 if (CheckHitboxIntersect(h1, h2))
                 {
                     DetermineHitboxEnterHitboxEvent(h1, h2);
@@ -87,7 +86,7 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool CheckHitboxIntersect(Hitbox h1, Hitbox h2)
     {
-        if (h1.associatedCharacterStats == h2.associatedCharacterStats)//If they are both from the same character, we will ignore
+        if (h1.PlayerIndex == h2.PlayerIndex)//If they are both from the same character, we will ignore
         {
             return false;
         }
@@ -109,7 +108,6 @@ public class HitboxManager : MonoBehaviour
     }
 
     #endregion monobehaviour methods
-
 
     #region hitbox events
     /// <summary>
@@ -183,14 +181,22 @@ public class HitboxManager : MonoBehaviour
 
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        print(hitbox.name + "  " + hurtbox.name + " entered!");
+        print(hitbox.name + " " + hurtbox.name + " entered!");
     }
 
     private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        //print(hitbox.name + "  " + hurtbox.name + " stayed!");
-        hitbox.OnHitEnemy(hurtbox);
-        hurtbox.OnHitByEnemy(hitbox);
+        print(hitbox.name + "  " + hurtbox.name + " stayed!");
+        PlayerController hitController = Overseer.Instance.GetCharacterByIndex(hitbox.PlayerIndex);
+        PlayerController hurtController = Overseer.Instance.GetCharacterByIndex(hurtbox.PlayerIndex);
+        if (hitController && hitController.InteractionHandler)
+        {
+            hitController.InteractionHandler.OnHitEnemy(hitbox, hurtbox);
+        }
+        if (hurtController && hurtController.InteractionHandler)
+        {
+            hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox);
+        }
     }
 
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
@@ -205,9 +211,17 @@ public class HitboxManager : MonoBehaviour
 
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
-        //print(hitbox1.name + "  " + hitbox2.name + " stayed!");
-        hitbox1.OnClash(hitbox2);
-        hitbox2.OnClash(hitbox1);
+        print(hitbox1.name + "  " + hitbox2.name + " stayed!");
+        PlayerController hitController1 = Overseer.Instance.GetCharacterByIndex(hitbox1.PlayerIndex);
+        PlayerController hitController2 = Overseer.Instance.GetCharacterByIndex(hitbox2.PlayerIndex);
+        if (hitController1 && hitController1.InteractionHandler)
+        {
+            hitController1.InteractionHandler.OnClash(hitbox2);
+        }
+        if (hitController2 && hitController2.InteractionHandler)
+        {
+            hitController2.InteractionHandler.OnClash(hitbox1);
+        }
     }
 
     private void OnHitboxExitHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)

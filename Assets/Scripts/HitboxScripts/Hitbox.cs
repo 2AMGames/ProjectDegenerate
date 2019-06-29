@@ -27,10 +27,7 @@ public class Hitbox : MonoBehaviour
 
     public HitboxBounds hitboxColliderBounds;
 
-    [SerializeField]
-    public HitData hitData;
-
-    public CharacterStats associatedCharacterStats { get; set; }
+    public int PlayerIndex { get; set; }
     /// <summary>
     /// Hitboxes that we are currently intersecting
     /// </summary>
@@ -40,14 +37,15 @@ public class Hitbox : MonoBehaviour
     private void Awake()
     {
         Overseer.Instance.hitboxManager.AddHitboxToList(this);
-        if (associatedCharacterStats == null)
+        if (GetComponentInParent<CharacterStats>())
         {
-            associatedCharacterStats = GetComponentInParent<CharacterStats>();
+            PlayerIndex = GetComponentInParent<CharacterStats>().PlayerIndex;
         }
-        if (hitboxType == HitboxType.Hurtbox)
+        else
         {
-            hitData = default;
+            PlayerIndex = 2;
         }
+
     }
 
     private void OnDestroy()
@@ -158,30 +156,6 @@ public class Hitbox : MonoBehaviour
 
     }
 
-    public void OnHitByEnemy(Hitbox enemyHitbox)
-    {
-        if (associatedCharacterStats != null)
-        {
-            associatedCharacterStats.OnPlayerHitByEnemy(this, enemyHitbox);
-        }
-    }
-
-    public void OnHitEnemy(Hitbox enemyHurtbox)
-    {
-        if (associatedCharacterStats != null)
-        {
-            associatedCharacterStats.OnPlayerHitEnemy(this, enemyHurtbox);
-        }
-    }
-
-    public void OnClash(Hitbox enemyHitbox)
-    {
-        if (associatedCharacterStats != null)
-        {
-            associatedCharacterStats.OnClash(this, enemyHitbox);
-        }
-    }
-
     public struct HitboxBounds
     {
         public Vector2 topLeft;
@@ -199,22 +173,5 @@ public class Hitbox : MonoBehaviour
                 bottomLeft,
             };
         }
-    }
-
-    /// <summary>
-    /// Data that affects the receiving player when a hit is registered.
-    /// </summary>
-    public struct HitData
-    {
-        public float OnGuardDamage;
-        public float OnGuardFrames;
-        public Vector2 OnGuardKnockback;
-
-        public float OnHitDamage;
-        public float OnHitFrames;
-        public Vector2 OnHitKnockback;
-
-        public bool GuardBreak;
-
     }
 }

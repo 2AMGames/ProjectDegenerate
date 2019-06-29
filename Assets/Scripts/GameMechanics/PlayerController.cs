@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
     public CharacterStats CharacterStats;
 
+    public InteractionHandler InteractionHandler;
+
+    public CommandInterpreter CommandInterpreter;
+
     [HideInInspector]
     public int PlayerIndex;
 
@@ -24,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return Overseer.Instance.GetCharacterByIndex(PlayerIndex);
+            return Overseer.Instance.GetNextCharacterByIndex(PlayerIndex);
         }
     }
 

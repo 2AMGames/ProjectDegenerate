@@ -38,13 +38,22 @@ public class Overseer : MonoBehaviour
 
     }
 
-    
+
 
     #endregion
 
     #region public interface
 
     public PlayerController GetCharacterByIndex(int index)
+    {
+        if (index >= 0 && index < players.Length)
+        {
+            return players[index];
+        }
+        return null;
+    }
+
+    public PlayerController GetNextCharacterByIndex(int index)
     {
         int indexToGet = (index + 1) % players.Length;
         return players[indexToGet];
