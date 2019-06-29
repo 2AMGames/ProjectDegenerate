@@ -62,10 +62,9 @@ public class HitboxManager : MonoBehaviour
         }
         for (int i = 0; i < allActiveHitboxes.Count - 1; i++)
         {
+            h1 = allActiveHitboxes[i];
             for (int j = i + 1; j < allActiveHitboxes.Count; j++)
             {
-
-                h1 = allActiveHitboxes[i];
                 h2 = allActiveHitboxes[j];
 
                 if (CheckHitboxIntersect(h1, h2))
@@ -122,7 +121,7 @@ public class HitboxManager : MonoBehaviour
     public void DetermineHitboxEnterHitboxEvent(Hitbox h1, Hitbox h2)
     {
         bool firstTimeIntersecting = h1.AddIntersectingHitbox(h2);
-        firstTimeIntersecting = h2.AddIntersectingHitbox(h1) && firstTimeIntersecting;
+        firstTimeIntersecting &= h2.AddIntersectingHitbox(h1);
         if (h1.hitboxType == Hitbox.HitboxType.Hitbox)
         {
             if (h2.hitboxType == Hitbox.HitboxType.Hurtbox)
@@ -190,6 +189,8 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         //print(hitbox.name + "  " + hurtbox.name + " stayed!");
+        hitbox.OnHitEnemy(hurtbox);
+        hurtbox.OnHitByEnemy(hitbox);
     }
 
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
@@ -205,6 +206,8 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         //print(hitbox1.name + "  " + hitbox2.name + " stayed!");
+        hitbox1.OnClash(hitbox2);
+        hitbox2.OnClash(hitbox1);
     }
 
     private void OnHitboxExitHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)

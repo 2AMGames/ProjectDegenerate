@@ -27,6 +27,9 @@ public class Hitbox : MonoBehaviour
 
     public HitboxBounds hitboxColliderBounds;
 
+    [SerializeField]
+    public HitData hitData;
+
     public CharacterStats associatedCharacterStats { get; set; }
     /// <summary>
     /// Hitboxes that we are currently intersecting
@@ -40,6 +43,10 @@ public class Hitbox : MonoBehaviour
         if (associatedCharacterStats == null)
         {
             associatedCharacterStats = GetComponentInParent<CharacterStats>();
+        }
+        if (hitboxType == HitboxType.Hurtbox)
+        {
+            hitData = default;
         }
     }
 
@@ -151,6 +158,30 @@ public class Hitbox : MonoBehaviour
 
     }
 
+    public void OnHitByEnemy(Hitbox enemyHitbox)
+    {
+        if (associatedCharacterStats != null)
+        {
+            associatedCharacterStats.OnPlayerHitByEnemy(this, enemyHitbox);
+        }
+    }
+
+    public void OnHitEnemy(Hitbox enemyHurtbox)
+    {
+        if (associatedCharacterStats != null)
+        {
+            associatedCharacterStats.OnPlayerHitEnemy(this, enemyHurtbox);
+        }
+    }
+
+    public void OnClash(Hitbox enemyHitbox)
+    {
+        if (associatedCharacterStats != null)
+        {
+            associatedCharacterStats.OnClash(this, enemyHitbox);
+        }
+    }
+
     public struct HitboxBounds
     {
         public Vector2 topLeft;
@@ -168,5 +199,22 @@ public class Hitbox : MonoBehaviour
                 bottomLeft,
             };
         }
+    }
+
+    /// <summary>
+    /// Data that affects the receiving player when a hit is registered.
+    /// </summary>
+    public struct HitData
+    {
+        public float OnGuardDamage;
+        public float OnGuardFrames;
+        public Vector2 OnGuardKnockback;
+
+        public float OnHitDamage;
+        public float OnHitFrames;
+        public Vector2 OnHitKnockback;
+
+        public bool GuardBreak;
+
     }
 }

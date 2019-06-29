@@ -23,4 +23,27 @@ public class CharacterStats : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
     }
 
+    public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox)
+    {
+        if (myHurtbox.associatedCharacterStats == this && enemyHitbox.associatedCharacterStats != this)
+        {
+            print("I got hit: " + PlayerIndex);
+            MovementMechanics.HandlePlayerHit(myHurtbox, enemyHitbox);
+        }
+    }
+
+    public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox)
+    {
+        if (myHitbox.associatedCharacterStats == this && enemyHurtbox.associatedCharacterStats != this)
+        {
+            print("I Hit Someone: " + PlayerIndex);
+            MovementMechanics.HandlePlayerHitEnemy(myHitbox, enemyHurtbox);
+        }
+    }
+    
+    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox)
+    {
+        print("Clash");
+    }
+
 }

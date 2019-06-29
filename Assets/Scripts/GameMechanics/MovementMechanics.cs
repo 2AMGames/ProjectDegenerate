@@ -97,6 +97,12 @@ public class MovementMechanics : MonoBehaviour {
     private float verticalInput;
     private Animator anim;
     private bool isCrouching = false;
+
+    /// <summary>
+    ///  Can the player guard in his/her current state?
+    /// </summary>
+    private bool canGuard;
+
     #endregion main variables
 
     #region monobehaivour methods
@@ -179,6 +185,8 @@ public class MovementMechanics : MonoBehaviour {
     }
     #endregion monobehaviour methods
 
+    #region public methods
+
     /// <summary>
     /// Sets the horizontal input that will determine the speed that our character will move
     /// </summary>
@@ -249,6 +257,10 @@ public class MovementMechanics : MonoBehaviour {
         SetSpriteFlipped(dotProduct >= 0.0f);
 
     }
+
+    #endregion
+
+    #region private methods
 
     /// <summary>
     /// Updates the speed of our character while they are grounded
@@ -341,6 +353,13 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
+    private void CanPlayerInput(bool enabled)
+    {
+        ignoreJumpButton = !enabled;
+        ignoreJoystickInputs = !enabled;
+    }
+
+    #endregion
 
     #region jumping methods
     /// <summary>
@@ -460,6 +479,27 @@ public class MovementMechanics : MonoBehaviour {
         rigid.useGravity = true;
     }
     #endregion dashing methods
+
+    #region player interaction methods
+
+    /// <summary>
+    /// Method that handles player state when their hurtbox is inflitrated by an active hitbox.
+    /// </summary>
+
+    public void HandlePlayerHit(Hitbox myHurtbox, Hitbox enemyHitBox)
+    {
+
+    }
+
+    /// <summary>
+    /// Player state when a hit is landed.
+    /// </summary>
+    public void HandlePlayerHitEnemy(Hitbox myHitBox, Hitbox enemyHurtBox)
+    {
+
+    }
+
+    #endregion
 
     private IEnumerator LoseUpwardMomentumFromJump()
     {
