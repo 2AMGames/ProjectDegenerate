@@ -22,9 +22,10 @@ public class MovementMechanics : MonoBehaviour {
     private const string IN_AIR_ANIMATION_PARAMETER = "InAir";
     private const string IS_CROUCHING_PARAMETER = "IsCrouching";
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
+    private const string HORIZONTAL_INPUT = "HorizontalInput";
+    private const string VERTICAL_INPUT = "VerticalInput";
 
     private const float INPUT_THRESHOLD_RUNNING = .6f;
-    private const float INPUT_THRESHOLD_WALKING = .15f;
     private const float CROUCHING_THRESHOLD = .6F;
 
     #region main variables
@@ -93,8 +94,8 @@ public class MovementMechanics : MonoBehaviour {
     /// <summary>
     /// The last horizontal input that was passed in
     /// </summary>
-    private float horizontalInput;
-    private float verticalInput;
+    private int horizontalInput;
+    private int verticalInput;
     private Animator anim;
     private bool isCrouching = false;
 
@@ -198,11 +199,12 @@ public class MovementMechanics : MonoBehaviour {
             horizontalInput = 0;
         }
 
-        this.horizontalInput = horizontalInput;
+        this.horizontalInput = (int)Mathf.Sign(horizontalInput) * (Mathf.Abs(horizontalInput) > INPUT_THRESHOLD_RUNNING ? 1:0 );
        //FlipSpriteBasedOnInput(this.horizontalInput);
         if (anim && anim.runtimeAnimatorController)
         {
-            anim.SetFloat(SPEED_ANIMATION_PARAMETER, Mathf.Abs(horizontalInput));
+            //anim.SetFloat(SPEED_ANIMATION_PARAMETER, Mathf.Abs(horizontalInput));
+            anim.SetInteger(HORIZONTAL_INPUT, (isFacingRight ? 1 : -1) * this.horizontalInput);
         }
     }
 
@@ -217,7 +219,8 @@ public class MovementMechanics : MonoBehaviour {
         {
             verticalInput = 0;
         }
-        this.verticalInput = verticalInput;
+        this.verticalInput = (int)Mathf.Sign(verticalInput) * (Mathf.Abs(verticalInput) > INPUT_THRESHOLD_RUNNING ? 1 : 0);
+        anim.SetInteger(VERTICAL_INPUT, this.verticalInput);
     }
 
     /// <summary>
@@ -272,10 +275,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             goalSpeed = runningSpeed * Mathf.Sign(horizontalInput);
         }
-        else if (Mathf.Abs(horizontalInput) > INPUT_THRESHOLD_WALKING)
-        {
-            goalSpeed = walkingSpeed * Mathf.Sign(horizontalInput);
-        }
+        
         Vector2 newVelocityVector = new Vector2(rigid.velocity.x, rigid.velocity.y);
         newVelocityVector.x = Mathf.MoveTowards(rigid.velocity.x, goalSpeed, Time.deltaTime * groundAcceleration);
         rigid.velocity = newVelocityVector;
@@ -286,7 +286,7 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void UpdateCurrentSpeedInAir()
     {
-        if (Mathf.Abs(horizontalInput) < INPUT_THRESHOLD_WALKING)
+        if (this.horizontalInput < INPUT_THRESHOLD_RUNNING)
         {
             return;
         }
@@ -306,14 +306,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     private void FlipSpriteBasedOnInput(float horizontalInput, bool ignoreInAirCondition = false)
     {
-        if (rigid.isInAir && !ignoreInAirCondition)
-        {
-            return;
-        }
-        if (Mathf.Abs(horizontalInput) < INPUT_THRESHOLD_WALKING)
-        {
-            return;
-        }
+       
 
         /*
 
