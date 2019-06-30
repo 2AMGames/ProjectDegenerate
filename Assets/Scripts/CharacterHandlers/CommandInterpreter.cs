@@ -29,7 +29,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public CharacterStats characterStats;
+    public CharacterStats characterStats { get; private set; }
 
     #endregion
 
