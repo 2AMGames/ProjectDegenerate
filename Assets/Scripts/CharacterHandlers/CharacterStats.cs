@@ -23,6 +23,8 @@ public class CharacterStats : MonoBehaviour
 
     public MovementMechanics MovementMechanics { get; private set; }
 
+    public Animator anim;
+
     [HideInInspector]
     public int PlayerIndex;
 
@@ -33,6 +35,7 @@ public class CharacterStats : MonoBehaviour
     private void Awake()
     {
         MovementMechanics = GetComponent<MovementMechanics>();
+        anim = GetComponent<Animator>();
     }
 
     #endregion
