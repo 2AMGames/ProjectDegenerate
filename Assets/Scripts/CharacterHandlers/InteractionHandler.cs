@@ -16,6 +16,33 @@ public class InteractionHandler : MonoBehaviour
 
     public CommandInterpreter CommandInterpreter { get; private set; }
 
+    public float MoveGuardDamage;
+    public float MoveGuardFrames;
+    public Vector2 MoveGuardKnockback;
+
+    public float MoveHitDamage;
+    public float MoveHitFrames;
+    public Vector2 MoveHitKnockback;
+
+    public bool MoveGuardBreak;
+
+    public MoveData CurrentMove
+    {
+        get
+        {
+            return new MoveData
+            {
+                OnGuardDamage = MoveGuardDamage,
+                OnGuardFrames = MoveGuardFrames,
+                OnGuardKnockback = MoveGuardKnockback,
+                OnHitDamage = MoveHitDamage,
+                OnHitFrames = MoveHitFrames,
+                OnHitKnockback = MoveHitKnockback,
+                GuardBreak = MoveGuardBreak
+            };
+        }
+    }
+
     #endregion
 
     #region monobehaviour methods
@@ -43,22 +70,42 @@ public class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox)
+    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData currentMove)
     {
-        //TODO Get current active move from animation and command interpreter. Pass null for now.
-        CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, null);
+        //TODO Get current active move from animation and command interpreter.
+        CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
     }
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox)
     {
         //TODO Get current active move from animation and command interpreter. Pass null for now.
-        CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, null);
+        CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
     }
 
     public void OnClash(Hitbox enemyHitbox)
     {
 
     }
+
+    #endregion
+
+    #region structs
+
+    
+    public struct MoveData
+    {
+        public float OnGuardDamage;
+        public float OnGuardFrames;
+        public Vector2 OnGuardKnockback;
+
+        public float OnHitDamage;
+        public float OnHitFrames;
+        public Vector2 OnHitKnockback;
+
+        public bool GuardBreak;
+
+    }
+    
 
     #endregion
 }

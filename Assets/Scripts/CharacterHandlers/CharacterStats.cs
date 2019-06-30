@@ -39,21 +39,21 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
-    public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, CharacterMove move)
+    public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
     {
         print("I got hit: " + PlayerIndex);
         UpdateCharacterStats(true, move);
         MovementMechanics.HandlePlayerHit(move);
     }
 
-    public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, CharacterMove move)
+    public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox,InteractionHandler.MoveData move)
     {
         print("I Hit Someone: " + PlayerIndex);
         UpdateCharacterStats(false, move);
         MovementMechanics.HandlePlayerHitEnemy(move);
     }
 
-    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox, CharacterMove move)
+    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
     {
         print("Clash");
     }
@@ -62,7 +62,7 @@ public class CharacterStats : MonoBehaviour
 
     #region private interface
 
-    private void UpdateCharacterStats(bool wasHit, CharacterMove move)
+    private void UpdateCharacterStats(bool wasHit, InteractionHandler.MoveData move)
     {
 
     }

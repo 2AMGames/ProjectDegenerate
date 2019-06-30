@@ -486,7 +486,7 @@ public class MovementMechanics : MonoBehaviour {
     /// Method that handles player state when their hurtbox is inflitrated by an active hitbox.
     /// </summary>
 
-    public void HandlePlayerHit(CharacterMove move)
+    public void HandlePlayerHit(InteractionHandler.MoveData move)
     {
 
     }
@@ -494,7 +494,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <summary>
     /// Player state when a hit is landed.
     /// </summary>
-    public void HandlePlayerHitEnemy(CharacterMove move)
+    public void HandlePlayerHitEnemy(InteractionHandler.MoveData move)
     {
 
     }

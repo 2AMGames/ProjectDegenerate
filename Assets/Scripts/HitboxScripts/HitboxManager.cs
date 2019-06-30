@@ -189,13 +189,14 @@ public class HitboxManager : MonoBehaviour
         print(hitbox.name + "  " + hurtbox.name + " stayed!");
         PlayerController hitController = Overseer.Instance.GetCharacterByIndex(hitbox.PlayerIndex);
         PlayerController hurtController = Overseer.Instance.GetCharacterByIndex(hurtbox.PlayerIndex);
+
         if (hitController && hitController.InteractionHandler)
         {
             hitController.InteractionHandler.OnHitEnemy(hitbox, hurtbox);
         }
         if (hurtController && hurtController.InteractionHandler)
         {
-            hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox);
+            hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox, hitController && hitController.InteractionHandler ? hitController.InteractionHandler.CurrentMove : (default));
         }
     }
 
