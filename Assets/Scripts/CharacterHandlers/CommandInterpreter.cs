@@ -153,7 +153,7 @@ public class CommandInterpreter : MonoBehaviour
             StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
         }
         framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER - 1;
     }
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
