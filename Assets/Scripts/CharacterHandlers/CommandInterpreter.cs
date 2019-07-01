@@ -148,12 +148,12 @@ public class CommandInterpreter : MonoBehaviour
         {
             StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
         }
-        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] > 0)
+        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
         }
         framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER - 1;
+        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
     }
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
@@ -163,11 +163,14 @@ public class CommandInterpreter : MonoBehaviour
         while (framesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
             yield return null;
+            //if (buttonEventName == BUTTON_ACTION_TRIGGER)
+            //{
+            //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
+            //}
             --framesRemainingUntilRemoveFromBuffer[buttonEventName];
         }
-        if (anim.GetBool(buttonEventName))
-        {
-            anim.ResetTrigger(buttonEventName);
-        }
+        
+        anim.ResetTrigger(buttonEventName);
+        
     }
 }
