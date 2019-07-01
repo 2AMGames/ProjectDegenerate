@@ -121,7 +121,7 @@ public class CommandInterpreter : MonoBehaviour
 
         if (Input.GetButtonDown(LK_ANIM_TRIGGER))
         {
-
+            OnButtonEventTriggered(LK_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(MK_ANIM_TRIGGER))
