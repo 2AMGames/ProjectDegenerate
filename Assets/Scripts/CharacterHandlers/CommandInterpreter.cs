@@ -148,7 +148,7 @@ public class CommandInterpreter : MonoBehaviour
         {
             StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
         }
-        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] > 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
         }
