@@ -73,6 +73,7 @@ public class MovementMechanics : MonoBehaviour {
     /// should not move, mark this value as true
     /// </summary>
     public bool ignoreJoystickInputs;
+    public bool canMoveWhileCrouching;
     [HideInInspector]
     /// <summary>
     /// Ignores inputs related to the jump function
@@ -98,6 +99,7 @@ public class MovementMechanics : MonoBehaviour {
     private int verticalInput;
     private Animator anim;
     private bool isCrouching = false;
+    
 
     /// <summary>
     ///  Can the player guard in his/her current state?
@@ -194,7 +196,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     public void SetHorizontalInput(float horizontalInput)
     {
-        if (this.ignoreJoystickInputs)
+        if (this.ignoreJoystickInputs || (canMoveWhileCrouching && isCrouching))
         {
             horizontalInput = 0;
         }
