@@ -63,6 +63,8 @@ public class CommandInterpreter : MonoBehaviour
     /// Quartercircle Back
     /// </summary>
     private const string QCB_ANIM_TRIGGER = "QCB";
+
+    private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
 
     private DIRECTION currentDirection;
@@ -89,6 +91,8 @@ public class CommandInterpreter : MonoBehaviour
     private void Awake()
     {
         characterStats = GetComponent<CharacterStats>();
+
+        framesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
 
         framesRemainingUntilRemoveFromBuffer.Add(LP_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
@@ -139,11 +143,17 @@ public class CommandInterpreter : MonoBehaviour
    private void OnButtonEventTriggered(string buttonEventName)
     {
         anim.SetTrigger(buttonEventName);
+        anim.SetTrigger(BUTTON_ACTION_TRIGGER);
         if (framesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
         }
+        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+        {
+            StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
+        }
         framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
     }
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
@@ -158,7 +168,6 @@ public class CommandInterpreter : MonoBehaviour
         if (anim.GetBool(buttonEventName))
         {
             anim.ResetTrigger(buttonEventName);
-
         }
     }
 }

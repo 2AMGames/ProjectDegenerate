@@ -36,6 +36,7 @@ public class Overseer : MonoBehaviour
         instance = this;
         AssignPlayerIndices();
 
+        Application.targetFrameRate = 60;
     }
 
 
