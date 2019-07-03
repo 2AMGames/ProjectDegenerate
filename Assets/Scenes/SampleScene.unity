@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 489040385781029602, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
@@ -1802,5 +1802,11 @@ PrefabInstance:
       propertyPath: canMoveWhileCrouching
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 489040386471808067, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0688be161247f5f4dae65e2381b4d47d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
