@@ -8,6 +8,12 @@ using UnityEngine;
 public class InteractionHandler : MonoBehaviour
 {
 
+    #region const variables
+
+    private const string HITSTUN_TRIGGER = "Hitstun";
+
+    #endregion
+
     #region main variables
 
     public Animator Animator { get; private set; }
@@ -19,11 +25,11 @@ public class InteractionHandler : MonoBehaviour
     public MovementMechanics MovementMechanics { get; private set; }
 
     public float MoveGuardDamage;
-    public float MoveGuardFrames;
+    public int MoveGuardFrames;
     public Vector2 MoveGuardKnockback;
 
     public float MoveHitDamage;
-    public float MoveHitFrames;
+    public int MoveHitFrames;
     public Vector2 MoveHitKnockback;
 
     public bool MoveGuardBreak;
@@ -83,8 +89,8 @@ public class InteractionHandler : MonoBehaviour
 
         if (currentMove.OnHitFrames > 0)
         {
-            Hitstun += (int)currentMove.OnHitFrames;
-            Animator.SetBool("Hitstun", true);
+            Hitstun += currentMove.OnHitFrames;
+            Animator.SetBool(HITSTUN_TRIGGER, true);
             Animator.SetTrigger(currentMove.Magnitude.ToString());
             StartCoroutine(HandleHitstun());
         }
@@ -115,13 +121,12 @@ public class InteractionHandler : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Animator.SetBool("Hitstun", false);
+        Animator.SetBool(HITSTUN_TRIGGER, false);
     }
     
     #endregion
 
     #region structs
-
 
     public struct MoveData
     {
@@ -135,17 +140,16 @@ public class InteractionHandler : MonoBehaviour
         public HitMagnitude Magnitude;
 
         public float OnGuardDamage;
-        public float OnGuardFrames;
+        public int OnGuardFrames;
         public Vector2 OnGuardKnockback;
 
         public float OnHitDamage;
-        public float OnHitFrames;
+        public int OnHitFrames;
         public Vector2 OnHitKnockback;
 
         public bool GuardBreak;
 
     }
     
-
     #endregion
 }
