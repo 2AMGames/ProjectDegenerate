@@ -7,9 +7,10 @@ public class PlayerController : MonoBehaviour
 
     #region const variables
 
-    private const string MOVEMENT_HORIZONTAL = "Horizontal";
-    private const string MOVEMENT_VERTICAL = "Vertical";
-    private const string MOVEMENT_JUMP = "Jump";
+    public const string MOVEMENT_HORIZONTAL = "Horizontal";
+    public const string MOVEMENT_VERTICAL = "Vertical";
+    public const string MOVEMENT_JUMP = "Jump";
+    public const float INPUT_THRESHOLD_RUNNING = .6f;
 
     #endregion
 

@@ -25,7 +25,6 @@ public class MovementMechanics : MonoBehaviour {
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
 
-    private const float INPUT_THRESHOLD_RUNNING = .6f;
     private const float CROUCHING_THRESHOLD = .6F;
 
     #region main variables
@@ -201,7 +200,7 @@ public class MovementMechanics : MonoBehaviour {
             horizontalInput = 0;
         }
 
-        this.horizontalInput = (int)Mathf.Sign(horizontalInput) * (Mathf.Abs(horizontalInput) > INPUT_THRESHOLD_RUNNING ? 1:0 );
+        this.horizontalInput = (int)Mathf.Sign(horizontalInput) * (Mathf.Abs(horizontalInput) > PlayerController.INPUT_THRESHOLD_RUNNING ? 1:0 );
        //FlipSpriteBasedOnInput(this.horizontalInput);
         if (anim && anim.runtimeAnimatorController)
         {
@@ -221,7 +220,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             verticalInput = 0;
         }
-        this.verticalInput = (int)Mathf.Sign(verticalInput) * (Mathf.Abs(verticalInput) > INPUT_THRESHOLD_RUNNING ? 1 : 0);
+        this.verticalInput = (int)Mathf.Sign(verticalInput) * (Mathf.Abs(verticalInput) > PlayerController.INPUT_THRESHOLD_RUNNING ? 1 : 0);
         anim.SetInteger(VERTICAL_INPUT, this.verticalInput);
     }
 
@@ -273,7 +272,7 @@ public class MovementMechanics : MonoBehaviour {
     private void UpdateCurrentSpeedOnGround()
     {
         float goalSpeed = 0;
-        if (Mathf.Abs(horizontalInput) > INPUT_THRESHOLD_RUNNING)
+        if (Mathf.Abs(horizontalInput) > PlayerController.INPUT_THRESHOLD_RUNNING)
         {
             goalSpeed = runningSpeed * Mathf.Sign(horizontalInput);
         }
@@ -288,7 +287,7 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void UpdateCurrentSpeedInAir()
     {
-        if (this.horizontalInput < INPUT_THRESHOLD_RUNNING)
+        if (this.horizontalInput < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
             return;
         }
