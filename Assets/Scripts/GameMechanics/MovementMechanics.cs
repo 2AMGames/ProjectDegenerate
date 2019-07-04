@@ -98,7 +98,7 @@ public class MovementMechanics : MonoBehaviour {
     private int verticalInput;
     private Animator anim;
     private bool isCrouching = false;
-    
+ 
 
     /// <summary>
     ///  Can the player guard in his/her current state?

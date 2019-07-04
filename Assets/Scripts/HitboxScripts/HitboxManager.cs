@@ -66,6 +66,13 @@ public class HitboxManager : MonoBehaviour
             for (int j = i + 1; j < allActiveHitboxes.Count; j++)
             {
                 h2 = allActiveHitboxes[j];
+                
+                // Do not consider pairs of hit boxes that are both hurtboxes. These will never trigger an event
+                // Do not consider hitboxes of the same player indices.
+                if (h1.PlayerIndex == h2.PlayerIndex || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox))
+                {
+                    continue;
+                }
                 if (CheckHitboxIntersect(h1, h2))
                 {
                     DetermineHitboxEnterHitboxEvent(h1, h2);
@@ -86,10 +93,6 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool CheckHitboxIntersect(Hitbox h1, Hitbox h2)
     {
-        if (h1.PlayerIndex == h2.PlayerIndex)//If they are both from the same character, we will ignore
-        {
-            return false;
-        }
         Vector2 tl1 = h1.hitboxColliderBounds.topLeft;
         Vector2 br1 = h1.hitboxColliderBounds.bottomRight;
         Vector2 tl2 = h2.hitboxColliderBounds.topLeft;
@@ -182,11 +185,6 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         print(hitbox.name + " " + hurtbox.name + " entered!");
-    }
-
-    private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
-    {
-        print(hitbox.name + "  " + hurtbox.name + " stayed!");
         PlayerController hitController = Overseer.Instance.GetCharacterByIndex(hitbox.PlayerIndex);
         PlayerController hurtController = Overseer.Instance.GetCharacterByIndex(hurtbox.PlayerIndex);
 
@@ -198,6 +196,12 @@ public class HitboxManager : MonoBehaviour
         {
             hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox, hitController && hitController.InteractionHandler ? hitController.InteractionHandler.CurrentMove : (default));
         }
+    }
+
+    private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
+    {
+        print(hitbox.name + "  " + hurtbox.name + " stayed!");
+
     }
 
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)

@@ -16,6 +16,8 @@ public class InteractionHandler : MonoBehaviour
 
     public CommandInterpreter CommandInterpreter { get; private set; }
 
+    public MovementMechanics MovementMechanics { get; private set; }
+
     public float MoveGuardDamage;
     public float MoveGuardFrames;
     public Vector2 MoveGuardKnockback;
@@ -25,6 +27,8 @@ public class InteractionHandler : MonoBehaviour
     public Vector2 MoveHitKnockback;
 
     public bool MoveGuardBreak;
+
+    public int Hitstun = 0;
 
     public MoveData CurrentMove
     {
@@ -64,6 +68,7 @@ public class InteractionHandler : MonoBehaviour
         Animator = GetComponent<Animator>();
         CharacterStats = GetComponent<CharacterStats>();
         CommandInterpreter = GetComponent<CommandInterpreter>();
+        MovementMechanics = GetComponent<MovementMechanics>();
     }
 
     #endregion
@@ -74,12 +79,22 @@ public class InteractionHandler : MonoBehaviour
     {
         //TODO Get current active move from animation and command interpreter.
         CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
+        MovementMechanics.HandlePlayerHit(currentMove);
+
+        if (currentMove.OnHitFrames > 0)
+        {
+            Hitstun += (int)currentMove.OnHitFrames;
+            Animator.SetBool("Hitstun", true);
+            Animator.SetTrigger(currentMove.Magnitude.ToString());
+            StartCoroutine(HandleHitstun());
+        }
     }
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox)
     {
         //TODO Get current active move from animation and command interpreter. Pass null for now.
         CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
+        MovementMechanics.HandlePlayerHitEnemy(CurrentMove);
     }
 
     public void OnClash(Hitbox enemyHitbox)
@@ -89,11 +104,36 @@ public class InteractionHandler : MonoBehaviour
 
     #endregion
 
+    #region private methods
+
+    private IEnumerator HandleHitstun()
+    {
+
+        while (Hitstun > 0)
+        {
+            --Hitstun;
+            yield return new WaitForEndOfFrame();
+        }
+
+        Animator.SetBool("Hitstun", false);
+    }
+    
+    #endregion
+
     #region structs
 
-    
+
     public struct MoveData
     {
+        public enum HitMagnitude
+        {
+            LightHit,
+            MediumHit,
+            HeavyHit
+        };
+
+        public HitMagnitude Magnitude;
+
         public float OnGuardDamage;
         public float OnGuardFrames;
         public Vector2 OnGuardKnockback;

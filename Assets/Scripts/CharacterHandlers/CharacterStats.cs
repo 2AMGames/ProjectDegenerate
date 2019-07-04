@@ -44,14 +44,12 @@ public class CharacterStats : MonoBehaviour
 
     public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
     {
-        print("I got hit: " + PlayerIndex);
         UpdateCharacterStats(true, move);
         MovementMechanics.HandlePlayerHit(move);
     }
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox,InteractionHandler.MoveData move)
     {
-        print("I Hit Someone: " + PlayerIndex);
         UpdateCharacterStats(false, move);
         MovementMechanics.HandlePlayerHitEnemy(move);
     }
