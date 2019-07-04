@@ -182,11 +182,6 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         print(hitbox.name + " " + hurtbox.name + " entered!");
-    }
-
-    private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
-    {
-        print(hitbox.name + "  " + hurtbox.name + " stayed!");
         PlayerController hitController = Overseer.Instance.GetCharacterByIndex(hitbox.PlayerIndex);
         PlayerController hurtController = Overseer.Instance.GetCharacterByIndex(hurtbox.PlayerIndex);
 
@@ -198,6 +193,12 @@ public class HitboxManager : MonoBehaviour
         {
             hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox, hitController && hitController.InteractionHandler ? hitController.InteractionHandler.CurrentMove : (default));
         }
+    }
+
+    private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
+    {
+        print(hitbox.name + "  " + hurtbox.name + " stayed!");
+
     }
 
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)

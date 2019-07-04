@@ -190,12 +190,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveGuardDamage: 0
-  MoveGuardFrames: 0
+  MoveGuardFrames: 3
   MoveGuardKnockback: {x: 0, y: 0}
   MoveHitDamage: 0
-  MoveHitFrames: 0
+  MoveHitFrames: 2
   MoveHitKnockback: {x: 0, y: 0}
   MoveGuardBreak: 0
+  Hitstun: 0
 --- !u!1 &489040385881696257
 GameObject:
   m_ObjectHideFlags: 0
