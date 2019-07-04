@@ -112,7 +112,6 @@ public class InteractionHandler : MonoBehaviour
         while (Hitstun > 0)
         {
             --Hitstun;
-            Debug.LogWarning("Hitstun: " + Hitstun);
             yield return new WaitForEndOfFrame();
         }
 
