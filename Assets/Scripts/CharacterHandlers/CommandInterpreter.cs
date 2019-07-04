@@ -171,6 +171,8 @@ public class CommandInterpreter : MonoBehaviour
         float horizontal = Input.GetAxisRaw(PlayerController.MOVEMENT_HORIZONTAL);
         float vertical = Input.GetAxisRaw(PlayerController.MOVEMENT_VERTICAL);
 
+        return DIRECTION.FORWARD;
+
     }
     /// <summary>
     /// 

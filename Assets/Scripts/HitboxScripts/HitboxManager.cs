@@ -66,10 +66,10 @@ public class HitboxManager : MonoBehaviour
             for (int j = i + 1; j < allActiveHitboxes.Count; j++)
             {
                 h2 = allActiveHitboxes[j];
-                
+
                 // Do not consider pairs of hit boxes that are both hurtboxes. These will never trigger an event
                 // Do not consider hitboxes of the same player indices.
-                if (h1.PlayerIndex == h2.PlayerIndex || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox))
+                if (!IsValidHitBoxPair(h1,h2)) 
                 {
                     continue;
                 }
@@ -232,6 +232,11 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxExitHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         print(hitbox1.name + "  " + hitbox2.name + " exited!");
+    }
+
+    private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
+    {
+        return !(h1.PlayerIndex == h2.PlayerIndex || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
     }
     #endregion hitbox events 
 }
