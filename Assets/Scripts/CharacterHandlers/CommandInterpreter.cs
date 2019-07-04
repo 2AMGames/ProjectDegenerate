@@ -24,6 +24,7 @@ public class CommandInterpreter : MonoBehaviour
     #endregion enum
     #region const variabes
     private const int FRAMES_TO_BUFFER = 7;
+    private const int DIRECTIONAL_INPUT_LENIENCY = 15;
 
     /// <summary>
     /// Light Punch trigger
@@ -63,6 +64,32 @@ public class CommandInterpreter : MonoBehaviour
     /// Quartercircle Back
     /// </summary>
     private const string QCB_ANIM_TRIGGER = "QCB";
+
+    /// <summary>
+    /// Dragon punch input
+    /// </summary>
+    private const string DP_ANIM_TRIGGER = "DP";
+
+    private DIRECTION[] QCF_INPUT = new DIRECTION[]
+    {
+        DIRECTION.DOWN,
+        DIRECTION.FORWARD_DOWN,
+        DIRECTION.FORWARD,
+    };
+
+    private DIRECTION[] QCB_INPUT = new DIRECTION[]
+    {
+        DIRECTION.DOWN,
+        DIRECTION.DOWN_BACK,
+        DIRECTION.BACK
+    };
+
+    private DIRECTION[] DP_INPUT = new DIRECTION[]
+    {
+        DIRECTION.FORWARD,
+        DIRECTION.DOWN,
+        DIRECTION.FORWARD_DOWN,
+    };
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
@@ -133,9 +160,18 @@ public class CommandInterpreter : MonoBehaviour
         {
             
         }
+
+        
     }
 
     #endregion
+
+    private DIRECTION InterpretJoystickAsDirection()
+    {
+        float horizontal = Input.GetAxisRaw(PlayerController.MOVEMENT_HORIZONTAL);
+        float vertical = Input.GetAxisRaw(PlayerController.MOVEMENT_VERTICAL);
+
+    }
     /// <summary>
     /// 
     /// </summary>
