@@ -17,7 +17,7 @@ public class CommandInterpreter : MonoBehaviour
         BACK = 4,
         FORWARD_DOWN = 3,
         DOWN = 2,
-        DOWN_BACK = 1,
+        BACK_DOWN = 1,
     }
 
 
@@ -80,7 +80,7 @@ public class CommandInterpreter : MonoBehaviour
     private DIRECTION[] QCB_INPUT = new DIRECTION[]
     {
         DIRECTION.DOWN,
-        DIRECTION.DOWN_BACK,
+        DIRECTION.BACK_DOWN,
         DIRECTION.BACK
     };
 
@@ -97,6 +97,8 @@ public class CommandInterpreter : MonoBehaviour
     private DIRECTION currentDirection;
 
     private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
+
+    private Vector2Int lastJoystickInput = Vector2Int.zero;
 
     #region main variables
 
@@ -127,6 +129,9 @@ public class CommandInterpreter : MonoBehaviour
         framesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
+
+        currentDirection = DIRECTION.NEUTRAL;
+        lastJoystickInput = Vector2Int.zero;
     }
 
     private void Update()
@@ -161,18 +166,73 @@ public class CommandInterpreter : MonoBehaviour
             
         }
 
-        
+        Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
+        if (lastJoystickInput != currentJoystickVec)
+        {
+            lastJoystickInput = currentJoystickVec;
+            currentDirection = InterpretJoystickAsDirection(lastJoystickInput);
+            print(currentDirection);
+        }
     }
 
     #endregion
 
-    private DIRECTION InterpretJoystickAsDirection()
+    private Vector2Int GetJoystickInputAsVector2Int()
     {
         float horizontal = Input.GetAxisRaw(PlayerController.MOVEMENT_HORIZONTAL);
         float vertical = Input.GetAxisRaw(PlayerController.MOVEMENT_VERTICAL);
 
-        return DIRECTION.FORWARD;
+        int horizontalInputAsInt = 0;
+        int verticalInputAsInt = 0;
 
+        if (Mathf.Abs(horizontal) > PlayerController.INPUT_THRESHOLD_RUNNING)
+        {
+            horizontalInputAsInt = (int)Mathf.Sign(horizontal);
+        }
+
+        if (Mathf.Abs(vertical) > PlayerController.INPUT_THRESHOLD_RUNNING)
+        {
+            verticalInputAsInt = (int)Mathf.Sign(vertical);
+        }
+        return new Vector2Int(horizontalInputAsInt, verticalInputAsInt);
+    }
+
+    /// <summary>
+    /// Returns the current axis as a direction
+    /// </summary>
+    /// <returns></returns>
+    private DIRECTION InterpretJoystickAsDirection(Vector2Int joystickInput)
+    {
+        int x = joystickInput.x;
+        int y = joystickInput.y;
+
+        if (x == 0)
+        {
+            if (y == 0)
+                return DIRECTION.NEUTRAL;
+            else if (y == 1)
+                return DIRECTION.UP;
+            else
+                return DIRECTION.DOWN;
+        }
+        else if (x == 1)
+        {
+            if (y == 0)
+                return DIRECTION.FORWARD;
+            else if (y == 1)
+                return DIRECTION.FORWARD_UP;
+            else
+                return DIRECTION.FORWARD_DOWN;
+        }
+        else
+        {
+            if (y == 0)
+                return DIRECTION.BACK;
+            else if (y == 1)
+                return DIRECTION.BACK_UP;
+            else
+                return DIRECTION.BACK_DOWN;
+        }
     }
     /// <summary>
     /// 
