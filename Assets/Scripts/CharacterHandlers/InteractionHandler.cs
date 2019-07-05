@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -24,6 +23,8 @@ public class InteractionHandler : MonoBehaviour
 
     public MovementMechanics MovementMechanics { get; private set; }
 
+    #region Current Move Data
+
     public float MoveGuardDamage;
     public int MoveGuardFrames;
     public Vector2 MoveGuardKnockback;
@@ -33,8 +34,16 @@ public class InteractionHandler : MonoBehaviour
     public Vector2 MoveHitKnockback;
 
     public bool MoveGuardBreak;
+    public bool MultiHit = false;
 
-    public int Hitstun = 0;
+    // Has the last move we activated already hit a player
+    public bool MoveHitPlayer;
+
+    #endregion
+
+    public int Hitstun;
+
+    private Hitbox LastHitBoxCollidedWith;
 
     public MoveData CurrentMove
     {
@@ -83,6 +92,8 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData currentMove)
     {
+        Debug.LogWarning("Hit by enemy");
+
         //TODO Get current active move from animation and command interpreter.
         CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
         MovementMechanics.HandlePlayerHit(currentMove);
@@ -90,6 +101,7 @@ public class InteractionHandler : MonoBehaviour
         if (currentMove.OnHitFrames > 0)
         {
             Hitstun += currentMove.OnHitFrames;
+            LastHitBoxCollidedWith = enemyHitbox;
             Animator.SetBool(HITSTUN_TRIGGER, true);
             Animator.SetTrigger(currentMove.Magnitude.ToString());
             StartCoroutine(HandleHitstun());
@@ -101,6 +113,7 @@ public class InteractionHandler : MonoBehaviour
         //TODO Get current active move from animation and command interpreter. Pass null for now.
         CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
         MovementMechanics.HandlePlayerHitEnemy(CurrentMove);
+        MoveHitPlayer = true;
     }
 
     public void OnClash(Hitbox enemyHitbox)
@@ -122,6 +135,7 @@ public class InteractionHandler : MonoBehaviour
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
+        LastHitBoxCollidedWith = null;
     }
     
     #endregion
@@ -148,6 +162,11 @@ public class InteractionHandler : MonoBehaviour
         public Vector2 OnHitKnockback;
 
         public bool GuardBreak;
+
+        // Allows the hitbox to register multiple hits on the opposing player in the same move.
+        // Ex. A projectile may register as two hits when it connects with an opponent,
+        // but a standing medium punch usually should not do the same.
+        public bool AllowMultiHit;
 
     }
     
