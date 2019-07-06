@@ -23,8 +23,8 @@ public class CommandInterpreter : MonoBehaviour
 
     #endregion enum
     #region const variabes
-    private const int FRAMES_TO_BUFFER = 7;
-    private const int DIRECTIONAL_INPUT_LENIENCY = 15;
+    private const int FRAMES_TO_BUFFER = 50;
+    private const int DIRECTIONAL_INPUT_LENIENCY = 50;
 
     /// <summary>
     /// Light Punch trigger
@@ -70,26 +70,28 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private const string DP_ANIM_TRIGGER = "DP";
 
-    private DIRECTION[] QCF_INPUT = new DIRECTION[]
+    private readonly DIRECTION[] QCF_INPUT = new DIRECTION[]
     {
         DIRECTION.DOWN,
         DIRECTION.FORWARD_DOWN,
         DIRECTION.FORWARD,
     };
 
-    private DIRECTION[] QCB_INPUT = new DIRECTION[]
+    private readonly DIRECTION[] QCB_INPUT = new DIRECTION[]
     {
         DIRECTION.DOWN,
         DIRECTION.BACK_DOWN,
         DIRECTION.BACK
     };
 
-    private DIRECTION[] DP_INPUT = new DIRECTION[]
+    private readonly DIRECTION[] DP_INPUT = new DIRECTION[]
     {
         DIRECTION.FORWARD,
         DIRECTION.DOWN,
         DIRECTION.FORWARD_DOWN,
     };
+
+    private List<DIRECTION> directionalInputRecordList = new List<DIRECTION>();
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
@@ -129,6 +131,9 @@ public class CommandInterpreter : MonoBehaviour
         framesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
+
+        framesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
+        framesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
 
         currentDirection = DIRECTION.NEUTRAL;
         lastJoystickInput = Vector2Int.zero;
@@ -171,7 +176,8 @@ public class CommandInterpreter : MonoBehaviour
         {
             lastJoystickInput = currentJoystickVec;
             currentDirection = InterpretJoystickAsDirection(lastJoystickInput);
-            print(currentDirection);
+            directionalInputRecordList.Add(currentDirection);
+            StartCoroutine(RemoveDirectionalInputAfterTime());
         }
     }
 
@@ -252,6 +258,7 @@ public class CommandInterpreter : MonoBehaviour
         }
         framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
         framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+        CheckDirectionalInputCommands();
     }
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
@@ -260,7 +267,7 @@ public class CommandInterpreter : MonoBehaviour
         
         while (framesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
-            yield return null;
+            yield return new WaitForFixedUpdate();
             //if (buttonEventName == BUTTON_ACTION_TRIGGER)
             //{
             //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
@@ -269,6 +276,82 @@ public class CommandInterpreter : MonoBehaviour
         }
         
         anim.ResetTrigger(buttonEventName);
-        
+    }
+
+    private IEnumerator RemoveDirectionalInputAfterTime()
+    {
+        int framesThatHavePassed = 0;
+        while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
+        {
+            yield return new WaitForFixedUpdate();
+            ++framesThatHavePassed;
+        }
+
+        directionalInputRecordList.RemoveAt(0);
+    }
+
+
+    private void CheckDirectionalInputCommands()
+    {
+        if (CheckIfDirectionalArrayMatches(QCB_INPUT) > 0)
+        {
+            anim.SetTrigger(QCB_ANIM_TRIGGER);
+            if (framesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("QCB Successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(QCB_ANIM_TRIGGER));
+            }
+
+        }
+        if (CheckIfDirectionalArrayMatches(QCF_INPUT) > 0)
+        {
+            anim.SetTrigger(QCF_ANIM_TRIGGER);
+            if (framesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("QCF successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(QCF_ANIM_TRIGGER));
+            }
+        }
+    }
+
+
+
+    /// <summary>
+    /// Checks to see if the array that is passed in matches anywhere in our 
+    /// </summary>
+    private int CheckIfDirectionalArrayMatches(DIRECTION[] inputArray)
+    {
+        if (inputArray.Length > directionalInputRecordList.Count)
+        {
+            return -1;
+        }
+
+        bool passedInput;
+        for (int i = directionalInputRecordList.Count - inputArray.Length; i >= 0; i--)
+        {
+            passedInput = true;
+            for (int j = 0; j < inputArray.Length; j++)
+            {
+                if (directionalInputRecordList[i + j] != inputArray[j])
+                {
+                    passedInput = false;
+                    break;
+                }
+            }
+            if (passedInput)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="direction"></param>
+    private void PrintDirectionalArray(DIRECTION direction)
+    {
+
     }
 }
