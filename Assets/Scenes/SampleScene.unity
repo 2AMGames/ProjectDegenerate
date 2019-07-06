@@ -175,7 +175,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -888,7 +888,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &747253267
 GameObject:
@@ -1863,7 +1863,7 @@ PrefabInstance:
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
@@ -1882,8 +1882,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
-      propertyPath: MoveHitFrames
-      value: 0
+      propertyPath: CharacterMoves.Array.data[0].MoveName
+      value: Light_Punch
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}

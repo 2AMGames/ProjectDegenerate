@@ -163,7 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 0}
   PlayerIndex: 0
 --- !u!114 &7808090552154802651
 MonoBehaviour:
@@ -189,13 +188,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveGuardDamage: 0
-  MoveGuardFrames: 3
-  MoveGuardKnockback: {x: 0, y: 0}
-  MoveHitDamage: 0
-  MoveHitFrames: 10
-  MoveHitKnockback: {x: 0, y: 0}
-  MoveGuardBreak: 0
+  CharacterMoves:
+  - MoveName: Light_Punch
+    Magnitude: 0
+    OnGuardDamage: 1
+    OnGuardFrames: 1
+    OnGuardKnockback: {x: 3, y: 0}
+    OnHitDamage: 2
+    OnHitFrames: 2
+    OnHitKnockback: {x: 5, y: 0}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  - MoveName: MP
+    Magnitude: 1
+    OnGuardDamage: 3
+    OnGuardFrames: 3
+    OnGuardKnockback: {x: 3, y: 0}
+    OnHitDamage: 6
+    OnHitFrames: 6
+    OnHitKnockback: {x: 7, y: 0}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  - MoveName: HP
+    Magnitude: 2
+    OnGuardDamage: 4
+    OnGuardFrames: 4
+    OnGuardKnockback: {x: 5, y: 0}
+    OnHitDamage: 10
+    OnHitFrames: 10
+    OnHitKnockback: {x: 10, y: 0}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  MoveHitPlayer: 0
   Hitstun: 0
 --- !u!1 &489040385881696257
 GameObject:
@@ -472,12 +496,12 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.018
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.772
+      value: 0.776
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -527,7 +551,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.2
+      value: 0.56
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -557,7 +581,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.009
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -612,7 +636,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.5
+      value: 0.71
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -642,7 +666,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.044
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -696,11 +720,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
-      propertyPath: boxColliderSize.x
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
       propertyPath: boxColliderSize.y
       value: 0.25
       objectReference: {fileID: 0}
@@ -727,7 +746,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.018
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -782,7 +801,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.6
+      value: 0.62
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1197,7 +1216,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.093
+      value: 0.074
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1246,8 +1265,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: boxColliderSize.x
+      value: 1.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.25
+      value: 0.33
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}

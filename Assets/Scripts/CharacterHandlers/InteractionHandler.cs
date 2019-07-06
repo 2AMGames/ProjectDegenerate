@@ -26,44 +26,35 @@ public class InteractionHandler : MonoBehaviour
 
     public HashSet<InteractionHandler> CharactersHit { get; private set; }
 
-    #region Current Move Data
+    [SerializeField]
+    private List<MoveData> CharacterMoves;
 
-    public float MoveGuardDamage;
-    public int MoveGuardFrames;
-    public Vector2 MoveGuardKnockback;
+    private Dictionary<string, MoveData> CharacterMoveDict;
 
-    public float MoveHitDamage;
-    public int MoveHitFrames;
-    public Vector2 MoveHitKnockback;
-
-    public bool MoveGuardBreak;
-    public bool MultiHit = false;
-
-    // Has the last move we activated already hit a player
-    public bool MoveHitPlayer;
-
-    #endregion
-
-    public int Hitstun;
-
-    private Hitbox LastHitBoxCollidedWith;
+    private string AnimatorClipName
+    {
+        get
+        {
+            return Animator != null ? Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name : "idle";
+        }
+    }
 
     public MoveData CurrentMove
     {
         get
         {
-            return new MoveData
-            {
-                OnGuardDamage = MoveGuardDamage,
-                OnGuardFrames = MoveGuardFrames,
-                OnGuardKnockback = MoveGuardKnockback,
-                OnHitDamage = MoveHitDamage,
-                OnHitFrames = MoveHitFrames,
-                OnHitKnockback = MoveHitKnockback,
-                GuardBreak = MoveGuardBreak
-            };
+            return Animator != null && CharacterMoveDict.ContainsKey(AnimatorClipName) ? CharacterMoveDict[AnimatorClipName] : default;
         }
     }
+
+    #region Interaction Data
+
+    // Has the last move we activated already hit a player
+    public bool MoveHitPlayer;
+
+    public int Hitstun;
+
+    #endregion
 
     #endregion
 
@@ -71,7 +62,6 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnMoveBegin()
     {
-        Debug.LogWarning("Move Begin.");
         CharactersHit.Clear();
     }
 
@@ -84,7 +74,6 @@ public class InteractionHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void Awake()
@@ -95,6 +84,11 @@ public class InteractionHandler : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
 
         CharactersHit = new HashSet<InteractionHandler>();
+        CharacterMoveDict = new Dictionary<string, MoveData>();
+        foreach(MoveData move in CharacterMoves)
+        {
+            CharacterMoveDict.Add(move.MoveName, move);
+        }
     }
 
     #endregion
@@ -111,7 +105,6 @@ public class InteractionHandler : MonoBehaviour
         if (currentMove.OnHitFrames > 0)
         {
             Hitstun += currentMove.OnHitFrames;
-            LastHitBoxCollidedWith = enemyHitbox;
             Animator.SetBool(HITSTUN_TRIGGER, true);
             Animator.SetTrigger(currentMove.Magnitude.ToString());
             StartCoroutine(HandleHitstun());
@@ -146,15 +139,18 @@ public class InteractionHandler : MonoBehaviour
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
-        LastHitBoxCollidedWith = null;
     }
     
     #endregion
 
     #region structs
 
+    [System.Serializable]
     public struct MoveData
     {
+
+        public string MoveName;
+
         public enum HitMagnitude
         {
             LightHit,

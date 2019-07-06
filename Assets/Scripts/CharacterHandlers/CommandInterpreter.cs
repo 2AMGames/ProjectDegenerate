@@ -106,7 +106,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         get
         {
-            return characterStats.anim;
+            return characterStats.Anim;
         }
     }
     /// <summary>
