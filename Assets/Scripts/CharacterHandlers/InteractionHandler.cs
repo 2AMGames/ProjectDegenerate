@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -22,6 +23,8 @@ public class InteractionHandler : MonoBehaviour
     public CommandInterpreter CommandInterpreter { get; private set; }
 
     public MovementMechanics MovementMechanics { get; private set; }
+
+    public HashSet<InteractionHandler> CharactersHit { get; private set; }
 
     #region Current Move Data
 
@@ -66,6 +69,12 @@ public class InteractionHandler : MonoBehaviour
 
     #region monobehaviour methods
 
+    public void OnMoveBegin()
+    {
+        Debug.LogWarning("Move Begin.");
+        CharactersHit.Clear();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +93,8 @@ public class InteractionHandler : MonoBehaviour
         CharacterStats = GetComponent<CharacterStats>();
         CommandInterpreter = GetComponent<CommandInterpreter>();
         MovementMechanics = GetComponent<MovementMechanics>();
+
+        CharactersHit = new HashSet<InteractionHandler>();
     }
 
     #endregion
@@ -92,7 +103,6 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData currentMove)
     {
-        Debug.LogWarning("Hit by enemy");
 
         //TODO Get current active move from animation and command interpreter.
         CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
@@ -114,6 +124,7 @@ public class InteractionHandler : MonoBehaviour
         CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
         MovementMechanics.HandlePlayerHitEnemy(CurrentMove);
         MoveHitPlayer = true;
+        CharactersHit.Add(Overseer.Instance.GetCharacterByIndex(enemyHurtbox.PlayerIndex).InteractionHandler);
     }
 
     public void OnClash(Hitbox enemyHitbox)

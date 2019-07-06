@@ -7,10 +7,6 @@ public class HitboxManager : MonoBehaviour
     public List<Hitbox> allHitboxes = new List<Hitbox>();
     public List<Hitbox> allActiveHitboxes = new List<Hitbox>();
 
-    /// <summary>
-    /// Players that have been hit this frame. We don't want to hit more than one hitbox per frame.
-    /// </summary>
-    private bool[] PlayersHitThisFrame;
     #region monobehavoiur methods
     private void Awake()
     {
@@ -61,7 +57,6 @@ public class HitboxManager : MonoBehaviour
     {
         Hitbox h1 = null;
         Hitbox h2 = null;
-        PlayersHitThisFrame = new bool[Overseer.Instance.players.Length];
         foreach (Hitbox hBox in allActiveHitboxes)
         {
             hBox.UpdateBoxColliderPoints();
@@ -131,14 +126,13 @@ public class HitboxManager : MonoBehaviour
         firstTimeIntersecting &= h2.AddIntersectingHitbox(h1);
         if (h1.hitboxType == Hitbox.HitboxType.Hitbox)
         {
-            if (h2.hitboxType == Hitbox.HitboxType.Hurtbox && !PlayersHitThisFrame[h2.PlayerIndex])
-            {
+            if (h2.hitboxType == Hitbox.HitboxType.Hurtbox)
+            { 
                 OnHitboxStayHurtboxEvent(h1, h2);
                 if (firstTimeIntersecting)
                 {
                     OnHitboxEnteredHurtboxEvent(h1, h2);
                 }
-                PlayersHitThisFrame[h2.PlayerIndex] = true;
             }
             else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
             {
@@ -151,14 +145,13 @@ public class HitboxManager : MonoBehaviour
         }
         else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
         {
-            if (h1.hitboxType == Hitbox.HitboxType.Hurtbox && !PlayersHitThisFrame[h1.PlayerIndex])
+            if (h1.hitboxType == Hitbox.HitboxType.Hurtbox)
             {
                 OnHitboxStayHurtboxEvent(h2, h1);
                 if (firstTimeIntersecting)
                 {
                     OnHitboxEnteredHurtboxEvent(h2, h1);
                 }
-                PlayersHitThisFrame[h1.PlayerIndex] = true;
             }
         }
     }
@@ -200,7 +193,7 @@ public class HitboxManager : MonoBehaviour
         // If not, only register a hit if the move has not already hit the player.
         // TODO Replace HitBox.AllowMultiHit with (CharacterMove).MultiHit
         // Assuming we want to keep move properties in a 
-        if (hurtController && hurtController.InteractionHandler && (hitController.InteractionHandler.MultiHit || !hitController.InteractionHandler.MoveHitPlayer))
+        if (hurtController && hurtController.InteractionHandler && !hitController.InteractionHandler.CharactersHit.Contains(hurtController.InteractionHandler))
         {
             hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox, hitController && hitController.InteractionHandler ? hitController.InteractionHandler.CurrentMove : (default));
         }
