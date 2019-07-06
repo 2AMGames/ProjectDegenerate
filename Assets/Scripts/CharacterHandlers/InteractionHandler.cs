@@ -71,7 +71,7 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnMoveBegin()
     {
-        Debug.LogWarning("Move Begin.");
+        //Debug.LogWarning("Move Begin.");
         CharactersHit.Clear();
     }
 

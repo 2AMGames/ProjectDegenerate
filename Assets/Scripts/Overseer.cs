@@ -36,6 +36,7 @@ public class Overseer : MonoBehaviour
         instance = this;
         AssignPlayerIndices();
 
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
     }
 
