@@ -104,7 +104,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region main variables
 
-    private Animator anim
+    private Animator Anim
     {
         get
         {
@@ -246,8 +246,8 @@ public class CommandInterpreter : MonoBehaviour
     /// <param name="buttonEvent"></param>
    private void OnButtonEventTriggered(string buttonEventName)
     {
-        anim.SetTrigger(buttonEventName);
-        anim.SetTrigger(BUTTON_ACTION_TRIGGER);
+        Anim.SetTrigger(buttonEventName);
+        Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
         if (framesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
@@ -275,7 +275,7 @@ public class CommandInterpreter : MonoBehaviour
             --framesRemainingUntilRemoveFromBuffer[buttonEventName];
         }
         
-        anim.ResetTrigger(buttonEventName);
+        Anim.ResetTrigger(buttonEventName);
     }
 
     private IEnumerator RemoveDirectionalInputAfterTime()
@@ -295,7 +295,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (CheckIfDirectionalArrayMatches(QCB_INPUT) > 0)
         {
-            anim.SetTrigger(QCB_ANIM_TRIGGER);
+            Anim.SetTrigger(QCB_ANIM_TRIGGER);
             if (framesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
             {
                 Debug.LogWarning("QCB Successful");
@@ -305,7 +305,7 @@ public class CommandInterpreter : MonoBehaviour
         }
         if (CheckIfDirectionalArrayMatches(QCF_INPUT) > 0)
         {
-            anim.SetTrigger(QCF_ANIM_TRIGGER);
+            Anim.SetTrigger(QCF_ANIM_TRIGGER);
             if (framesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
             {
                 Debug.LogWarning("QCF successful");
