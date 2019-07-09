@@ -76,6 +76,7 @@ MonoBehaviour:
   groundAcceleration: 100
   maximumAirSpeed: 8
   airAcceleration: 20
+  knockbackSpeed: 2
   isFacingRight: 1
   timeToReachJumpApex: 0.35
   heightOfJump: 3
@@ -163,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Anim: {fileID: 0}
   PlayerIndex: 0
 --- !u!114 &7808090552154802651
 MonoBehaviour:
@@ -193,10 +195,10 @@ MonoBehaviour:
     Magnitude: 0
     OnGuardDamage: 1
     OnGuardFrames: 1
-    OnGuardKnockback: {x: 3, y: 0}
+    OnGuardKnockback: {x: 0.75, y: 0}
     OnHitDamage: 2
     OnHitFrames: 2
-    OnHitKnockback: {x: 5, y: 0}
+    OnHitKnockback: {x: 0.75, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: MP

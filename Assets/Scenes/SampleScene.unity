@@ -361,6 +361,21 @@ PrefabInstance:
       propertyPath: MoveHitFrames
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].OnHitKnockback.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].OnGuardKnockback.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].GuardBreak
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7808090552154802651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_Enabled
@@ -2601,8 +2616,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
-      propertyPath: CharacterMoves.Array.data[0].MoveName
-      value: Light_Punch
+      propertyPath: CharacterMoves.Array.data[0].OnHitKnockback.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].OnGuardKnockback.x
+      value: 0.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}

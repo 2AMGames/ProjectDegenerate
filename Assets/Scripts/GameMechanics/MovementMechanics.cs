@@ -18,6 +18,8 @@ public class MovementMechanics : MonoBehaviour {
     }
     #endregion enums
 
+    #region const variables
+
     private const string SPEED_ANIMATION_PARAMETER = "Speed";
     private const string IN_AIR_ANIMATION_PARAMETER = "InAir";
     private const string IS_CROUCHING_PARAMETER = "IsCrouching";
@@ -26,6 +28,8 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_INPUT = "VerticalInput";
 
     private const float CROUCHING_THRESHOLD = .6F;
+
+    #endregion
 
     #region main variables
     [Header("Mono References")]
@@ -40,6 +44,9 @@ public class MovementMechanics : MonoBehaviour {
     public float groundAcceleration = 25f;
     public float maximumAirSpeed = 8f;
     public float airAcceleration = 20f;
+
+    [Tooltip("Speed character will be knocked back when hit by attack")]
+    public float knockbackSpeed = 2f;
 
     [Header("Sprite Renderer Referneces")]
     [Tooltip("This indicates what direction our sprite will be facing. This will change based on input")]
@@ -99,11 +106,12 @@ public class MovementMechanics : MonoBehaviour {
     private Animator anim;
     private bool isCrouching = false;
  
-
     /// <summary>
     ///  Can the player guard in his/her current state?
     /// </summary>
     private bool canGuard;
+
+    private IEnumerator ForcedMovementCoroutine;
 
     #endregion main variables
 
@@ -482,7 +490,12 @@ public class MovementMechanics : MonoBehaviour {
 
     public void HandlePlayerHit(InteractionHandler.MoveData move)
     {
-
+        if (ForcedMovementCoroutine != null)
+        {
+            StopCoroutine(ForcedMovementCoroutine);
+        }
+        ForcedMovementCoroutine = TranslateForcedMovement(move.OnHitKnockback);
+        StartCoroutine(ForcedMovementCoroutine);
     }
 
     /// <summary>
@@ -500,6 +513,19 @@ public class MovementMechanics : MonoBehaviour {
         if (rigid.velocity.y < 0)
         {
             yield break;
+        }
+    }
+
+    private IEnumerator TranslateForcedMovement(Vector2 forceVector)
+    {
+        Vector2 destination = (Vector2)transform.position + (forceVector * (isFacingRight ? -1 : 1));
+
+        float distance = Vector2.Distance(destination, transform.position);
+        while(distance > .01f)
+        {
+            transform.position = Vector2.Lerp(transform.position, destination, .2f);
+            yield return new WaitForEndOfFrame();
+            distance = Vector2.Distance(transform.position, destination);
         }
     }
 

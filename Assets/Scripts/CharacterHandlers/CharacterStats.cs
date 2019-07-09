@@ -45,7 +45,6 @@ public class CharacterStats : MonoBehaviour
     public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
     {
         UpdateCharacterStats(true, move);
-        MovementMechanics.HandlePlayerHit(move);
     }
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox,InteractionHandler.MoveData move)
