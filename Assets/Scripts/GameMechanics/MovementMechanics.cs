@@ -255,10 +255,10 @@ public class MovementMechanics : MonoBehaviour {
             return;
         }
 
-        Vector2 facingDirection = transform.right.normalized;
+        //Vector2 facingDirection = transform.right.normalized;
         Vector2 opponentDirection = (opponentPosition.position - transform.position).normalized;
-        float dotProduct = Vector2.Dot(facingDirection, opponentDirection);
-        SetSpriteFlipped(dotProduct >= 0.0f);
+        //float dotProduct = Vector2.Dot(facingDirection, opponentDirection);
+        SetSpriteFlipped(opponentDirection.x >= 0.0f);
 
     }
 
