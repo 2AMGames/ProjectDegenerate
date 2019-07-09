@@ -488,13 +488,18 @@ public class MovementMechanics : MonoBehaviour {
     /// Method that handles player state when their hurtbox is inflitrated by an active hitbox.
     /// </summary>
 
-    public void HandlePlayerHit(InteractionHandler.MoveData move)
+    public void HandlePlayerHit(Hitbox enemyHitbox, InteractionHandler.MoveData move)
     {
         if (ForcedMovementCoroutine != null)
         {
             StopCoroutine(ForcedMovementCoroutine);
         }
-        ForcedMovementCoroutine = TranslateForcedMovement(move.OnHitKnockback);
+
+        // Hitbox came from left or right?
+        int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
+        Vector2 destination = move.OnHitKnockback * direction;
+
+        ForcedMovementCoroutine = TranslateForcedMovement(destination);
         StartCoroutine(ForcedMovementCoroutine);
     }
 
@@ -516,10 +521,9 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
-    private IEnumerator TranslateForcedMovement(Vector2 forceVector)
+    private IEnumerator TranslateForcedMovement(Vector2 destinationVector)
     {
-        Vector2 destination = (Vector2)transform.position + (forceVector * (isFacingRight ? -1 : 1));
-
+        Vector2 destination = destinationVector + (Vector2)transform.position;
         float distance = Vector2.Distance(destination, transform.position);
         while(distance > .01f)
         {

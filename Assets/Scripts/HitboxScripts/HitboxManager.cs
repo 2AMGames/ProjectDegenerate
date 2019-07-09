@@ -185,7 +185,7 @@ public class HitboxManager : MonoBehaviour
 
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        print(hitbox.name + " " + hurtbox.name + " entered!");
+        //print(hitbox.name + " " + hurtbox.name + " entered!");
         InteractionHandler hitHandler = hitbox.InteractionHandler;
         InteractionHandler hurtHandler = hurtbox.InteractionHandler;
 
@@ -206,18 +206,18 @@ public class HitboxManager : MonoBehaviour
 
     private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        print(hitbox.name + "  " + hurtbox.name + " stayed!");
+        //print(hitbox.name + "  " + hurtbox.name + " stayed!");
 
     }
 
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        print(hitbox.name + "  " + hurtbox.name + " exited!");
+        //print(hitbox.name + "  " + hurtbox.name + " exited!");
     }
 
     private void OnHitboxEnterHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
-        print(hitbox1.name + "  " + hitbox2.name + " entered!");
+        //print(hitbox1.name + "  " + hitbox2.name + " entered!");
     }
 
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
@@ -238,7 +238,7 @@ public class HitboxManager : MonoBehaviour
 
     private void OnHitboxExitHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
-        print(hitbox1.name + "  " + hitbox2.name + " exited!");
+        //print(hitbox1.name + "  " + hitbox2.name + " exited!");
     }
 
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
