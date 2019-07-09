@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(CharacterStats))]
 public class CommandInterpreter : MonoBehaviour
 {
     #region enum
 
-    private enum DIRECTION
+    public enum DIRECTION
     {
         FORWARD_UP = 9,
         UP = 8,
@@ -102,6 +103,12 @@ public class CommandInterpreter : MonoBehaviour
 
     private Vector2Int lastJoystickInput = Vector2Int.zero;
 
+    #region action methods
+    public UnityAction<string> OnButtonPressedEvent;
+    public UnityAction<string> OnbuttonReleasedEvent;
+    public UnityAction<DIRECTION> OnDirectionSetEvent;
+    #endregion 
+
     #region main variables
 
     private Animator Anim
@@ -176,6 +183,7 @@ public class CommandInterpreter : MonoBehaviour
         {
             lastJoystickInput = currentJoystickVec;
             currentDirection = InterpretJoystickAsDirection(lastJoystickInput);
+            OnDirectionSetEvent.Invoke(currentDirection);
             directionalInputRecordList.Add(currentDirection);
             StartCoroutine(RemoveDirectionalInputAfterTime());
         }
