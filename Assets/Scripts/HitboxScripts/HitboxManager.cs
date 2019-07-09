@@ -186,21 +186,21 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         print(hitbox.name + " " + hurtbox.name + " entered!");
-        PlayerController hitController = Overseer.Instance.GetCharacterByIndex(hitbox.PlayerIndex);
-        PlayerController hurtController = Overseer.Instance.GetCharacterByIndex(hurtbox.PlayerIndex);
+        InteractionHandler hitHandler = hitbox.InteractionHandler;
+        InteractionHandler hurtHandler = hurtbox.InteractionHandler;
 
         // If the hitbox for this move allows multi hit, then we can register another hit on this frame.
         // If not, only register a hit if the move has not already hit the player.
         // TODO Replace HitBox.AllowMultiHit with (CharacterMove).MultiHit
         // Assuming we want to keep move properties in a 
-        if (hurtController && hurtController.InteractionHandler && !hitController.InteractionHandler.CharactersHit.Contains(hurtController.InteractionHandler))
+        if (hurtHandler && !hitHandler.CharactersHit.Contains(hurtHandler))
         {
-            hurtController.InteractionHandler.OnHitByEnemy(hurtbox, hitbox, hitController && hitController.InteractionHandler ? hitController.InteractionHandler.CurrentMove : (default));
+            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove);
         }
 
-        if (hitController && hitController.InteractionHandler)
+        if (hitHandler)
         {
-            hitController.InteractionHandler.OnHitEnemy(hitbox, hurtbox);
+            hitHandler.OnHitEnemy(hitbox, hurtbox);
         }
     }
 
@@ -223,15 +223,16 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         print(hitbox1.name + "  " + hitbox2.name + " stayed!");
-        PlayerController hitController1 = Overseer.Instance.GetCharacterByIndex(hitbox1.PlayerIndex);
-        PlayerController hitController2 = Overseer.Instance.GetCharacterByIndex(hitbox2.PlayerIndex);
-        if (hitController1 && hitController1.InteractionHandler)
+        InteractionHandler hitHandler1 = hitbox1.InteractionHandler;
+        InteractionHandler hitHandler2 = hitbox2.InteractionHandler;
+
+        if (hitHandler1)
         {
-            hitController1.InteractionHandler.OnClash(hitbox2);
+            hitHandler1.OnClash(hitbox2);
         }
-        if (hitController2 && hitController2.InteractionHandler)
+        if (hitHandler2)
         {
-            hitController2.InteractionHandler.OnClash(hitbox1);
+            hitHandler2.OnClash(hitbox1);
         }
     }
 
@@ -242,7 +243,7 @@ public class HitboxManager : MonoBehaviour
 
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
     {
-        return !(h1.PlayerIndex == h2.PlayerIndex || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
+        return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
     }
     #endregion hitbox events 
 }

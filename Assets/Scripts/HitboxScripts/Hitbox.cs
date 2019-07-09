@@ -27,13 +27,7 @@ public class Hitbox : MonoBehaviour
 
     public HitboxBounds hitboxColliderBounds;
 
-    public int PlayerIndex
-    {
-        get
-        {
-            return GetComponentInParent<CharacterStats>() != null ? GetComponentInParent<CharacterStats>().PlayerIndex : 0;
-        }
-    }
+    public InteractionHandler InteractionHandler;
     /// <summary>
     /// Hitboxes that we are currently intersecting
     /// </summary>
@@ -43,6 +37,7 @@ public class Hitbox : MonoBehaviour
     private void Awake()
     {
         Overseer.Instance.hitboxManager.AddHitboxToList(this);
+        InteractionHandler = GetComponentInParent<InteractionHandler>();
 
     }
 

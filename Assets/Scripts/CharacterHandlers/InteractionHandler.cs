@@ -117,7 +117,7 @@ public class InteractionHandler : MonoBehaviour
         CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
         MovementMechanics.HandlePlayerHitEnemy(CurrentMove);
         MoveHitPlayer = true;
-        CharactersHit.Add(Overseer.Instance.GetCharacterByIndex(enemyHurtbox.PlayerIndex).InteractionHandler);
+        CharactersHit.Add(enemyHurtbox.InteractionHandler);
     }
 
     public void OnClash(Hitbox enemyHitbox)
