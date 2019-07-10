@@ -98,6 +98,8 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private CustomPhysics2D rigid;
 
+    private InteractionHandler InteractionHandler;
+
     /// <summary>
     /// The last horizontal input that was passed in
     /// </summary>
@@ -110,7 +112,6 @@ public class MovementMechanics : MonoBehaviour {
     ///  Can the player guard in his/her current state?
     /// </summary>
     private bool canGuard;
-
     private IEnumerator ForcedMovementCoroutine;
 
     #endregion main variables
@@ -120,6 +121,8 @@ public class MovementMechanics : MonoBehaviour {
     {
         rigid = GetComponent<CustomPhysics2D>();
         anim = GetComponent<Animator>();
+        InteractionHandler = GetComponent<InteractionHandler>();
+
         currentJumpsAvailable = maxAvailableJumps;
 
         rigid.OnGroundedEvent += this.OnGroundedEvent;
@@ -497,7 +500,8 @@ public class MovementMechanics : MonoBehaviour {
 
         // Hitbox came from left or right?
         int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-        Vector2 destination = move.OnHitKnockback * direction;
+        Vector2 destination = move.OnHitKnockback;
+        destination.x *= direction;
 
         ForcedMovementCoroutine = TranslateForcedMovement(destination);
         StartCoroutine(ForcedMovementCoroutine);
@@ -523,13 +527,12 @@ public class MovementMechanics : MonoBehaviour {
 
     private IEnumerator TranslateForcedMovement(Vector2 destinationVector)
     {
-        Vector2 destination = destinationVector + (Vector2)transform.position;
-        float distance = Vector2.Distance(destination, transform.position);
-        while(distance > .01f)
+
+        ignoreJoystickInputs = true;
+        while(InteractionHandler.Hitstun > 0)
         {
-            transform.position = Vector2.Lerp(transform.position, destination, .2f);
+            rigid.velocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
             yield return new WaitForEndOfFrame();
-            distance = Vector2.Distance(transform.position, destination);
         }
     }
 

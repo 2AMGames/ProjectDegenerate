@@ -198,7 +198,7 @@ MonoBehaviour:
     OnGuardKnockback: {x: 0.75, y: 0}
     OnHitDamage: 2
     OnHitFrames: 2
-    OnHitKnockback: {x: 0.75, y: 0}
+    OnHitKnockback: {x: 1.5, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Medium_Punch

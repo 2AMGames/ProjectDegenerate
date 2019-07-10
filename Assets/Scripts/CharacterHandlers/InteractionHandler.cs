@@ -91,18 +91,28 @@ public class InteractionHandler : MonoBehaviour
         }
     }
 
+    private void OnValidate()
+    {
+        CharacterMoveDict = new Dictionary<string, MoveData>();
+        foreach (MoveData move in CharacterMoves)
+        {
+            CharacterMoveDict.Add(move.MoveName, move);
+        }
+    }
+
     #endregion
 
     #region public methods
 
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData currentMove)
     {
-        CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
-        MovementMechanics.HandlePlayerHit(enemyHitbox,currentMove);
 
         if (currentMove.OnHitFrames > 0)
         {
             Hitstun += currentMove.OnHitFrames;
+            CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
+            MovementMechanics.HandlePlayerHit(enemyHitbox, currentMove);
+
             Animator.SetBool(HITSTUN_TRIGGER, true);
             Animator.SetTrigger(currentMove.Magnitude.ToString());
             StartCoroutine(HandleHitstun());
