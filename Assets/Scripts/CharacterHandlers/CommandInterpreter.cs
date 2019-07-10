@@ -181,15 +181,27 @@ public class CommandInterpreter : MonoBehaviour
         Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
         if (lastJoystickInput != currentJoystickVec)
         {
-            lastJoystickInput = currentJoystickVec;
-            currentDirection = InterpretJoystickAsDirection(lastJoystickInput);
+            currentDirection = InterpretJoystickAsDirection(currentJoystickVec);
             OnDirectionSetEvent.Invoke(currentDirection);
             directionalInputRecordList.Add(currentDirection);
             StartCoroutine(RemoveDirectionalInputAfterTime());
+
+            CheckForJumpInput(lastJoystickInput, currentJoystickVec);
+            lastJoystickInput = currentJoystickVec;
+
         }
     }
 
     #endregion
+
+    private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
+    {
+        if (prevInput.y < 1 && currentInput.y >= 1)
+        {
+            characterStats.MovementMechanics.Jump();
+        }
+    }
+    
 
     private Vector2Int GetJoystickInputAsVector2Int()
     {
