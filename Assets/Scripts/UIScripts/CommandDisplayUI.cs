@@ -27,6 +27,7 @@ public class CommandDisplayUI : MonoBehaviour
     public Color buttonReleasedColor = Color.white;
     [Tooltip("")]
     public Dictionary<string, Image> buttonImageDictionary = new Dictionary<string, Image>();
+    public Image[] buttonImages;
     public Image joystickImage;
     public Image cursorImage;
 
@@ -43,6 +44,12 @@ public class CommandDisplayUI : MonoBehaviour
 
         }
 
+        buttonImageDictionary.Add(CommandInterpreter.LP_ANIM_TRIGGER, buttonImages[0]);
+        buttonImageDictionary.Add(CommandInterpreter.MP_ANIM_TRIGGER, buttonImages[1]);
+        buttonImageDictionary.Add(CommandInterpreter.HP_ANIM_TRIGGER, buttonImages[2]);
+        buttonImageDictionary.Add(CommandInterpreter.LK_ANIM_TRIGGER, buttonImages[3]);
+        buttonImageDictionary.Add(CommandInterpreter.MK_ANIM_TRIGGER, buttonImages[4]);
+        buttonImageDictionary.Add(CommandInterpreter.HK_ANIM_TRIGGER, buttonImages[5]);
     }
     #endregion monobehaviour methods
 
@@ -51,7 +58,7 @@ public class CommandDisplayUI : MonoBehaviour
     /// </summary>
     public void OnButtonPressed(string buttonPressed)
     {
-
+        buttonImageDictionary[buttonPressed].color = buttonPressedColor;
     }
 
     /// <summary>
@@ -59,7 +66,7 @@ public class CommandDisplayUI : MonoBehaviour
     /// </summary>
     public void OnButtonReleased(string buttonReleased)
     {
-
+        buttonImageDictionary[buttonReleased].color = buttonReleasedColor;
     }
 
     /// <summary>

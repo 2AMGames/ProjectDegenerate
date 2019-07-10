@@ -42,10 +42,10 @@ public class PlayerController : MonoBehaviour
         CharacterStats.MovementMechanics.SetHorizontalInput(Input.GetAxisRaw(MOVEMENT_HORIZONTAL));
         CharacterStats.MovementMechanics.SetVerticalInput(Input.GetAxisRaw(MOVEMENT_VERTICAL));
         
-        if (Input.GetButtonDown(MOVEMENT_JUMP))
-        {
-            CharacterStats.MovementMechanics.Jump();
-        }
+        //if (Input.GetButtonDown(MOVEMENT_JUMP))
+        //{
+        //    CharacterStats.MovementMechanics.Jump();
+        //}
 
         CharacterStats.MovementMechanics.FlipSpriteBasedOnOpponentDirection(Opponent.CharacterStats.transform);
 
