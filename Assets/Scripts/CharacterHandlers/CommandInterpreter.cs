@@ -30,31 +30,31 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// Light Punch trigger
     /// </summary>
-    private const string LP_ANIM_TRIGGER = "LP";
+    public const string LP_ANIM_TRIGGER = "LP";
     /// <summary>
     /// Medium Punch trigger
     /// </summary>
-    private const string MP_ANIM_TRIGGER = "MP";
+    public const string MP_ANIM_TRIGGER = "MP";
 
     /// <summary>
     /// Heavy punch trigger
     /// </summary>
-    private const string HP_ANIM_TRIGGER = "HP";
+    public const string HP_ANIM_TRIGGER = "HP";
 
     /// <summary>
     /// Light Kick Trigger
     /// </summary>
-    private const string LK_ANIM_TRIGGER = "LK";
+    public const string LK_ANIM_TRIGGER = "LK";
 
     /// <summary>
     /// Medium Kick Trigger
     /// </summary>
-    private const string MK_ANIM_TRIGGER = "MK";
+    public const string MK_ANIM_TRIGGER = "MK";
 
     /// <summary>
     /// Heavy Kick trigger
     /// </summary>
-    private const string HK_ANIM_TRIGGER = "HK";
+    public const string HK_ANIM_TRIGGER = "HK";
 
     /// <summary>
     /// Quarter Circle Forward
@@ -151,31 +151,59 @@ public class CommandInterpreter : MonoBehaviour
         if (Input.GetButtonDown(LP_ANIM_TRIGGER))
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);
+            OnButtonPressedEvent.Invoke(LP_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(LP_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(LP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(MP_ANIM_TRIGGER))
         {
             OnButtonEventTriggered(MP_ANIM_TRIGGER);
+            OnButtonPressedEvent.Invoke(MP_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(MP_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(MP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(HP_ANIM_TRIGGER))
         {
             OnButtonEventTriggered(HP_ANIM_TRIGGER);
+            OnButtonPressedEvent.Invoke(HP_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(HP_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(HP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(LK_ANIM_TRIGGER))
         {
             OnButtonEventTriggered(LK_ANIM_TRIGGER);
+            OnButtonPressedEvent.Invoke(LK_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(LK_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(LK_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(MK_ANIM_TRIGGER))
         {
-
+            OnButtonPressedEvent.Invoke(MK_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(MK_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(MK_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(HK_ANIM_TRIGGER))
         {
-            
+            OnButtonPressedEvent.Invoke(HK_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(HK_ANIM_TRIGGER))
+        {
+            OnbuttonReleasedEvent.Invoke(HK_ANIM_TRIGGER);
         }
 
         Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
