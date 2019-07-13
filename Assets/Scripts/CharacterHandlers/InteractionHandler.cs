@@ -12,6 +12,8 @@ public class InteractionHandler : MonoBehaviour
 
     private const string HITSTUN_TRIGGER = "Hitstun";
 
+    private const string GUARD_TRIGGER = "Guard";
+
     #endregion
 
     #region main variables
@@ -104,26 +106,30 @@ public class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData currentMove)
+    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData moveHitBy, bool didMoveLand)
     {
 
-        if (currentMove.OnHitFrames > 0)
-        {
-            Hitstun += currentMove.OnHitFrames;
-            CharacterStats.OnPlayerHitByEnemy(myHurtbox, enemyHitbox, currentMove);
-            MovementMechanics.HandlePlayerHit(enemyHitbox, currentMove);
+        int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
 
+        if (frames > 0)
+        {
+            Hitstun = frames;
+            CharacterStats.OnPlayerHitByEnemy(moveHitBy, didMoveLand);
+            MovementMechanics.HandlePlayerHit(enemyHitbox, moveHitBy);
+
+            string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
+            Animator.SetTrigger(triggerToSet);
             Animator.SetBool(HITSTUN_TRIGGER, true);
-            Animator.SetTrigger(currentMove.Magnitude.ToString());
+
             StartCoroutine(HandleHitstun());
         }
     }
 
-    public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox)
+    public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
         //TODO Get current active move from animation and command interpreter. Pass null for now.
-        CharacterStats.OnPlayerHitEnemy(myHitbox, enemyHurtbox, CurrentMove);
-        MovementMechanics.HandlePlayerHitEnemy(CurrentMove);
+        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
+        MovementMechanics.HandlePlayerHitEnemy(CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
     }
@@ -159,12 +165,21 @@ public class InteractionHandler : MonoBehaviour
 
         public string MoveName;
 
+        public enum HitHeight
+        {
+            Low,
+            Mid,
+            High,
+            Air
+        }
         public enum HitMagnitude
         {
             LightHit,
             MediumHit,
-            HeavyHit
+            HeavyHit,
         };
+
+        public HitHeight Height;
 
         public HitMagnitude Magnitude;
 

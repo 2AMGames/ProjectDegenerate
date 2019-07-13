@@ -42,15 +42,14 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
-    public void OnPlayerHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
+    public void OnPlayerHitByEnemy(InteractionHandler.MoveData move, bool didMoveHit)
     {
         UpdateCharacterStats(true, move);
     }
 
-    public void OnPlayerHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox,InteractionHandler.MoveData move)
+    public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.MoveData move, bool didMoveHit)
     {
         UpdateCharacterStats(false, move);
-        MovementMechanics.HandlePlayerHitEnemy(move);
     }
 
     public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)

@@ -106,8 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe57b4ea7b84b14f8ebfccfd5a12630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalBuffer: 0.1
-  verticalBuffer: 0.1
   horizontalRayCount: 8
   verticalRayCount: 8
   centerPoint: {x: 0, y: 0.72}
@@ -192,16 +190,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterMoves:
   - MoveName: Light_Punch
+    Height: 2
     Magnitude: 0
     OnGuardDamage: 1
-    OnGuardFrames: 1
+    OnGuardFrames: 3
     OnGuardKnockback: {x: 0.75, y: 0}
     OnHitDamage: 2
-    OnHitFrames: 2
-    OnHitKnockback: {x: 1.5, y: 0}
+    OnHitFrames: 5
+    OnHitKnockback: {x: 6, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Medium_Punch
+    Height: 2
     Magnitude: 1
     OnGuardDamage: 3
     OnGuardFrames: 3
@@ -212,6 +212,7 @@ MonoBehaviour:
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: HP
+    Height: 2
     Magnitude: 2
     OnGuardDamage: 4
     OnGuardFrames: 4
@@ -221,6 +222,28 @@ MonoBehaviour:
     OnHitKnockback: {x: 10, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
+  - MoveName: Cr_LP
+    Height: 1
+    Magnitude: 0
+    OnGuardDamage: 1
+    OnGuardFrames: 2
+    OnGuardKnockback: {x: 1.25, y: 0}
+    OnHitDamage: 2
+    OnHitFrames: 4
+    OnHitKnockback: {x: 1.5, y: 0}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  - MoveName: Cr_LK
+    Height: 0
+    Magnitude: 0
+    OnGuardDamage: 1
+    OnGuardFrames: 4
+    OnGuardKnockback: {x: 1.25, y: 0}
+    OnHitDamage: 2
+    OnHitFrames: 4
+    OnHitKnockback: {x: 1.5, y: 0}
+    GuardBreak: 0
+    AllowMultiHit: 1
   MoveHitPlayer: 0
   Hitstun: 0
 --- !u!1 &489040385881696257

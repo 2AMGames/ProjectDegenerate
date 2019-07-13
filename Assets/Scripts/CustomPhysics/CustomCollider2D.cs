@@ -9,8 +9,8 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(CustomPhysics2D))]
 public class CustomCollider2D : MonoBehaviour {
-    public float horizontalBuffer = .02f;
-    public float verticalBuffer = .02f;
+    private const float HorizontalBuffer = .02f;
+    private const float VerticalBuffer = .02f;
 
     [Header("Ray Counts")]
     [Tooltip("The number of rays we will fire in the horizontal direction")]
@@ -128,10 +128,10 @@ public class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-        Vector2 adjustedPoint1 = currentColliderBounds.topLeft + Vector2.right * horizontalBuffer - verticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = currentColliderBounds.topRight + Vector2.left * horizontalBuffer - verticalBuffer * Vector2.up;
+        Vector2 adjustedPoint1 = currentColliderBounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = currentColliderBounds.topRight + Vector2.left * HorizontalBuffer - VerticalBuffer * Vector2.up;
         List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up, 
-            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + verticalBuffer, verticalRayCount);
+            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
             return false;
@@ -158,10 +158,10 @@ public class CustomCollider2D : MonoBehaviour {
             return false;
         }
 
-        Vector2 adjustedPoint1 = currentColliderBounds.bottomLeft + Vector2.right * horizontalBuffer + verticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = currentColliderBounds.bottomRight + Vector2.left * horizontalBuffer + verticalBuffer * Vector2.up;
+        Vector2 adjustedPoint1 = currentColliderBounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = currentColliderBounds.bottomRight + Vector2.left * HorizontalBuffer + VerticalBuffer * Vector2.up;
         List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down, 
-            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + verticalBuffer, verticalRayCount);
+            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
             return false;
@@ -189,8 +189,8 @@ public class CustomCollider2D : MonoBehaviour {
         }
 
         List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            currentColliderBounds.topRight + Vector2.down * verticalBuffer, currentColliderBounds.bottomRight + Vector2.up * verticalBuffer, Vector2.right, 
-            Mathf.Abs(rigid.velocity.x * Time.deltaTime) + horizontalBuffer, horizontalRayCount);
+            currentColliderBounds.topRight + Vector2.down * VerticalBuffer, currentColliderBounds.bottomRight + Vector2.up * VerticalBuffer, Vector2.right, 
+            Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
             return false;
@@ -222,8 +222,8 @@ public class CustomCollider2D : MonoBehaviour {
         }
 
         List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            currentColliderBounds.topLeft + Vector2.down * verticalBuffer, currentColliderBounds.bottomLeft + Vector2.up * verticalBuffer, 
-            Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + horizontalBuffer, horizontalRayCount);
+            currentColliderBounds.topLeft + Vector2.down * VerticalBuffer, currentColliderBounds.bottomLeft + Vector2.up * VerticalBuffer, 
+            Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Count == 0)
         {
             return false;

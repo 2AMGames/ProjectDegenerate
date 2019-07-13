@@ -106,12 +106,17 @@ public class MovementMechanics : MonoBehaviour {
     private int horizontalInput;
     private int verticalInput;
     private Animator anim;
-    private bool isCrouching = false;
- 
-    /// <summary>
-    ///  Can the player guard in his/her current state?
-    /// </summary>
-    private bool canGuard;
+
+    public bool IsCrouching { get; private set; }
+
+    public bool IsInAir
+    {
+        get
+        {
+            return rigid.isInAir; 
+        }
+    }
+
     private IEnumerator ForcedMovementCoroutine;
 
     #endregion main variables
@@ -152,18 +157,18 @@ public class MovementMechanics : MonoBehaviour {
             }
         }
 
-        if (!isCrouching && verticalInput <= -CROUCHING_THRESHOLD)
+        if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD)
         {
-            isCrouching = true;
+            IsCrouching = true;
             if (anim && anim.runtimeAnimatorController)
             {
-                anim.SetBool(IS_CROUCHING_PARAMETER, isCrouching);
+                anim.SetBool(IS_CROUCHING_PARAMETER, IsCrouching);
             }
         }
-        else if(isCrouching && verticalInput > -CROUCHING_THRESHOLD)
+        else if(IsCrouching && verticalInput > -CROUCHING_THRESHOLD)
         {
-            isCrouching = false;
-            anim.SetBool(IS_CROUCHING_PARAMETER, isCrouching);
+            IsCrouching = false;
+            anim.SetBool(IS_CROUCHING_PARAMETER, IsCrouching);
         }      
     }
 
@@ -206,7 +211,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     public void SetHorizontalInput(float horizontalInput)
     {
-        if (this.ignoreJoystickInputs || (canMoveWhileCrouching && isCrouching))
+        if (this.ignoreJoystickInputs || (canMoveWhileCrouching && IsCrouching))
         {
             horizontalInput = 0;
         }
@@ -510,12 +515,14 @@ public class MovementMechanics : MonoBehaviour {
     /// <summary>
     /// Player state when a hit is landed.
     /// </summary>
-    public void HandlePlayerHitEnemy(InteractionHandler.MoveData move)
+    public void HandlePlayerHitEnemy(InteractionHandler.MoveData move, bool didMoveHit)
     {
 
     }
 
     #endregion
+
+    #region coroutines
 
     private IEnumerator LoseUpwardMomentumFromJump()
     {
@@ -535,5 +542,7 @@ public class MovementMechanics : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
     }
+
+    #endregion
 
 }
