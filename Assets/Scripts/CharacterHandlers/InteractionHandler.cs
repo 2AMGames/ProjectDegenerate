@@ -110,7 +110,6 @@ public class InteractionHandler : MonoBehaviour
     {
 
         int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
-
         if (frames > 0)
         {
             Hitstun = frames;
