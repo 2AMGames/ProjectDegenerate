@@ -58,10 +58,10 @@ public class CustomPhysics2D : MonoBehaviour {
         if (useGravity) UpdateVelocityFromGravity();
 
 
-        foreach (CustomCollider2D customCollider in allCustomColliders)
-        {
-            customCollider.UpdateCollisionPhysics();
-        }
+        //foreach (CustomCollider2D customCollider in allCustomColliders)
+        //{
+        //    customCollider.UpdateCollisionPhysics();
+        //}
         UpdatePositionFromVelocity();
     }
 
