@@ -44,24 +44,31 @@ public class CustomBoxCollider2D : CustomCollider2D
         this.bounds = b;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        Vector2 u0 = origin;
-        Vector2 v0 = origin + direction * length;
+        
+        Vector2 v0 = direction * length;
 
-        if (LineCrossLine(u0, v0, bounds.bottomLeft, bounds.bottomRight))
+        if (LineCrossLine(origin, v0, bounds.bottomLeft, (bounds.bottomRight - bounds.bottomLeft)))
         {
             return true;
         }
-        if (LineCrossLine(u0, v0, bounds.bottomRight, bounds.topRight))
+        if (LineCrossLine(origin, v0, bounds.bottomRight, (bounds.topRight - bounds.bottomRight)))
         {
             return true;
         }
-        if (LineCrossLine(u0, v0, bounds.topRight, bounds.topLeft))
+        if (LineCrossLine(origin, v0, bounds.topRight, (bounds.topLeft - bounds.topRight)))
         {
             return true;
         }
-        if (LineCrossLine(u0, v0, bounds.topLeft, bounds.bottomLeft))
+        if (LineCrossLine(origin, v0, bounds.topLeft, (bounds.bottomLeft - bounds.topLeft)))
         {
             return true;
         }
@@ -73,7 +80,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     private bool LineCrossLine(Vector2 u0, Vector2 v0, Vector2 u1, Vector2 v1)
     {
-        float d1 = GetDeterminant(v0, v1);
+        float d1 = GetDeterminant(v1, v0);
         if (d1 == 0)
         {
             return false;
