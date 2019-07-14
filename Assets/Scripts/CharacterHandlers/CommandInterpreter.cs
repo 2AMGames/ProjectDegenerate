@@ -97,7 +97,7 @@ public class CommandInterpreter : MonoBehaviour
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
 
-    private DIRECTION currentDirection;
+    public DIRECTION CurrentDirection { get; private set; }
 
     private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
 
@@ -142,7 +142,7 @@ public class CommandInterpreter : MonoBehaviour
         framesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
 
-        currentDirection = DIRECTION.NEUTRAL;
+        CurrentDirection = DIRECTION.NEUTRAL;
         lastJoystickInput = Vector2Int.zero;
     }
 
@@ -209,9 +209,9 @@ public class CommandInterpreter : MonoBehaviour
         Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
         if (lastJoystickInput != currentJoystickVec)
         {
-            currentDirection = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent.Invoke(currentDirection);
-            directionalInputRecordList.Add(currentDirection);
+            CurrentDirection = InterpretJoystickAsDirection(currentJoystickVec);
+            OnDirectionSetEvent.Invoke(CurrentDirection);
+            directionalInputRecordList.Add(CurrentDirection);
             StartCoroutine(RemoveDirectionalInputAfterTime());
 
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);

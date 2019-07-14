@@ -195,12 +195,10 @@ public class HitboxManager : MonoBehaviour
         // Assuming we want to keep move properties in a 
         if (hurtHandler && !hitHandler.CharactersHit.Contains(hurtHandler))
         {
-            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove);
-        }
-
-        if (hitHandler)
-        {
-            hitHandler.OnHitEnemy(hitbox, hurtbox);
+            
+            bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
+            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove, didMoveHit);
+            hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
         }
     }
 
@@ -244,6 +242,44 @@ public class HitboxManager : MonoBehaviour
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
     {
         return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
+    }
+
+    private bool WasMoveBlocked(InteractionHandler.MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
+    {
+        CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CommandInterpreter.CurrentDirection;
+        bool wasGuarded = true;
+
+        wasGuarded &= hurtBox.InteractionHandler.Hitstun <= 0;
+        if (!wasGuarded)
+        {
+            return wasGuarded;
+        }
+
+        bool isCharacterCrouching = hurtBox.InteractionHandler.MovementMechanics.IsCrouching;
+        // Determine if blocked based on height
+        switch (moveThatHit.Height)
+        {
+            case InteractionHandler.MoveData.HitHeight.Low:
+                wasGuarded &= isCharacterCrouching;
+                break;
+            case InteractionHandler.MoveData.HitHeight.Mid:
+                wasGuarded &= !isCharacterCrouching;
+                break;
+            case InteractionHandler.MoveData.HitHeight.High:
+                wasGuarded &= !isCharacterCrouching;
+                break;
+            case InteractionHandler.MoveData.HitHeight.Air:
+                wasGuarded &= !isCharacterCrouching;
+                break;
+        }
+
+        if (!wasGuarded)
+        {
+            return wasGuarded;
+        }
+
+        return wasGuarded & (hitPlayerInputDirection == CommandInterpreter.DIRECTION.BACK || hitPlayerInputDirection == CommandInterpreter.DIRECTION.BACK_DOWN);
+
     }
     #endregion hitbox events 
 }

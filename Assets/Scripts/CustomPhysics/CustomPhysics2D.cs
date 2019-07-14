@@ -10,6 +10,7 @@ public class CustomPhysics2D : MonoBehaviour {
     #region const variables
     public const float GRAVITY_CONSTANT = 9.8f;
     #endregion const variables
+
     #region main variables
     [System.NonSerialized]
     public Vector2 velocity = Vector2.zero;
@@ -46,7 +47,6 @@ public class CustomPhysics2D : MonoBehaviour {
     public float terminalVelocity = 10;
     #endregion main variables
 
-
     #region monobehavoiur methods
     private void Awake()
     {
@@ -70,7 +70,6 @@ public class CustomPhysics2D : MonoBehaviour {
         gravityVector = gravityVector.normalized;
     }
     #endregion monobehaviour methods
-
 
     #region event methods
     /// <summary>
