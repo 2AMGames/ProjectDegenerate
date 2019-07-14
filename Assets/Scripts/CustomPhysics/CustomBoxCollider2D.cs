@@ -78,6 +78,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
+        
 
         float s = (1 / d1) * (((u0.x - u1.x) * v0.y) - ((u0.y - u1.y) * v0.x));
         float t = (1 / d1) * -((-(u0.x - u1.x) * v1.y) + ((u0.y - u1.y) * v1.x));
