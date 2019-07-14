@@ -60,4 +60,19 @@ public class ColliderManager : MonoBehaviour
         colliderList.Remove(collider);
     }
     #endregion collider interaction methods
+
+    public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance)
+    {
+        foreach (CustomCollider2D coll in colliderList)
+        {
+            if (coll.enabled)
+            {
+                if (coll.LineIntersectWithCollider(origin, direction, distance))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

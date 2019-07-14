@@ -7,8 +7,7 @@ using UnityEngine;
 /// Base class of our custom collider. This will check to see if there are any points where our collider intersects
 /// with other colliders.
 /// </summary>
-[RequireComponent(typeof(CustomPhysics2D))]
-public class CustomCollider2D : MonoBehaviour {
+public abstract class CustomCollider2D : MonoBehaviour {
 	[Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
     private const float HorizontalBuffer = .02f;
@@ -51,10 +50,7 @@ public class CustomCollider2D : MonoBehaviour {
     /// <param name="direction"></param>
     /// <param name="length"></param>
     /// <returns></returns>
-    public virtual bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
-    {
-        return false;
-    }
+    public abstract bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length);
 
 
     //private bool UpdateCollisionUp()
