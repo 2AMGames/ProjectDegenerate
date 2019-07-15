@@ -23,6 +23,7 @@ public class CommandInterpreter : MonoBehaviour
 
 
     #endregion enum
+
     #region const variabes
     private const int FRAMES_TO_BUFFER = 50;
     private const int DIRECTIONAL_INPUT_LENIENCY = 50;
@@ -102,6 +103,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
+
     #region player specific input keys
 
     private string LightPunchKey
@@ -152,13 +154,23 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    private string HorizontalInputKey
+    {
+        get
+        {
+            return PlayerController.MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
+        }
+    }
+
+    private string VerticalInputKey
+    {
+        get
+        {
+            return PlayerController.MOVEMENT_VERTICAL + (PlayerIndex + 1);
+        }
+    }
+
     #endregion
-
-    public DIRECTION CurrentDirection { get; private set; }
-
-    private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
-
-    private Vector2Int lastJoystickInput = Vector2Int.zero;
 
     #region action methods
     public UnityAction<string> OnButtonPressedEvent;
@@ -182,21 +194,11 @@ public class CommandInterpreter : MonoBehaviour
 
     public int PlayerIndex;
 
-    private string HorizontalInputKey
-    {
-        get
-        {
-            return PlayerController.MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
-        }
-    }
+    public DIRECTION CurrentDirection { get; private set; }
 
-    private string VerticalInputKey
-    {
-        get
-        {
-            return PlayerController.MOVEMENT_VERTICAL + (PlayerIndex + 1);
-        }
-    }
+    private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
+
+    private Vector2Int lastJoystickInput = Vector2Int.zero;
 
     #endregion
 
