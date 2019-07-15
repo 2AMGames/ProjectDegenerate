@@ -97,6 +97,8 @@ MonoBehaviour:
   players:
   - {fileID: 6728667214474030064}
   - {fileID: 6728667213063285794}
+  HitboxManager: {fileID: 6728667214325178033}
+  ColliderManager: {fileID: 6728667214325178032}
 --- !u!114 &6728667214325178033
 MonoBehaviour:
   m_ObjectHideFlags: 0

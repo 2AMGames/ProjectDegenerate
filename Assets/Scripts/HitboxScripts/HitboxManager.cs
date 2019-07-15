@@ -10,7 +10,7 @@ public class HitboxManager : MonoBehaviour
     #region monobehavoiur methods
     private void Awake()
     {
-        Overseer.Instance.hitboxManager = this;
+        Overseer.Instance.HitboxManager = this;
     }
 
     /// <summary>

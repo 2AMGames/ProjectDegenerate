@@ -13,7 +13,7 @@ public class ColliderManager : MonoBehaviour
     #region monobehaviour methods
     private void Awake()
     {
-        Overseer.Instance.colliderManager = this;
+        Overseer.Instance.ColliderManager = this;
     }
 
     private void Update()

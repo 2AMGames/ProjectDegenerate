@@ -26,9 +26,9 @@ public class Overseer : MonoBehaviour
 
     public PlayerController[] players;
 
-    public HitboxManager hitboxManager { get; set; }
+    public HitboxManager HitboxManager;
 
-    public ColliderManager colliderManager { get; set; }
+    public ColliderManager ColliderManager;
 
     #endregion
 
