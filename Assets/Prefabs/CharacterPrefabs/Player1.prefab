@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 489040385781029602}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.66, y: 1.52, z: 0}
-  m_LocalScale: {x: -1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 489040386471808064}
   - {fileID: 489040385881696256}
@@ -76,7 +76,7 @@ MonoBehaviour:
   maximumAirSpeed: 8
   airAcceleration: 20
   knockbackSpeed: 2
-  isFacingRight: 1
+  isFacingRight: 0
   timeToReachJumpApex: 0.35
   heightOfJump: 3
   fastFallScale: 1.7
