@@ -159,7 +159,6 @@ public class InteractionHandler : MonoBehaviour
         {
             --Hitstun;
             yield return new WaitForEndOfFrame();
-            print("hs: " + Hitstun);
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
