@@ -31,6 +31,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
     {
         UpdateBoundsOfCollider();
         rigid = GetComponent<CustomPhysics2D>();
+        if (rigid == null)
+        {
+            isStatic = true;
+        }
         Overseer.Instance.ColliderManager.AddColliderToManager(this);
     }
 
@@ -138,9 +142,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
+        Vector2 adjustedPoint1 = bounds.topRight + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = bounds.bottomRight + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            bounds.topRight + Vector2.down * VerticalBuffer, bounds.bottomRight + Vector2.up * VerticalBuffer, Vector2.right,
+            adjustedPoint1, adjustedPoint2, Vector2.right,
             Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {
@@ -169,9 +174,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
         {
             return false;
         }
-
+        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            bounds.topLeft + Vector2.down * VerticalBuffer, bounds.bottomLeft + Vector2.up * VerticalBuffer,
+            adjustedPoint1, adjustedPoint2,
             Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {

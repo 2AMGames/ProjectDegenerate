@@ -62,17 +62,20 @@ public class CustomPhysics2D : MonoBehaviour {
         }
     }
 
-
-
+    int i = 0;
     public void UpdatePhysics()
     {
-        if (useGravity) UpdateVelocityFromGravity();
-
 
         //foreach (CustomCollider2D customCollider in allCustomColliders)
         //{
         //    customCollider.UpdateCollisionPhysics();
         //}
+        i++;
+        if (velocity.x < 0)
+        {
+
+            print("Help" + i + "  " + velocity.x);
+        }
         UpdatePositionFromVelocity();
     }
 
@@ -99,8 +102,12 @@ public class CustomPhysics2D : MonoBehaviour {
     /// <summary>
     /// Updates the current velocity that is caused by gravitational force
     /// </summary>
-    private void UpdateVelocityFromGravity()
+    public void UpdateVelocityFromGravity()
     {
+        if (!useGravity)
+        {
+            return;
+        }
         if (useTerminalVelocity)
         {
             float dotGravity = Vector2.Dot(gravityVector, velocity);

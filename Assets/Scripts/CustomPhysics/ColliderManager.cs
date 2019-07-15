@@ -16,17 +16,22 @@ public class ColliderManager : MonoBehaviour
         Overseer.Instance.ColliderManager = this;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         foreach (CustomCollider2D collider in colliderList)
         {
             if (collider.enabled && !collider.isStatic)
             {
                 collider.UpdateBoundsOfCollider();
-                
             }
         }
-
+        foreach (CustomPhysics2D rigid in customPhysicsList)
+        {
+            if (rigid.enabled)
+            {
+                rigid.UpdateVelocityFromGravity();
+            }
+        }
         for (int i = 0; i < colliderList.Count; i++)
         {
             if (!colliderList[i].isStatic)
@@ -41,9 +46,13 @@ public class ColliderManager : MonoBehaviour
             //}
         }
 
+
         foreach (CustomPhysics2D rigid in customPhysicsList)
         {
-            rigid.UpdatePhysics();
+            if (rigid.enabled)
+            {
+                rigid.UpdatePhysics();
+            }
         }
     }
     #endregion monobehaviour methods
