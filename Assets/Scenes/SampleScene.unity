@@ -364,7 +364,7 @@ PrefabInstance:
     - target: {fileID: 7808090552154802651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 489040386075378927, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
@@ -386,7 +386,13 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 489040385781029625, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: useGravity
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 489040385781029629, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
 --- !u!1 &49535705
 GameObject:
@@ -1918,7 +1924,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 38577534}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
@@ -2666,31 +2672,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[4].OnHitKnockback.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[4].OnHitKnockback.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[4].OnGuardKnockback.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[1].OnHitKnockback.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[0].OnHitKnockback.x
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}

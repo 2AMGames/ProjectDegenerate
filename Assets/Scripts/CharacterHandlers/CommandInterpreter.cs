@@ -28,6 +28,12 @@ public class CommandInterpreter : MonoBehaviour
     private const int DIRECTIONAL_INPUT_LENIENCY = 50;
 
     /// <summary>
+    /// Player Key. Append this to the end of an input key to get the specific player that pressed the button.
+    /// Ex. LP_P1 = Player one light punch
+    /// </summary>
+    private const string PlayerKey = "_P";
+
+    /// <summary>
     /// Light Punch trigger
     /// </summary>
     public const string LP_ANIM_TRIGGER = "LP";
@@ -96,6 +102,57 @@ public class CommandInterpreter : MonoBehaviour
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
+    #region player specific input keys
+
+    private string LightPunchKey
+    {
+        get
+        {
+            return LP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    private string MediumPunchKey
+    {
+        get
+        {
+            return MP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    private string HardPunchKey
+    {
+        get
+        {
+            return HP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    private string LightKickKey
+    {
+        get
+        {
+            return LK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    private string MediumKickKey
+    {
+        get
+        {
+            return MK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    private string HardKickKey
+    {
+        get
+        {
+            return HK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+        }
+    }
+
+    #endregion
 
     public DIRECTION CurrentDirection { get; private set; }
 
@@ -123,6 +180,24 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     public CharacterStats characterStats { get; private set; }
 
+    public int PlayerIndex;
+
+    private string HorizontalInputKey
+    {
+        get
+        {
+            return PlayerController.MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
+        }
+    }
+
+    private string VerticalInputKey
+    {
+        get
+        {
+            return PlayerController.MOVEMENT_VERTICAL + (PlayerIndex + 1);
+        }
+    }
+
     #endregion
 
     #region monobehaviour method
@@ -148,69 +223,69 @@ public class CommandInterpreter : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown(LP_ANIM_TRIGGER))
+        if (Input.GetButtonDown(LightPunchKey))
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);
-            OnButtonPressedEvent.Invoke(LP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(LP_ANIM_TRIGGER))
+        else if (Input.GetButtonUp(LightPunchKey))
         {
-            OnbuttonReleasedEvent.Invoke(LP_ANIM_TRIGGER);
+            OnbuttonReleasedEvent?.Invoke(LP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(MP_ANIM_TRIGGER))
+        if (Input.GetButtonDown(MediumPunchKey))
         {
             OnButtonEventTriggered(MP_ANIM_TRIGGER);
-            OnButtonPressedEvent.Invoke(MP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(MP_ANIM_TRIGGER))
+        else if (Input.GetButtonUp(MediumPunchKey))
         {
-            OnbuttonReleasedEvent.Invoke(MP_ANIM_TRIGGER);
+            OnbuttonReleasedEvent?.Invoke(MP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(HP_ANIM_TRIGGER))
+        if (Input.GetButtonDown(HardPunchKey))
         {
             OnButtonEventTriggered(HP_ANIM_TRIGGER);
-            OnButtonPressedEvent.Invoke(HP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(HP_ANIM_TRIGGER))
+        else if (Input.GetButtonUp(HardPunchKey))
         {
-            OnbuttonReleasedEvent.Invoke(HP_ANIM_TRIGGER);
+            OnbuttonReleasedEvent?.Invoke(HP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(LK_ANIM_TRIGGER))
+        if (Input.GetButtonDown(LightKickKey))
         {
             OnButtonEventTriggered(LK_ANIM_TRIGGER);
-            OnButtonPressedEvent.Invoke(LK_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(LK_ANIM_TRIGGER))
+        else if (Input.GetButtonUp(LightKickKey))
         {
-            OnbuttonReleasedEvent.Invoke(LK_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(MK_ANIM_TRIGGER))
-        {
-            OnButtonPressedEvent.Invoke(MK_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(MK_ANIM_TRIGGER))
-        {
-            OnbuttonReleasedEvent.Invoke(MK_ANIM_TRIGGER);
+            OnbuttonReleasedEvent?.Invoke(LK_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(HK_ANIM_TRIGGER))
+        if (Input.GetButtonDown(MediumKickKey))
         {
-            OnButtonPressedEvent.Invoke(HK_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(HK_ANIM_TRIGGER))
+        else if (Input.GetButtonUp(MediumKickKey))
         {
-            OnbuttonReleasedEvent.Invoke(HK_ANIM_TRIGGER);
+            OnbuttonReleasedEvent?.Invoke(MK_ANIM_TRIGGER);
+        }
+
+        if (Input.GetButtonDown(HardKickKey))
+        {
+            OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
+        }
+        else if (Input.GetButtonUp(HardKickKey))
+        {
+            OnbuttonReleasedEvent?.Invoke(HK_ANIM_TRIGGER);
         }
 
         Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
         if (lastJoystickInput != currentJoystickVec)
         {
             CurrentDirection = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent.Invoke(CurrentDirection);
+            OnDirectionSetEvent?.Invoke(CurrentDirection);
             directionalInputRecordList.Add(CurrentDirection);
             StartCoroutine(RemoveDirectionalInputAfterTime());
 
@@ -233,8 +308,8 @@ public class CommandInterpreter : MonoBehaviour
 
     private Vector2Int GetJoystickInputAsVector2Int()
     {
-        float horizontal = Input.GetAxisRaw(PlayerController.MOVEMENT_HORIZONTAL);
-        float vertical = Input.GetAxisRaw(PlayerController.MOVEMENT_VERTICAL);
+        float horizontal = Input.GetAxisRaw(HorizontalInputKey);
+        float vertical = Input.GetAxisRaw(VerticalInputKey);
 
         int horizontalInputAsInt = 0;
         int verticalInputAsInt = 0;
