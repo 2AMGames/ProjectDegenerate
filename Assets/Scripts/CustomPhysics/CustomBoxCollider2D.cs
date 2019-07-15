@@ -114,7 +114,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         HashSet<CustomCollider2D> allLines = new HashSet<CustomCollider2D>();
         for (int i = 0; i < rayCount; i++)
         {
-            Overseer.Instance.colliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
+            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
             foreach (CustomCollider2D c in lineColliders)
             {
                 if (c != this)
