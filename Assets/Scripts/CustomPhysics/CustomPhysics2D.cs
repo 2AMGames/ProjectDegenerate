@@ -51,9 +51,20 @@ public class CustomPhysics2D : MonoBehaviour {
     private void Awake()
     {
         allCustomColliders = new List<CustomCollider2D>();
+        Overseer.Instance.ColliderManager.AddCustomPhysics(this);
     }
 
-    private void Update()
+    private void OnDestroy()
+    {
+        if (Overseer.Instance && Overseer.Instance.ColliderManager)
+        {
+            Overseer.Instance.ColliderManager.RemoveCustomPhysics(this);
+        }
+    }
+
+
+
+    public void UpdatePhysics()
     {
         if (useGravity) UpdateVelocityFromGravity();
 
