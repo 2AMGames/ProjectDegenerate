@@ -772,7 +772,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 489040384883500141}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1965207634}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
@@ -784,7 +784,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 489040384883500141}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1965207634}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
@@ -1970,7 +1970,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 489040384883500141}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1965207634}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
@@ -2469,6 +2469,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959519289}
   m_CullTransparentMesh: 0
+--- !u!1 &1965207634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 489040385781029602, guid: 5e7026d810020bf47a508cb6258c6372,
+    type: 3}
+  m_PrefabInstance: {fileID: 489040384883500141}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1965207635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965207634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTrigger: 0
+  isStatic: 0
+  boxColliderSize: {x: 0.7, y: 1.27}
+  boxColliderPosition: {x: 0, y: 0.59}
 --- !u!1 &1980597517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2577,7 +2599,6 @@ MonoBehaviour:
   players:
   - {fileID: 1886710215}
   - {fileID: 747253269}
-  hitboxManager: {fileID: 2069175430}
 --- !u!4 &2069175429
 Transform:
   m_ObjectHideFlags: 0
@@ -2799,7 +2820,8 @@ PrefabInstance:
       propertyPath: CharacterMoves.Array.data[0].OnHitKnockback.x
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 489040385781029629, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
 --- !u!1001 &6772816088755905800
 PrefabInstance:

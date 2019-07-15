@@ -63,16 +63,23 @@ public class ColliderManager : MonoBehaviour
 
     public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance)
     {
+        List<CustomCollider2D> list = new List<CustomCollider2D>();
+        return CheckLineIntersectWithCollider(origin, direction, distance, out list);
+    }
+
+    public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance, out List<CustomCollider2D> collidersHit)
+    {
+        collidersHit = new List<CustomCollider2D>();
         foreach (CustomCollider2D coll in colliderList)
         {
             if (coll.enabled)
             {
                 if (coll.LineIntersectWithCollider(origin, direction, distance))
                 {
-                    return true;
+                    collidersHit.Add(coll);
                 }
             }
         }
-        return false;
+        return collidersHit.Count >= 1;
     }
 }

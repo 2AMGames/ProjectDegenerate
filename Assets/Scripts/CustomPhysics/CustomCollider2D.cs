@@ -12,8 +12,11 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public bool isTrigger;
     private const float HorizontalBuffer = .02f;
     private const float VerticalBuffer = .02f;
+    public int verticalRayCount;
+    public int horizontalRayCount;
 
 
+    public CustomPhysics2D rigid { get; set; }
     public bool isStatic;
     /// <summary>
     /// 
@@ -53,130 +56,128 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public abstract bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length);
 
 
-    //private bool UpdateCollisionUp()
-    //{
-    //    if (rigid.velocity.y <= 0)
-    //    {
-    //        return false;
-    //    }
-    //    Vector2 adjustedPoint1 = currentColliderBounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
-    //    Vector2 adjustedPoint2 = currentColliderBounds.topRight + Vector2.left * HorizontalBuffer - VerticalBuffer * Vector2.up;
-    //    List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up, 
-    //        Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
-    //    if (tileCollidersThatWeHit.Count == 0)
-    //    {
-    //        return false;
-    //    }
-    //    float lowestYValue = tileCollidersThatWeHit[0].GetPointToBottom(transform.position).y;
-    //    foreach (TileCollider tile in tileCollidersThatWeHit)
-    //    {
-    //        Vector2 pointThatWeCollidedWith = tile.GetPointToBottom(transform.position);
-    //        if (pointThatWeCollidedWith.y < lowestYValue)
-    //        {
-    //            lowestYValue = pointThatWeCollidedWith.y;
-    //        }
-    //    }
+    private bool UpdateCollisionUp()
+    {
+        if (rigid.velocity.y <= 0)
+        {
+            return false;
+        }
+        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = bounds.topRight + Vector2.left * HorizontalBuffer - VerticalBuffer * Vector2.up;
+        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up,
+            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
+        if (tileCollidersThatWeHit.Length == 0)
+        {
+            return false;
+        }
+        float lowestYValue = tileCollidersThatWeHit[0].bounds.bottomRight.y;
+        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
+        {
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.bottomRight.y);
+            if (pointThatWeCollidedWith.y < lowestYValue)
+            {
+                lowestYValue = pointThatWeCollidedWith.y;
+            }
+        }
 
-    //    transform.position = new Vector3(transform.position.x, lowestYValue + (transform.position.y - currentColliderBounds.topLeft.y), transform.position.z);
-    //    UpdateColliderBounds();
-    //    return true;
-    //}
+        transform.position = new Vector3(transform.position.x, lowestYValue + (transform.position.y - bounds.topLeft.y), transform.position.z);
+        UpdateBoundsOfCollider();
+        return true;
+    }
 
-    //private bool UpdateCollisionDown()
-    //{
-    //    if (rigid.velocity.y > 0)
-    //    {
-    //        return false;
-    //    }
+    private bool UpdateCollisionDown()
+    {
+        if (rigid.velocity.y > 0)
+        {
+            return false;
+        }
 
-    //    Vector2 adjustedPoint1 = currentColliderBounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
-    //    Vector2 adjustedPoint2 = currentColliderBounds.bottomRight + Vector2.left * HorizontalBuffer + VerticalBuffer * Vector2.up;
-    //    List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down, 
-    //        Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
-    //    if (tileCollidersThatWeHit.Count == 0)
-    //    {
-    //        return false;
-    //    }
-    //    float highestYValue = tileCollidersThatWeHit[0].GetPointToTop(transform.position).y;
-    //    foreach (TileCollider tile in tileCollidersThatWeHit)
-    //    {
-    //        Vector2 pointThatWeCollidedWith = tile.GetPointToTop(transform.position);
-    //        if (pointThatWeCollidedWith.y > highestYValue)
-    //        {
-    //            highestYValue = pointThatWeCollidedWith.y;
-    //        }
-    //    }
+        Vector2 adjustedPoint1 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = bounds.bottomRight + Vector2.left * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down,
+            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
+        if (tileCollidersThatWeHit.Length == 0)
+        {
+            return false;
+        }
+        float highestYValue = tileCollidersThatWeHit[0].bounds.topLeft.y;
+        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
+        {
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.topLeft.y);
+            if (pointThatWeCollidedWith.y > highestYValue)
+            {
+                highestYValue = pointThatWeCollidedWith.y;
+            }
+        }
 
-    //    transform.position = new Vector3(transform.position.x, highestYValue + (transform.position.y - currentColliderBounds.bottomLeft.y), transform.position.z);
-    //    UpdateColliderBounds();//If we made it to the end, we wil need to update the collider bounds
-    //    return true;
-    //}
+        transform.position = new Vector3(transform.position.x, highestYValue + (transform.position.y - bounds.bottomLeft.y), transform.position.z);
+        UpdateBoundsOfCollider();//If we made it to the end, we wil need to update the collider bounds
+        return true;
+    }
 
-    //private bool UpdateCollisionRight()
-    //{
-    //    if (rigid.velocity.x <= 0)
-    //    {
-    //        return false;
-    //    }
+    private bool UpdateCollisionRight()
+    {
+        if (rigid.velocity.x <= 0)
+        {
+            return false;
+        }
 
-    //    List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-    //        currentColliderBounds.topRight + Vector2.down * VerticalBuffer, currentColliderBounds.bottomRight + Vector2.up * VerticalBuffer, Vector2.right, 
-    //        Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
-    //    if (tileCollidersThatWeHit.Count == 0)
-    //    {
-    //        return false;
-    //    }
-    //    print(tileCollidersThatWeHit[0].name);
-    //    float lowestXValue = tileCollidersThatWeHit[0].GetPointToLeft(transform.position).x;
-    //    foreach (TileCollider tile in tileCollidersThatWeHit)
-    //    {
-    //        Vector2 pointThatWeCollidedWith = tile.GetPointToLeft(transform.position);
-    //        if (pointThatWeCollidedWith.x < lowestXValue)
-    //        {
-    //            lowestXValue = pointThatWeCollidedWith.x;
-    //        }
-    //    }
+        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
+            bounds.topRight + Vector2.down * VerticalBuffer, bounds.bottomRight + Vector2.up * VerticalBuffer, Vector2.right,
+            Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
+        if (tileCollidersThatWeHit.Length == 0)
+        {
+            return false;
+        }
+        //print(tileCollidersThatWeHit[0].name);
+        float lowestXValue = tileCollidersThatWeHit[0].bounds.bottomLeft.x;
+        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
+        {
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomLeft.x, this.transform.position.y);
+            if (pointThatWeCollidedWith.x < lowestXValue)
+            {
+                lowestXValue = pointThatWeCollidedWith.x;
+            }
+        }
 
-    //    transform.position = new Vector3(lowestXValue + (transform.position.x - currentColliderBounds.topRight.x), transform.position.y, transform.position.z);
-    //    print(currentColliderBounds);
-    //    UpdateColliderBounds();
-    //    print(currentColliderBounds);
+        transform.position = new Vector3(lowestXValue + (transform.position.x - bounds.topRight.x), transform.position.y, transform.position.z);
+        UpdateBoundsOfCollider();
 
-    //    return true;
-    //}
+        return true;
+    }
 
-    //private bool UpdateCollisionLeft()
-    //{
-    //    if (rigid.velocity.x >= 0)
-    //    {
-    //        return false;
-    //    }
+    private bool UpdateCollisionLeft()
+    {
+        if (rigid.velocity.x >= 0)
+        {
+            return false;
+        }
 
-    //    List<TileCollider> tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-    //        currentColliderBounds.topLeft + Vector2.down * VerticalBuffer, currentColliderBounds.bottomLeft + Vector2.up * VerticalBuffer, 
-    //        Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
-    //    if (tileCollidersThatWeHit.Count == 0)
-    //    {
-    //        return false;
-    //    }
-    //    print(tileCollidersThatWeHit[0].name);
-    //    float highestXValue = tileCollidersThatWeHit[0].GetPointToRight(transform.position).x;
-    //    foreach (TileCollider tile in tileCollidersThatWeHit)
-    //    {
-    //        Vector2 pointThatWeCollidedWith = tile.GetPointToRight(transform.position);
-    //        if (pointThatWeCollidedWith.x > highestXValue)
-    //        {
-    //            highestXValue = pointThatWeCollidedWith.x;
-    //        }
-    //    }
+        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
+            bounds.topLeft + Vector2.down * VerticalBuffer, bounds.bottomLeft + Vector2.up * VerticalBuffer,
+            Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
+        if (tileCollidersThatWeHit.Length == 0)
+        {
+            return false;
+        }
+        //print(tileCollidersThatWeHit[0].name);
+        float highestXValue = tileCollidersThatWeHit[0].bounds.bottomRight.x;
+        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
+        {
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomRight.x, this.transform.position.y);
+            if (pointThatWeCollidedWith.x > highestXValue)
+            {
+                highestXValue = pointThatWeCollidedWith.x;
+            }
+        }
 
-    //    transform.position = new Vector3(highestXValue + (transform.position.x - currentColliderBounds.topLeft.x), transform.position.y, transform.position.z);
-    //    print(currentColliderBounds);
-    //    UpdateColliderBounds();
-    //    print(currentColliderBounds);
-    //    return true;
+        transform.position = new Vector3(highestXValue + (transform.position.x - bounds.topLeft.x), transform.position.y, transform.position.z);
+        UpdateBoundsOfCollider();
+        return true;
 
-    //}
+    }
+
+    public abstract CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount);
 
     /// <summary>
     /// Call this method to check if we intersect with a colider

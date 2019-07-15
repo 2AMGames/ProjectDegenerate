@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 489040385781029628}
   - component: {fileID: 489040385781029625}
   - component: {fileID: 489040385781029630}
-  - component: {fileID: 489040385781029629}
   - component: {fileID: 489040385781029624}
   - component: {fileID: 489040385781029627}
   - component: {fileID: 489040385781029626}
   - component: {fileID: 7808090552154802651}
   - component: {fileID: 7518321783212868651}
+  - component: {fileID: 1965207635}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Untagged
@@ -94,22 +94,6 @@ MonoBehaviour:
   ignoreJoystickInputs: 0
   canMoveWhileCrouching: 1
   ignoreJumpButton: 0
---- !u!114 &489040385781029629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abe57b4ea7b84b14f8ebfccfd5a12630, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  horizontalRayCount: 8
-  verticalRayCount: 8
-  centerPoint: {x: 0, y: 0.72}
-  colliderSize: {x: 0.67, y: 1.43}
 --- !u!95 &489040385781029624
 Animator:
   serializedVersion: 3
@@ -197,7 +181,7 @@ MonoBehaviour:
     OnGuardKnockback: {x: 0.75, y: 0}
     OnHitDamage: 2
     OnHitFrames: 5
-    OnHitKnockback: {x: 6, y: 0}
+    OnHitKnockback: {x: 2, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Medium_Punch
@@ -208,7 +192,7 @@ MonoBehaviour:
     OnGuardKnockback: {x: 1, y: 0}
     OnHitDamage: 6
     OnHitFrames: 6
-    OnHitKnockback: {x: 1.75, y: 0}
+    OnHitKnockback: {x: 4, y: 0}
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Height_Punch
@@ -238,14 +222,30 @@ MonoBehaviour:
     Magnitude: 0
     OnGuardDamage: 1
     OnGuardFrames: 5
-    OnGuardKnockback: {x: 3, y: 0}
+    OnGuardKnockback: {x: 2, y: 0}
     OnHitDamage: 2
     OnHitFrames: 5
-    OnHitKnockback: {x: 5, y: 0}
+    OnHitKnockback: {x: 1, y: 20}
     GuardBreak: 0
     AllowMultiHit: 0
   MoveHitPlayer: 0
   Hitstun: 0
+--- !u!114 &1965207635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489040385781029602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTrigger: 0
+  isStatic: 0
+  boxColliderSize: {x: 0.7, y: 1.27}
+  boxColliderPosition: {x: 0, y: 0.59}
 --- !u!1 &489040385881696257
 GameObject:
   m_ObjectHideFlags: 0
