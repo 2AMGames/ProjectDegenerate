@@ -49,6 +49,8 @@ public class InteractionHandler : MonoBehaviour
         }
     }
 
+    public IEnumerator HitstunCoroutine;
+
     #region Interaction Data
 
     // Has the last move we activated already hit a player
@@ -112,15 +114,24 @@ public class InteractionHandler : MonoBehaviour
         int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
         if (frames > 0)
         {
+            if (Hitstun <= 0)
+            {
+                string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
+                Animator.SetTrigger(triggerToSet);
+                Animator.SetBool(HITSTUN_TRIGGER, true);
+            }
+
             Hitstun = frames;
+
             CharacterStats.OnPlayerHitByEnemy(moveHitBy, didMoveLand);
             MovementMechanics.HandlePlayerHit(enemyHitbox, moveHitBy);
 
-            string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
-            Animator.SetTrigger(triggerToSet);
-            Animator.SetBool(HITSTUN_TRIGGER, true);
-
-            StartCoroutine(HandleHitstun());
+            if (HitstunCoroutine != null)
+            {
+                StopCoroutine(HitstunCoroutine);
+            }
+            HitstunCoroutine = HandleHitstun();
+            StartCoroutine(HitstunCoroutine);
         }
     }
 
@@ -144,11 +155,11 @@ public class InteractionHandler : MonoBehaviour
 
     private IEnumerator HandleHitstun()
     {
-
         while (Hitstun > 0)
         {
             --Hitstun;
             yield return new WaitForEndOfFrame();
+            print("hs: " + Hitstun);
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);

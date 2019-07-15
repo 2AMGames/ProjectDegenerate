@@ -35,7 +35,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     protected virtual void OnDestroy()
     {
-        Overseer.Instance.ColliderManager.RemoveColliderFromManager(this);
+        if (Overseer.Instance)
+        {
+            Overseer.Instance.ColliderManager.RemoveColliderFromManager(this);
+        }
     }
 
     /// <summary>
