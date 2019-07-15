@@ -52,6 +52,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         {
             horizontalRayCount = 2;
         }
+
     }
 
     /// <summary>
