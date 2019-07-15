@@ -248,7 +248,6 @@ public class HitboxManager : MonoBehaviour
     {
         CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CommandInterpreter.CurrentDirection;
         bool wasGuarded = true;
-        Debug.LogWarning("Direction: " + hitPlayerInputDirection);
         wasGuarded &= hurtBox.InteractionHandler.Hitstun <= 0;
         if (!wasGuarded)
         {
