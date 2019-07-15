@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
 
     #region const variables
 
-    public const string MOVEMENT_HORIZONTAL = "Horizontal";
-    public const string MOVEMENT_VERTICAL = "Vertical";
-    public const string MOVEMENT_JUMP = "Jump";
+    public const string MOVEMENT_HORIZONTAL = "Horizontal_P";
+    public const string MOVEMENT_VERTICAL = "Vertical_P";
+    public const string MOVEMENT_JUMP = "Jump_";
     public const float INPUT_THRESHOLD_RUNNING = .6f;
 
     #endregion
@@ -25,6 +25,22 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public int PlayerIndex;
 
+    private string HorizontalInputKey
+    {
+        get
+        {
+            return MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
+        }
+    }
+
+    private string VerticalInputKey
+    {
+        get
+        {
+            return MOVEMENT_VERTICAL + (PlayerIndex + 1);
+        }
+    }
+
     private PlayerController Opponent
     {
         get
@@ -39,8 +55,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        CharacterStats.MovementMechanics.SetHorizontalInput(Input.GetAxisRaw(MOVEMENT_HORIZONTAL));
-        CharacterStats.MovementMechanics.SetVerticalInput(Input.GetAxisRaw(MOVEMENT_VERTICAL));
+        CharacterStats.MovementMechanics.SetHorizontalInput(Input.GetAxisRaw(HorizontalInputKey));
+        CharacterStats.MovementMechanics.SetVerticalInput(Input.GetAxisRaw(VerticalInputKey));
         
         //if (Input.GetButtonDown(MOVEMENT_JUMP))
         //{
@@ -59,6 +75,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerIndex = index;
         CharacterStats.PlayerIndex = index;
+        CommandInterpreter.PlayerIndex = index;
     }
 
     #endregion

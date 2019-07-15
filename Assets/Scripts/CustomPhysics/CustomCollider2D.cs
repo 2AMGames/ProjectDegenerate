@@ -30,12 +30,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
     protected virtual void Awake()
     {
         UpdateBoundsOfCollider();
-        Overseer.Instance.colliderManager.AddColliderToManager(this);
+        Overseer.Instance.ColliderManager.AddColliderToManager(this);
     }
 
     protected virtual void OnDestroy()
     {
-        Overseer.Instance.colliderManager.RemoveColliderFromManager(this);
+        Overseer.Instance.ColliderManager.RemoveColliderFromManager(this);
     }
 
     /// <summary>

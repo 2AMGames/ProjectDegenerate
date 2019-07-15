@@ -36,27 +36,27 @@ public class Hitbox : MonoBehaviour
     #region monobehaviour methods
     private void Awake()
     {
-        Overseer.Instance.hitboxManager.AddHitboxToList(this);
+        Overseer.Instance.HitboxManager.AddHitboxToList(this);
         InteractionHandler = GetComponentInParent<InteractionHandler>();
 
     }
 
     private void OnDestroy()
     {
-        if (Overseer.Instance && Overseer.Instance.hitboxManager)
-            Overseer.Instance.hitboxManager.RemoveHitboxFromList(this);
+        if (Overseer.Instance && Overseer.Instance.HitboxManager)
+            Overseer.Instance.HitboxManager.RemoveHitboxFromList(this);
     }
 
     private void OnEnable()
     {
-        Overseer.Instance.hitboxManager.SetHitboxEnabled(this, true);
+        Overseer.Instance.HitboxManager.SetHitboxEnabled(this, true);
     }
 
     private void OnDisable()
     {
-        if (Overseer.Instance && Overseer.Instance.hitboxManager)
+        if (Overseer.Instance && Overseer.Instance.HitboxManager)
         {
-            Overseer.Instance.hitboxManager.SetHitboxEnabled(this, false);
+            Overseer.Instance.HitboxManager.SetHitboxEnabled(this, false);
         }
         else
         {
@@ -66,7 +66,7 @@ public class Hitbox : MonoBehaviour
         {
             if (hbox)
             {
-                Overseer.Instance.hitboxManager.DetermineHitboxExitHitboxEvent(this, hbox);
+                Overseer.Instance.HitboxManager.DetermineHitboxExitHitboxEvent(this, hbox);
             }
         }
         currentIntersectingHitboxes.Clear();
