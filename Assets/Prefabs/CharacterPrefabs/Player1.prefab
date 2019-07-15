@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 489040385781029625}
   - component: {fileID: 489040385781029630}
   - component: {fileID: 489040385781029624}
-  - component: {fileID: 489040385781029627}
   - component: {fileID: 489040385781029626}
   - component: {fileID: 7808090552154802651}
   - component: {fileID: 7518321783212868651}
@@ -53,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64792a47924876c4bb38b81715a4d8e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGravity: 0
+  useGravity: 1
   useTerminalVelocity: 1
   gravityVector: {x: 0, y: -1}
   gravityScale: 4.9979177
@@ -113,27 +112,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!50 &489040385781029627
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489040385781029602}
-  m_BodyType: 1
-  m_Simulated: 0
-  m_UseFullKinematicContacts: 1
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 0
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &489040385781029626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +222,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTrigger: 0
+  HorizontalBuffer: 0.1
+  VerticalBuffer: 0.1
+  verticalRayCount: 4
+  horizontalRayCount: 4
   isStatic: 0
   boxColliderSize: {x: 0.7, y: 1.27}
   boxColliderPosition: {x: 0, y: 0.59}

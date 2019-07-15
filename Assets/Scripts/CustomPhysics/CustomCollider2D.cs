@@ -10,8 +10,8 @@ using UnityEngine;
 public abstract class CustomCollider2D : MonoBehaviour {
 	[Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
-    private const float HorizontalBuffer = .02f;
-    private const float VerticalBuffer = .02f;
+    public float HorizontalBuffer = .02f;
+    public float VerticalBuffer = .02f;
     public int verticalRayCount;
     public int horizontalRayCount;
 
@@ -30,15 +30,29 @@ public abstract class CustomCollider2D : MonoBehaviour {
     protected virtual void Awake()
     {
         UpdateBoundsOfCollider();
+        rigid = GetComponent<CustomPhysics2D>();
         Overseer.Instance.ColliderManager.AddColliderToManager(this);
     }
 
     protected virtual void OnDestroy()
     {
-        if (Overseer.Instance)
+        if (Overseer.Instance && Overseer.Instance.ColliderManager)
         {
             Overseer.Instance.ColliderManager.RemoveColliderFromManager(this);
         }
+    }
+
+    protected virtual void OnValidate()
+    {
+        if (verticalRayCount < 2)
+        {
+            verticalRayCount = 2;
+        }
+        if (horizontalRayCount < 2)
+        {
+            horizontalRayCount = 2;
+        }
+
     }
 
     /// <summary>
@@ -82,7 +96,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 lowestYValue = pointThatWeCollidedWith.y;
             }
         }
-
+        rigid.velocity.y = 0;
         transform.position = new Vector3(transform.position.x, lowestYValue + (transform.position.y - bounds.topLeft.y), transform.position.z);
         UpdateBoundsOfCollider();
         return true;
@@ -112,7 +126,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 highestYValue = pointThatWeCollidedWith.y;
             }
         }
-
+        rigid.velocity.y = 0;
         transform.position = new Vector3(transform.position.x, highestYValue + (transform.position.y - bounds.bottomLeft.y), transform.position.z);
         UpdateBoundsOfCollider();//If we made it to the end, we wil need to update the collider bounds
         return true;
@@ -142,7 +156,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 lowestXValue = pointThatWeCollidedWith.x;
             }
         }
-
+        rigid.velocity.x = 0;
         transform.position = new Vector3(lowestXValue + (transform.position.x - bounds.topRight.x), transform.position.y, transform.position.z);
         UpdateBoundsOfCollider();
 
@@ -173,11 +187,19 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 highestXValue = pointThatWeCollidedWith.x;
             }
         }
-
+        rigid.velocity.x = 0;
         transform.position = new Vector3(highestXValue + (transform.position.x - bounds.topLeft.x), transform.position.y, transform.position.z);
         UpdateBoundsOfCollider();
         return true;
 
+    }
+
+    public virtual void CheckForCollisions()
+    {
+        UpdateCollisionDown();
+        UpdateCollisionUp();
+        UpdateCollisionLeft();
+        UpdateCollisionRight();
     }
 
     public abstract CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount);

@@ -9,7 +9,7 @@ using UnityEngine;
 public class ColliderManager : MonoBehaviour
 {
     private List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
-
+    private List<CustomPhysics2D> customPhysicsList = new List<CustomPhysics2D>();
     #region monobehaviour methods
     private void Awake()
     {
@@ -23,24 +23,49 @@ public class ColliderManager : MonoBehaviour
             if (collider.enabled && !collider.isStatic)
             {
                 collider.UpdateBoundsOfCollider();
+                
             }
         }
 
         for (int i = 0; i < colliderList.Count; i++)
         {
-            if (colliderList[i].enabled)
-            {
-                for (int j = i + 1; j < colliderList.Count - 1; j++)
-                {
-                    colliderList[i].IntersectWithCollider(colliderList[j]);
-                }
-            }
+            if (!colliderList[i].isStatic)
+                colliderList[i].CheckForCollisions();
+            //if (colliderList[i].enabled)
+            //{
+            //    for (int j = i + 1; j < colliderList.Count - 1; j++)
+            //    {
+            //        colliderList[i].IntersectWithCollider(colliderList[j]);
+            //    }
+                
+            //}
+        }
+
+        foreach (CustomPhysics2D rigid in customPhysicsList)
+        {
+            rigid.UpdatePhysics();
         }
     }
     #endregion monobehaviour methods
 
     #region collider interaction methods
+    
+    public void AddCustomPhysics(CustomPhysics2D rigid) 
+    {
+        if (customPhysicsList.Contains(rigid))
+        {
+            return;
+        }
+        customPhysicsList.Add(rigid);
+    }
 
+    public void RemoveCustomPhysics(CustomPhysics2D rigid)
+    {
+        if (customPhysicsList.Contains(rigid))
+        {
+            customPhysicsList.Remove(rigid);
+        }
+    }
 
     public void AddColliderToManager(CustomCollider2D collider)
     {
@@ -74,6 +99,7 @@ public class ColliderManager : MonoBehaviour
         {
             if (coll.enabled)
             {
+                DebugSettings.DrawLineDirection(origin, direction, distance, Color.red);
                 if (coll.LineIntersectWithCollider(origin, direction, distance))
                 {
                     collidersHit.Add(coll);

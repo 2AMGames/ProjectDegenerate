@@ -55,6 +55,16 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         
         Vector2 v0 = direction * length;
+        Vector2 endpoint = origin + v0;
+
+        Vector2 tr = bounds.topRight;
+        Vector2 bl = bounds.bottomLeft;
+
+        if (bl.x < origin.x && origin.x < tr.x && bl.y < origin.y && origin.y < tr.y)
+        {
+            return true;
+        }
+
 
         if (LineCrossLine(origin, v0, bounds.bottomLeft, (bounds.bottomRight - bounds.bottomLeft)))
         {
@@ -122,6 +132,10 @@ public class CustomBoxCollider2D : CustomCollider2D
                     allLines.Add(c);
                 } 
             }
+        }
+        if (allLines.Count > 0)
+        {
+
         }
         CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
         allLines.CopyTo(allValidColliderList);
