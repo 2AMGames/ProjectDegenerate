@@ -202,7 +202,23 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     public virtual void CheckForCollisions()
     {
-        UpdateCollisionDown();
+        
+        if (UpdateCollisionDown())
+        {
+            if (rigid.isInAir)
+            {
+                rigid.isInAir = false;
+                rigid.OnPhysicsObjectGrounded();
+            }
+        }
+        else
+        {
+            if (!rigid.isInAir)
+            {
+                rigid.isInAir = true;
+                rigid.OnPhysicsObjectAirborne();
+            }
+        }
         UpdateCollisionUp();
         UpdateCollisionLeft();
         UpdateCollisionRight();
