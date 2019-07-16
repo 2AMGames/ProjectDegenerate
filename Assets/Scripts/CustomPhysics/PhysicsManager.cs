@@ -8,6 +8,20 @@ using UnityEngine;
 /// </summary>
 public class PhysicsManager : MonoBehaviour
 {
+    private static PhysicsManager instance;
+
+    public static PhysicsManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = GameObject.FindObjectOfType<PhysicsManager>();
+            }
+            return instance;
+        }
+    }
+
     /// <summary>
     /// A list of all the custom colliders in the scene
     /// </summary>
@@ -17,6 +31,11 @@ public class PhysicsManager : MonoBehaviour
     /// </summary>
     private List<CustomPhysics2D> customPhysicsList = new List<CustomPhysics2D>();
     #region monobehaviour methods
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void LateUpdate()
     {
         foreach (CustomCollider2D collider in colliderList)
@@ -58,7 +77,10 @@ public class PhysicsManager : MonoBehaviour
     #endregion monobehaviour methods
 
     #region collider interaction methods
-    
+    /// <summary>
+    /// Add a physics object to the manager.
+    /// </summary>
+    /// <param name="rigid"></param>
     public void AddCustomPhysics(CustomPhysics2D rigid) 
     {
         if (customPhysicsList.Contains(rigid))
@@ -68,6 +90,10 @@ public class PhysicsManager : MonoBehaviour
         customPhysicsList.Add(rigid);
     }
 
+    /// <summary>
+    /// Remove a physics object from the manager if is present in the manager
+    /// </summary>
+    /// <param name="rigid"></param>
     public void RemoveCustomPhysics(CustomPhysics2D rigid)
     {
         if (customPhysicsList.Contains(rigid))
@@ -76,6 +102,10 @@ public class PhysicsManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Add a collider to the manager
+    /// </summary>
+    /// <param name="collider"></param>
     public void AddColliderToManager(CustomCollider2D collider)
     {
         if (colliderList.Contains(collider))
@@ -95,12 +125,27 @@ public class PhysicsManager : MonoBehaviour
     }
     #endregion collider interaction methods
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance)
     {
         List<CustomCollider2D> list = new List<CustomCollider2D>();
         return CheckLineIntersectWithCollider(origin, direction, distance, out list);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="distance"></param>
+    /// <param name="collidersHit"></param>
+    /// <returns></returns>
     public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance, out List<CustomCollider2D> collidersHit)
     {
         collidersHit = new List<CustomCollider2D>();

@@ -2016,7 +2016,7 @@ Transform:
   - {fileID: 1745326622}
   - {fileID: 916330931}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1585544855 stripped
 MonoBehaviour:
@@ -2755,6 +2755,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029630, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: isFacingRight
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
 --- !u!1001 &4928876089398127172
@@ -2807,7 +2817,7 @@ PrefabInstance:
     - target: {fileID: 6728667214325178034, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6728667214325178034, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
