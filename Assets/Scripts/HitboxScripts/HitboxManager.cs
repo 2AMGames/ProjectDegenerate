@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class HitboxManager : MonoBehaviour
 {
+    [System.NonSerialized]
+    /// <summary>
+    /// 
+    /// </summary>
     public List<Hitbox> allHitboxes = new List<Hitbox>();
+    [System.NonSerialized]
+    /// <summary>
+    /// 
+    /// </summary>
     public List<Hitbox> allActiveHitboxes = new List<Hitbox>();
 
     #region monobehavoiur methods
-    private void Awake()
-    {
-        Overseer.Instance.HitboxManager = this;
-    }
-
+   
     /// <summary>
     /// Adds a new hitbox to the list of all available hitboxes
     /// </summary>
@@ -23,12 +27,21 @@ public class HitboxManager : MonoBehaviour
         allHitboxes.Add(hitboxToAdd);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitboxToRemove"></param>
     public void RemoveHitboxFromList(Hitbox hitboxToRemove)
     {
         allActiveHitboxes.Remove(hitboxToRemove);
         allHitboxes.Remove(hitboxToRemove);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox"></param>
+    /// <param name="hitboxEnabled"></param>
     public void SetHitboxEnabled(Hitbox hitbox, bool hitboxEnabled)
     {
         if (hitboxEnabled)
@@ -156,6 +169,11 @@ public class HitboxManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="h1"></param>
+    /// <param name="h2"></param>
     public void DetermineHitboxExitHitboxEvent(Hitbox h1, Hitbox h2)
     {
         bool leaveHitbox = h1.RemoveIntersectingHitbox(h2);
@@ -183,6 +201,11 @@ public class HitboxManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox"></param>
+    /// <param name="hurtbox"></param>
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         //print(hitbox.name + " " + hurtbox.name + " entered!");
@@ -202,22 +225,42 @@ public class HitboxManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox"></param>
+    /// <param name="hurtbox"></param>
     private void OnHitboxStayHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         //print(hitbox.name + "  " + hurtbox.name + " stayed!");
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox"></param>
+    /// <param name="hurtbox"></param>
     private void OnHitboxExitHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
         //print(hitbox.name + "  " + hurtbox.name + " exited!");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox1"></param>
+    /// <param name="hitbox2"></param>
     private void OnHitboxEnterHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         //print(hitbox1.name + "  " + hitbox2.name + " entered!");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox1"></param>
+    /// <param name="hitbox2"></param>
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         print(hitbox1.name + "  " + hitbox2.name + " stayed!");
@@ -234,16 +277,34 @@ public class HitboxManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hitbox1"></param>
+    /// <param name="hitbox2"></param>
     private void OnHitboxExitHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         //print(hitbox1.name + "  " + hitbox2.name + " exited!");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="h1"></param>
+    /// <param name="h2"></param>
+    /// <returns></returns>
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
     {
         return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="moveThatHit"></param>
+    /// <param name="hitBox"></param>
+    /// <param name="hurtBox"></param>
+    /// <returns></returns>
     private bool WasMoveBlocked(InteractionHandler.MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
     {
         CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CommandInterpreter.CurrentDirection;

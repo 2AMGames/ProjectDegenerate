@@ -6,16 +6,17 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-public class ColliderManager : MonoBehaviour
+public class PhysicsManager : MonoBehaviour
 {
+    /// <summary>
+    /// A list of all the custom colliders in the scene
+    /// </summary>
     private List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
+    /// <summary>
+    /// A list of all the physics objects in the scene
+    /// </summary>
     private List<CustomPhysics2D> customPhysicsList = new List<CustomPhysics2D>();
     #region monobehaviour methods
-    private void Awake()
-    {
-        Overseer.Instance.ColliderManager = this;
-    }
-
     private void LateUpdate()
     {
         foreach (CustomCollider2D collider in colliderList)
@@ -45,7 +46,6 @@ public class ColliderManager : MonoBehaviour
                 
             //}
         }
-
 
         foreach (CustomPhysics2D rigid in customPhysicsList)
         {

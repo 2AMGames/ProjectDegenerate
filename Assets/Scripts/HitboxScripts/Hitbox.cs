@@ -101,6 +101,7 @@ public class Hitbox : MonoBehaviour
         #endif
     }
     #endregion monobehaviour methods
+
     /// <summary>
     /// Returns true if we successfully added the hitbox to the list
     /// </summary>

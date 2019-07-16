@@ -28,7 +28,7 @@ public class Overseer : MonoBehaviour
 
     public HitboxManager HitboxManager;
 
-    public ColliderManager ColliderManager;
+    public PhysicsManager ColliderManager;
 
     #endregion
 
