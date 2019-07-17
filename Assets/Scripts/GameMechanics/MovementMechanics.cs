@@ -150,12 +150,10 @@ public class MovementMechanics : MonoBehaviour {
         {
             UpdateCurrentSpeedOnGround();
         }
-        if (rigid.isInAir)
+
+        if (anim && anim.runtimeAnimatorController)
         {
-            if (anim && anim.runtimeAnimatorController)
-            {
-                anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.velocity.y);
-            }
+            anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.velocity.y);
         }
 
         if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD)
