@@ -77,23 +77,14 @@ public class Hitbox : MonoBehaviour
         UpdateBoxColliderPoints();
     }
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
             UpdateBoxColliderPoints();
         }
-        Color colorToDraw = Color.white;
-        switch (hitboxType)
-        {
-            case HitboxType.Hitbox:
-                colorToDraw = GIZMO_COLOR;
-                
-                break;
-            case HitboxType.Hurtbox:
-                colorToDraw = GIZMO_HURTBOX_COLOR;
-                break;
-        }
+        Color colorToDraw = GetColorToDrawGizmos();
+        
         Color colorWithTransparency = colorToDraw;
         colorWithTransparency.a = .2f;
         #if UNITY_EDITOR
@@ -101,6 +92,24 @@ public class Hitbox : MonoBehaviour
         #endif
     }
     #endregion monobehaviour methods
+
+    #region debug helper methods
+    protected Color GetColorToDrawGizmos()
+    {
+        Color colorToDraw = Color.white;
+        switch (hitboxType)
+        {
+            case HitboxType.Hitbox:
+                colorToDraw = GIZMO_COLOR;
+
+                break;
+            case HitboxType.Hurtbox:
+                colorToDraw = GIZMO_HURTBOX_COLOR;
+                break;
+        }
+        return colorToDraw;
+    }
+    #endregion debug helper methods
 
     /// <summary>
     /// Returns true if we successfully added the hitbox to the list
