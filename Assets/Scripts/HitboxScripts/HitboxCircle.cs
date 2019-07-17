@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-public class HitboxCircle : Hitbox
+public class HitboxCircle : HitboxRect
 {
     public float radius = 1;
 

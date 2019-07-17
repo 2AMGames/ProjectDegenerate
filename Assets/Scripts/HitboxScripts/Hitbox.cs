@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-/// <summary>
-/// Our custom collider hitbox class. Hitboxes do not interact with any other type of collider except for other hitboxes and hurtboxes
-/// Do not use this to interact with the environment or activate the triggers
-/// </summary>
-public class Hitbox : MonoBehaviour
+public abstract class Hitbox : MonoBehaviour
 {
     #region const variables
-    private static Color GIZMO_COLOR = new Color(204f / 255f, 0, 0);
-    private static Color GIZMO_HURTBOX_COLOR = new Color(51f / 255f, 1, 1);
+    protected static Color GIZMO_COLOR = new Color(204f / 255f, 0, 0);
+    protected static Color GIZMO_HURTBOX_COLOR = new Color(51f / 255f, 1, 1);
     #endregion const variables
-
     public enum HitboxType
     {
         Hitbox,
@@ -22,18 +16,13 @@ public class Hitbox : MonoBehaviour
 
     public HitboxType hitboxType = HitboxType.Hurtbox;
 
-    public Vector2 boxColliderSize = Vector2.one;
-    public Vector2 boxColliderPosition;
-
-    public HitboxBounds hitboxColliderBounds;
-
     public InteractionHandler InteractionHandler;
     /// <summary>
     /// Hitboxes that we are currently intersecting
     /// </summary>
     public List<Hitbox> currentIntersectingHitboxes = new List<Hitbox>();
 
-    #region monobehaviour methods
+    #region monobehaivour methods
     private void Awake()
     {
         Overseer.Instance.HitboxManager.AddHitboxToList(this);
@@ -62,7 +51,7 @@ public class Hitbox : MonoBehaviour
         {
             return;
         }
-        foreach (Hitbox hbox in currentIntersectingHitboxes.ToArray())
+        foreach (HitboxRect hbox in currentIntersectingHitboxes.ToArray())
         {
             if (hbox)
             {
@@ -71,28 +60,7 @@ public class Hitbox : MonoBehaviour
         }
         currentIntersectingHitboxes.Clear();
     }
-
-    private void OnValidate()
-    {
-        UpdateBoxColliderPoints();
-    }
-
-    protected virtual void OnDrawGizmos()
-    {
-        if (!Application.isPlaying)
-        {
-            UpdateBoxColliderPoints();
-        }
-        Color colorToDraw = GetColorToDrawGizmos();
-        
-        Color colorWithTransparency = colorToDraw;
-        colorWithTransparency.a = .2f;
-        #if UNITY_EDITOR
-        UnityEditor.Handles.DrawSolidRectangleWithOutline(hitboxColliderBounds.GetVertices(), colorWithTransparency, colorToDraw);
-        #endif
-    }
-    #endregion monobehaviour methods
-
+    #endregion
     #region debug helper methods
     protected Color GetColorToDrawGizmos()
     {
@@ -144,37 +112,7 @@ public class Hitbox : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// This should be called by our HitboxManager
-    /// </summary>
-    public void UpdateBoxColliderPoints()
-    {
-        hitboxColliderBounds = new HitboxBounds();
-        Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
+    public abstract void UpdateBoxColliderPoints();
+    public abstract bool CheckHitboxIntersect(Hitbox hboxToCheck);
 
-        hitboxColliderBounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-
-    }
-
-    public struct HitboxBounds
-    {
-        public Vector2 topLeft;
-        public Vector2 topRight;
-        public Vector2 bottomLeft;
-        public Vector2 bottomRight;
-
-        public Vector3[] GetVertices()
-        {
-            return new Vector3[]
-            {
-                topLeft,
-                topRight,
-                bottomRight,
-                bottomLeft,
-            };
-        }
-    }
 }

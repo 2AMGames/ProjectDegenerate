@@ -107,21 +107,7 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool CheckHitboxIntersect(Hitbox h1, Hitbox h2)
     {
-        Vector2 tl1 = h1.hitboxColliderBounds.topLeft;
-        Vector2 br1 = h1.hitboxColliderBounds.bottomRight;
-        Vector2 tl2 = h2.hitboxColliderBounds.topLeft;
-        Vector2 br2 = h2.hitboxColliderBounds.bottomRight;
-
-        if (tl1.x > br2.x || tl2.x > br1.x)
-        {
-            return false;
-        }
-        if (tl1.y < br2.y || tl2.y < br1.y)
-        {
-            return false;
-        }
-
-        return true;
+        return h1.CheckHitboxIntersect(h2);
     }
 
     #endregion monobehaviour methods
@@ -137,9 +123,9 @@ public class HitboxManager : MonoBehaviour
     {
         bool firstTimeIntersecting = h1.AddIntersectingHitbox(h2);
         firstTimeIntersecting &= h2.AddIntersectingHitbox(h1);
-        if (h1.hitboxType == Hitbox.HitboxType.Hitbox)
+        if (h1.hitboxType == HitboxRect.HitboxType.Hitbox)
         {
-            if (h2.hitboxType == Hitbox.HitboxType.Hurtbox)
+            if (h2.hitboxType == HitboxRect.HitboxType.Hurtbox)
             { 
                 OnHitboxStayHurtboxEvent(h1, h2);
                 if (firstTimeIntersecting)
@@ -147,7 +133,7 @@ public class HitboxManager : MonoBehaviour
                     OnHitboxEnteredHurtboxEvent(h1, h2);
                 }
             }
-            else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
+            else if (h2.hitboxType == HitboxRect.HitboxType.Hitbox)
             {
                 OnHitboxStayHitboxEvent(h1, h2);
                 if (firstTimeIntersecting)
@@ -156,9 +142,9 @@ public class HitboxManager : MonoBehaviour
                 }
             }
         }
-        else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
+        else if (h2.hitboxType == HitboxRect.HitboxType.Hitbox)
         {
-            if (h1.hitboxType == Hitbox.HitboxType.Hurtbox)
+            if (h1.hitboxType == HitboxRect.HitboxType.Hurtbox)
             {
                 OnHitboxStayHurtboxEvent(h2, h1);
                 if (firstTimeIntersecting)
@@ -180,20 +166,20 @@ public class HitboxManager : MonoBehaviour
         leaveHitbox = h2.RemoveIntersectingHitbox(h1);
         if (leaveHitbox)
         {
-            if (h1.hitboxType == Hitbox.HitboxType.Hitbox)
+            if (h1.hitboxType == HitboxRect.HitboxType.Hitbox)
             {
-                if (h2.hitboxType == Hitbox.HitboxType.Hurtbox)
+                if (h2.hitboxType == HitboxRect.HitboxType.Hurtbox)
                 {
                     OnHitboxExitHurtboxEvent(h1, h2);
                 }
-                else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
+                else if (h2.hitboxType == HitboxRect.HitboxType.Hitbox)
                 {
                     OnHitboxExitHitboxEvent(h1, h2);
                 }
             }
-            else if (h2.hitboxType == Hitbox.HitboxType.Hitbox)
+            else if (h2.hitboxType == HitboxRect.HitboxType.Hitbox)
             {
-                if (h1.hitboxType == Hitbox.HitboxType.Hurtbox)
+                if (h1.hitboxType == HitboxRect.HitboxType.Hurtbox)
                 {
                     OnHitboxExitHurtboxEvent(h2, h1);
                 }
@@ -295,7 +281,7 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
     {
-        return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == Hitbox.HitboxType.Hurtbox && h2.hitboxType == Hitbox.HitboxType.Hurtbox));
+        return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == HitboxRect.HitboxType.Hurtbox && h2.hitboxType == HitboxRect.HitboxType.Hurtbox));
     }
 
     /// <summary>
