@@ -79,6 +79,10 @@ public class HitboxRect : Hitbox
 
             return true;
         }
+        if (hboxToCheck is HitboxCircle)
+        {
+            return ((HitboxCircle)hboxToCheck).CircleIntersectRect(this);
+        }
         return false;
     }
 

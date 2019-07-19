@@ -40,7 +40,7 @@ public class HitboxCircle : Hitbox
 
         if (hboxToCheck is HitboxRect)
         {
-
+            CircleIntersectRect((HitboxRect)hboxToCheck);
         }
         else if (hboxToCheck is HitboxCircle)
         {
@@ -49,8 +49,22 @@ public class HitboxCircle : Hitbox
         return false;
     }
 
+    public bool CircleIntersectRect(HitboxRect hboxRect)
+    {
+        Vector2 point = transform.position;
+
+        Vector2 A = hboxRect.hitboxColliderBounds.topLeft;
+        Vector2 B = hboxRect.hitboxColliderBounds.topRight;
+        Vector2 D = hboxRect.hitboxColliderBounds.bottomLeft;
+        float APdotAB = Vector2.Dot(point - A, B - A);
+        float ABdotAB = Vector2.Dot(B - A, B - A);
+        float APdotAD = Vector2.Dot(point - A, D - A);
+        float ADdotAD = Vector2.Dot(D - A, D - A);
+        return 0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD;
+    }
+
     public override void UpdateBoxColliderPoints()
     {
-        throw new System.NotImplementedException();
+        return;
     }
 }
