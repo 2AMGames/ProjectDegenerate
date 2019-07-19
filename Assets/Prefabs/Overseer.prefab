@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6728667213063285795
 Transform:
   m_ObjectHideFlags: 0
@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 6728667214325178035}
   - component: {fileID: 6728667214325178033}
   - component: {fileID: 6728667214325178032}
+  - component: {fileID: 9207758887553089138}
   m_Layer: 0
   m_Name: Overseer
   m_TagString: Untagged
@@ -111,8 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f47cc6b2c7e8043acfe04940b78684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allHitboxes: []
-  allActiveHitboxes: []
 --- !u!114 &6728667214325178032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae1161873af5d1e46a7863653a91748d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9207758887553089138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6728667214325178036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ece018cf007276b4095749f2f5172e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainCamera: {fileID: 0}
 --- !u!1 &6728667214474030066
 GameObject:
   m_ObjectHideFlags: 0
