@@ -40,7 +40,7 @@ public class PhysicsManager : MonoBehaviour
     {
         foreach (CustomCollider2D collider in colliderList)
         {
-            if (collider.enabled && !collider.isStatic)
+            if (collider.enabled)
             {
                 collider.UpdateBoundsOfCollider();
             }
