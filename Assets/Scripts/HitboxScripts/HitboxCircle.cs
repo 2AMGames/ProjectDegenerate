@@ -5,12 +5,14 @@ using UnityEngine;
 /// <summary>
 /// 
 /// </summary>
-public class HitboxCircle : HitboxRect
+public class HitboxCircle : Hitbox
 {
     public float radius = 1;
 
+    
+
     #region monobehaviour methods
-    protected override void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
@@ -28,4 +30,27 @@ public class HitboxCircle : HitboxRect
 #endif
     }
     #endregion monobehaviour methods
+
+    public override bool CheckHitboxIntersect(Hitbox hboxToCheck)
+    {
+        if (hboxToCheck == null)
+        {
+            return false;
+        }
+
+        if (hboxToCheck is HitboxRect)
+        {
+
+        }
+        else if (hboxToCheck is HitboxCircle)
+        {
+            return this.radius + ((HitboxCircle)hboxToCheck).radius < Vector2.Distance(this.transform.position, hboxToCheck.transform.position);
+        }
+        return false;
+    }
+
+    public override void UpdateBoxColliderPoints()
+    {
+        throw new System.NotImplementedException();
+    }
 }
