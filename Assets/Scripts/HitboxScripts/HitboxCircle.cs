@@ -40,7 +40,7 @@ public class HitboxCircle : Hitbox
 
         if (hboxToCheck is HitboxRect)
         {
-            CircleIntersectRect((HitboxRect)hboxToCheck);
+            return CircleIntersectRect((HitboxRect)hboxToCheck);
         }
         else if (hboxToCheck is HitboxCircle)
         {
@@ -60,7 +60,18 @@ public class HitboxCircle : Hitbox
         float ABdotAB = Vector2.Dot(B - A, B - A);
         float APdotAD = Vector2.Dot(point - A, D - A);
         float ADdotAD = Vector2.Dot(D - A, D - A);
-        return 0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD;
+        if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
+            return true;
+        float rectX = hboxRect.hitboxColliderBounds.bottomLeft.x;
+        float recty = hboxRect.hitboxColliderBounds.bottomLeft.y;
+
+        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + hboxRect.boxColliderSize.x));
+        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + hboxRect.boxColliderSize.y));
+
+        float dX = point.x - nearestX;
+        float dY = point.y - nearestY;
+
+        return (dX * dX + dY * dY) < radius * radius;
     }
 
     public override void UpdateBoxColliderPoints()

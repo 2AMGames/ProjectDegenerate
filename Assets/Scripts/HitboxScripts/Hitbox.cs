@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(InteractionHandler))]
 public abstract class Hitbox : MonoBehaviour
 {
     #region const variables
