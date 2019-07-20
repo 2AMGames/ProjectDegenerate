@@ -6,6 +6,10 @@ public class CameraController : MonoBehaviour
 {
     #region const variables
 
+    private const float CameraBoundHorizontalBuffer = .2f;
+
+    private const float CameraYOffset = .40f;
+
     #endregion
 
     #region main variables
@@ -29,11 +33,13 @@ public class CameraController : MonoBehaviour
         {
             MainCamera = GetComponent<Camera>();
         }
+        SetCameraBounds();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         UpdateCameraPosition();
+        SetCameraBounds();
     }
 
     #endregion
@@ -49,10 +55,36 @@ public class CameraController : MonoBehaviour
             Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
             Vector3 displacement = (characterPosition + character2) / 2;
             Vector3 cameraPosition = displacement;
-           cameraPosition.z = z;
+            cameraPosition.z = z;
+            cameraPosition.y += CameraYOffset;
             MainCamera.transform.position = cameraPosition;
-            
+
         }
+    }
+
+    private void SetCameraBounds()
+    {
+        float cameraZValue = MainCamera.transform.position.z;
+        Vector3 leftEdge = MainCamera.ViewportToWorldPoint(new Vector3(0, .5f, -cameraZValue));
+        Vector3 rightEdge = MainCamera.ViewportToWorldPoint(new Vector3(1, .5f, -cameraZValue));
+
+        Debug.LogWarning("Left Edge: " + leftEdge);
+        Debug.LogWarning("Right Edge: " + rightEdge);
+
+         if (LeftCameraBound != null)
+        {
+            leftEdge.x += CameraBoundHorizontalBuffer;
+            leftEdge.y = 0f;
+            LeftCameraBound.transform.position = leftEdge;
+        }
+
+         if (RightCameraBound != null)
+        {
+            rightEdge.x -= CameraBoundHorizontalBuffer;
+            rightEdge.y = 0f;
+            RightCameraBound.transform.position = rightEdge;
+        }
+
     }
 
     #endregion
