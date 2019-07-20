@@ -44,7 +44,14 @@ public class CameraController : MonoBehaviour
     {
         if (MainCamera != null)
         {
-
+            float z = MainCamera.transform.position.z;
+            Vector2 characterPosition = Overseer.Instance.GetCharacterByIndex(0).CharacterStats.transform.position;
+            Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
+            Vector3 displacement = (characterPosition + character2) / 2;
+            Vector3 cameraPosition = displacement;
+           cameraPosition.z = z;
+            MainCamera.transform.position = cameraPosition;
+            
         }
     }
 
