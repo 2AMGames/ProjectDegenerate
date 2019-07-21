@@ -56,11 +56,9 @@ public class CameraController : MonoBehaviour
             Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
             Vector3 displacement = (character1 + character2) / 2;
 
-            displacement.z = MainCamera.transform.position.z;
-
             Vector3 cameraPosition = displacement;
-
             float highestY = Mathf.Max(character1.y, character2.y);
+
             cameraPosition.y = highestY;
             cameraPosition.z = MainCamera.transform.position.z;
 
