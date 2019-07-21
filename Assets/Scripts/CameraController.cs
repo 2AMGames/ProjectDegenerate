@@ -7,10 +7,9 @@ public class CameraController : MonoBehaviour
     #region const variables
 
     private const float CameraBoundHorizontalBuffer = .2f;
+    private const float CameraVerticalOffset = .75f;
 
-    private const float CameraYOffset = .40f;
-
-    private const float PlayerYDistanceThreshold = 2.5f;
+    public float HorizontalDistanceThreshold = 2.5f;
 
     #endregion
 
@@ -52,18 +51,27 @@ public class CameraController : MonoBehaviour
     {
         if (MainCamera != null)
         {
+
+            Vector3 cameraPosition = MainCamera.transform.position;
             Vector2 character1 = Overseer.Instance.GetCharacterByIndex(0).CharacterStats.transform.position;
             Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
-            Vector3 displacement = (character1 + character2) / 2;
 
-            Vector3 cameraPosition = displacement;
             float highestY = Mathf.Max(character1.y, character2.y);
+            cameraPosition.y = highestY + CameraVerticalOffset;
 
-            cameraPosition.y = highestY;
-            cameraPosition.z = MainCamera.transform.position.z;
+            Vector2 cameraCenterPoint = MainCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, -MainCamera.transform.position.z));
 
-            MainCamera.transform.position = cameraPosition;
+            float character1Distance = (character1 - cameraCenterPoint).x;
+            float character2Distance = (character2 - cameraCenterPoint).x;
 
+            float maxDistanceFromCameraCenter = Mathf.Max(Mathf.Abs(character1Distance), Mathf.Abs(character2Distance));
+  
+            if (maxDistanceFromCameraCenter > HorizontalDistanceThreshold)
+            {
+                cameraPosition.x = ((character1 + character2) / 2f).x;
+            }
+
+            MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, .75f);
         }
     }
 

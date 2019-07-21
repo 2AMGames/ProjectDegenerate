@@ -1176,6 +1176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ece018cf007276b4095749f2f5172e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HorizontalDistanceThreshold: 2.5
   MainCamera: {fileID: 519420031}
   LeftCameraBound: {fileID: 108982979}
   RightCameraBound: {fileID: 353011935}
