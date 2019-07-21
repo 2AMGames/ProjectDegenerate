@@ -32,6 +32,10 @@ public class MovementMechanics : MonoBehaviour {
 
     #endregion
 
+    #region action events
+    public UnityEngine.Events.UnityAction<bool> OnDirectionChanged;
+    #endregion action events
+
     #region main variables
     [Header("Mono References")]
     [Tooltip("A reference to the sprite renderer object")]
@@ -273,7 +277,15 @@ public class MovementMechanics : MonoBehaviour {
         //Vector2 facingDirection = transform.right.normalized;
         Vector2 opponentDirection = (opponentPosition.position - transform.position).normalized;
         //float dotProduct = Vector2.Dot(facingDirection, opponentDirection);
-        SetSpriteFlipped(opponentDirection.x >= 0.0f);
+        if (opponentDirection.x < 0 && isFacingRight)
+        {
+            SetSpriteFlipped(false);
+        }
+        if (opponentDirection.x > 0 && !isFacingRight)
+        {
+            SetSpriteFlipped(true);
+        }
+        //SetSpriteFlipped(opponentDirection.x >= 0.0f);
 
     }
 
@@ -360,6 +372,7 @@ public class MovementMechanics : MonoBehaviour {
             currentScale.x = Mathf.Abs(currentScale.x); ;
             spriteRenderer.transform.parent.localScale = currentScale;
         }
+        OnDirectionChanged?.Invoke(spriteFacingright);
     }
 
     private void CanPlayerInput(bool enabled)
