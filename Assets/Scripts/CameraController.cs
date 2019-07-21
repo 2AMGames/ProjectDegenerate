@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour
 
     private const float CameraYOffset = .40f;
 
+    private const float PlayerYDistanceThreshold = 2.5f;
+
     #endregion
 
     #region main variables
@@ -50,13 +52,18 @@ public class CameraController : MonoBehaviour
     {
         if (MainCamera != null)
         {
-            float z = MainCamera.transform.position.z;
-            Vector2 characterPosition = Overseer.Instance.GetCharacterByIndex(0).CharacterStats.transform.position;
+            Vector2 character1 = Overseer.Instance.GetCharacterByIndex(0).CharacterStats.transform.position;
             Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
-            Vector3 displacement = (characterPosition + character2) / 2;
+            Vector3 displacement = (character1 + character2) / 2;
+
+            displacement.z = MainCamera.transform.position.z;
+
             Vector3 cameraPosition = displacement;
-            cameraPosition.z = z;
-            cameraPosition.y += CameraYOffset;
+
+            float highestY = Mathf.Max(character1.y, character2.y);
+            cameraPosition.y = highestY;
+            cameraPosition.z = MainCamera.transform.position.z;
+
             MainCamera.transform.position = cameraPosition;
 
         }
@@ -67,9 +74,6 @@ public class CameraController : MonoBehaviour
         float cameraZValue = MainCamera.transform.position.z;
         Vector3 leftEdge = MainCamera.ViewportToWorldPoint(new Vector3(0, .5f, -cameraZValue));
         Vector3 rightEdge = MainCamera.ViewportToWorldPoint(new Vector3(1, .5f, -cameraZValue));
-
-        Debug.LogWarning("Left Edge: " + leftEdge);
-        Debug.LogWarning("Right Edge: " + rightEdge);
 
          if (LeftCameraBound != null)
         {
