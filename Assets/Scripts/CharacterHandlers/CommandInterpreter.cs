@@ -6,6 +6,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CharacterStats))]
 public class CommandInterpreter : MonoBehaviour
 {
+
+
     #region enum
 
     public enum DIRECTION
@@ -25,6 +27,8 @@ public class CommandInterpreter : MonoBehaviour
     #endregion enum
 
     #region const variabes
+    private const bool DEFAULT_DIRECTION_RIGHT = true;
+
     private const int FRAMES_TO_BUFFER = 50;
     private const int DIRECTIONAL_INPUT_LENIENCY = 50;
 
@@ -99,7 +103,7 @@ public class CommandInterpreter : MonoBehaviour
         DIRECTION.FORWARD_DOWN,
     };
 
-    private List<DIRECTION> directionalInputRecordList = new List<DIRECTION>();
+    private List<DirectionalinputStruct> directionalInputRecordList = new List<DirectionalinputStruct>();
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
@@ -192,13 +196,18 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     public CharacterStats characterStats { get; private set; }
 
+    private bool isFacingRight { get { return characterStats.MovementMechanics.isFacingRight; } }
+
     public int PlayerIndex;
 
-    public DIRECTION CurrentDirection { get; private set; }
+    private bool previousDirectionFasingRight = false;
 
+    public DIRECTION CurrentDirection { get { return currentDirectionalInputStruct.direction; } }
+
+    private DirectionalinputStruct currentDirectionalInputStruct;
     private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
 
-    private Vector2Int lastJoystickInput = Vector2Int.zero;
+    private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
     #endregion
 
@@ -206,6 +215,7 @@ public class CommandInterpreter : MonoBehaviour
     private void Awake()
     {
         characterStats = GetComponent<CharacterStats>();
+
 
         framesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
 
@@ -219,8 +229,17 @@ public class CommandInterpreter : MonoBehaviour
         framesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
         framesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
 
-        CurrentDirection = DIRECTION.NEUTRAL;
-        lastJoystickInput = Vector2Int.zero;
+        currentDirectionalInputStruct.direction = DIRECTION.NEUTRAL;
+        currentDirectionalInputStruct.directionInput = Vector2Int.zero;
+
+    }
+
+    private void Start()
+    {
+        if (characterStats)
+        {
+            characterStats.MovementMechanics.OnDirectionChanged += this.OnDirectionChanged;
+        }
     }
 
     private void Update()
@@ -286,13 +305,16 @@ public class CommandInterpreter : MonoBehaviour
         Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
         if (lastJoystickInput != currentJoystickVec)
         {
-            CurrentDirection = InterpretJoystickAsDirection(currentJoystickVec);
+            currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
             OnDirectionSetEvent?.Invoke(CurrentDirection);
-            directionalInputRecordList.Add(CurrentDirection);
+            DirectionalinputStruct dInput = new DirectionalinputStruct();
+            dInput.direction = CurrentDirection;
+            dInput.directionInput = currentJoystickVec;
+            directionalInputRecordList.Add(dInput);
             StartCoroutine(RemoveDirectionalInputAfterTime());
 
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);
-            lastJoystickInput = currentJoystickVec;
+            currentDirectionalInputStruct.directionInput = currentJoystickVec;
 
         }
     }
@@ -334,7 +356,7 @@ public class CommandInterpreter : MonoBehaviour
     /// <returns></returns>
     private DIRECTION InterpretJoystickAsDirection(Vector2Int joystickInput)
     {
-        int x = joystickInput.x;
+        int x = joystickInput.x * (characterStats.MovementMechanics.isFacingRight ? 1 : -1 );
         int y = joystickInput.y;
 
         if (x == 0)
@@ -457,7 +479,7 @@ public class CommandInterpreter : MonoBehaviour
             passedInput = true;
             for (int j = 0; j < inputArray.Length; j++)
             {
-                if (directionalInputRecordList[i + j] != inputArray[j])
+                if (directionalInputRecordList[i + j].direction != inputArray[j])
                 {
                     passedInput = false;
                     break;
@@ -472,11 +494,37 @@ public class CommandInterpreter : MonoBehaviour
     }
 
     /// <summary>
+    /// Whenever our direction is flipped this method should be called to adjust the 
+    /// inputs to appropriately match the direction of the player
+    /// </summary>
+    /// <param name="isFacingRight"></param>
+    private void OnDirectionChanged(bool isFacingRight)
+    {
+        currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentDirectionalInputStruct.directionInput);
+        DirectionalinputStruct dInput;
+        for (int i = 0; i < directionalInputRecordList.Count; i++)
+        {
+            dInput = directionalInputRecordList[i];
+            dInput.direction = InterpretJoystickAsDirection(dInput.directionInput);
+            directionalInputRecordList[i] = dInput;
+        }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="direction"></param>
     private void PrintDirectionalArray(DIRECTION direction)
     {
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private struct DirectionalinputStruct
+    {
+        public Vector2Int directionInput;
+        public DIRECTION direction;
     }
 }
