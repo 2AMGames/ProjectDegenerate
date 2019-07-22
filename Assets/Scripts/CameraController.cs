@@ -61,7 +61,6 @@ public class CameraController : MonoBehaviour
     {
         if (MainCamera != null)
         {
-
             Vector3 cameraPosition = MainCamera.transform.position;
             Vector2 character1 = Overseer.Instance.GetCharacterByIndex(0).CharacterStats.transform.position;
             Vector2 character2 = Overseer.Instance.GetCharacterByIndex(1).CharacterStats.transform.position;
@@ -71,8 +70,8 @@ public class CameraController : MonoBehaviour
 
             cameraPosition.x = (character1.x + character2.x) / 2f;
 
-            float distanceFromLeftBound = -10f - LeftCameraBound.transform.position.x;
-            float distanceFromRightBound = 10f - RightCameraBound.transform.position.x;
+            float distanceFromLeftBound = -CameraWorldBounds - LeftCameraBound.transform.position.x;
+            float distanceFromRightBound = CameraWorldBounds - RightCameraBound.transform.position.x;
 
             if (LeftCameraBound.transform.position.x < -CameraWorldBounds)
             {
