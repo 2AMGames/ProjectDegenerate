@@ -1176,10 +1176,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ece018cf007276b4095749f2f5172e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HorizontalDistanceThreshold: 3.5
   MainCamera: {fileID: 519420031}
   LeftCameraBound: {fileID: 108982979}
   RightCameraBound: {fileID: 353011935}
+  CameraWorldBounds: 10
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -2907,15 +2907,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: -1.5
+      propertyPath: CharacterMoves.Array.data[2].MoveName
+      value: Heavy_Punch
       objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029630, guid: 5e7026d810020bf47a508cb6258c6372,
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
-      propertyPath: isFacingRight
-      value: 1
+      propertyPath: CharacterMoves.Array.data[1].GuardBreak
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
