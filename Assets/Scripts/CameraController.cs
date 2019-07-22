@@ -8,8 +8,7 @@ public class CameraController : MonoBehaviour
 
     private const float CameraBoundHorizontalBuffer = .2f;
     private const float CameraVerticalOffset = .75f;
-
-    public float HorizontalDistanceThreshold = 2.5f;
+    private const float HorizontalDistanceThreshold = .15f;
 
     #endregion
 
@@ -23,6 +22,9 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]
     public CustomBoxCollider2D RightCameraBound;
+
+    // How far from the center can the camera travel?
+    public float CameraWorldBounds = 10f;
 
     #endregion
 
@@ -43,6 +45,14 @@ public class CameraController : MonoBehaviour
         SetCameraBounds();
     }
 
+    private void OnValidate()
+    {
+        if (CameraWorldBounds < 10f)
+        {
+            CameraWorldBounds = 10f;
+        }
+    }
+
     #endregion
 
     #region private methods
@@ -59,19 +69,30 @@ public class CameraController : MonoBehaviour
             float highestY = Mathf.Max(character1.y, character2.y);
             cameraPosition.y = highestY + CameraVerticalOffset;
 
-            Vector2 cameraCenterPoint = MainCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, -MainCamera.transform.position.z));
+            cameraPosition.x = (character1.x + character2.x) / 2f;
 
-            float character1Distance = (character1 - cameraCenterPoint).x;
-            float character2Distance = (character2 - cameraCenterPoint).x;
+            float distanceFromLeftBound = -10f - LeftCameraBound.transform.position.x;
+            float distanceFromRightBound = 10f - RightCameraBound.transform.position.x;
 
-            float maxDistanceFromCameraCenter = Mathf.Max(Mathf.Abs(character1Distance), Mathf.Abs(character2Distance));
-  
-            if (maxDistanceFromCameraCenter > HorizontalDistanceThreshold)
+            if (LeftCameraBound.transform.position.x < -CameraWorldBounds)
             {
-                cameraPosition.x = ((character1 + character2) / 2f).x;
+                cameraPosition.x += -CameraWorldBounds - LeftCameraBound.transform.position.x; ;
+            }
+            else if (Mathf.Abs(distanceFromLeftBound) < HorizontalDistanceThreshold && cameraPosition.x < MainCamera.transform.position.x)
+            {
+                cameraPosition.x = MainCamera.transform.position.x;
             }
 
-            MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, .75f);
+            if (RightCameraBound.transform.position.x > CameraWorldBounds)
+            {
+                cameraPosition.x -= (RightCameraBound.transform.position.x - CameraWorldBounds);
+            }
+            else if (Mathf.Abs(distanceFromRightBound) < HorizontalDistanceThreshold && cameraPosition.x > MainCamera.transform.position.x)
+            {
+                cameraPosition.x = MainCamera.transform.position.x;
+            }
+
+            MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, .5f);
         }
     }
 

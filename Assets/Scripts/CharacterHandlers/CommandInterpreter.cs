@@ -200,7 +200,7 @@ public class CommandInterpreter : MonoBehaviour
 
     public int PlayerIndex;
 
-    private bool previousDirectionFasingRight = false;
+    private bool previousDirectionFacingRight = false;
 
     public DIRECTION CurrentDirection { get { return currentDirectionalInputStruct.direction; } }
 
