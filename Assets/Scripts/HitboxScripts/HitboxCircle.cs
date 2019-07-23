@@ -9,14 +9,14 @@ public class HitboxCircle : Hitbox
 {
     public float radius = 1;
 
-    
+    public CustomCollider2D.BoundsCircle bounds;
 
     #region monobehaviour methods
     protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
-            UpdateBoxColliderPoints();
+            UpdateColliderBounds();
         }
         Color colorToDraw = GetColorToDrawGizmos();
         Color colorToDrawTransparent = colorToDraw;
@@ -44,7 +44,7 @@ public class HitboxCircle : Hitbox
         }
         else if (hboxToCheck is HitboxCircle)
         {
-            return this.radius + ((HitboxCircle)hboxToCheck).radius < Vector2.Distance(this.transform.position, hboxToCheck.transform.position);
+            return false;
         }
         return false;
     }
@@ -74,8 +74,13 @@ public class HitboxCircle : Hitbox
         return (dX * dX + dY * dY) < radius * radius;
     }
 
-    public override void UpdateBoxColliderPoints()
+    /// <summary>
+    /// 
+    /// </summary>
+    public override void UpdateColliderBounds()
     {
-        return;
+        bounds = new CustomCollider2D.BoundsCircle();
+        bounds.center = this.transform.position;
+        bounds.radius = this.radius;
     }
 }

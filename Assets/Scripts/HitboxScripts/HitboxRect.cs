@@ -12,7 +12,7 @@ public class HitboxRect : Hitbox
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
 
-    public HitboxBounds hitboxColliderBounds;
+    public CustomCollider2D.ColliderBounds hitboxColliderBounds;
 
    
 
@@ -21,14 +21,14 @@ public class HitboxRect : Hitbox
 
     private void OnValidate()
     {
-        UpdateBoxColliderPoints();
+        UpdateColliderBounds();
     }
 
     protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
-            UpdateBoxColliderPoints();
+            UpdateColliderBounds();
         }
         Color colorToDraw = GetColorToDrawGizmos();
         
@@ -46,9 +46,9 @@ public class HitboxRect : Hitbox
     /// <summary>
     /// This should be called by our HitboxManager
     /// </summary>
-    public override void UpdateBoxColliderPoints()
+    public override void UpdateColliderBounds()
     {
-        hitboxColliderBounds = new HitboxBounds();
+        hitboxColliderBounds = new CustomCollider2D.ColliderBounds();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
         hitboxColliderBounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
@@ -86,22 +86,5 @@ public class HitboxRect : Hitbox
         return false;
     }
 
-    public struct HitboxBounds
-    {
-        public Vector2 topLeft;
-        public Vector2 topRight;
-        public Vector2 bottomLeft;
-        public Vector2 bottomRight;
-
-        public Vector3[] GetVertices()
-        {
-            return new Vector3[]
-            {
-                topLeft,
-                topRight,
-                bottomRight,
-                bottomLeft,
-            };
-        }
-    }
+    
 }

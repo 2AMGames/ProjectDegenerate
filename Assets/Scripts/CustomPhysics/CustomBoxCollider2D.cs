@@ -216,8 +216,8 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        Vector2 adjustedPoint1 = bounds.topRight + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = bounds.bottomRight + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint1 = bounds.topRight - Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint2 = bounds.bottomRight - Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
             adjustedPoint1, adjustedPoint2, Vector2.right,
             Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
@@ -252,7 +252,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
+        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
         Vector2 adjustedPoint2 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
             adjustedPoint1, adjustedPoint2,

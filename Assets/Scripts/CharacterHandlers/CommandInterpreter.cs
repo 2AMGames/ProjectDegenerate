@@ -286,6 +286,7 @@ public class CommandInterpreter : MonoBehaviour
 
         if (Input.GetButtonDown(MediumKickKey))
         {
+            OnButtonEventTriggered(MK_ANIM_TRIGGER);
             OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
         }
         else if (Input.GetButtonUp(MediumKickKey))
@@ -295,6 +296,7 @@ public class CommandInterpreter : MonoBehaviour
 
         if (Input.GetButtonDown(HardKickKey))
         {
+            OnButtonEventTriggered(HK_ANIM_TRIGGER);
             OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
         }
         else if (Input.GetButtonUp(HardKickKey))

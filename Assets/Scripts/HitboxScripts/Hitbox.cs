@@ -113,7 +113,7 @@ public abstract class Hitbox : MonoBehaviour
         return false;
     }
 
-    public abstract void UpdateBoxColliderPoints();
+    public abstract void UpdateColliderBounds();
     public abstract bool CheckHitboxIntersect(Hitbox hboxToCheck);
 
 }
