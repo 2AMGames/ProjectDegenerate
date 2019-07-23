@@ -168,4 +168,52 @@ public abstract class CustomCollider2D : MonoBehaviour {
             };
         }
     }
+
+    public struct BoundsCircle
+    {
+        public Vector2 center;
+        public float radius;
+    }
+
+
+    #region static methods
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public static bool RectIntersectRect(ColliderBounds r1, ColliderBounds r2, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+
+        return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="r"></param>
+    /// <param name="c"></param>
+    /// <param name="intersectionPoint"></param>
+    /// <returns></returns>
+    public static bool RectIntersectCircle(ColliderBounds r, BoundsCircle c, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+
+        return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="c1"></param>
+    /// <param name="c2"></param>
+    /// <param name="intersectionPoint"></param>
+    /// <returns></returns>
+    public static bool CircleIntersectCircle(BoundsCircle c1, BoundsCircle c2, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+
+        return false;
+    }
+    #endregion static methods
 }
