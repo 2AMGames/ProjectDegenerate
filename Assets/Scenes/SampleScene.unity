@@ -2910,7 +2910,7 @@ PrefabInstance:
     - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: CharacterMoves.Array.data[2].MoveName
-      value: Heavy_Punch
+      value: Hard_Punch
       objectReference: {fileID: 0}
     - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
