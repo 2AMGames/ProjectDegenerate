@@ -45,7 +45,7 @@ public class PhysicsManager : MonoBehaviour
             {
                 if (CustomCollider2D.RectIntersectRect(colliderList[i].bounds, colliderList[j].bounds, out vec))
                 {
-                    print("I made it here");
+                    //print("I made it here");
                     if (colliderList[i].isStatic)
                     {
                         colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
