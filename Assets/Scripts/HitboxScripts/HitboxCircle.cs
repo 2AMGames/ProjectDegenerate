@@ -38,40 +38,16 @@ public class HitboxCircle : Hitbox
             return false;
         }
 
+        Vector2 intersectVec;
         if (hboxToCheck is HitboxRect)
         {
-            return CircleIntersectRect((HitboxRect)hboxToCheck);
+            return CustomCollider2D.RectIntersectCircle(((HitboxRect)hboxToCheck).hitboxColliderBounds, this.bounds, out intersectVec);
         }
         else if (hboxToCheck is HitboxCircle)
         {
-            return false;
+            return CustomCollider2D.CircleIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds, out intersectVec);
         }
         return false;
-    }
-
-    public bool CircleIntersectRect(HitboxRect hboxRect)
-    {
-        Vector2 point = transform.position;
-
-        Vector2 A = hboxRect.hitboxColliderBounds.topLeft;
-        Vector2 B = hboxRect.hitboxColliderBounds.topRight;
-        Vector2 D = hboxRect.hitboxColliderBounds.bottomLeft;
-        float APdotAB = Vector2.Dot(point - A, B - A);
-        float ABdotAB = Vector2.Dot(B - A, B - A);
-        float APdotAD = Vector2.Dot(point - A, D - A);
-        float ADdotAD = Vector2.Dot(D - A, D - A);
-        if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
-            return true;
-        float rectX = hboxRect.hitboxColliderBounds.bottomLeft.x;
-        float recty = hboxRect.hitboxColliderBounds.bottomLeft.y;
-
-        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + hboxRect.boxColliderSize.x));
-        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + hboxRect.boxColliderSize.y));
-
-        float dX = point.x - nearestX;
-        float dY = point.y - nearestY;
-
-        return (dX * dX + dY * dY) < radius * radius;
     }
 
     /// <summary>

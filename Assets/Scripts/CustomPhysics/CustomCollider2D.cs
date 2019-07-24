@@ -184,8 +184,21 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public static bool RectIntersectRect(ColliderBounds r1, ColliderBounds r2, out Vector2 intersectionPoint)
     {
         intersectionPoint = Vector2.zero;
+        Vector2 tl1 = r1.topLeft;
+        Vector2 br1 = r1.bottomRight;
+        Vector2 tl2 = r2.topLeft;
+        Vector2 br2 = r2.bottomRight;
 
-        return false;
+        if (tl1.x > br2.x || tl2.x > br1.x)
+        {
+            return false;
+        }
+        if (tl1.y < br2.y || tl2.y < br1.y)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -199,7 +212,30 @@ public abstract class CustomCollider2D : MonoBehaviour {
     {
         intersectionPoint = Vector2.zero;
 
-        return false;
+        Vector2 point = c.center;
+
+        Vector2 A = r.topLeft;
+        Vector2 B = r.topRight;
+        Vector2 D = r.bottomLeft;
+        float height = r.topLeft.y - r.bottomLeft.y;
+        float width = r.topRight.x - r.topRight.x;
+        float APdotAB = Vector2.Dot(point - A, B - A);
+        float ABdotAB = Vector2.Dot(B - A, B - A);
+        float APdotAD = Vector2.Dot(point - A, D - A);
+        float ADdotAD = Vector2.Dot(D - A, D - A);
+        if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
+            return true;
+        float rectX = r.bottomLeft.x;
+        float recty = r.bottomLeft.y;
+
+        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + width));
+        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + height));
+
+        float dX = point.x - nearestX;
+        float dY = point.y - nearestY;
+
+        return (dX * dX + dY * dY) < c.radius * c.radius;
+
     }
 
     /// <summary>
@@ -212,8 +248,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public static bool CircleIntersectCircle(BoundsCircle c1, BoundsCircle c2, out Vector2 intersectionPoint)
     {
         intersectionPoint = Vector2.zero;
+        float distanceMax = c1.radius + c2.radius;
+        float distance = Vector2.Distance(c1.center, c2.center);
 
-        return false;
+        return distance <= distanceMax;
     }
     #endregion static methods
 }
