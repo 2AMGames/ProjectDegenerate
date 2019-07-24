@@ -301,7 +301,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         if (downLeftVec.x <= 0)
         {
             print("DLX");
-            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x), bCollider.transform.position.y, bCollider.transform.position.z);
+            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x) + .01f, bCollider.transform.position.y, bCollider.transform.position.z);
         }
         if (downLeftVec.y < 0)
         {
@@ -311,7 +311,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         if (upRightVec.x <= 0)
         {
             print("URX");
-            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x), bCollider.transform.position.y, bCollider.transform.position.z);
+            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x) - .01f, bCollider.transform.position.y, bCollider.transform.position.z);
         }
         if (upRightVec.y < 0)
         {
