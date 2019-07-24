@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64792a47924876c4bb38b81715a4d8e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0}
   useGravity: 1
   useTerminalVelocity: 0
   gravityVector: {x: 0, y: -1}
@@ -260,6 +261,28 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 25
     OnHitKnockback: {x: 1, y: 12.5}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  - MoveName: Cr_Medium_Kick
+    Height: 0
+    Magnitude: 0
+    OnGuardDamage: 1
+    OnGuardFrames: 5
+    OnGuardKnockback: {x: 1, y: 2}
+    OnHitDamage: 2
+    OnHitFrames: 25
+    OnHitKnockback: {x: 1, y: 2}
+    GuardBreak: 0
+    AllowMultiHit: 0
+  - MoveName: Cr_Hard_Kick
+    Height: 0
+    Magnitude: 0
+    OnGuardDamage: 1
+    OnGuardFrames: 5
+    OnGuardKnockback: {x: 5, y: 0}
+    OnHitDamage: 2
+    OnHitFrames: 25
+    OnHitKnockback: {x: 1, y: 20}
     GuardBreak: 0
     AllowMultiHit: 0
   MoveHitPlayer: 0
@@ -871,12 +894,12 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.66200006
+      value: -0.767
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.145
+      value: 0.162
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1066,12 +1089,12 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.632
+      value: -0.512
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1141,12 +1164,12 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.3
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.25
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
