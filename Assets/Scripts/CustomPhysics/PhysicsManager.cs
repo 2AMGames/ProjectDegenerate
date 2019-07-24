@@ -38,6 +38,25 @@ public class PhysicsManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        Vector2 vec;
+        for (int i = 0; i < colliderList.Count - 1; i++)
+        {
+            for (int j = i + 1; j < colliderList.Count; j++)
+            {
+                if (CustomCollider2D.RectIntersectRect(colliderList[i].bounds, colliderList[j].bounds, out vec))
+                {
+                    print("I made it here");
+                    if (colliderList[i].isStatic)
+                    {
+                        colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
+                    }
+                    if (colliderList[j].isStatic)
+                    {
+                        colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
+                    }
+                }
+            }
+        }
         foreach (CustomCollider2D collider in colliderList)
         {
             if (collider.enabled)
@@ -45,6 +64,7 @@ public class PhysicsManager : MonoBehaviour
                 collider.UpdateBoundsOfCollider();
             }
         }
+        
         foreach (CustomPhysics2D rigid in customPhysicsList)
         {
             if (rigid.enabled)

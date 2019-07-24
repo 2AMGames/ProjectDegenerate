@@ -12,7 +12,7 @@ public class HitboxRect : Hitbox
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
 
-    public CustomCollider2D.ColliderBounds hitboxColliderBounds;
+    public CustomCollider2D.BoundsRect bounds;
 
    
 
@@ -35,7 +35,7 @@ public class HitboxRect : Hitbox
         Color colorWithTransparency = colorToDraw;
         colorWithTransparency.a = .2f;
         #if UNITY_EDITOR
-        UnityEditor.Handles.DrawSolidRectangleWithOutline(hitboxColliderBounds.GetVertices(), colorWithTransparency, colorToDraw);
+        UnityEditor.Handles.DrawSolidRectangleWithOutline(bounds.GetVertices(), colorWithTransparency, colorToDraw);
         #endif
     }
     #endregion monobehaviour methods
@@ -48,13 +48,13 @@ public class HitboxRect : Hitbox
     /// </summary>
     public override void UpdateColliderBounds()
     {
-        hitboxColliderBounds = new CustomCollider2D.ColliderBounds();
+        bounds = new CustomCollider2D.BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
-        hitboxColliderBounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        hitboxColliderBounds.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
+        bounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
+        bounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
+        bounds.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
+        bounds.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
 
     }
 
@@ -63,13 +63,13 @@ public class HitboxRect : Hitbox
         Vector2 intersectionVec;
         if (hboxToCheck is HitboxRect)
         {
-            return CustomCollider2D.RectIntersectRect(this.hitboxColliderBounds, ((HitboxRect)hboxToCheck).hitboxColliderBounds, out intersectionVec);
+            return CustomCollider2D.RectIntersectRect(this.bounds, ((HitboxRect)hboxToCheck).bounds, out intersectionVec);
 
             
         }
         if (hboxToCheck is HitboxCircle)
         {
-            return CustomCollider2D.RectIntersectCircle(this.hitboxColliderBounds, ((HitboxCircle)hboxToCheck).bounds, out intersectionVec);
+            return CustomCollider2D.RectIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds, out intersectionVec);
         }
         return false;
     }

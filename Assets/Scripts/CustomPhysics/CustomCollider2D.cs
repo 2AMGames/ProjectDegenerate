@@ -21,12 +21,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <summary>
     /// 
     /// </summary>
-    public ColliderBounds bounds { get; set; }
+    public BoundsRect bounds { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    protected ColliderBounds previousBounds { get; set; }
+    protected BoundsRect previousBounds { get; set; }
 
     protected virtual void Awake()
     {
@@ -150,7 +150,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return false;
     }
 
-    public struct ColliderBounds
+    public struct BoundsRect
     {
         public Vector2 topLeft;
         public Vector2 topRight;
@@ -181,7 +181,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// 
     /// </summary>
     /// <returns></returns>
-    public static bool RectIntersectRect(ColliderBounds r1, ColliderBounds r2, out Vector2 intersectionPoint)
+    public static bool RectIntersectRect(BoundsRect r1, BoundsRect r2, out Vector2 intersectionPoint)
     {
         intersectionPoint = Vector2.zero;
         Vector2 tl1 = r1.topLeft;
@@ -208,7 +208,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <param name="c"></param>
     /// <param name="intersectionPoint"></param>
     /// <returns></returns>
-    public static bool RectIntersectCircle(ColliderBounds r, BoundsCircle c, out Vector2 intersectionPoint)
+    public static bool RectIntersectCircle(BoundsRect r, BoundsCircle c, out Vector2 intersectionPoint)
     {
         intersectionPoint = Vector2.zero;
 

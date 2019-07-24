@@ -33,7 +33,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         base.UpdateBoundsOfCollider();
         
-        ColliderBounds b = new ColliderBounds();
+        BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
@@ -279,10 +279,40 @@ public class CustomBoxCollider2D : CustomCollider2D
     }
 
     /// <summary>
-    /// 
+    /// Whenever we intersect with a collider this method should be called to move the collider outside
     /// </summary>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        
+        if (collider.isStatic)
+        {
+            return;
+        }
+        CustomBoxCollider2D bCollider = (CustomBoxCollider2D)collider;
+        Vector2 tr1 = previousBounds.topRight;
+        Vector2 bl1 = previousBounds.bottomLeft;
+
+        Vector2 tr2 = bCollider.previousBounds.topRight;
+        Vector2 bl2 = bCollider.previousBounds.bottomLeft;
+
+        Vector2 upRightVec = tr1 - bl2;
+        Vector2 downLeftVec = tr2 - bl1;
+
+        if (downLeftVec.x < 0)
+        {
+            bCollider.transform.position = new Vector3(bl1.x - (bCollider.transform.position.x - tr2.x), bCollider.transform.position.y, bCollider.transform.position.z);
+        }
+        if (downLeftVec.y < 0)
+        {
+            bCollider.transform.position = new Vector3(bCollider.transform.position.x, bl1.y - (bCollider.transform.position.y - tr2.y), bCollider.transform.position.z);
+        }
+        if (upRightVec.x < 0)
+        {
+            bCollider.transform.position = new Vector3(tr1.x + (-bCollider.transform.position.x + bl2.x), bCollider.transform.position.y, bCollider.transform.position.z);
+        }
+        if (upRightVec.y < 0)
+        {
+            bCollider.transform.position = new Vector3(bCollider.transform.position.x, tr1.y + (-bCollider.transform.position.y + bl2.y), bCollider.transform.position.z);
+        }
+        bCollider.UpdateBoundsOfCollider();
     }
 }
