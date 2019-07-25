@@ -33,7 +33,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         base.UpdateBoundsOfCollider();
         
-        ColliderBounds b = new ColliderBounds();
+        BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
@@ -279,10 +279,45 @@ public class CustomBoxCollider2D : CustomCollider2D
     }
 
     /// <summary>
-    /// 
+    /// Whenever we intersect with a collider this method should be called to move the collider outside
     /// </summary>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
+        if (collider.isStatic)
+        {
+            return;
+        }
+        CustomBoxCollider2D bCollider = (CustomBoxCollider2D)collider;
+        Vector2 tr1 = previousBounds.topRight;
+        Vector2 bl1 = previousBounds.bottomLeft;
+
+        Vector2 tr2 = bCollider.previousBounds.topRight;
+        Vector2 bl2 = bCollider.previousBounds.bottomLeft;
+
+        Vector2 downLeftVec = tr1 - bl2;
+        Vector2 upRightVec = tr2 - bl1;
         
+
+        if (downLeftVec.x <= 0)
+        {
+            print("DLX");
+            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x) + .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+        }
+        if (downLeftVec.y < 0)
+        {
+            print("DLY");
+            bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.bottomLeft.y - (bCollider.transform.position.y - tr2.y), bCollider.transform.position.z);
+        }
+        if (upRightVec.x <= 0)
+        {
+            print("URX");
+            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x) - .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+        }
+        if (upRightVec.y < 0)
+        {
+            print("URY");
+            bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.topRight.y + (-bCollider.transform.position.y + bl2.y), bCollider.transform.position.z);
+        }
+        bCollider.UpdateBoundsOfCollider();
     }
 }

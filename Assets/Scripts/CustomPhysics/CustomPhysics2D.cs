@@ -12,7 +12,7 @@ public class CustomPhysics2D : MonoBehaviour {
     #endregion const variables
 
     #region main variables
-    [HideInInspector]
+    [System.NonSerialized]
     public Vector2 velocity = Vector2.zero;
     [Header("Gravity Values")]
     [Tooltip("When this is marked true, gravity will effect the object based on the gravity scale and gravity vector")]
