@@ -294,16 +294,17 @@ public class CustomBoxCollider2D : CustomCollider2D
         Vector2 tr2 = bCollider.previousBounds.topRight;
         Vector2 bl2 = bCollider.previousBounds.bottomLeft;
 
-        Vector2 downLeftVec = tr1 - bl2;
-        Vector2 upRightVec = tr2 - bl1;
+        Vector2 upRightVec = tr1 - bl2;
+        Vector2 downLeftVec = tr2 - bl1;
         
 
         if (downLeftVec.x <= 0)
         {
             print("DLX");
-            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x) + .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x) - .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+
         }
-        if (downLeftVec.y < 0)
+        if (downLeftVec.y <= 0)
         {
             print("DLY");
             bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.bottomLeft.y - (bCollider.transform.position.y - tr2.y), bCollider.transform.position.z);
@@ -311,13 +312,15 @@ public class CustomBoxCollider2D : CustomCollider2D
         if (upRightVec.x <= 0)
         {
             print("URX");
-            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x) - .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x) + .01f, bCollider.transform.position.y, bCollider.transform.position.z);
+
         }
-        if (upRightVec.y < 0)
+        if (upRightVec.y <= 0)
         {
             print("URY");
             bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.topRight.y + (-bCollider.transform.position.y + bl2.y), bCollider.transform.position.z);
         }
+
         bCollider.UpdateBoundsOfCollider();
     }
 }

@@ -39,6 +39,15 @@ public class PhysicsManager : MonoBehaviour
     private void LateUpdate()
     {
         Vector2 vec;
+        foreach (CustomCollider2D collider in colliderList)
+        {
+            if (collider.enabled)
+            {
+                collider.UpdateBoundsOfCollider();
+            }
+        }
+
+
         for (int i = 0; i < colliderList.Count - 1; i++)
         {
             for (int j = i + 1; j < colliderList.Count; j++)
@@ -57,13 +66,7 @@ public class PhysicsManager : MonoBehaviour
                 }
             }
         }
-        foreach (CustomCollider2D collider in colliderList)
-        {
-            if (collider.enabled)
-            {
-                collider.UpdateBoundsOfCollider();
-            }
-        }
+        
         
         foreach (CustomPhysics2D rigid in customPhysicsList)
         {
