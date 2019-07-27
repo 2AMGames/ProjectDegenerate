@@ -35,7 +35,7 @@ public class CommandDisplayUI : MonoBehaviour
     #region monobehaviour methods
     private void Start()
     {
-        PlayerController p = Overseer.Instance.players[0];
+        PlayerController p = Overseer.Instance.Players[0];
         if (p.CommandInterpreter)
         {
             p.CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;

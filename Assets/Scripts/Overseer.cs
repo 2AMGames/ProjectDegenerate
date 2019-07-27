@@ -24,7 +24,7 @@ public class Overseer : MonoBehaviour
         }
     }
 
-    public PlayerController[] players;
+    public PlayerController[] Players;
 
     public HitboxManager HitboxManager;
 
@@ -54,17 +54,17 @@ public class Overseer : MonoBehaviour
 
     public PlayerController GetCharacterByIndex(int index)
     {
-        if (index >= 0 && index < players.Length)
+        if (index >= 0 && index < Players.Length)
         {
-            return players[index];
+            return Players[index];
         }
         return null;
     }
 
     public PlayerController GetNextCharacterByIndex(int index)
     {
-        int indexToGet = (index + 1) % players.Length;
-        return players[indexToGet];
+        int indexToGet = (index + 1) % Players.Length;
+        return Players[indexToGet];
     }
 
     #endregion
@@ -73,9 +73,9 @@ public class Overseer : MonoBehaviour
 
     private void AssignPlayerIndices()
     {
-        for(int index = 0; index < players.Length; ++index)
+        for(int index = 0; index < Players.Length; ++index)
         {
-            PlayerController controller = players[index];
+            PlayerController controller = Players[index];
             if (controller != null)
             {
                 controller.SetPlayerIndex(index);

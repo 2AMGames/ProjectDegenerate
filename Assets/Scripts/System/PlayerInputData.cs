@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFrameData 
+public class PlayerInputData 
 {
     public ushort FrameNumber;
 
-    public Vector2 CurrentPlayerWorldPosition;
+    public int PlayerIndex;
 
     // Pattern: 
     // Bit 0: LP
@@ -20,5 +20,12 @@ public class PlayerFrameData
     // Bit 8: Up Directional Input
     // Bit 9: Down Directional Input
     public ushort InputData;
+
+    public override bool Equals(object ob)
+    {
+        PlayerInputData frameData = ob as PlayerInputData;
+        // Leave frame data out of the comparison, since we only want to check data that is concerned with player input.
+        return frameData != null && InputData == frameData.InputData;
+    }
 
 }
