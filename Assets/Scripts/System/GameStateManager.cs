@@ -59,14 +59,18 @@ public class GameStateManager : MonoBehaviour
 
     private IEnumerator SaveGameState()
     {
-        yield return new WaitForEndOfFrame();
+        while (true)
+        {
+            yield return new WaitForEndOfFrame();
+            CreateNewGameState();
+        }
     }
 
     private GameState CreateNewGameState()
     {
         GameState NewGameState = new GameState();
 
-        NewGameState.FrameCount = FrameCount;
+        NewGameState.FrameCount = (ushort)FrameCount;
         NewGameState.RoundTimeElapsed = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 
@@ -74,8 +78,13 @@ public class GameStateManager : MonoBehaviour
         {
             GameState.PlayerState state = new GameState.PlayerState();
             CommandInterpreter interpreter = player.CommandInterpreter;
+
             state.PlayerPosition = player.CommandInterpreter.gameObject.transform.position;
-            // TO DO: Save buttons pressed in command interpreter, translate to frame data.
+            state.PlayerIndex = player.PlayerIndex;
+
+            PlayerInputData inputData = new PlayerInputData();
+            inputData.FrameNumber = (ushort)FrameCount;
+            inputData.InputPattern = interpreter.GetPlayerInputByte();
         }
 
         return NewGameState;

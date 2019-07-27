@@ -19,13 +19,13 @@ public class PlayerInputData
     // Bit 7: Right Directional Input
     // Bit 8: Up Directional Input
     // Bit 9: Down Directional Input
-    public ushort InputData;
+    public ushort InputPattern;
 
     public override bool Equals(object ob)
     {
         PlayerInputData frameData = ob as PlayerInputData;
         // Leave frame data out of the comparison, since we only want to check data that is concerned with player input.
-        return frameData != null && InputData == frameData.InputData;
+        return frameData != null && InputPattern == frameData.InputPattern;
     }
 
 }

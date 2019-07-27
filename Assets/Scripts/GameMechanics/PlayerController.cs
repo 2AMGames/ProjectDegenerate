@@ -156,7 +156,6 @@ public class PlayerController : MonoBehaviour
     {
         PlayerIndex = index;
         CharacterStats.PlayerIndex = index;
-        CommandInterpreter.PlayerIndex = index;
     }
 
     #endregion
@@ -172,7 +171,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(LightPunchKey))
         {
-           CommandInterpreter.OnbuttonReleasedEvent?.Invoke(LP_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(LP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(MediumPunchKey))
@@ -182,7 +181,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(MediumPunchKey))
         {
-            CommandInterpreter.OnbuttonReleasedEvent?.Invoke(MP_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(MP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(HardPunchKey))
@@ -192,7 +191,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(HardPunchKey))
         {
-            CommandInterpreter.OnbuttonReleasedEvent?.Invoke(HP_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(HP_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(LightKickKey))
@@ -202,7 +201,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(LightKickKey))
         {
-            CommandInterpreter.OnbuttonReleasedEvent?.Invoke(LK_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(LK_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(MediumKickKey))
@@ -212,7 +211,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(MediumKickKey))
         {
-            CommandInterpreter.OnbuttonReleasedEvent?.Invoke(MK_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(MK_ANIM_TRIGGER);
         }
 
         if (Input.GetButtonDown(HardKickKey))
@@ -222,7 +221,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetButtonUp(HardKickKey))
         {
-            CommandInterpreter.OnbuttonReleasedEvent?.Invoke(HK_ANIM_TRIGGER);
+            CommandInterpreter.OnButtonReleased(HK_ANIM_TRIGGER);
         }
     }
 

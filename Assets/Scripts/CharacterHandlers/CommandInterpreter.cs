@@ -25,6 +25,9 @@ public class CommandInterpreter : MonoBehaviour
     #endregion enum
 
     #region const variabes
+
+    private const ushort BitMask = 0xFF;
+
     private const bool DEFAULT_DIRECTION_RIGHT = true;
 
     private const int FRAMES_TO_BUFFER = 50;
@@ -108,7 +111,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region action methods
     public UnityAction<string> OnButtonPressedEvent;
-    public UnityAction<string> OnbuttonReleasedEvent;
+    public UnityAction<string> OnButtonReleasedEvent;
     public UnityAction<DIRECTION, Vector2Int> OnDirectionSetEvent;
 
     #endregion 
@@ -122,21 +125,16 @@ public class CommandInterpreter : MonoBehaviour
             return characterStats.Anim;
         }
     }
-    /// <summary>
-    /// Reference to the character stats that are associated with this character
-    /// </summary>
     public CharacterStats characterStats { get; private set; }
 
-    private bool isFacingRight { get { return characterStats.MovementMechanics.isFacingRight; } }
-
-    public int PlayerIndex;
-
     public DIRECTION CurrentDirection { get { return currentDirectionalInputStruct.direction; } }
-
     private DirectionalinputStruct currentDirectionalInputStruct;
-    private Dictionary<string, int> framesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
-
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
+
+    private ushort lastButtonPattern;
+
+    private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
+    public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
     #endregion
 
@@ -146,17 +144,24 @@ public class CommandInterpreter : MonoBehaviour
         characterStats = GetComponent<CharacterStats>();
 
 
-        framesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
 
-        framesRemainingUntilRemoveFromBuffer.Add(LP_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(HP_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(LP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(HP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
 
-        framesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
-        framesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
+        ButtonsPressed.Add(LP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(MP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(HP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(LK_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(MK_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(HK_ANIM_TRIGGER, false);
+
+        FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
 
         currentDirectionalInputStruct.direction = DIRECTION.NEUTRAL;
         currentDirectionalInputStruct.directionInput = Vector2Int.zero;
@@ -201,22 +206,70 @@ public class CommandInterpreter : MonoBehaviour
     {
         Anim.SetTrigger(buttonEventName);
         Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
-        if (framesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
+
+        if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
         }
-        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+        if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
         {
             StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
         }
-        framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+
+        FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+        FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+
+        ButtonsPressed[buttonEventName] = true;
+
         CheckDirectionalInputCommands();
+    }
+
+    public void OnButtonReleased(string buttonEventName)
+    {
+        OnButtonReleasedEvent?.Invoke(buttonEventName);
+        ButtonsPressed[buttonEventName] = false;
+    }
+
+    public ushort GetPlayerInputByte()
+    {
+        // Pattern: 
+        // Bit 0: LP
+        // Bit 1: MP
+        // Bit 2: HP
+        // Bit 3: LK
+        // Bit 4: MK
+        // Bit 5: HK
+        // Bit 6: Left Directional Input
+        // Bit 7: Right Directional Input
+        // Bit 8: Up Directional Input
+        // Bit 9: Down Directional Input
+
+        var inputData = 0xf000;
+
+        inputData |= IsButtonPressed(LP_ANIM_TRIGGER);
+        inputData |= IsButtonPressed(MP_ANIM_TRIGGER) << 1;
+        inputData |= IsButtonPressed(HP_ANIM_TRIGGER) << 2;
+        inputData |= IsButtonPressed(LK_ANIM_TRIGGER) << 3;
+        inputData |= IsButtonPressed(MK_ANIM_TRIGGER) << 4;
+        inputData |= IsButtonPressed(HK_ANIM_TRIGGER) << 5;
+
+        inputData |= (currentDirectionalInputStruct.directionInput.x < 0f ? 1 : 0) << 6;
+        inputData |= (currentDirectionalInputStruct.directionInput.x > 0f ? 1 : 0) << 7;
+        inputData |= (currentDirectionalInputStruct.directionInput.y > 0f ? 1 : 0) << 8;
+        inputData |= (currentDirectionalInputStruct.directionInput.y < 0f ? 1 : 0) << 9;
+
+        return (ushort)inputData;
+
     }
 
     #endregion
 
     #region private interface
+
+    private int IsButtonPressed(string buttonTrigger)
+    {
+        return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
+    }
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
     {
@@ -268,14 +321,14 @@ public class CommandInterpreter : MonoBehaviour
     {
         yield return null;
         
-        while (framesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
+        while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
             yield return new WaitForFixedUpdate();
             //if (buttonEventName == BUTTON_ACTION_TRIGGER)
             //{
             //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
             //}
-            --framesRemainingUntilRemoveFromBuffer[buttonEventName];
+            --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
         }
         
         Anim.ResetTrigger(buttonEventName);
@@ -298,7 +351,7 @@ public class CommandInterpreter : MonoBehaviour
         if (CheckIfDirectionalArrayMatches(QCB_INPUT) > 0)
         {
             Anim.SetTrigger(QCB_ANIM_TRIGGER);
-            if (framesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
+            if (FramesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
             {
                 Debug.LogWarning("QCB Successful");
                 StartCoroutine(DisableButtonTriggerAfterTime(QCB_ANIM_TRIGGER));
@@ -308,7 +361,7 @@ public class CommandInterpreter : MonoBehaviour
         if (CheckIfDirectionalArrayMatches(QCF_INPUT) > 0)
         {
             Anim.SetTrigger(QCF_ANIM_TRIGGER);
-            if (framesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
+            if (FramesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
             {
                 Debug.LogWarning("QCF successful");
                 StartCoroutine(DisableButtonTriggerAfterTime(QCF_ANIM_TRIGGER));

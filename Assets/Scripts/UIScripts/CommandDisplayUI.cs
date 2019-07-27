@@ -39,7 +39,7 @@ public class CommandDisplayUI : MonoBehaviour
         if (p.CommandInterpreter)
         {
             p.CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;
-            p.CommandInterpreter.OnbuttonReleasedEvent += OnButtonReleased;
+            p.CommandInterpreter.OnButtonReleasedEvent += OnButtonReleased;
             p.CommandInterpreter.OnDirectionSetEvent += OnDirectionSet;
 
         }

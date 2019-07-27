@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameState
 {
 
-    public int FrameCount;
+    public ushort FrameCount;
 
     public ushort RoundTimeElapsed;
 
@@ -13,6 +13,8 @@ public class GameState
 
     public struct PlayerState
     {
+        public int PlayerIndex;
+
         public PlayerInputData InputData;
 
         public Vector3 PlayerPosition;
