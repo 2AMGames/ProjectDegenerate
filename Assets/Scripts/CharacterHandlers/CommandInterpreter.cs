@@ -6,8 +6,6 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CharacterStats))]
 public class CommandInterpreter : MonoBehaviour
 {
-
-
     #region enum
 
     public enum DIRECTION
@@ -108,74 +106,6 @@ public class CommandInterpreter : MonoBehaviour
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
     #endregion const variables
 
-    #region player specific input keys
-
-    private string LightPunchKey
-    {
-        get
-        {
-            return LP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string MediumPunchKey
-    {
-        get
-        {
-            return MP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string HardPunchKey
-    {
-        get
-        {
-            return HP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string LightKickKey
-    {
-        get
-        {
-            return LK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string MediumKickKey
-    {
-        get
-        {
-            return MK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string HardKickKey
-    {
-        get
-        {
-            return HK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    private string HorizontalInputKey
-    {
-        get
-        {
-            return PlayerController.MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
-        }
-    }
-
-    private string VerticalInputKey
-    {
-        get
-        {
-            return PlayerController.MOVEMENT_VERTICAL + (PlayerIndex + 1);
-        }
-    }
-
-    #endregion
-
     #region action methods
     public UnityAction<string> OnButtonPressedEvent;
     public UnityAction<string> OnbuttonReleasedEvent;
@@ -201,8 +131,6 @@ public class CommandInterpreter : MonoBehaviour
 
     public int PlayerIndex;
 
-    private bool previousDirectionFacingRight = false;
-
     public DIRECTION CurrentDirection { get { return currentDirectionalInputStruct.direction; } }
 
     private DirectionalinputStruct currentDirectionalInputStruct;
@@ -212,7 +140,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #endregion
 
-    #region monobehaviour method
+    #region monobehaviour methods
     private void Awake()
     {
         characterStats = GetComponent<CharacterStats>();
@@ -243,69 +171,13 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    private void Update()
+    #endregion
+
+    #region public interface
+
+    public void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        if (Input.GetButtonDown(LightPunchKey))
-        {
-            OnButtonEventTriggered(LP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(LightPunchKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(LP_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(MediumPunchKey))
-        {
-            OnButtonEventTriggered(MP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(MediumPunchKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(MP_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(HardPunchKey))
-        {
-            OnButtonEventTriggered(HP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(HardPunchKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(HP_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(LightKickKey))
-        {
-            OnButtonEventTriggered(LK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(LightKickKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(LK_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(MediumKickKey))
-        {
-            OnButtonEventTriggered(MK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(MediumKickKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(MK_ANIM_TRIGGER);
-        }
-
-        if (Input.GetButtonDown(HardKickKey))
-        {
-            OnButtonEventTriggered(HK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
-        }
-        else if (Input.GetButtonUp(HardKickKey))
-        {
-            OnbuttonReleasedEvent?.Invoke(HK_ANIM_TRIGGER);
-        }
-
-        Vector2Int currentJoystickVec = GetJoystickInputAsVector2Int();
+        Debug.LogWarning("Current Joystick: " + currentJoystickVec);
         if (lastJoystickInput != currentJoystickVec)
         {
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
@@ -322,7 +194,30 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="buttonEvent"></param>
+    public void OnButtonEventTriggered(string buttonEventName)
+    {
+        Anim.SetTrigger(buttonEventName);
+        Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
+        if (framesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
+        {
+            StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
+        }
+        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+        {
+            StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
+        }
+        framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+        CheckDirectionalInputCommands();
+    }
+
     #endregion
+
+    #region private interface
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
     {
@@ -330,27 +225,6 @@ public class CommandInterpreter : MonoBehaviour
         {
             characterStats.MovementMechanics.Jump();
         }
-    }
-    
-
-    private Vector2Int GetJoystickInputAsVector2Int()
-    {
-        float horizontal = Input.GetAxisRaw(HorizontalInputKey);
-        float vertical = Input.GetAxisRaw(VerticalInputKey);
-
-        int horizontalInputAsInt = 0;
-        int verticalInputAsInt = 0;
-
-        if (Mathf.Abs(horizontal) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            horizontalInputAsInt = (int)Mathf.Sign(horizontal);
-        }
-
-        if (Mathf.Abs(vertical) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            verticalInputAsInt = (int)Mathf.Sign(vertical);
-        }
-        return new Vector2Int(horizontalInputAsInt, verticalInputAsInt);
     }
 
     /// <summary>
@@ -390,26 +264,6 @@ public class CommandInterpreter : MonoBehaviour
                 return DIRECTION.BACK_DOWN;
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="buttonEvent"></param>
-   private void OnButtonEventTriggered(string buttonEventName)
-    {
-        Anim.SetTrigger(buttonEventName);
-        Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
-        if (framesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
-        {
-            StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
-        }
-        if (framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
-        {
-            StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
-        }
-        framesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-        framesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
-        CheckDirectionalInputCommands();
-    }
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
     {
@@ -439,7 +293,6 @@ public class CommandInterpreter : MonoBehaviour
 
         directionalInputRecordList.RemoveAt(0);
     }
-
 
     private void CheckDirectionalInputCommands()
     {
@@ -530,4 +383,6 @@ public class CommandInterpreter : MonoBehaviour
         public Vector2Int directionInput;
         public DIRECTION direction;
     }
+
+    #endregion
 }
