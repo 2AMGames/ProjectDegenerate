@@ -1,18 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class BaseSelectionUI : MonoBehaviour
+
+public abstract class BaseSelectionUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public BaseSelectionNode currentBaseSelectionNode;
+
+
+
+    private void SetNextSelectionNode()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Due to a lot of 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DoActionAfterOneFrame(Action action)
     {
-        
+        yield return null;
+        action.Invoke();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ScrollThroughSelectionNodes()
+    {
+        yield return null;
     }
 }
