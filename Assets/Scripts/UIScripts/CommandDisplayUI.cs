@@ -73,39 +73,31 @@ public class CommandDisplayUI : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="direction"></param>
-    public void OnDirectionSet(CommandInterpreter.DIRECTION direction)
+    public void OnDirectionSet(CommandInterpreter.DIRECTION direction, Vector2Int directionOfJoystick)
     {
         float sizeOfImage = joystickImage.rectTransform.sizeDelta.x /2;
+        cursorImage.rectTransform.localPosition = new Vector2(directionOfJoystick.x, directionOfJoystick.y) * sizeOfImage;
         switch (direction)
         {
             case CommandInterpreter.DIRECTION.UP:
-                cursorImage.rectTransform.localPosition = UP * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.DOWN:
-                cursorImage.rectTransform.localPosition = DOWN * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.FORWARD:
-                cursorImage.rectTransform.localPosition = RIGHT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.BACK:
-                cursorImage.rectTransform.localPosition = LEFT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.FORWARD_UP:
-                cursorImage.rectTransform.localPosition = UP_RIGHT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.FORWARD_DOWN:
-                cursorImage.rectTransform.localPosition = DOWN_RIGHT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.BACK_UP:
-                cursorImage.rectTransform.localPosition = UP_LEFT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.BACK_DOWN:
-                cursorImage.rectTransform.localPosition = DOWN_LEFT * sizeOfImage;
                 return;
             case CommandInterpreter.DIRECTION.NEUTRAL:
-                cursorImage.rectTransform.localPosition = NEUTRAL * sizeOfImage;
+                
                 return;
-
         }
     }
 }
