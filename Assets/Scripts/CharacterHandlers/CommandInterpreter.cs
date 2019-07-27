@@ -176,7 +176,6 @@ public class CommandInterpreter : MonoBehaviour
 
     public void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        Debug.LogWarning("Current Joystick: " + currentJoystickVec);
         if (lastJoystickInput != currentJoystickVec)
         {
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
