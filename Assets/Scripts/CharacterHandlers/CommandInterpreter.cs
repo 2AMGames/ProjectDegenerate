@@ -377,7 +377,7 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// 
     /// </summary>
-    private struct DirectionalinputStruct
+    public struct DirectionalinputStruct
     {
         public Vector2Int directionInput;
         public DIRECTION direction;
