@@ -137,6 +137,12 @@ public class MovementMechanics : MonoBehaviour {
 
         rigid.OnGroundedEvent += this.OnGroundedEvent;
         rigid.OnAirborneEvent += this.OnAirborneEvent;
+
+        CommandInterpreter commandInterpreter = GetComponent<CommandInterpreter>();
+        if (commandInterpreter != null)
+        {
+            commandInterpreter.OnDirectionSetEvent += JoystickDirectionSet;
+        }
     }
 
     private void Update()
@@ -454,6 +460,12 @@ public class MovementMechanics : MonoBehaviour {
         }
         SetCharacterFastFalling(false);
         this.currentJumpsAvailable--;
+    }
+
+    private void JoystickDirectionSet(CommandInterpreter.DIRECTION direction, Vector2Int joystickDirectionVec)
+    {
+        SetHorizontalInput(joystickDirectionVec.x);
+        SetVerticalInput(joystickDirectionVec.y);
     }
     #endregion jumping methods
 

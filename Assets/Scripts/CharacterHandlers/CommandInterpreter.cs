@@ -179,7 +179,8 @@ public class CommandInterpreter : MonoBehaviour
     #region action methods
     public UnityAction<string> OnButtonPressedEvent;
     public UnityAction<string> OnbuttonReleasedEvent;
-    public UnityAction<DIRECTION> OnDirectionSetEvent;
+    public UnityAction<DIRECTION, Vector2Int> OnDirectionSetEvent;
+
     #endregion 
 
     #region main variables
@@ -308,7 +309,7 @@ public class CommandInterpreter : MonoBehaviour
         if (lastJoystickInput != currentJoystickVec)
         {
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent?.Invoke(CurrentDirection);
+            OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
             DirectionalinputStruct dInput = new DirectionalinputStruct();
             dInput.direction = CurrentDirection;
             dInput.directionInput = currentJoystickVec;
