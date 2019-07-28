@@ -234,7 +234,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     // On photon event received callback
     public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
     {
-        Debug.LogWarning("Code: " + photonEvent.Code);
+
     }
 
     #endregion

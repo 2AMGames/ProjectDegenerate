@@ -75,7 +75,6 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
 
                 if (data != null && data.PlayerIndex == PlayerIndex)
                 {
-                    Debug.LogWarning("Received input");
                     base.UpdateButtonsFromInputData(data);
                     CommandInterpreter.UpdateJoystickInput(base.GetJoystickInputFromData(data));
                 }
