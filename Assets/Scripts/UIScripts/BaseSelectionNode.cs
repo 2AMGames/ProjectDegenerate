@@ -2,8 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseSelectionNode : MonoBehaviour
+public abstract class BaseSelectionNode : MonoBehaviour
 {
-    
+    #region main variables
+    public BaseSelectionNode selectionNodeLeft;
+    public BaseSelectionNode selectionNodeRight;
+    public BaseSelectionNode selectionNodeUp;
+    public BaseSelectionNode selectionNodeDown;
+    #endregion main variables
+
+
 
 }
