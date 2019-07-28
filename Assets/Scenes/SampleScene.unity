@@ -2630,7 +2630,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 216}
+  m_AnchoredPosition: {x: 0, y: 482}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1892366803
@@ -3109,6 +3109,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Overseer
       objectReference: {fileID: 0}
+    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 459142431}
+    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: InteractionHandler
+      value: 
+      objectReference: {fileID: 1422880862}
+    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: CommandInterpreter
+      value: 
+      objectReference: {fileID: 1422880863}
+    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: CharacterStats
+      value: 
+      objectReference: {fileID: 1585544855}
+    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: InteractionHandler
+      value: 
+      objectReference: {fileID: 376100584}
+    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: CommandInterpreter
+      value: 
+      objectReference: {fileID: 376100585}
     - target: {fileID: 6728667214325178034, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3164,36 +3194,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: CharacterStats
-      value: 
-      objectReference: {fileID: 1585544855}
-    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: InteractionHandler
-      value: 
-      objectReference: {fileID: 376100584}
-    - target: {fileID: 6728667214474030064, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: CommandInterpreter
-      value: 
-      objectReference: {fileID: 376100585}
-    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: CharacterStats
-      value: 
-      objectReference: {fileID: 459142431}
-    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: InteractionHandler
-      value: 
-      objectReference: {fileID: 1422880862}
-    - target: {fileID: 6728667213063285794, guid: 36249abe33f974c4cbeae2e0d75bc28b,
-        type: 3}
-      propertyPath: CommandInterpreter
-      value: 
-      objectReference: {fileID: 1422880863}
     - target: {fileID: 9207758887553089138, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
       propertyPath: MainCamera
