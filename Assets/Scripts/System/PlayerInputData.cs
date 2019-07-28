@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInputData 
 {
-    public ushort FrameNumber;
+    public uint FrameNumber;
 
     public int PlayerIndex;
 
@@ -20,12 +20,5 @@ public class PlayerInputData
     // Bit 8: Up Directional Input
     // Bit 9: Down Directional Input
     public ushort InputPattern;
-
-    public override bool Equals(object ob)
-    {
-        PlayerInputData frameData = ob as PlayerInputData;
-        // Leave frame data out of the comparison, since we only want to check data that is concerned with player input.
-        return frameData != null && InputPattern == frameData.InputPattern;
-    }
 
 }

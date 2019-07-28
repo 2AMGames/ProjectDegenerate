@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Class responsible for keeping the gamestate
+// Class responsible for maintaining the gamestate
 public class GameStateManager : MonoBehaviour
 {
 
@@ -12,15 +12,31 @@ public class GameStateManager : MonoBehaviour
 
     #endregion
 
-    #region main variables
+    #region static reference
 
-    public int FrameCount
+    private static GameStateManager instance;
+
+    public static GameStateManager Instance
     {
         get
         {
-            return Time.frameCount;
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameStateManager>();
+            }
+            if (instance == null)
+            {
+                instance = new GameStateManager();
+            }
+            return instance;
         }
     }
+
+    #endregion
+
+    #region main variables
+
+    public int FrameCount;
 
     public float RoundTime { get; private set; }
 
@@ -68,6 +84,7 @@ public class GameStateManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
             GameState gameStateToPush = CreateNewGameState();
             FrameStack.Push(gameStateToPush);
+            ++FrameCount;
         }
     }
 
@@ -101,6 +118,5 @@ public class GameStateManager : MonoBehaviour
     }
 
     #endregion
-
 
 }

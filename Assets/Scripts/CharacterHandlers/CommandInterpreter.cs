@@ -131,6 +131,7 @@ public class CommandInterpreter : MonoBehaviour
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
+    private ushort lastButtonPattern;
     private ushort currentButtonPattern;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
@@ -274,6 +275,24 @@ public class CommandInterpreter : MonoBehaviour
 
         return (ushort)inputData;
 
+    }
+
+    public PlayerInputData GetPlayerInputDataIfUpdated()
+    {
+        // If player button pattern has been updated, return input data
+        // else return null
+        if (lastButtonPattern != currentButtonPattern)
+        {
+            PlayerInputData data = new PlayerInputData();
+
+            data.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
+            data.InputPattern = GetPlayerInputByte();
+
+            lastButtonPattern = currentButtonPattern;
+
+            return data;
+        }
+        return null;
     }
 
     #endregion

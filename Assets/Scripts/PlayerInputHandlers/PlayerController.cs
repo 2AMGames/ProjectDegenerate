@@ -57,7 +57,6 @@ public abstract class PlayerController : MonoBehaviour
 
     public CommandInterpreter CommandInterpreter;
 
-    [HideInInspector]
     public int PlayerIndex;
 
     private PlayerController Opponent

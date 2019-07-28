@@ -40,9 +40,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Singleton Instance
 
-    private NetworkManager instance;
+    private static NetworkManager instance;
 
-    public NetworkManager Instance
+    public static NetworkManager Instance
     {
         get
         {

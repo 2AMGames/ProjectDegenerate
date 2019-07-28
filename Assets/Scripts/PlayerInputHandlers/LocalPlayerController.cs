@@ -9,7 +9,8 @@ public class LocalPlayerController : PlayerController
     public void Update()
     {
         UpdateButtonInput();
-        UpdateJoystickInput();
+
+        CommandInterpreter.UpdateJoystickInput(UpdateJoystickInput());
     }
 
     #endregion
