@@ -12,7 +12,7 @@ using UnityEngine;
 public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, ILobbyCallbacks, IOnEventCallback
 {
 
-    #region Photon Event Codes
+    #region Custom Photon Event Codes
 
     public const byte PlayerConnected = 0x00;
 
@@ -27,6 +27,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public const byte EvaluateWinner = 0x05;
 
     public const byte PlayerLeaving = 0x06;
+
+    #endregion
+
+    #region Photon Event Codes
+
+    // DO NOT CHANGE THESE.
+
+    public const float OnJoinedRoomEventCode = 254;
 
     #endregion
 
