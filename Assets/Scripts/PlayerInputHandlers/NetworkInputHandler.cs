@@ -34,8 +34,8 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     public void OnJoinedRoom()
     {
-        Debug.LogWarning("Joined room");
-        PlayerController.PlayerIndex = PhotonNetwork.CurrentRoom.PlayerCount;
+        Debug.LogWarning("Joined room Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
+        PlayerController.PlayerIndex = PhotonNetwork.CurrentRoom.PlayerCount - 1;
         StartCoroutine(SendInputIfNeccessary());
     }
 
@@ -85,6 +85,11 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
             {
                 Debug.LogWarning("Sending input data");
                 inputData.PlayerIndex = PlayerController.PlayerIndex;
+
+                Debug.LogWarning("Sent player index: " + inputData.PlayerIndex);
+                Debug.LogWarning("Sent Frame Number: " + inputData.FrameNumber);
+                Debug.LogWarning("Sent Pattern: " + inputData.InputPattern);
+
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
             }
         }

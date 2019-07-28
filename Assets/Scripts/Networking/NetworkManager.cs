@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 using UnityEngine;
 
 // Class for managing network interaction between clients
@@ -54,6 +55,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             {
                 instance = new NetworkManager();
             }
+
             return instance;
         }
     }
@@ -64,6 +66,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void Awake()
     {
+        RegisterEventTypes();
         if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode && UsePhotonMatchmaking)
         {
             PhotonNetwork.AddCallbackTarget(this);
@@ -82,13 +85,32 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
+    void OnDestroy()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
+
     #endregion
 
     #region Public Interface
 
     public void SendEventData(byte eventCode, object eventData)
     {
-        PhotonNetwork.RaiseEvent(eventCode, eventData, null, default);
+        RaiseEventOptions fuck = new RaiseEventOptions();
+        fuck.Receivers = ReceiverGroup.All;
+        PhotonNetwork.RaiseEvent(eventCode, eventData, fuck, SendOptions.SendUnreliable);
+    }
+
+    #endregion
+
+    #region Private Interface
+
+    private void RegisterEventTypes()
+    {
+        PhotonPeer.RegisterType(typeof(PlayerInputData), PlayerInputUpdate, PlayerInputData.Serialize, PlayerInputData.Deserialize);
     }
 
     #endregion
@@ -216,4 +238,5 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     }
 
     #endregion
+
 }

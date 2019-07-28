@@ -3284,7 +3284,7 @@ MonoBehaviour:
   CharacterStats: {fileID: 459142431}
   InteractionHandler: {fileID: 1422880862}
   CommandInterpreter: {fileID: 1422880863}
-  PlayerIndex: 0
+  PlayerIndex: 1
 --- !u!114 &4928876089398127178
 MonoBehaviour:
   m_ObjectHideFlags: 0

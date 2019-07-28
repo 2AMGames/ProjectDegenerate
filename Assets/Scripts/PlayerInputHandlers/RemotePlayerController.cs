@@ -72,6 +72,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             try
             {
                 PlayerInputData data = eventData.CustomData as PlayerInputData;
+
                 if (data != null && data.PlayerIndex == PlayerIndex)
                 {
                     Debug.LogWarning("Received input");
