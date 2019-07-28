@@ -61,8 +61,13 @@ public class GameStateManager : MonoBehaviour
     {
         while (true)
         {
+            if (FrameStack.Count > MaxStackSize)
+            {
+                FrameStack = new Stack<GameState>();
+            }
             yield return new WaitForEndOfFrame();
-            CreateNewGameState();
+            GameState gameStateToPush = CreateNewGameState();
+            FrameStack.Push(gameStateToPush);
         }
     }
 
@@ -88,6 +93,11 @@ public class GameStateManager : MonoBehaviour
         }
 
         return NewGameState;
+    }
+
+    private void RollbackGameState(uint FrameCount)
+    {
+
     }
 
     #endregion
