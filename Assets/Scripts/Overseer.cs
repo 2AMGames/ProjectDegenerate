@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine;
 
-public class Overseer : MonoBehaviour
+public class Overseer : MonoBehaviour, IOnEventCallback
 {
 
     #region member variables
@@ -30,6 +32,8 @@ public class Overseer : MonoBehaviour
 
     public PhysicsManager ColliderManager;
 
+    private NetworkManager NetworkManager;
+
     #endregion
 
     #region monobehaviour methods
@@ -37,7 +41,10 @@ public class Overseer : MonoBehaviour
     {
         instance = this;
         AssignPlayerIndices();
-
+        if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode)
+        {
+            NetworkManager = this.gameObject.AddComponent<NetworkManager>();
+        }
         
     }
 
@@ -81,6 +88,16 @@ public class Overseer : MonoBehaviour
                 controller.SetPlayerIndex(index);
             }
         }
+    }
+
+    #endregion
+
+    #region EventCallbacks
+
+    // On photon event received callback
+    public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
+    {
+        
     }
 
     #endregion

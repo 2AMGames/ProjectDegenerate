@@ -131,7 +131,7 @@ public class CommandInterpreter : MonoBehaviour
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
-    private ushort lastButtonPattern;
+    private ushort currentButtonPattern;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
@@ -195,6 +195,8 @@ public class CommandInterpreter : MonoBehaviour
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);
             currentDirectionalInputStruct.directionInput = currentJoystickVec;
 
+            currentButtonPattern = GetPlayerInputByte();
+
         }
     }
 
@@ -222,12 +224,16 @@ public class CommandInterpreter : MonoBehaviour
         ButtonsPressed[buttonEventName] = true;
 
         CheckDirectionalInputCommands();
+
+        currentButtonPattern = GetPlayerInputByte();
     }
 
     public void OnButtonReleased(string buttonEventName)
     {
         OnButtonReleasedEvent?.Invoke(buttonEventName);
         ButtonsPressed[buttonEventName] = false;
+
+        currentButtonPattern = GetPlayerInputByte();
     }
 
     public ushort GetPlayerInputByte()
