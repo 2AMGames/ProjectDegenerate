@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public abstract class PlayerController : MonoBehaviour
 {
 
     #region const variables
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     /// Player Key. Append this to the end of an input key to get the specific player that pressed the button.
     /// Ex. LP_P1 = Player one light punch
     /// </summary>
-    private const string PlayerKey = "_P";
+    protected const string PlayerKey = "_P";
 
     /// <summary>
     /// Light Punch trigger
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     #region player specific input keys
 
-    private string LightPunchKey
+    protected string LightPunchKey
     {
         get
         {
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string MediumPunchKey
+    protected string MediumPunchKey
     {
         get
         {
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string HardPunchKey
+    protected string HardPunchKey
     {
         get
         {
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string LightKickKey
+    protected string LightKickKey
     {
         get
         {
@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string MediumKickKey
+    protected string MediumKickKey
     {
         get
         {
@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string HardKickKey
+    protected string HardKickKey
     {
         get
         {
@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string HorizontalInputKey
+    protected string HorizontalInputKey
     {
         get
         {
@@ -128,24 +128,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private string VerticalInputKey
+    protected string VerticalInputKey
     {
         get
         {
             return MOVEMENT_VERTICAL + (PlayerIndex + 1);
         }
-    }
-
-    #endregion
-
-    #region monobehaviour methods
-
-    private void Update()
-    {
-        UpdateButtons();
-
-        CommandInterpreter.UpdateJoystickInput(GetJoystickInputAsVector2Int());
-
     }
 
     #endregion
@@ -158,92 +146,91 @@ public class PlayerController : MonoBehaviour
         CharacterStats.PlayerIndex = index;
     }
 
-    #endregion
-
-    #region private interface
-
-    private void UpdateButtons()
+    public void UpdateButtonsFromInputData(PlayerInputData inputData)
     {
-        if (Input.GetButtonDown(LightPunchKey))
+
+        if ((inputData.InputPattern & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(LP_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(LightPunchKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(LP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(MediumPunchKey))
+        if (((inputData.InputPattern >> 1) & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(MP_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(MediumPunchKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(MP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(HardPunchKey))
+        if (((inputData.InputPattern >> 2) & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(HP_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(HardPunchKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(HP_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(LightKickKey))
+        if (((inputData.InputPattern >> 3) & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(LK_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(LightKickKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(LK_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(MediumKickKey))
+        if (((inputData.InputPattern >> 4) & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(MK_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(MediumKickKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(MK_ANIM_TRIGGER);
         }
 
-        if (Input.GetButtonDown(HardKickKey))
+        if (((inputData.InputPattern >> 5) & 1) == 1)
         {
             CommandInterpreter.OnButtonEventTriggered(HK_ANIM_TRIGGER);
             CommandInterpreter.OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
         }
-        else if (Input.GetButtonUp(HardKickKey))
+        else
         {
             CommandInterpreter.OnButtonReleased(HK_ANIM_TRIGGER);
         }
     }
 
-    private Vector2Int GetJoystickInputAsVector2Int()
+    public Vector2Int GetJoystickInputFromData(PlayerInputData inputData)
     {
-        float horizontal = Input.GetAxisRaw(HorizontalInputKey);
-        float vertical = Input.GetAxisRaw(VerticalInputKey);
+        Vector2Int joystickVector = new Vector2Int();
 
-        int horizontalInputAsInt = 0;
-        int verticalInputAsInt = 0;
+        joystickVector.x += ((inputData.InputPattern >> 6) & 1) == 1 ? 1 : 0;
+        joystickVector.x -= ((inputData.InputPattern >> 7) & 1) == 1 ? 1 : 0;
 
-        if (Mathf.Abs(horizontal) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            horizontalInputAsInt = (int)Mathf.Sign(horizontal);
-        }
+        joystickVector.y += ((inputData.InputPattern >> 8) & 1) == 1 ? 1 : 0;
+        joystickVector.y -= ((inputData.InputPattern >> 9) & 1) == 1 ? 1 : 0;
 
-        if (Mathf.Abs(vertical) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            verticalInputAsInt = (int)Mathf.Sign(vertical);
-        }
-        return new Vector2Int(horizontalInputAsInt, verticalInputAsInt);
+        return joystickVector;
+
     }
+
+    #endregion
+
+    #region virtual interface
+
+    protected abstract void UpdateButtonInput();
+
+    protected abstract Vector2Int UpdateJoystickInput();
 
     #endregion
 

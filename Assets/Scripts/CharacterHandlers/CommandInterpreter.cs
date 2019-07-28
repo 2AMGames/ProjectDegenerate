@@ -206,34 +206,42 @@ public class CommandInterpreter : MonoBehaviour
     /// <param name="buttonEvent"></param>
     public void OnButtonEventTriggered(string buttonEventName)
     {
-        Anim.SetTrigger(buttonEventName);
-        Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
 
-        if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
+        if (!ButtonsPressed[buttonEventName])
         {
-            StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
+
+            Anim.SetTrigger(buttonEventName);
+            Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
+
+            if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
+            {
+                StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
+            }
+            if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+            {
+                StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
+            }
+
+            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+
+            ButtonsPressed[buttonEventName] = true;
+
+            CheckDirectionalInputCommands();
+
+            currentButtonPattern = GetPlayerInputByte();
         }
-        if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
-        {
-            StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
-        }
-
-        FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-        FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
-
-        ButtonsPressed[buttonEventName] = true;
-
-        CheckDirectionalInputCommands();
-
-        currentButtonPattern = GetPlayerInputByte();
     }
 
     public void OnButtonReleased(string buttonEventName)
     {
-        OnButtonReleasedEvent?.Invoke(buttonEventName);
-        ButtonsPressed[buttonEventName] = false;
+        if (ButtonsPressed[buttonEventName] == true)
+        {
+            OnButtonReleasedEvent?.Invoke(buttonEventName);
+            ButtonsPressed[buttonEventName] = false;
 
-        currentButtonPattern = GetPlayerInputByte();
+            currentButtonPattern = GetPlayerInputByte();
+        }
     }
 
     public ushort GetPlayerInputByte()
