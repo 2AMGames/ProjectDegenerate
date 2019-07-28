@@ -13,23 +13,50 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Photon Event Codes
 
-    private const byte PlayerConnected = 0x00;
+    public const byte PlayerConnected = 0x00;
 
-    private const byte SynchronizationNeeded = 0x01;
+    public const byte SynchronizationNeeded = 0x01;
 
-    private const byte PlayerInputUpdate = 0x02;
+    public const byte SynchronizationAck = 0x02;
 
-    private const byte PlayerInputAck = 0x03;
+    public const byte PlayerInputUpdate = 0x03;
 
-    private const byte PlayerLeaving = 0x04;
+    public const byte PlayerInputAck = 0x04;
+
+    public const byte EvaluateWinner = 0x05;
+
+    public const byte PlayerLeaving = 0x06;
 
     #endregion
 
-    #region main variables
+    #region Main Variables
 
     public bool UsePhotonMatchmaking;
 
+    [HideInInspector]
     public string CurrentRoomId;
+
+    #endregion
+
+    #region Singleton Instance
+
+    private NetworkManager instance;
+
+    public NetworkManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<NetworkManager>();
+            }
+            if (instance == null)
+            {
+                instance = new NetworkManager();
+            }
+            return instance;
+        }
+    }
 
     #endregion
 
@@ -37,11 +64,31 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void Awake()
     {
-        if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode)
+        if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode && UsePhotonMatchmaking)
         {
             PhotonNetwork.AddCallbackTarget(this);
             PhotonNetwork.ConnectUsingSettings();
         }
+    }
+
+    void OnValidate()
+    {
+        if(!UsePhotonMatchmaking)
+        {
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+        }
+    }
+
+    #endregion
+
+    #region Public Interface
+
+    public void SendEventData(byte eventCode, object eventData)
+    {
+        PhotonNetwork.RaiseEvent(eventCode, eventData, null, default);
     }
 
     #endregion
@@ -104,6 +151,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnJoinedRoom()
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
+        CurrentRoomId = PhotonNetwork.CurrentLobby.Name;
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)
@@ -119,6 +167,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnLeftRoom()
     {
         Debug.Log("Sucessfully Left Photon Room");
+        CurrentRoomId = null;
     }
 
     #endregion
@@ -148,6 +197,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarning("Disconnected: " + cause.ToString());
+        CurrentRoomId = null;
     }
 
     public void OnRegionListReceived(RegionHandler regionHandler)

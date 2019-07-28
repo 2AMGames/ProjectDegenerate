@@ -32,8 +32,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback
 
     public PhysicsManager ColliderManager;
 
-    private NetworkManager NetworkManager;
-
     #endregion
 
     #region monobehaviour methods
@@ -41,10 +39,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback
     {
         instance = this;
         AssignPlayerIndices();
-        if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode)
-        {
-            NetworkManager = this.gameObject.AddComponent<NetworkManager>();
-        }
         
     }
 
