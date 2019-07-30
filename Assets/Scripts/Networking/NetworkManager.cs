@@ -108,6 +108,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.AddCallbackTarget(this);
+            RegisterEventTypes();
             PhotonNetwork.ConnectUsingSettings();
         }
     }
