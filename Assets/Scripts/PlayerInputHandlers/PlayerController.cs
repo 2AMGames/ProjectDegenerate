@@ -224,8 +224,8 @@ public abstract class PlayerController : MonoBehaviour
     {
         Vector2Int joystickVector = new Vector2Int();
 
-        joystickVector.x += ((inputData.InputPattern >> 6) & 1) == 1 ? 1 : 0;
-        joystickVector.x -= ((inputData.InputPattern >> 7) & 1) == 1 ? 1 : 0;
+        joystickVector.x -= ((inputData.InputPattern >> 6) & 1) == 1 ? 1 : 0;
+        joystickVector.x += ((inputData.InputPattern >> 7) & 1) == 1 ? 1 : 0;
 
         joystickVector.y += ((inputData.InputPattern >> 8) & 1) == 1 ? 1 : 0;
         joystickVector.y -= ((inputData.InputPattern >> 9) & 1) == 1 ? 1 : 0;
