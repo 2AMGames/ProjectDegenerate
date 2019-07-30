@@ -124,7 +124,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void SendEventData(byte eventCode, object eventData)
     {
         RaiseEventOptions fuck = new RaiseEventOptions();
-        fuck.Receivers = ReceiverGroup.All;
         PhotonNetwork.RaiseEvent(eventCode, eventData, fuck, SendOptions.SendUnreliable);
     }
 
