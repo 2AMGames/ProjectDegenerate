@@ -80,12 +80,15 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
-            if (Overseer.Instance.IsGameReady && inputData != null)
+            if (Overseer.Instance.IsGameReady && CommandInterpreter != null)
             {
-                inputData.PlayerIndex = PlayerController.PlayerIndex;
+                PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
+                if (inputData != null)
+                {
+                    inputData.PlayerIndex = PlayerController.PlayerIndex;
 
-                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
+                    NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
+                }
             }
         }
     }
