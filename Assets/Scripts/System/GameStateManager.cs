@@ -49,7 +49,7 @@ public class GameStateManager : MonoBehaviour
     private void Awake()
     {
         FrameStack = new Stack<GameState>();
-        StartCoroutine(SaveGameState());
+        Overseer.Instance.OnGameReady = OnGameReady;
     }
 
     private void Update()
@@ -68,6 +68,14 @@ public class GameStateManager : MonoBehaviour
     #endregion
 
     #region private interface
+
+    private void OnGameReady(bool isGameReady)
+    {
+        if (isGameReady)
+        {
+            StartCoroutine(SaveGameState());
+        }
+    }
 
     #endregion
 

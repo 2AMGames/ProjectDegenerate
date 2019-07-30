@@ -8,9 +8,12 @@ public class LocalPlayerController : PlayerController
 
     public void Update()
     {
-        UpdateButtonInput();
+        if (Overseer.Instance.IsGameReady)
+        {
+            UpdateButtonInput();
 
-        CommandInterpreter.UpdateJoystickInput(UpdateJoystickInput());
+            CommandInterpreter.UpdateJoystickInput(UpdateJoystickInput());
+        }
     }
 
     #endregion

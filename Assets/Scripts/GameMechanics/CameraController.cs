@@ -41,8 +41,11 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        UpdateCameraPosition();
-        SetCameraBounds();
+        if (Overseer.Instance.IsGameReady)
+        {
+            UpdateCameraPosition();
+            SetCameraBounds();
+        }
     }
 
     private void OnValidate()

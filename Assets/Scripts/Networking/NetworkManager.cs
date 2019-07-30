@@ -74,11 +74,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void Awake()
     {
-        RegisterEventTypes();
-        if (!PhotonNetwork.PhotonServerSettings.StartInOfflineMode && UsePhotonMatchmaking)
+       if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
-            PhotonNetwork.AddCallbackTarget(this);
-            PhotonNetwork.ConnectUsingSettings();
+            ConnectToNetwork();
         }
     }
 
@@ -104,6 +102,23 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #endregion
 
     #region Public Interface
+
+    public void ConnectToNetwork()
+    {
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+            PhotonNetwork.ConnectUsingSettings();
+        }
+    }
+
+    public void DisconnectToNetwork()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+    }
 
     public void SendEventData(byte eventCode, object eventData)
     {
@@ -182,6 +197,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentLobby.Name;
+        Overseer.Instance.HandleJoinedRoom();
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)

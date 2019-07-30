@@ -49,6 +49,17 @@ public abstract class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region enum
+
+    public enum PlayerType
+    {
+        Local,
+        Remote,
+        AI
+    }
+
+    #endregion
+
     #region member variables
 
     public CharacterStats CharacterStats;

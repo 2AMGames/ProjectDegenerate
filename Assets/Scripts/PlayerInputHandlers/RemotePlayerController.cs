@@ -73,7 +73,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             {
                 PlayerInputData data = eventData.CustomData as PlayerInputData;
 
-                if (data != null && data.PlayerIndex == PlayerIndex)
+                if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
                     base.UpdateButtonsFromInputData(data);
                     CommandInterpreter.UpdateJoystickInput(base.GetJoystickInputFromData(data));

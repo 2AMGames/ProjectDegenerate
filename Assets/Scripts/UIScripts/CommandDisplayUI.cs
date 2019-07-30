@@ -35,14 +35,8 @@ public class CommandDisplayUI : MonoBehaviour
     #region monobehaviour methods
     private void Start()
     {
-        PlayerController p = Overseer.Instance.Players[0];
-        if (p.CommandInterpreter)
-        {
-            p.CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;
-            p.CommandInterpreter.OnButtonReleasedEvent += OnButtonReleased;
-            p.CommandInterpreter.OnDirectionSetEvent += OnDirectionSet;
 
-        }
+        Overseer.Instance.OnGameReady += OnGameReady;
 
         buttonImageDictionary.Add(CommandInterpreter.LP_ANIM_TRIGGER, buttonImages[0]);
         buttonImageDictionary.Add(CommandInterpreter.MP_ANIM_TRIGGER, buttonImages[1]);
@@ -98,6 +92,27 @@ public class CommandDisplayUI : MonoBehaviour
             case CommandInterpreter.DIRECTION.NEUTRAL:
                 
                 return;
+        }
+    }
+
+    private void OnGameReady(bool isGameReady)
+    {
+        if (isGameReady)
+        {
+            LinkPlayerWithDisplay();
+        }
+    }
+
+    private void LinkPlayerWithDisplay()
+    {
+        Debug.LogWarning("Link player");
+        PlayerController p = Overseer.Instance.Players[0];
+        if (p.CommandInterpreter)
+        {
+            p.CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;
+            p.CommandInterpreter.OnButtonReleasedEvent += OnButtonReleased;
+            p.CommandInterpreter.OnDirectionSetEvent += OnDirectionSet;
+
         }
     }
 }
