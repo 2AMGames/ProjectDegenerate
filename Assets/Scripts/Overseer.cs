@@ -150,10 +150,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback
             case PlayerController.PlayerType.Local:
                 playerController = playerControllerGameObject.AddComponent<LocalPlayerController>();
                 playerController.PlayerIndex = playerIndex;
-                if (SelectedGameType == GameType.PlayerVsRemote)
-                {
-                    playerController.gameObject.AddComponent<NetworkInputHandler>();
-                }
                 break;
             case PlayerController.PlayerType.Remote:
                 playerController = playerControllerGameObject.AddComponent<RemotePlayerController>();
@@ -172,6 +168,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback
         playerController.CommandInterpreter = associatedPlayer.GetComponent<CommandInterpreter>();
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
+
+        if (SelectedGameType == GameType.PlayerVsRemote)
+        {
+            playerController.gameObject.AddComponent<NetworkInputHandler>();
+        }
 
         if (Players.Count > playerIndex + 1)
         {
