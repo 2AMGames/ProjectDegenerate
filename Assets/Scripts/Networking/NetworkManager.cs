@@ -9,7 +9,7 @@ using UnityEngine;
 // Class for managing network interaction between clients
 // Should monitor network connection, Average Latency, and send input data to other players in game.
 // Should also accept input data from other players
-public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, ILobbyCallbacks, IOnEventCallback
+public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, ILobbyCallbacks, IOnEventCallback, IInRoomCallbacks
 {
 
     #region Custom Photon Event Codes
@@ -260,6 +260,31 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
     {
 
+    }
+
+    public void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.LogWarning("Entered room");
+    }
+
+    public void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        //
+    }
+
+    public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        //
+    }
+
+    public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+       //
+    }
+
+    public void OnMasterClientSwitched(Player newMasterClient)
+    {
+       //
     }
 
     #endregion

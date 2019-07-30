@@ -74,12 +74,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback
     void Awake()
     {
         instance = this;
-        CreateGameType();
     }
 
     private void Start()
     {
         Application.targetFrameRate = 60;
+        CreateGameType();
     }
 
     #endregion
@@ -128,6 +128,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback
             {
                 CreateLocalPlayer(index);
             }
+            OnGameReady?.Invoke(true);
         }
         else if (SelectedGameType == GameType.PlayerVsAI)
         {

@@ -34,8 +34,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     public void OnJoinedRoom()
     {
-        PlayerController.PlayerIndex = PhotonNetwork.CurrentRoom.PlayerCount - 1;
-        StartCoroutine(SendInputIfNeccessary());
+
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)
@@ -68,6 +67,8 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
         CommandInterpreter = PlayerController.CommandInterpreter;
 
         PhotonNetwork.AddCallbackTarget(this);
+
+        StartCoroutine(SendInputIfNeccessary());
     }
 
     #endregion

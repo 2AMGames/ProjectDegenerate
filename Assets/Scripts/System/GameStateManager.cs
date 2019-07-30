@@ -49,7 +49,7 @@ public class GameStateManager : MonoBehaviour
     private void Awake()
     {
         FrameStack = new Stack<GameState>();
-        Overseer.Instance.OnGameReady = OnGameReady;
+        Overseer.Instance.OnGameReady += OnGameReady;
     }
 
     private void Update()
