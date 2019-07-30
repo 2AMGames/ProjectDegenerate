@@ -54,7 +54,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback
             bool isReady = true;
             if (SelectedGameType == GameType.PlayerVsRemote)
             {
-                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId);
+                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2;
             }
             isReady &= Players.Count >= 2;
             return isReady;
@@ -205,7 +205,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback
 
     public void HandleJoinedRoom()
     {
-        Debug.LogWarning("Overseer.HandleJoinedRoom");
         if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
             Debug.LogWarning("Im the last player to join");

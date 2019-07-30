@@ -196,7 +196,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnJoinedRoom()
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
-        CurrentRoomId = PhotonNetwork.CurrentLobby.Name;
+        CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
         Overseer.Instance.HandleJoinedRoom();
     }
 
@@ -221,7 +221,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #region Connection Callback Interface
     public void OnConnected()
     {
-        Debug.LogWarning("Connected to master server");
+
     }
 
     public void OnConnectedToMaster()
