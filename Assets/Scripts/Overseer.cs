@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Overseer : MonoBehaviour, IOnEventCallback
+public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 {
     #region const variables
 
@@ -74,6 +74,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback
     void Awake()
     {
         instance = this;
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void Start()
@@ -210,26 +211,44 @@ public class Overseer : MonoBehaviour, IOnEventCallback
 
     public void HandleLocalPlayerJoinedRoom()
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 1)
         {
-            Debug.LogWarning("Im the last player to join");
-            CreateRemotePlayer(0);
-            CreateLocalPlayer(1);      
+            CreateLocalPlayer(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         }
-        else
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= NumberOfPlayers)
         {
-            Debug.LogWarning("Im the first player here");
-            CreateLocalPlayer(0);
-            CreateRemotePlayer(1);
+            OnGameReady?.Invoke(true);
         }
     }
 
-    public void OnPlayerJoinedRoom()
+    public void OnPlayerEnteredRoom(Player newPlayer)
     {
+        CreateRemotePlayer(PhotonNetwork.CurrentRoom.PlayerCount - 1);
         if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
             OnGameReady?.Invoke(true);
         }
+    }
+
+    public void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        //
+    }
+
+    public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        //
+    }
+
+    public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        //
+    }
+
+    public void OnMasterClientSwitched(Player newMasterClient)
+    {
+        //
     }
 
     #endregion
