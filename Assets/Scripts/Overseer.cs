@@ -208,7 +208,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback
 
     }
 
-    public void HandleJoinedRoom()
+    public void HandleLocalPlayerJoinedRoom()
     {
         if (PhotonNetwork.CurrentRoom.PlayerCount > 1)
         {
@@ -221,6 +221,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback
             Debug.LogWarning("Im the first player here");
             CreateLocalPlayer(0);
             CreateRemotePlayer(1);
+        }
+    }
+
+    public void OnPlayerJoinedRoom()
+    {
+        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            OnGameReady?.Invoke(true);
         }
     }
 

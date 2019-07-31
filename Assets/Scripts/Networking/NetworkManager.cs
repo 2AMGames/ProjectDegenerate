@@ -197,7 +197,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
-        Overseer.Instance.HandleJoinedRoom();
+        Overseer.Instance.HandleLocalPlayerJoinedRoom();
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)
@@ -263,7 +263,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.LogWarning("Entered room");
+
     }
 
     public void OnPlayerLeftRoom(Player otherPlayer)
