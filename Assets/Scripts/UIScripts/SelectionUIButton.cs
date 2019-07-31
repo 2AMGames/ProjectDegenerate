@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 
@@ -9,6 +10,9 @@ using UnityEngine;
 public class SelectionUIButton : BaseSelectionNode
 {
     private const string ACCEPT_BUTTON = "Submit";
+
+    public Text buttonTitleText;
+    public Image buttonImage;
 
     public UnityEvent onButtonPressedEvent;
     public UnityEvent onButtonReleasedEvent;
