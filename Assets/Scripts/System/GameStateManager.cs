@@ -8,7 +8,7 @@ public class GameStateManager : MonoBehaviour
 
     #region const variables
 
-    private const int MaxStackSize = 500;
+    private const int MaxStackSize = 60;
 
     #endregion
 
@@ -73,26 +73,8 @@ public class GameStateManager : MonoBehaviour
     {
         if (isGameReady)
         {
+            StartCoroutine(TestFrameRate());
             StartCoroutine(SaveGameState());
-        }
-    }
-
-    #endregion
-
-    #region Coroutines
-
-    private IEnumerator SaveGameState()
-    {
-        while (true)
-        {
-            if (FrameStack.Count > MaxStackSize)
-            {
-                FrameStack = new Stack<GameState>();
-            }
-            yield return new WaitForEndOfFrame();
-            GameState gameStateToPush = CreateNewGameState();
-            FrameStack.Push(gameStateToPush);
-            ++FrameCount;
         }
     }
 
@@ -104,7 +86,7 @@ public class GameStateManager : MonoBehaviour
         NewGameState.RoundTimeElapsed = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 
-        foreach(PlayerController player in Overseer.Instance.Players)
+        foreach (PlayerController player in Overseer.Instance.Players)
         {
             GameState.PlayerState state = new GameState.PlayerState();
             CommandInterpreter interpreter = player.CommandInterpreter;
@@ -123,6 +105,36 @@ public class GameStateManager : MonoBehaviour
     private void RollbackGameState(uint FrameCount)
     {
 
+    }
+
+    #endregion
+
+    #region Coroutines
+
+    private IEnumerator SaveGameState()
+    {
+        while (true)
+        {
+            if (FrameStack.Count > MaxStackSize)
+            {
+                FrameStack = new Stack<GameState>();
+            }
+            GameState gameStateToPush = CreateNewGameState();
+            FrameStack.Push(gameStateToPush);
+            ++FrameCount;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator TestFrameRate()
+    {
+        float Seconds = 15f;
+        while (Seconds >= 0.0f)
+        {
+            Seconds -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        UnityEditor.EditorApplication.isPaused = true; 
     }
 
     #endregion
