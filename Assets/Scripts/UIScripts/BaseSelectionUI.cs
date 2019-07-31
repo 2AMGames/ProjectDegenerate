@@ -20,6 +20,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
     public const string CANCEL_BUTTON = "Cancel";
     #endregion UI input names
     #endregion const variables
+
     public BaseSelectionNode initialNode;
     public BaseSelectionNode currentBaseSelectionNode;
     private bool isAutoScrolling;
@@ -28,8 +29,6 @@ public abstract class BaseSelectionUI : MonoBehaviour
 
     private void Update()
     {
-        
-
         if (!isAutoScrolling)
         {
             float x = GetHorizontalAxis();
@@ -44,7 +43,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
                 StartCoroutine(ScrollThroughSelectionNodes(new Vector2Int(0, (int)Mathf.Sign(y))));
             }
         }
-
+        
     }
 
     private void OnEnable()
@@ -54,6 +53,9 @@ public abstract class BaseSelectionUI : MonoBehaviour
 
     
     #endregion monobehaviour methods
+    /// <summary>
+    /// 
+    /// </summary>
     public virtual void OpenSelectionMenu()
     {
         SetNodeToCurrent(initialNode);
@@ -83,6 +85,10 @@ public abstract class BaseSelectionUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodeToSet"></param>
     private void SetNodeToCurrent(BaseSelectionNode nodeToSet)
     {
         if (nodeToSet == null)
@@ -163,11 +169,19 @@ public abstract class BaseSelectionUI : MonoBehaviour
 
 
     #region input methods
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public float GetVerticalAxis()
     {
         return Input.GetAxisRaw(VERTICAL_AXIS);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public float GetHorizontalAxis()
     {
         return Input.GetAxisRaw(HORIZONTAL_AXIS);
