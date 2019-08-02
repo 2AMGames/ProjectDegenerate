@@ -75,7 +75,6 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
     {
         if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
-            StartCoroutine(TestFrameRate());
             StartCoroutine(SaveGameState());
         }
         else

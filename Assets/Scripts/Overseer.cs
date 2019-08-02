@@ -267,7 +267,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values.OrderBy((x) => x.ActorNumber))
             {
-                Debug.LogWarning("Number: " + player.ActorNumber);
                 if (player != PhotonNetwork.LocalPlayer)
                 {
                     CreateRemotePlayer(player.ActorNumber - 1);
