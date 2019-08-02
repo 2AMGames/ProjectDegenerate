@@ -212,25 +212,24 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     #region EventCallbacks
 
     // On photon event received callback
-    public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
+    public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady)
         {
-            Debug.LogWarning("Other player ready");
             NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, 0x00);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck)
         {
-            Debug.LogWarning("Ack received");
             NetworkedGameReady = true;
         }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount < NumberOfPlayers)
+        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount <= Players.Count)
         {
             CreateRemotePlayer(PhotonNetwork.CurrentRoom.PlayerCount - 1);
+            Players[PhotonNetwork.CurrentRoom.PlayerCount - 1].AssociatedPlayer = newPlayer;
         }
     }
 
