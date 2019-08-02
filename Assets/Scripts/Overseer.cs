@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -263,8 +265,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (PhotonNetwork.CurrentRoom != null)
         {
-            foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
+            foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values.OrderBy((x) => x.ActorNumber))
             {
+                Debug.LogWarning("Number: " + player.ActorNumber);
                 if (player != PhotonNetwork.LocalPlayer)
                 {
                     CreateRemotePlayer(player.ActorNumber - 1);
