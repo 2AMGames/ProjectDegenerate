@@ -15,8 +15,8 @@ public class LocalPlayerController : PlayerController
 
     public void Awake()
     {
-        Overseer.Instance.OnGameReady += OnGameReady;
         enabled = false;
+        Overseer.Instance.OnGameReady += OnGameReady;
     }
 
     #endregion

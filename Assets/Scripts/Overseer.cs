@@ -226,10 +226,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount <= Players.Count)
+        if (PhotonNetwork.CurrentRoom != null && Players.Count <= PhotonNetwork.CurrentRoom.PlayerCount)
         {
-            CreateRemotePlayer(PhotonNetwork.CurrentRoom.PlayerCount - 1);
-            Players[PhotonNetwork.CurrentRoom.PlayerCount - 1].AssociatedPlayer = newPlayer;
+            // ActorNumber, from what i can tell, is the order in which the room was joined.
+            // Might need to be changed later.
+            CreateRemotePlayer(newPlayer.ActorNumber - 1);
+            Players[newPlayer.ActorNumber - 1].AssociatedPlayer = newPlayer;
         }
     }
 
@@ -261,19 +263,17 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (PhotonNetwork.CurrentRoom != null)
         {
-            int index = 0;
             foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
             {
-                Debug.LogWarning("ID: " + player.ActorNumber);
                 if (player != PhotonNetwork.LocalPlayer)
                 {
-                    CreateRemotePlayer(index);
+                    CreateRemotePlayer(player.ActorNumber - 1);
                 }
                 else
                 {
-                    CreateLocalPlayer(index);
+                    CreateLocalPlayer(player.ActorNumber - 1);
                 }
-                Players[index].AssociatedPlayer = player;
+                Players[player.ActorNumber - 1].AssociatedPlayer = player;
             }
         }
     }
