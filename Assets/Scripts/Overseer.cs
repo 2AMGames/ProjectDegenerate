@@ -60,7 +60,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             bool isReady = true;
             if (SelectedGameType == GameType.PlayerVsRemote)
             {
-                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2 && NetworkedGameReady;
+                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2;
             }
             isReady &= Players.Count >= 2;
             return isReady;
@@ -254,7 +254,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #endregion
 
-    #region Photon Network Methods
+    #region Photon Room Methods
 
     public void HandleJoinedRoom()
     {
@@ -272,16 +272,32 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
                 {
                     CreateLocalPlayer(index);
                 }
+                Players[index].AssociatedPlayer = player;
             }
         }
     }
 
+    private void SendGameReadyMessage()
+    {
+        Debug.LogWarning("Sending game ready message");
+        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, 0x00);
+    }
+
     private IEnumerator WaitUntilNetworkedGameReady()
     {
-        while(!IsGameReady)
+        while (!IsGameReady)
         {
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
+
+        SendGameReadyMessage();
+        
+        while(!NetworkedGameReady)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        Debug.LogWarning("Game ready");
         OnGameReady?.Invoke(true);
     }
 

@@ -1,5 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
+using Photon.Pun;
+using Photon.Realtime;
+
 using UnityEngine;
 
 public abstract class PlayerController : MonoBehaviour
@@ -62,14 +66,6 @@ public abstract class PlayerController : MonoBehaviour
 
     #region member variables
 
-    public CharacterStats CharacterStats;
-
-    public InteractionHandler InteractionHandler;
-
-    public CommandInterpreter CommandInterpreter;
-
-    public int PlayerIndex;
-
     private PlayerController Opponent
     {
         get
@@ -77,6 +73,16 @@ public abstract class PlayerController : MonoBehaviour
             return Overseer.Instance.GetNextCharacterByIndex(PlayerIndex);
         }
     }
+
+    public Player AssociatedPlayer;
+
+    public CharacterStats CharacterStats;
+
+    public InteractionHandler InteractionHandler;
+
+    public CommandInterpreter CommandInterpreter;
+
+    public int PlayerIndex;
 
     #endregion
 
@@ -149,6 +155,11 @@ public abstract class PlayerController : MonoBehaviour
     #endregion
 
     #region public interface
+
+    public void SetPhotonPlayer(Player player)
+    {
+        AssociatedPlayer = player;
+    }
 
     public void SetPlayerIndex(int index)
     {
