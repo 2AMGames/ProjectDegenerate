@@ -216,10 +216,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady)
         {
+            Debug.LogWarning("Other player ready");
             NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, 0x00);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck)
         {
+            Debug.LogWarning("Ack received");
             NetworkedGameReady = true;
         }
     }
