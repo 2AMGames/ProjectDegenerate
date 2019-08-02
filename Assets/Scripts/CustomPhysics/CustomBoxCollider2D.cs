@@ -22,6 +22,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
         DebugSettings.DrawLine(bounds.topRight, bounds.topLeft, colorToDraw);
         DebugSettings.DrawLine(bounds.topLeft, bounds.bottomLeft, colorToDraw);
+        
     }
 
 
