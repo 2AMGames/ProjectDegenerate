@@ -53,7 +53,6 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
 
     public void Update()
     {
-        
     }
 
     public void Awake()

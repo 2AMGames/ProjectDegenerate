@@ -58,7 +58,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     void Update()
     {
-        
     }
 
     void Awake()
@@ -66,14 +65,21 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
         PlayerController = GetComponent<PlayerController>();
         CommandInterpreter = PlayerController.CommandInterpreter;
 
+        Overseer.Instance.OnGameReady += OnGameReady;
         PhotonNetwork.AddCallbackTarget(this);
-
-        StartCoroutine(SendInputIfNeccessary());
     }
 
     #endregion
 
     #region private interface
+
+    private void OnGameReady(bool isGameReady)
+    {
+        if (isGameReady)
+        {
+            StartCoroutine(SendInputIfNeccessary());
+        }
+    }
 
     private IEnumerator SendInputIfNeccessary()
     {
@@ -94,4 +100,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     }
 
     #endregion
+
+    // TODO: Implement Ping
 }
