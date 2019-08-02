@@ -59,6 +59,8 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
     public void Awake()
     {
         PhotonNetwork.AddCallbackTarget(this);
+        Overseer.Instance.OnGameReady = OnGameReady;
+        enabled = false;
     }
 
     #endregion

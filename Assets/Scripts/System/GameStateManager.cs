@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
+using Photon.Realtime;
 using UnityEngine;
 
 // Class responsible for maintaining the gamestate
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : MonoBehaviour, IOnEventCallback
 {
 
     #region const variables
@@ -71,10 +73,14 @@ public class GameStateManager : MonoBehaviour
 
     private void OnGameReady(bool isGameReady)
     {
-        if (isGameReady)
+        if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
             StartCoroutine(TestFrameRate());
             StartCoroutine(SaveGameState());
+        }
+        else
+        {
+            enabled = false;
         }
     }
 
@@ -100,6 +106,11 @@ public class GameStateManager : MonoBehaviour
         }
 
         return NewGameState;
+    }
+
+    private void EvaluateRollbackRequest(int frameRequested)
+    {
+        Debug.LogWarning("Evaluating rollback: " + frameRequested);
     }
 
     private void RollbackGameState(uint FrameCount)
@@ -135,6 +146,18 @@ public class GameStateManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         UnityEditor.EditorApplication.isPaused = true; 
+    }
+
+    #endregion
+
+    #region Callbacks
+
+    public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
+    {
+        if (photonEvent.Code == NetworkManager.RollbackRequest)
+        {
+            EvaluateRollbackRequest((int)photonEvent.CustomData);   
+        }
     }
 
     #endregion

@@ -16,9 +16,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte PlayerConnected = 0x00;
 
-    public const byte SynchronizationNeeded = 0x01;
+    public const byte RemotePlayerReady = 0x01;
 
-    public const byte SynchronizationAck = 0x02;
+    public const byte RemotePlayerReadyAck = 0x02;
 
     public const byte PlayerInputUpdate = 0x03;
 
@@ -26,7 +26,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte EvaluateWinner = 0x05;
 
-    public const byte PlayerLeaving = 0x06;
+    public const byte RollbackRequest = 0x06;
+
+    public const byte PlayerLeaving = 0x07;
 
     #endregion
 
@@ -44,6 +46,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     [HideInInspector]
     public string CurrentRoomId;
+
+    public int CurrentDelayFrames;
+
+    public int CurrentPing
+    {
+        get
+        {
+            return 0;
+        }
+    }
 
     #endregion
 
@@ -131,9 +143,19 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Private Interface
 
+    private void SetPlayerPhotonSettings()
+    {
+        ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+    }
+
     private void RegisterEventTypes()
     {
         PhotonPeer.RegisterType(typeof(PlayerInputData), PlayerInputUpdate, PlayerInputData.Serialize, PlayerInputData.Deserialize);
+    }
+
+    private void UpdateDelay()
+    {
+
     }
 
     #endregion
@@ -197,7 +219,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
-        Overseer.Instance.HandleLocalPlayerJoinedRoom();
+        Overseer.Instance.HandleJoinedRoom();
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)

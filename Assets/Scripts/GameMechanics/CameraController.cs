@@ -36,16 +36,16 @@ public class CameraController : MonoBehaviour
         {
             MainCamera = GetComponent<Camera>();
         }
+
+        Overseer.Instance.OnGameReady += OnGameReady;
         SetCameraBounds();
+        enabled = false;
     }
 
     private void LateUpdate()
     {
-        if (Overseer.Instance.IsGameReady)
-        {
-            UpdateCameraPosition();
-            SetCameraBounds();
-        }
+        UpdateCameraPosition();
+        SetCameraBounds();
     }
 
     private void OnValidate()
@@ -59,6 +59,14 @@ public class CameraController : MonoBehaviour
     #endregion
 
     #region private methods
+
+    private void OnGameReady(bool isReady)
+    {
+        if (isReady)
+        {
+            enabled = true;
+        }
+    }
 
     private void UpdateCameraPosition()
     {

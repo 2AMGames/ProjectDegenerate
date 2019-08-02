@@ -8,12 +8,15 @@ public class LocalPlayerController : PlayerController
 
     public void Update()
     {
-        if (Overseer.Instance.IsGameReady)
-        {
-            UpdateButtonInput();
+        UpdateButtonInput();
 
-            CommandInterpreter.UpdateJoystickInput(UpdateJoystickInput());
-        }
+        CommandInterpreter.UpdateJoystickInput(UpdateJoystickInput());
+    }
+
+    public void Awake()
+    {
+        Overseer.Instance.OnGameReady += OnGameReady;
+        enabled = false;
     }
 
     #endregion

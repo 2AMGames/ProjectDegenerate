@@ -242,6 +242,11 @@ public abstract class PlayerController : MonoBehaviour
 
     protected abstract Vector2Int UpdateJoystickInput();
 
+    protected void OnGameReady(bool isReady)
+    {
+        enabled = true;
+    }
+
     #endregion
 
 }
