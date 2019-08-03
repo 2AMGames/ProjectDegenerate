@@ -32,6 +32,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
+    #region Player Custom Property Keys
+
+    public const string PlayerPingKey = "Ping";
+
+    #endregion
+
     #region Photon Event Codes
 
     // DO NOT CHANGE THESE.

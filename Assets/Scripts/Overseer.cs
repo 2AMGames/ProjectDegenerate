@@ -161,6 +161,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             case PlayerController.PlayerType.Local:
                 playerController = playerControllerGameObject.AddComponent<LocalPlayerController>();
                 playerController.PlayerIndex = playerIndex;
+
+                if (SelectedGameType == GameType.PlayerVsRemote)
+                {
+                    playerController.gameObject.AddComponent<NetworkInputHandler>();
+                }
                 break;
             case PlayerController.PlayerType.Remote:
                 playerController = playerControllerGameObject.AddComponent<RemotePlayerController>();
@@ -179,11 +184,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         playerController.CommandInterpreter = associatedPlayer.GetComponent<CommandInterpreter>();
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
-
-        if (SelectedGameType == GameType.PlayerVsRemote)
-        {
-            playerController.gameObject.AddComponent<NetworkInputHandler>();
-        }
 
         if (Players.Count > playerIndex + 1)
         {
@@ -206,7 +206,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         PlayerVsPlayer,
         PlayerVsRemote,
-        PlayerVsAI
+        PlayerVsAI,
+        Observer
     }
 
     #endregion
@@ -267,15 +268,18 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values.OrderBy((x) => x.ActorNumber))
             {
-                if (player != PhotonNetwork.LocalPlayer)
+                if (player.ActorNumber <= 2)
                 {
-                    CreateRemotePlayer(player.ActorNumber - 1);
+                    if (player != PhotonNetwork.LocalPlayer)
+                    {
+                        CreateRemotePlayer(player.ActorNumber - 1);
+                    }
+                    else
+                    {
+                        CreateLocalPlayer(player.ActorNumber - 1);
+                    }
+                    Players[player.ActorNumber - 1].AssociatedPlayer = player;
                 }
-                else
-                {
-                    CreateLocalPlayer(player.ActorNumber - 1);
-                }
-                Players[player.ActorNumber - 1].AssociatedPlayer = player;
             }
         }
     }
@@ -300,7 +304,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.LogWarning("Game ready");
+        Debug.LogWarning("Game Starting");
         OnGameReady?.Invoke(true);
     }
 

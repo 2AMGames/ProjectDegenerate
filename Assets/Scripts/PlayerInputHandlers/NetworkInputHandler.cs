@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+
+using ExitGames.Client.Photon;
 
 using Photon.Pun;
 using Photon.Realtime;
@@ -8,7 +11,19 @@ using UnityEngine;
 public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 {
 
+    #region const variables
+    
+    // If the difference in ping we read from the custom player properties is more than this value, then we should
+    // update the custom properties with the new value.
+    private const int PingThreshold = 5;
+
+    private const float SecondsToCheckForPing = 6f;
+
+    #endregion
+
     #region main variables
+
+    private Player AssociatedPlayer;
 
     private PlayerController PlayerController;
 
@@ -58,13 +73,13 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     void Update()
     {
+
     }
 
     void Awake()
     {
         PlayerController = GetComponent<PlayerController>();
         CommandInterpreter = PlayerController.CommandInterpreter;
-
         Overseer.Instance.OnGameReady += OnGameReady;
         PhotonNetwork.AddCallbackTarget(this);
     }
@@ -77,7 +92,48 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     {
         if (isGameReady)
         {
+            AssociatedPlayer = PlayerController.AssociatedPlayer;
+            UpdatePlayerPing();
+
+            StartCoroutine(CheckForPingUpdate());
             StartCoroutine(SendInputIfNeccessary());
+
+            enabled = true;
+        }
+    }
+
+    private void UpdatePlayerPing()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            ExitGames.Client.Photon.Hashtable playerProperties = AssociatedPlayer.CustomProperties;
+            if (playerProperties.ContainsKey(NetworkManager.PlayerPingKey))
+            {
+                int ping = (int)playerProperties[NetworkManager.PlayerPingKey];
+                int currentPing = PhotonNetwork.GetPing();
+
+                if (Math.Abs(currentPing - ping) >= PingThreshold)
+                {
+                    playerProperties[NetworkManager.PlayerPingKey] = currentPing;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+
+                    Debug.LogWarning("New Ping: " + playerProperties[NetworkManager.PlayerPingKey]);
+                }
+            }
+            else
+            {
+                playerProperties[NetworkManager.PlayerPingKey] = PhotonNetwork.GetPing();
+            }
+        }
+    }
+
+    private IEnumerator CheckForPingUpdate()
+    {
+        while (Overseer.Instance.IsGameReady)
+        {
+            yield return new WaitForSeconds(SecondsToCheckForPing);
+
+            UpdatePlayerPing();
         }
     }
 
