@@ -140,7 +140,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     private IEnumerator SendInputIfNeccessary()
     {
-        Debug.LogWarning("What");
         while (true)
         {
             yield return new WaitForEndOfFrame();
@@ -151,7 +150,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 {
                     inputData.PlayerIndex = PlayerController.PlayerIndex;
 
-                    Debug.LogWarning("Sending data");
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
                 }
             }
