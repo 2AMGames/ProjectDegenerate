@@ -156,16 +156,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         GameObject associatedPlayer = PlayerObjects[playerIndex];
         GameObject playerControllerGameObject = new GameObject();
         PlayerController playerController;
+
         switch (playerType)
         {
             case PlayerController.PlayerType.Local:
                 playerController = playerControllerGameObject.AddComponent<LocalPlayerController>();
                 playerController.PlayerIndex = playerIndex;
 
-                if (SelectedGameType == GameType.PlayerVsRemote)
-                {
-                    playerController.gameObject.AddComponent<NetworkInputHandler>();
-                }
                 break;
             case PlayerController.PlayerType.Remote:
                 playerController = playerControllerGameObject.AddComponent<RemotePlayerController>();
@@ -185,6 +182,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
 
+        if (SelectedGameType == GameType.PlayerVsRemote && playerType == PlayerController.PlayerType.Local)
+        {
+            playerController.gameObject.AddComponent<NetworkInputHandler>();
+        }
+
+        playerControllerGameObject.transform.parent = this.gameObject.transform;
+        playerControllerGameObject.name = PlayerControllerString + (playerIndex + 1);
+
         if (Players.Count > playerIndex + 1)
         {
             Players[playerIndex] = playerController;
@@ -193,9 +198,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             Players.Add(playerController);
         }
-
-        playerControllerGameObject.transform.parent = this.gameObject.transform;
-        playerControllerGameObject.name = PlayerControllerString + (playerIndex + 1);
     }
 
     #endregion
@@ -304,7 +306,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.LogWarning("Game Starting");
         OnGameReady?.Invoke(true);
     }
 
