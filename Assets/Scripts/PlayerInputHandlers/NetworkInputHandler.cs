@@ -96,7 +96,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
             UpdatePlayerPing();
 
-            StartCoroutine(CheckForPingUpdate());
+            //StartCoroutine(CheckForPingUpdate());
             StartCoroutine(SendInputIfNeccessary());
 
             enabled = true;
@@ -148,6 +148,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
                 if (inputData != null)
                 {
+                    Debug.LogWarning("Sending");
                     inputData.PlayerIndex = PlayerController.PlayerIndex;
 
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);

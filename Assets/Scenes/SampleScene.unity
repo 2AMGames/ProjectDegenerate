@@ -1785,6 +1785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UsePhotonMatchmaking: 1
   CurrentRoomId: 
+  CurrentDelayFrames: 0
 --- !u!4 &865024345
 Transform:
   m_ObjectHideFlags: 0

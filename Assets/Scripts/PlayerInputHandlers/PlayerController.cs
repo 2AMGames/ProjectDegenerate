@@ -167,91 +167,19 @@ public abstract class PlayerController : MonoBehaviour
         CharacterStats.PlayerIndex = index;
     }
 
-    public void UpdateButtonsFromInputData(PlayerInputData inputData)
-    {
-
-        if ((inputData.InputPattern & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(LP_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(LP_ANIM_TRIGGER);
-        }
-
-        if (((inputData.InputPattern >> 1) & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(MP_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(MP_ANIM_TRIGGER);
-        }
-
-        if (((inputData.InputPattern >> 2) & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(HP_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(HP_ANIM_TRIGGER);
-        }
-
-        if (((inputData.InputPattern >> 3) & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(LK_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(LK_ANIM_TRIGGER);
-        }
-
-        if (((inputData.InputPattern >> 4) & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(MK_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(MK_ANIM_TRIGGER);
-        }
-
-        if (((inputData.InputPattern >> 5) & 1) == 1)
-        {
-            CommandInterpreter.OnButtonEventTriggered(HK_ANIM_TRIGGER);
-            CommandInterpreter.OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
-        }
-        else
-        {
-            CommandInterpreter.OnButtonReleased(HK_ANIM_TRIGGER);
-        }
-    }
-
-    public Vector2Int GetJoystickInputFromData(PlayerInputData inputData)
-    {
-        Vector2Int joystickVector = new Vector2Int();
-
-        joystickVector.x -= ((inputData.InputPattern >> 6) & 1) == 1 ? 1 : 0;
-        joystickVector.x += ((inputData.InputPattern >> 7) & 1) == 1 ? 1 : 0;
-
-        joystickVector.y += ((inputData.InputPattern >> 8) & 1) == 1 ? 1 : 0;
-        joystickVector.y -= ((inputData.InputPattern >> 9) & 1) == 1 ? 1 : 0;
-
-        return joystickVector;
-
-    }
-
     #endregion
 
     #region virtual interface
 
-    protected abstract void UpdateButtonInput();
+    protected virtual void UpdateButtonInput(ref ushort inputPattern)
+    {
 
-    protected abstract Vector2Int UpdateJoystickInput();
+    }
+
+    protected virtual void UpdateJoystickInput(ref ushort inputPattern)
+    {
+
+    }
 
     protected void OnGameReady(bool isReady)
     {

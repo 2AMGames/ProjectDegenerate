@@ -14,7 +14,7 @@ public class CommandInterpreter : MonoBehaviour
         UP = 8,
         BACK_UP = 7,
         FORWARD = 6,
-        NEUTRAL = 5, 
+        NEUTRAL = 5,
         BACK = 4,
         FORWARD_DOWN = 3,
         DOWN = 2,
@@ -127,6 +127,10 @@ public class CommandInterpreter : MonoBehaviour
     }
     public CharacterStats characterStats { get; private set; }
 
+    #endregion
+
+    #region input variables
+
     public DIRECTION CurrentDirection { get { return currentDirectionalInputStruct.direction; } }
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
@@ -137,6 +141,8 @@ public class CommandInterpreter : MonoBehaviour
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
+    private Queue<PlayerInputData> InputBuffer = new Queue<PlayerInputData>();
+
     #endregion
 
     #region monobehaviour methods
@@ -144,29 +150,10 @@ public class CommandInterpreter : MonoBehaviour
     {
         characterStats = GetComponent<CharacterStats>();
 
-
-        FramesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
-
-        FramesRemainingUntilRemoveFromBuffer.Add(LP_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(HP_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
-
-        ButtonsPressed.Add(LP_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(MP_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(HP_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(LK_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(MK_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(HK_ANIM_TRIGGER, false);
-
-        FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
+        ResetInputData();
 
         currentDirectionalInputStruct.direction = DIRECTION.NEUTRAL;
         currentDirectionalInputStruct.directionInput = Vector2Int.zero;
-
     }
 
     private void Start()
@@ -177,71 +164,23 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (InputBuffer.Count > 0)
+        {
+            ExecuteInput(InputBuffer.Dequeue());
+        }
+    }
+
     #endregion
 
     #region public interface
 
-    public void UpdateJoystickInput(Vector2Int currentJoystickVec)
+    public void QueuePlayerInput(PlayerInputData dataToQueue)
     {
-        if (lastJoystickInput != currentJoystickVec)
+        if (dataToQueue != null)
         {
-            currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
-            DirectionalinputStruct dInput = new DirectionalinputStruct();
-            dInput.direction = CurrentDirection;
-            dInput.directionInput = currentJoystickVec;
-            directionalInputRecordList.Add(dInput);
-            StartCoroutine(RemoveDirectionalInputAfterTime());
-
-            CheckForJumpInput(lastJoystickInput, currentJoystickVec);
-            currentDirectionalInputStruct.directionInput = currentJoystickVec;
-
-            currentButtonPattern = GetPlayerInputByte();
-
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="buttonEvent"></param>
-    public void OnButtonEventTriggered(string buttonEventName)
-    {
-
-        if (!ButtonsPressed[buttonEventName])
-        {
-
-            Anim.SetTrigger(buttonEventName);
-            Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
-
-            if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
-            {
-                StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
-            }
-            if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
-            {
-                StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
-            }
-
-            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
-
-            ButtonsPressed[buttonEventName] = true;
-
-            CheckDirectionalInputCommands();
-
-            currentButtonPattern = GetPlayerInputByte();
-        }
-    }
-
-    public void OnButtonReleased(string buttonEventName)
-    {
-        if (ButtonsPressed[buttonEventName] == true)
-        {
-            OnButtonReleasedEvent?.Invoke(buttonEventName);
-            ButtonsPressed[buttonEventName] = false;
-
-            currentButtonPattern = GetPlayerInputByte();
+            InputBuffer.Enqueue(dataToQueue);
         }
     }
 
@@ -288,8 +227,6 @@ public class CommandInterpreter : MonoBehaviour
             data.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
             data.InputPattern = GetPlayerInputByte();
 
-            lastButtonPattern = currentButtonPattern;
-
             return data;
         }
         return null;
@@ -299,9 +236,137 @@ public class CommandInterpreter : MonoBehaviour
 
     #region private interface
 
+    private void ExecuteInput(PlayerInputData inputData)
+    {
+        if ((inputData.InputPattern & 1) == 1)
+        {
+            OnButtonEventTriggered(LP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(LP_ANIM_TRIGGER);
+        }
+
+        if (((inputData.InputPattern >> 1) & 1) == 1)
+        {
+            OnButtonEventTriggered(MP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(MP_ANIM_TRIGGER);
+        }
+
+        if (((inputData.InputPattern >> 2) & 1) == 1)
+        {
+            OnButtonEventTriggered(HP_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(HP_ANIM_TRIGGER);
+        }
+
+        if (((inputData.InputPattern >> 3) & 1) == 1)
+        {
+            OnButtonEventTriggered(LK_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(LK_ANIM_TRIGGER);
+        }
+
+        if (((inputData.InputPattern >> 4) & 1) == 1)
+        {
+            OnButtonEventTriggered(MK_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(MK_ANIM_TRIGGER);
+        }
+
+        if (((inputData.InputPattern >> 5) & 1) == 1)
+        {
+            OnButtonEventTriggered(HK_ANIM_TRIGGER);
+            OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
+        }
+        else
+        {
+            OnButtonReleased(HK_ANIM_TRIGGER);
+        }
+
+        UpdateJoystickInput(GetJoystickInputFromData(inputData));
+
+        if (lastButtonPattern != inputData.InputPattern)
+        {
+            lastButtonPattern = inputData.InputPattern;
+        }
+    }
+
+    public void OnButtonEventTriggered(string buttonEventName)
+    {
+        if (!ButtonsPressed[buttonEventName])
+        {
+            Anim.SetTrigger(buttonEventName);
+            Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
+
+            if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
+            {
+                StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
+            }
+            if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
+            {
+                StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
+            }
+
+            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+
+            ButtonsPressed[buttonEventName] = true;
+
+            CheckDirectionalInputCommands();
+
+        }
+    }
+
+    private void UpdateJoystickInput(Vector2Int currentJoystickVec)
+    {
+        if (lastJoystickInput != currentJoystickVec)
+        {
+            currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
+            OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
+            DirectionalinputStruct dInput = new DirectionalinputStruct();
+            dInput.direction = CurrentDirection;
+            dInput.directionInput = currentJoystickVec;
+            directionalInputRecordList.Add(dInput);
+            StartCoroutine(RemoveDirectionalInputAfterTime());
+
+            CheckForJumpInput(lastJoystickInput, currentJoystickVec);
+            currentDirectionalInputStruct.directionInput = currentJoystickVec;
+
+        }
+    }
+
     private int IsButtonPressed(string buttonTrigger)
     {
         return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
+    }
+
+    private Vector2Int GetJoystickInputFromData(PlayerInputData inputData)
+    {
+        Vector2Int joystickVector = new Vector2Int();
+
+        joystickVector.x -= ((inputData.InputPattern >> 6) & 1) == 1 ? 1 : 0;
+        joystickVector.x += ((inputData.InputPattern >> 7) & 1) == 1 ? 1 : 0;
+
+        joystickVector.y += ((inputData.InputPattern >> 8) & 1) == 1 ? 1 : 0;
+        joystickVector.y -= ((inputData.InputPattern >> 9) & 1) == 1 ? 1 : 0;
+
+        return joystickVector;
+
     }
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
@@ -318,7 +383,7 @@ public class CommandInterpreter : MonoBehaviour
     /// <returns></returns>
     private DIRECTION InterpretJoystickAsDirection(Vector2Int joystickInput)
     {
-        int x = joystickInput.x * (characterStats.MovementMechanics.isFacingRight ? 1 : -1 );
+        int x = joystickInput.x * (characterStats.MovementMechanics.isFacingRight ? 1 : -1);
         int y = joystickInput.y;
 
         if (x == 0)
@@ -350,35 +415,6 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
-    {
-        yield return null;
-        
-        while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
-        {
-            yield return new WaitForFixedUpdate();
-            //if (buttonEventName == BUTTON_ACTION_TRIGGER)
-            //{
-            //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
-            //}
-            --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
-        }
-        
-        Anim.ResetTrigger(buttonEventName);
-    }
-
-    private IEnumerator RemoveDirectionalInputAfterTime()
-    {
-        int framesThatHavePassed = 0;
-        while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
-        {
-            yield return new WaitForFixedUpdate();
-            ++framesThatHavePassed;
-        }
-
-        directionalInputRecordList.RemoveAt(0);
-    }
-
     private void CheckDirectionalInputCommands()
     {
         if (CheckIfDirectionalArrayMatches(QCB_INPUT) > 0)
@@ -401,8 +437,6 @@ public class CommandInterpreter : MonoBehaviour
             }
         }
     }
-
-
 
     /// <summary>
     /// Checks to see if the array that is passed in matches anywhere in our 
@@ -451,18 +485,76 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="direction"></param>
-    private void PrintDirectionalArray(DIRECTION direction)
+    public void OnButtonReleased(string buttonEventName)
     {
+        if (ButtonsPressed[buttonEventName] == true)
+        {
+            OnButtonReleasedEvent?.Invoke(buttonEventName);
+            ButtonsPressed[buttonEventName] = false;
 
+            currentButtonPattern = GetPlayerInputByte();
+        }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    private void ResetInputData()
+    {
+        FramesRemainingUntilRemoveFromBuffer.Add(BUTTON_ACTION_TRIGGER, 0);
+
+        FramesRemainingUntilRemoveFromBuffer.Add(LP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(HP_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
+
+        ButtonsPressed.Add(LP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(MP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(HP_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(LK_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(MK_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(HK_ANIM_TRIGGER, false);
+
+        FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
+    }
+
+    #endregion
+
+    #region Coroutines
+
+    private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
+    {
+        yield return null;
+
+        while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
+        {
+            yield return new WaitForFixedUpdate();
+            //if (buttonEventName == BUTTON_ACTION_TRIGGER)
+            //{
+            //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
+            //}
+            --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
+        }
+
+        Anim.ResetTrigger(buttonEventName);
+    }
+
+    private IEnumerator RemoveDirectionalInputAfterTime()
+    {
+        int framesThatHavePassed = 0;
+        while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
+        {
+            yield return new WaitForFixedUpdate();
+            ++framesThatHavePassed;
+        }
+
+        directionalInputRecordList.RemoveAt(0);
+    }
+
+    #endregion
+
+    #region structs
+
     public struct DirectionalinputStruct
     {
         public Vector2Int directionInput;

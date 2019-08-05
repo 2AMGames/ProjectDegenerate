@@ -22,30 +22,19 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
     // Bit 8: Up Directional Input
     // Bit 9: Down Directional Input
 
-    protected override void UpdateButtonInput()
+    protected override void UpdateButtonInput(ref ushort inputPattern)
     {
 
     }
 
-    protected override Vector2Int UpdateJoystickInput()
+    protected override void UpdateJoystickInput(ref ushort inputPattern)
     {
-        float horizontal = Input.GetAxisRaw(HorizontalInputKey);
-        float vertical = Input.GetAxisRaw(VerticalInputKey);
-
-        int horizontalInputAsInt = 0;
-        int verticalInputAsInt = 0;
-
-        if (Mathf.Abs(horizontal) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            horizontalInputAsInt = (int)Mathf.Sign(horizontal);
-        }
-
-        if (Mathf.Abs(vertical) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            verticalInputAsInt = (int)Mathf.Sign(vertical);
-        }
-        return new Vector2Int(horizontalInputAsInt, verticalInputAsInt);
+        
     }
+
+    #endregion
+
+    #region main variables
 
     #endregion
 
@@ -75,8 +64,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 PlayerInputData data = eventData.CustomData as PlayerInputData;
                 if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
-                    base.UpdateButtonsFromInputData(data);
-                    CommandInterpreter.UpdateJoystickInput(base.GetJoystickInputFromData(data));
+                    CommandInterpreter.QueuePlayerInput(data);
                 }
             }
             catch (System.Exception e)
@@ -85,6 +73,10 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             }
         }
     }
+
+    #endregion
+
+    #region private interface
 
     #endregion
 }
