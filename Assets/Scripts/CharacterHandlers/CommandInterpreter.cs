@@ -25,11 +25,6 @@ public class CommandInterpreter : MonoBehaviour
     #endregion enum
 
     #region const variabes
-
-    private const ushort BitMask = 0xFF;
-
-    private const bool DEFAULT_DIRECTION_RIGHT = true;
-
     private const int FRAMES_TO_BUFFER = 50;
     private const int DIRECTIONAL_INPUT_LENIENCY = 50;
 
