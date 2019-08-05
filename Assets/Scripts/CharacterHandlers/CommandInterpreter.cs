@@ -227,6 +227,8 @@ public class CommandInterpreter : MonoBehaviour
             data.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
             data.InputPattern = GetPlayerInputByte();
 
+            lastButtonPattern = currentButtonPattern;
+
             return data;
         }
         return null;
@@ -300,10 +302,7 @@ public class CommandInterpreter : MonoBehaviour
 
         UpdateJoystickInput(GetJoystickInputFromData(inputData));
 
-        if (lastButtonPattern != inputData.InputPattern)
-        {
-            lastButtonPattern = inputData.InputPattern;
-        }
+        currentButtonPattern = inputData.InputPattern;
     }
 
     public void OnButtonEventTriggered(string buttonEventName)
@@ -346,7 +345,6 @@ public class CommandInterpreter : MonoBehaviour
 
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);
             currentDirectionalInputStruct.directionInput = currentJoystickVec;
-
         }
     }
 
@@ -491,8 +489,6 @@ public class CommandInterpreter : MonoBehaviour
         {
             OnButtonReleasedEvent?.Invoke(buttonEventName);
             ButtonsPressed[buttonEventName] = false;
-
-            currentButtonPattern = GetPlayerInputByte();
         }
     }
 
