@@ -73,7 +73,6 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private void OnGameReady(bool isGameReady)
     {
-        Debug.LogWarning("Game ready?");
         if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
             StartCoroutine(SaveGameState());
