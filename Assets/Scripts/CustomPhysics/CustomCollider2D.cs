@@ -10,12 +10,22 @@ using UnityEngine;
 public abstract class CustomCollider2D : MonoBehaviour {
 	[Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
+    [Tooltip("")]
     public float HorizontalBuffer = .02f;
+    [Tooltip("")]
     public float VerticalBuffer = .02f;
+    [Tooltip("")]
     public int verticalRayCount;
+    [Tooltip("")]
     public int horizontalRayCount;
 
+    /// <summary>
+    /// The attached Custom physics component that is attached to our custom collider
+    /// This is not required for components that are static.
+    /// </summary>
     public CustomPhysics2D rigid { get; set; }
+
+    [Tooltip("Indicates whether or not the object is static")]
     public bool isStatic;
 
     
@@ -54,7 +64,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
 
     /// <summary>
-    /// Be sure to call this methodd
+    /// Be sure to call this method
     /// </summary>
     public abstract void UpdateBoundsOfCollider();
 
@@ -97,6 +107,34 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     protected abstract bool CheckCollisionLeftFromVelocity();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetLowerBoundsAtXValue(float x);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetUpperBoundsAtXValue(float x);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetRighBoundAtYValue(float y);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetLeftBoundAtYValue(float y);
     
 
     /// <summary>

@@ -10,6 +10,9 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     private bool drawHorizontal;
     public Vector2 capsuleOffset;
 
+    public BoundsRect bounds;
+    public BoundsRect previousBounds;
+
     #region monobehaviour methods
     private void OnDrawGizmos()
     {
@@ -96,7 +99,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        base.UpdateBoundsOfCollider();
+        previousBounds = bounds;
 
         BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
@@ -110,5 +113,25 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         b.bottomRight = origin - Vector2.up * ySize / 2 + Vector2.right * xSize / 2;
 
         this.bounds = b;
+    }
+
+    public override Vector2 GetLowerBoundsAtXValue(float x)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetUpperBoundsAtXValue(float x)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetRighBoundAtYValue(float y)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetLeftBoundAtYValue(float y)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -52,7 +52,7 @@ public class PhysicsManager : MonoBehaviour
         {
             for (int j = i + 1; j < colliderList.Count; j++)
             {
-                if (CustomCollider2D.RectIntersectRect(colliderList[i].bounds, colliderList[j].bounds, out vec))
+                if (CustomCollider2D.RectIntersectRect(((CustomBoxCollider2D)colliderList[i]).bounds, ((CustomBoxCollider2D)colliderList[j]).bounds, out vec))
                 {
                     //print("I made it here");
                     if (colliderList[i].isStatic)

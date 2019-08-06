@@ -137,10 +137,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        float lowestYValue = tileCollidersThatWeHit[0].bounds.bottomRight.y;
+        float lowestYValue = tileCollidersThatWeHit[0].GetLowerBoundsAtXValue(this.transform.position.x).y;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.bottomRight.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetLowerBoundsAtXValue(this.transform.position.x).y);
             if (pointThatWeCollidedWith.y < lowestYValue)
             {
                 lowestYValue = pointThatWeCollidedWith.y;
@@ -171,10 +171,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        float highestYValue = tileCollidersThatWeHit[0].bounds.topLeft.y;
+        float highestYValue = tileCollidersThatWeHit[0].GetUpperBoundsAtXValue(this.transform.position.x).y;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.topLeft.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetUpperBoundsAtXValue(this.transform.position.x).y);
             if (pointThatWeCollidedWith.y > highestYValue)
             {
                 highestYValue = pointThatWeCollidedWith.y;
@@ -206,10 +206,10 @@ public class CustomBoxCollider2D : CustomCollider2D
             return false;
         }
         //print(tileCollidersThatWeHit[0].name);
-        float lowestXValue = tileCollidersThatWeHit[0].bounds.bottomLeft.x;
+        float lowestXValue = tileCollidersThatWeHit[0].GetLeftBoundAtYValue(this.transform.position.y).x;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomLeft.x, this.transform.position.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetLeftBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
             if (pointThatWeCollidedWith.x < lowestXValue)
             {
                 lowestXValue = pointThatWeCollidedWith.x;
@@ -242,10 +242,10 @@ public class CustomBoxCollider2D : CustomCollider2D
             return false;
         }
         //print(tileCollidersThatWeHit[0].name);
-        float highestXValue = tileCollidersThatWeHit[0].bounds.bottomRight.x;
+        float highestXValue = tileCollidersThatWeHit[0].GetRighBoundAtYValue(this.transform.position.y).x;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomRight.x, this.transform.position.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetRighBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
             if (pointThatWeCollidedWith.x > highestXValue)
             {
                 highestXValue = pointThatWeCollidedWith.x;
@@ -298,5 +298,25 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
 
         bCollider.UpdateBoundsOfCollider();
+    }
+
+    public override Vector2 GetLowerBoundsAtXValue(float x)
+    {
+        return new Vector2(x, bounds.bottomLeft.y);
+    }
+
+    public override Vector2 GetUpperBoundsAtXValue(float x)
+    {
+        return new Vector2(x, bounds.topRight.y);
+    }
+
+    public override Vector2 GetRighBoundAtYValue(float y)
+    {
+        return new Vector2(bounds.topRight.x, y);
+    }
+
+    public override Vector2 GetLeftBoundAtYValue(float y)
+    {
+        return new Vector2(bounds.bottomLeft.x, y);
     }
 }

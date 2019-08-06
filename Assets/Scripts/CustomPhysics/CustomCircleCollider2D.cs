@@ -17,7 +17,8 @@ public class CustomCircleCollider2D : CustomCollider2D
 
 #if UNITY_EDITOR
 
-        UnityEditor.Handles.DrawWireDisc()
+        UnityEditor.Handles.DrawWireDisc(bounds.center, Vector3.forward, bounds.radius);
+
 #endif
     }
     #endregion monobehaviour methods
@@ -52,12 +53,33 @@ public class CustomCircleCollider2D : CustomCollider2D
         throw new System.NotImplementedException();
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        base.UpdateBoundsOfCollider();
         BoundsCircle cBounds = new BoundsCircle();
         cBounds.center = this.transform.position;
         cBounds.radius = radius;
+    }
+
+    public override Vector2 GetLowerBoundsAtXValue(float x)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetUpperBoundsAtXValue(float x)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetRighBoundAtYValue(float y)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override Vector2 GetLeftBoundAtYValue(float y)
+    {
+        throw new System.NotImplementedException();
     }
 }
