@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomCapsuleCollider : CustomCollider2D
+public class CustomCapsuleCollider2D : CustomCollider2D
 {
     public float size = 1;
     public float radius = 1;
@@ -29,47 +29,71 @@ public class CustomCapsuleCollider : CustomCollider2D
             UnityEditor.Handles.color = colorToDraw;
             UnityEditor.Handles.DrawWireDisc(bounds.topLeft + offsetToCenter, Vector3.forward, radius);
             UnityEditor.Handles.DrawWireDisc(bounds.bottomLeft + offsetToCenter, Vector3.forward, radius);
-
         }
 #endif
     }
 #endregion monobehaviour methods
 
-    public override CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
-    {
-        throw new System.NotImplementedException();
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="collider"></param>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     protected override bool CheckCollisionDownFromVelocity()
     {
         throw new System.NotImplementedException();
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     protected override bool CheckCollisionLeftFromVelocity()
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     protected override bool CheckCollisionRightFromVelocity()
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     protected override bool CheckCollisionUpFromVelocity()
     {
         throw new System.NotImplementedException();
     }
-
+    
+    /// <summary>
+    /// Updates the bounds of the capsule collider
+    /// </summary>
     public override void UpdateBoundsOfCollider()
     {
         base.UpdateBoundsOfCollider();

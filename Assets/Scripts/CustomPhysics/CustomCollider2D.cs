@@ -18,15 +18,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public CustomPhysics2D rigid { get; set; }
     public bool isStatic;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public BoundsRect bounds { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected BoundsRect previousBounds { get; set; }
+    
 
     protected virtual void Awake()
     {
@@ -64,10 +56,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <summary>
     /// Be sure to call this methodd
     /// </summary>
-    public virtual void UpdateBoundsOfCollider()
-    {
-        previousBounds = bounds;
-    }
+    public abstract void UpdateBoundsOfCollider();
 
     /// <summary>
     /// 
@@ -138,7 +127,27 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);
 
-    public abstract CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount);
+    public virtual CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
+    {
+        Vector2 offset = (v2 - v1) / (rayCount - 1);
+        List<CustomCollider2D> lineColliders;
+        HashSet<CustomCollider2D> allLines = new HashSet<CustomCollider2D>();
+        for (int i = 0; i < rayCount; i++)
+        {
+            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
+            foreach (CustomCollider2D c in lineColliders)
+            {
+                if (c != this)
+                {
+                    allLines.Add(c);
+                }
+            }
+        }
+
+        CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
+        allLines.CopyTo(allValidColliderList);
+        return allValidColliderList;
+    }
 
     /// <summary>
     /// Call this method to check if we intersect with a colider
@@ -178,7 +187,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     #region static methods
     /// <summary>
-    /// 
+    /// Use this method to check if a rect bounds intersects another rect bound
     /// </summary>
     /// <returns></returns>
     public static bool RectIntersectRect(BoundsRect r1, BoundsRect r2, out Vector2 intersectionPoint)
@@ -202,7 +211,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
+    /// Use this method to check if a rect bounds intersects a circle bounds
     /// </summary>
     /// <param name="r"></param>
     /// <param name="c"></param>
@@ -239,7 +248,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
+    /// Use this method to check if two circle bounds are intersecting with each other
     /// </summary>
     /// <param name="c1"></param>
     /// <param name="c2"></param>

@@ -7,7 +7,15 @@ public class CustomBoxCollider2D : CustomCollider2D
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
 
-    
+    /// <summary>
+    /// 
+    /// </summary>
+    public BoundsRect bounds { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected BoundsRect previousBounds { get; set; }
 
     protected virtual void OnDrawGizmos()
     {
@@ -32,7 +40,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        base.UpdateBoundsOfCollider();
+        previousBounds = bounds;
         
         BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
@@ -109,36 +117,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         return -v2.x * v1.y + v1.x * v2.y;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="v1"></param>
-    /// <param name="v2"></param>
-    /// <param name="direction"></param>
-    /// <param name="distance"></param>
-    /// <param name="rayCount"></param>
-    /// <returns></returns>
-    public override CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
-    {
-        Vector2 offset = (v2 - v1) / (rayCount - 1);
-        List<CustomCollider2D> lineColliders;
-        HashSet<CustomCollider2D> allLines = new HashSet<CustomCollider2D>();
-        for (int i = 0; i < rayCount; i++)
-        {
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
-            foreach (CustomCollider2D c in lineColliders)
-            {
-                if (c != this)
-                {
-                    allLines.Add(c);
-                } 
-            }
-        }
-        
-        CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
-        allLines.CopyTo(allValidColliderList);
-        return allValidColliderList;
-    }
+   
 
     /// <summary>
     /// 
