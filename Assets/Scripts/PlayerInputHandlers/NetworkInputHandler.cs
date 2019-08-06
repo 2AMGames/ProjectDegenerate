@@ -23,8 +23,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     #region main variables
 
-    private Player AssociatedPlayer;
-
     private PlayerController PlayerController;
 
     private CommandInterpreter CommandInterpreter;
@@ -93,8 +91,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     {
         if (isGameReady)
         {
-            AssociatedPlayer = PlayerController.AssociatedPlayer;
-
             UpdatePlayerPing();
 
             StartCoroutine(CheckForPingUpdate());
@@ -108,7 +104,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
-            ExitGames.Client.Photon.Hashtable playerProperties = AssociatedPlayer.CustomProperties;
+            ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
             if (playerProperties.ContainsKey(NetworkManager.PlayerPingKey))
             {
                 int ping = (int)playerProperties[NetworkManager.PlayerPingKey];
