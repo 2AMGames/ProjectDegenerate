@@ -295,7 +295,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
                 {
                     Player playerToAdd = PhotonNetwork.CurrentRoom.Players[actorNumber];
-                    AddPlayerToActivePlayerDictionary(playerToAdd);
+                    AddPlayerToActivePlayerTable(playerToAdd);
                 }
 
             }
@@ -311,10 +311,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
-            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers.ContainsKey(otherPlayer.ActorNumber))
             {
-                RemovePlayerFromActiveDictionary(otherPlayer);
+                RemovePlayerFromActiveTable(otherPlayer);
             }
         }
     }
@@ -330,7 +330,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             Debug.LogWarning("Contains");
-            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers.ContainsKey(targetPlayer.ActorNumber))
             {
                 UpdatePing();
@@ -347,7 +347,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Master Client Methods
     // Methods that should only be executed if the current client is designated by the server as the master client
-    private void AddPlayerToActivePlayerDictionary(Player player)
+    private void AddPlayerToActivePlayerTable(Player player)
     {
         // Add player to dictionary found in room custom properties
         // Dictionary should contain players that are currently player (not observing).
@@ -355,26 +355,26 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         Debug.LogWarning("Adding active players");
         ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
 
-        Dictionary<int, Player> players = (Dictionary<int, Player>)hashtable[ActivePlayerKey] ?? new Dictionary<int, Player>();
+        ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new ExitGames.Client.Photon.Hashtable();
 
-        players[player.ActorNumber] = player;
-        hashtable[ActivePlayerKey] = players;
+        activePlayers.Add(player.ActorNumber, player.ActorNumber);
+        hashtable[ActivePlayerKey] = activePlayers;
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
     }
 
-    private void RemovePlayerFromActiveDictionary(Player player)
+    private void RemovePlayerFromActiveTable(Player player)
     {
         // Remove player from dictionary after leaving
 
         ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
-        Dictionary<int, Player> players = (Dictionary<int, Player>)hashtable[ActivePlayerKey] ?? new Dictionary<int, Player>();
+        ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new ExitGames.Client.Photon.Hashtable();
 
-        if (players.ContainsKey(player.ActorNumber))
+        if (activePlayers.ContainsKey(player.ActorNumber))
         {
-            players.Remove(player.ActorNumber);
+            activePlayers.Remove(player.ActorNumber);
         }
-        hashtable[ActivePlayerKey] = players;
+        hashtable[ActivePlayerKey] = activePlayers;
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
     }
@@ -387,14 +387,18 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
-            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
-            if (activePlayers.Count > 2)
+            ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            if (activePlayers != null && activePlayers.Count > 2)
             {
                 int currentPing = 0;
 
-                foreach(Player player in activePlayers.Values)
+                foreach(int actorNumber in activePlayers.Keys)
                 {
-                    currentPing += player.CustomProperties.ContainsKey(PlayerPingKey) ? (int)player.CustomProperties[PlayerPingKey] / 2 : 0;
+                    Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
+                    if (player != null)
+                    {
+                        currentPing += (int)player.CustomProperties[PlayerPingKey] / 2;
+                    }
                 }
 
                 CurrentDelayInMilliSeconds = currentPing;
