@@ -229,7 +229,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady)
         {
-            NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.MasterClient);
+            Debug.LogWarning("Sending Ack");
+            NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
         {

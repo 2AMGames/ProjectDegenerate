@@ -292,6 +292,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
             {
                 int actorNumber = (int)photonEvent.CustomData;
+                Debug.LogWarning("Ack Number: " + actorNumber);
                 if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
                 {
                     Player playerToAdd = PhotonNetwork.CurrentRoom.Players[actorNumber];
@@ -352,7 +353,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         // Add player to dictionary found in room custom properties
         // Dictionary should contain players that are currently player (not observing).
 
-        Debug.LogWarning("Adding active players");
+        Debug.LogWarning("Adding active player");
         ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
 
         ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new ExitGames.Client.Photon.Hashtable();
