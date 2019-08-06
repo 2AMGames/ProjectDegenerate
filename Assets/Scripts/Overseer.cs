@@ -93,6 +93,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         CreateGameType();
     }
 
+    private void Update()
+    {
+        if (SelectedGameType == GameType.PlayerVsRemote && IsGameReady)
+        {
+            Debug.LogWarning("Milliseconds: " + NetworkManager.Instance.CurrentDelayInMilliSeconds);
+        }
+    }
+
     #endregion
 
     #region public interface
@@ -289,7 +297,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private void SendGameReadyMessage()
     {
         Debug.LogWarning("Sending game ready message");
-        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, 0x00);
+        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
     }
 
     private IEnumerator WaitUntilNetworkedGameReady()

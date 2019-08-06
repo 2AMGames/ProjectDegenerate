@@ -46,22 +46,32 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
-    #region Main Variables
+    #region Const variables
 
-    public bool UsePhotonMatchmaking;
+    private const int FramesPerSeconds = 60;
+
+    private const string ActivePlayerKey = "ActivePlayers";
+
+    #endregion
+
+    #region Main Variables
 
     [HideInInspector]
     public string CurrentRoomId;
 
-    public int CurrentDelayFrames;
-
-    public int CurrentPing
+    public int CurrentDelayFrames
     {
         get
         {
-            return 0;
+            return CurrentDelayInMilliSeconds / FramesPerSeconds;
         }
     }
+
+    public int CurrentDelayInMilliSeconds { get; private set; }
+
+    // Dictionary containing players who are active (playing against each other).
+    // Used to store data we need (such as ping).
+    private Dictionary<int, Player> CurrentlyActivePlayers;
 
     #endregion
 
@@ -92,20 +102,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void Awake()
     {
-       if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
+        if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
             ConnectToNetwork();
-        }
-    }
-
-    void OnValidate()
-    {
-        if(!UsePhotonMatchmaking)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                PhotonNetwork.Disconnect();
-            }
         }
     }
 
@@ -139,7 +138,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public void SendEventData(byte eventCode, object eventData)
+    public void SendEventData(byte eventCode, object eventData, ReceiverGroup receiverOptions = 0)
     {
         RaiseEventOptions receiveOptions = new RaiseEventOptions();
         receiveOptions.Receivers = ReceiverGroup.Others;
@@ -183,11 +182,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         Debug.Log("Room List Count: " + roomList.Count);
-        foreach(RoomInfo room in roomList)
+        foreach (RoomInfo room in roomList)
         {
             Debug.Log("Room Name = " + room.Name + ", Player Count:" + room.PlayerCount);
         }
-        
+
         if (roomList.Count > 0)
         {
             PhotonNetwork.JoinRandomRoom();
@@ -226,6 +225,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
+        CurrentlyActivePlayers = new Dictionary<int, Player>();
         Overseer.Instance.HandleJoinedRoom();
     }
 
@@ -261,12 +261,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnCustomAuthenticationFailed(string debugMessage)
     {
-        
+
     }
 
     public void OnCustomAuthenticationResponse(Dictionary<string, object> data)
     {
-        
+
     }
 
     public void OnDisconnected(DisconnectCause cause)
@@ -277,7 +277,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnRegionListReceived(RegionHandler regionHandler)
     {
-        
+
     }
 
     #endregion
@@ -287,7 +287,19 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     // On photon event received callback
     public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
     {
+        if (photonEvent.Code == RemotePlayerReadyAck)
+        {
+            if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
+            {
+                int actorNumber = (int)photonEvent.CustomData;
+                if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
+                {
+                    Player playerToAdd = PhotonNetwork.CurrentRoom.Players[actorNumber];
+                    AddPlayerToActivePlayerDictionary(playerToAdd);
+                }
 
+            }
+        }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -297,24 +309,95 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerLeftRoom(Player otherPlayer)
     {
-        //
+        if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        {
+            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            if (activePlayers.ContainsKey(otherPlayer.ActorNumber))
+            {
+                RemovePlayerFromActiveDictionary(otherPlayer);
+            }
+        }
     }
 
     public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
-        //
+
     }
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-       //
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        {
+            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            if (activePlayers.ContainsKey(targetPlayer.ActorNumber))
+            {
+                UpdatePing();
+            }
+        }
     }
 
     public void OnMasterClientSwitched(Player newMasterClient)
     {
-       //
+        //
     }
 
     #endregion
 
+    #region Master Client Methods
+    // Methods that should only be executed if the current client is designated by the server as the master client
+    private void AddPlayerToActivePlayerDictionary(Player player)
+    {
+        // Add player to dictionary found in room custom properties
+        // Dictionary should contain players that are currently player (not observing).
+
+        ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
+
+        Dictionary<int, Player> players = (Dictionary<int, Player>)hashtable[ActivePlayerKey] ?? new Dictionary<int, Player>();
+
+        players[player.ActorNumber] = player;
+        hashtable[ActivePlayerKey] = players;
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+    }
+
+    private void RemovePlayerFromActiveDictionary(Player player)
+    {
+        // Remove player from dictionary after leaving
+
+        ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
+        Dictionary<int, Player> players = (Dictionary<int, Player>)hashtable[ActivePlayerKey] ?? new Dictionary<int, Player>();
+
+        if (players.ContainsKey(player.ActorNumber))
+        {
+            players.Remove(player.ActorNumber);
+        }
+        hashtable[ActivePlayerKey] = players;
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+    }
+
+    #endregion
+
+    #region Ping Methods
+
+    private void UpdatePing()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        {
+            Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            if (activePlayers.Count > 2)
+            {
+                int currentPing = 0;
+
+                foreach(Player player in activePlayers.Values)
+                {
+                    currentPing += player.CustomProperties.ContainsKey(PlayerPingKey) ? (int)player.CustomProperties[PlayerPingKey] / 2 : 0;
+                }
+
+                CurrentDelayInMilliSeconds = currentPing;
+            }
+        }
+
+        #endregion
+    }
 }
