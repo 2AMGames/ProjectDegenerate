@@ -113,6 +113,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 if (Math.Abs(currentPing - ping) >= PingThreshold)
                 {
                     playerProperties[NetworkManager.PlayerPingKey] = currentPing;
+                    Debug.LogWarning("Set");
                     PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
                 }
             }

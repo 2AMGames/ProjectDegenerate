@@ -326,8 +326,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        Debug.LogWarning("Properties updated");
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
+            Debug.LogWarning("Contains");
             Dictionary<int, Player> activePlayers = (Dictionary<int, Player>)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers.ContainsKey(targetPlayer.ActorNumber))
             {
@@ -350,6 +352,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         // Add player to dictionary found in room custom properties
         // Dictionary should contain players that are currently player (not observing).
 
+        Debug.LogWarning("Adding active players");
         ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
 
         Dictionary<int, Player> players = (Dictionary<int, Player>)hashtable[ActivePlayerKey] ?? new Dictionary<int, Player>();

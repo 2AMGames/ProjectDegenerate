@@ -229,9 +229,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady)
         {
-            NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, 0x00);
+            NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.MasterClient);
         }
-        else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck)
+        else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
         {
             NetworkedGameReady = true;
         }
