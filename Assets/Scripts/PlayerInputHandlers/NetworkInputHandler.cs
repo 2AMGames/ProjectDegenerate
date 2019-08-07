@@ -119,6 +119,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
             else
             {
                 playerProperties[NetworkManager.PlayerPingKey] = PhotonNetwork.GetPing();
+                PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
             }
         }
     }
