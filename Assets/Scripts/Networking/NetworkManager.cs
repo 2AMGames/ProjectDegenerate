@@ -361,6 +361,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         hashtable[ActivePlayerKey] = activePlayers;
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+
+        UpdatePing();
     }
 
     private void RemovePlayerFromActiveTable(Player player)
