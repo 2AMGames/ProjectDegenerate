@@ -147,6 +147,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                     Debug.LogWarning("Sending");
                     inputData.PlayerIndex = PlayerController.PlayerIndex;
 
+                    Debug.LogWarning("Sent frame: " + GameStateManager.Instance.FrameCount);
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
                 }
             }

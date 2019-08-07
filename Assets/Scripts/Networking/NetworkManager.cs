@@ -48,9 +48,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Const variables
 
-    private const int FramesPerSeconds = 60;
-
     private const string ActivePlayerKey = "ActivePlayers";
+
+    private const int MillisecondsPerFrame = 16;
 
     #endregion
 
@@ -63,7 +63,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         get
         {
-            return CurrentDelayInMilliSeconds / FramesPerSeconds;
+            return CurrentDelayInMilliSeconds / MillisecondsPerFrame;
         }
     }
 
