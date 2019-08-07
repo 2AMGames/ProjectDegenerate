@@ -271,18 +271,26 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float APdotAD = Vector2.Dot(point - A, D - A);
         float ADdotAD = Vector2.Dot(D - A, D - A);
         if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
+        {
+            print("I intersected");
             return true;
-        float rectX = r.bottomLeft.x;
-        float recty = r.bottomLeft.y;
 
-        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + width));
-        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + height));
+        }
+        if (LineIntersectCircle(c, r.bottomLeft, r.topRight))
+        {
+            print("I interesected");
+        }
+        return LineIntersectCircle(c, r.bottomLeft, r.topRight);
+        //float rectX = r.bottomLeft.x;
+        //float recty = r.bottomLeft.y;
 
-        float dX = point.x - nearestX;
-        float dY = point.y - nearestY;
+        //float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + width));
+        //float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + height));
 
-        return (dX * dX + dY * dY) < c.radius * c.radius;
+        //float dX = point.x - nearestX;
+        //float dY = point.y - nearestY;
 
+        //return (dX * dX + dY * dY) < c.radius * c.radius;
     }
 
     /// <summary>
@@ -299,6 +307,22 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float distance = Vector2.Distance(c1.center, c2.center);
 
         return distance <= distanceMax;
+    }
+
+    public static bool LineIntersectCircle(BoundsCircle c, Vector2 pointA, Vector2 pointB)
+    {
+        Vector2 point = c.center;
+
+        float rectX = pointA.x;
+        float recty = pointA.y;
+
+        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, pointB.x));
+        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, pointB.y));
+
+        float dX = point.x - nearestX;
+        float dY = point.y - nearestY;
+
+        return (dX * dX + dY * dY) < c.radius * c.radius;
     }
     #endregion static methods
 }

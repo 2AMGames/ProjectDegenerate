@@ -25,7 +25,7 @@ public class CustomCircleCollider2D : CustomCollider2D
 
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        throw new System.NotImplementedException();
+        return false;
     }
 
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
