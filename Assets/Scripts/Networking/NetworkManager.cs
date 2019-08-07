@@ -299,6 +299,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 }
 
             }
+            else
+            {
+                UpdatePing();
+            }
         }
     }
 
@@ -326,7 +330,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        Debug.LogWarning("Properties updated");
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
