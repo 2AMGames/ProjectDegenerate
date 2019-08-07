@@ -397,7 +397,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
                     if (player != null)
                     {
-                        currentPing += (int)player.CustomProperties[PlayerPingKey] / 2;
+                        currentPing += (int)player.CustomProperties[PlayerPingKey];
                     }
                 }
 

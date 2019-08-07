@@ -144,11 +144,10 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
                 if (inputData != null)
                 {
-                    Debug.LogWarning("Sending");
                     inputData.PlayerIndex = PlayerController.PlayerIndex;
 
                     Debug.LogWarning("Sent frame: " + GameStateManager.Instance.FrameCount);
-                    Debug.LogWarning("Sent time: " + DateTime.Now.ToString("hh.mm.ss.ffffff"));
+                    Debug.LogWarning("Sent time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
                 }
             }
