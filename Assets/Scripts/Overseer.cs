@@ -93,14 +93,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         CreateGameType();
     }
 
-    private void Update()
-    {
-        if (SelectedGameType == GameType.PlayerVsRemote && IsGameReady)
-        {
-            Debug.LogWarning("Milliseconds: " + NetworkManager.Instance.CurrentDelayInMilliSeconds);
-        }
-    }
-
     #endregion
 
     #region public interface
