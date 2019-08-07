@@ -77,7 +77,6 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
         Debug.LogWarning("Start Time: " + DateTime.Now);
         if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
-            StartCoroutine(TestFrameRate());
             StartCoroutine(SaveGameState());
         }
         else

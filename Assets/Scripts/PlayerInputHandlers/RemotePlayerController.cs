@@ -63,7 +63,8 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             try
             {
                 PlayerInputData data = eventData.CustomData as PlayerInputData;
-                Debug.LogWarning("Received time: " + DateTime.Now);
+                Debug.LogWarning("Received Frame: " + GameStateManager.Instance.FrameCount);
+                Debug.LogWarning("Received time: " + DateTime.Now.ToString("hh.mm.ss.ffffff"));
                 if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
                     CommandInterpreter.QueuePlayerInput(data);
