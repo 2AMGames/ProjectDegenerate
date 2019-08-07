@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Photon.Realtime;
@@ -73,8 +74,10 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private void OnGameReady(bool isGameReady)
     {
+        Debug.LogWarning("Start Time: " + DateTime.Now);
         if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
         {
+            StartCoroutine(TestFrameRate());
             StartCoroutine(SaveGameState());
         }
         else

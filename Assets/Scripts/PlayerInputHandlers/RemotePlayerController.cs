@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Photon.Pun;
@@ -62,6 +63,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             try
             {
                 PlayerInputData data = eventData.CustomData as PlayerInputData;
+                Debug.LogWarning("Received time: " + DateTime.Now);
                 if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
                     CommandInterpreter.QueuePlayerInput(data);
