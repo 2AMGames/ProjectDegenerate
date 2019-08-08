@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
+using ExitGames.Client.Photon;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -91,6 +94,10 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         Application.targetFrameRate = 60;
         CreateGameType();
+    }
+
+    private void Update()
+    {
     }
 
     #endregion
@@ -219,8 +226,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     // On photon event received callback
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == NetworkManager.RemotePlayerReady)
+        if (photonEvent.Code == NetworkManager.RemotePlayerReady && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
         {
+            UnityEngine.Debug.LogWarning("Sent ack Time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
             NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -288,7 +296,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void SendGameReadyMessage()
     {
-        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
+        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.Others);
     }
 
     private IEnumerator WaitUntilNetworkedGameReady()
@@ -298,12 +306,19 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return new WaitForEndOfFrame();
         }
 
+        Stopwatch watch = new Stopwatch();
+
+        watch.Start();
         SendGameReadyMessage();
         
         while(!NetworkedGameReady)
         {
             yield return new WaitForEndOfFrame();
         }
+
+        watch.Stop();
+
+        UnityEngine.Debug.LogWarning("Elapsed Time: " + watch.ElapsedMilliseconds);
 
         OnGameReady?.Invoke(true);
     }
