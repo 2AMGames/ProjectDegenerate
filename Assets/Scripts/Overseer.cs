@@ -226,7 +226,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
         {
-            Debug.LogWarning("Sent ack Time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
             NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -248,7 +247,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public void OnPlayerLeftRoom(Player otherPlayer)
     {
-        //
+        foreach(PlayerController playerController in Players)
+        {
+            if (playerController.AssociatedPlayer == otherPlayer)
+            {
+                Players.Remove(playerController);
+            }
+        }
     }
 
     public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
