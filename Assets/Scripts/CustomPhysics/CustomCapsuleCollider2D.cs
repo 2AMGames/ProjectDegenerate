@@ -21,7 +21,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             UpdateBoundsOfCollider();
         }
 
-        Color colorToDraw = Color.green;
+        Color colorToDraw = GIZMO_COLOR;
 #if UNITY_EDITOR
         if (!drawHorizontal)
         {
@@ -62,7 +62,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
+    protected override bool CheckCollisionUpFromVelocity()
     {
         throw new System.NotImplementedException();
     }
@@ -89,7 +89,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
+    protected override bool CheckCollisionDownFromVelocity()
     {
         throw new System.NotImplementedException();
     }

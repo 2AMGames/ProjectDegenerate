@@ -8,7 +8,11 @@ using UnityEngine;
 /// with other colliders.
 /// </summary>
 public abstract class CustomCollider2D : MonoBehaviour {
-	[Tooltip("Mark this value true if you would like to treat this value as a trigger")]
+
+    #region const variables
+    protected readonly Color GIZMO_COLOR = Color.green;
+    #endregion const variables
+    [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
     [Tooltip("")]
     public float HorizontalBuffer = .02f;
@@ -81,14 +85,14 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// 
     /// </summary>
     /// <returns></returns>
-    protected abstract bool CheckCollisionDownFromVelocity();
+    protected abstract bool CheckCollisionUpFromVelocity();
 
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    protected abstract bool CheckCollisionUpFromVelocity();
+    protected abstract bool CheckCollisionDownFromVelocity();
 
 
     /// <summary>
@@ -142,7 +146,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     public virtual void CheckForCollisions()
     {
-        if (CheckCollisionUpFromVelocity())
+        if (CheckCollisionDownFromVelocity())
         {
             if (rigid.isInAir)
             {
@@ -158,7 +162,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 rigid.OnPhysicsObjectAirborne();
             }
         }
-        CheckCollisionDownFromVelocity();
+        CheckCollisionUpFromVelocity();
         CheckCollisionLeftFromVelocity();
         CheckCollisionRightFromVelocity();
     }
@@ -272,14 +276,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float ADdotAD = Vector2.Dot(D - A, D - A);
         if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
         {
-            print("I intersected");
             return true;
 
         }
-        if (LineIntersectCircle(c, r.bottomLeft, r.topRight))
-        {
-            print("I interesected");
-        }
+        
         return LineIntersectCircle(c, r.bottomLeft, r.topRight);
         //float rectX = r.bottomLeft.x;
         //float recty = r.bottomLeft.y;

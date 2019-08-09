@@ -24,7 +24,7 @@ public class CustomBoxCollider2D : CustomCollider2D
             UpdateBoundsOfCollider();
         }
 
-        Color colorToDraw = Color.green;
+        Color colorToDraw = GIZMO_COLOR;
 
         DebugSettings.DrawLine(bounds.bottomLeft, bounds.bottomRight, colorToDraw);
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
@@ -123,7 +123,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
+    protected override bool CheckCollisionUpFromVelocity()
     {
         if (rigid.velocity.y <= 0)
         {
@@ -156,7 +156,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
+    protected override bool CheckCollisionDownFromVelocity()
     {
         if (rigid.velocity.y > 0)
         {
