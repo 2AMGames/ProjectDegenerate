@@ -315,6 +315,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                Debug.LogWarning("ack received");
                 OnPingAckReceived(actorNumber);
             }
         }
@@ -419,13 +420,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
         foreach (int actorNumber in activePlayers.Keys)
         {
-            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
+            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
                 PlayersToPing.Add(actorNumber);
             }
         }
+        Debug.LogWarning("players to ping: " + activePlayers.Count);
 
-        PingActivePlayers();
+        PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
         rtt.Start();
 
@@ -433,7 +435,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
-
+        Debug.LogWarning("Done pinging");
         rtt.Stop();
 
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
@@ -446,10 +448,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void PingActivePlayersInternal()
     {
-        foreach(int player in PlayersToPing)
-        {
-            SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
-        }
+        SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     private void OnPingAckReceived(int actorNumber)
