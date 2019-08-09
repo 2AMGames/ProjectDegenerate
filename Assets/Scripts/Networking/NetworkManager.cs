@@ -73,7 +73,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public int CurrentDelayInMilliSeconds { get; private set; }
 
-    private HashSet<Player> PlayersToPing;
+    // Hash set of players we need to ping, sorted by actor number.
+    private HashSet<int> PlayersToPing = new HashSet<int>(); 
 
     private bool CurrentlyPingingPlayers;
 
@@ -418,10 +419,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
         foreach (int actorNumber in activePlayers.Keys)
         {
-            Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
-            if (player != null)
+            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
             {
-                PlayersToPing.Add(player);
+                PlayersToPing.Add(actorNumber);
             }
         }
 
@@ -446,7 +446,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void PingActivePlayersInternal()
     {
-        foreach(Player player in PlayersToPing)
+        foreach(int player in PlayersToPing)
         {
             SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
         }
@@ -454,12 +454,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void OnPingAckReceived(int actorNumber)
     {
-        foreach(Player player in PlayersToPing)
+       if (PlayersToPing.Contains(actorNumber))
         {
-            if (player.ActorNumber == actorNumber)
-            {
-                PlayersToPing.Remove(player);
-            }
+            PlayersToPing.Remove(actorNumber);
         }
     }
 
