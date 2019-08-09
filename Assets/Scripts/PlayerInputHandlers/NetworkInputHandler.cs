@@ -69,18 +69,12 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     #region monobehaviour methods
 
-    void Update()
-    {
-
-    }
-
     void Awake()
     {
         PlayerController = GetComponent<PlayerController>();
         CommandInterpreter = PlayerController.CommandInterpreter;
         Overseer.Instance.OnGameReady += OnGameReady;
         PhotonNetwork.AddCallbackTarget(this);
-        UpdatePlayerPing();
     }
 
     #endregion
@@ -91,36 +85,10 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     {
         if (isGameReady)
         {
-            UpdatePlayerPing();
 
             StartCoroutine(CheckForPingUpdate());
             StartCoroutine(SendInputIfNeccessary());
-
             enabled = true;
-        }
-    }
-
-    private void UpdatePlayerPing()
-    {
-        if (PhotonNetwork.IsConnected)
-        {
-            ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-            if (playerProperties.ContainsKey(NetworkManager.PlayerPingKey))
-            {
-                int ping = (int)playerProperties[NetworkManager.PlayerPingKey];
-                int currentPing = PhotonNetwork.GetPing();
-
-                if (Math.Abs(currentPing - ping) >= PingThreshold)
-                {
-                    playerProperties[NetworkManager.PlayerPingKey] = currentPing;
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-                }
-            }
-            else
-            {
-                playerProperties[NetworkManager.PlayerPingKey] = PhotonNetwork.GetPing();
-                PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-            }
         }
     }
 
@@ -129,8 +97,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
         while (Overseer.Instance.IsGameReady)
         {
             yield return new WaitForSeconds(SecondsToCheckForPing);
-
-            UpdatePlayerPing();
+            NetworkManager.Instance.PingActivePlayers();
         }
     }
 

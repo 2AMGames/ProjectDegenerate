@@ -4,10 +4,8 @@ using System.Linq;
 using System;
 
 using ExitGames.Client.Photon;
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,7 +13,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 {
     #region const variables
 
-    private const int NumberOfPlayers = 2; // Change later?
+    public const int NumberOfPlayers = 2; // Change later?
 
     private const string PlayerControllerString = "PlayerController";
 
@@ -228,7 +226,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (photonEvent.Code == NetworkManager.RemotePlayerReady && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
         {
-            UnityEngine.Debug.LogWarning("Sent ack Time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
+            Debug.LogWarning("Sent ack Time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
             NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
         }
         else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -303,22 +301,23 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         while (!IsGameReady)
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
 
-        Stopwatch watch = new Stopwatch();
-
-        watch.Start();
         SendGameReadyMessage();
         
         while(!NetworkedGameReady)
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
 
-        watch.Stop();
-
-        UnityEngine.Debug.LogWarning("Elapsed Time: " + watch.ElapsedMilliseconds);
+        // Establish ping before starting game.
+        NetworkManager.Instance.PingActivePlayers();
+        while (NetworkManager.Instance.CurrentDelayInMilliSeconds <= 0)
+        {
+            yield return null;
+            Debug.LogWarning("Waiting for ping");
+        }
 
         OnGameReady?.Invoke(true);
     }

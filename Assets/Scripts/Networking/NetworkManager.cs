@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Diagnostics;
+using System.Collections;
 using System.Collections.Generic;
 
 using Photon.Pun;
@@ -6,6 +7,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine;
 
+using Debug = UnityEngine.Debug;
 // Class for managing network interaction between clients
 // Should monitor network connection, Average Latency, and send input data to other players in game.
 // Should also accept input data from other players
@@ -13,8 +15,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 {
 
     #region Custom Photon Event Codes
-
-    public const byte PlayerConnected = 0x00;
 
     public const byte RemotePlayerReady = 0x10;
 
@@ -24,11 +24,15 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte PlayerInputAck = 0x21;
 
-    public const byte EvaluateWinner = 0x05;
+    public const byte PingRequest = 0x30;
 
-    public const byte RollbackRequest = 0x06;
+    public const byte PingAck = 0x31;
 
-    public const byte PlayerLeaving = 0x07;
+    public const byte EvaluateWinner = 0x40;
+
+    public const byte RollbackRequest = 0x50;
+
+    public const byte PlayerLeaving = 0x60;
 
     #endregion
 
@@ -46,7 +50,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
-    #region Const variables
+    #region Const Variables
 
     private const string ActivePlayerKey = "ActivePlayers";
 
@@ -69,9 +73,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public int CurrentDelayInMilliSeconds { get; private set; }
 
-    // Dictionary containing players who are active (playing against each other).
-    // Used to store data we need (such as ping).
-    private Dictionary<int, Player> CurrentlyActivePlayers;
+    private HashSet<Player> PlayersToPing;
+
+    private bool CurrentlyPingingPlayers;
 
     #endregion
 
@@ -225,7 +229,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
-        CurrentlyActivePlayers = new Dictionary<int, Player>();
         Overseer.Instance.HandleJoinedRoom();
     }
 
@@ -299,9 +302,19 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 }
 
             }
-            else
+        }
+
+        if (photonEvent.Code == PingRequest)
+        {
+            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber);
+        }
+
+        if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
+        {
+            int actorNumber = (int)photonEvent.CustomData;
+            if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                UpdatePing();
+                OnPingAckReceived(actorNumber);
             }
         }
     }
@@ -388,12 +401,78 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Ping Methods
 
+    public void PingActivePlayers()
+    {
+        if (!CurrentlyPingingPlayers)
+        {
+            StartCoroutine(CheckPlayerPing());
+        }
+    }
+
+    private IEnumerator CheckPlayerPing()
+    {
+        CurrentlyPingingPlayers = true;
+
+        ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+        foreach (Player player in activePlayers.Values)
+        {
+            if (player.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                PlayersToPing.Add(player);
+            }
+        }
+
+        PingActivePlayers();
+        Stopwatch rtt = new Stopwatch();
+        rtt.Start();
+
+        while(PlayersToPing.Count > 0)
+        {
+            yield return null;
+        }
+
+        rtt.Stop();
+
+        SetLocalPlayerPing(rtt.ElapsedMilliseconds);
+
+        UpdatePing();
+
+        CurrentlyPingingPlayers = false;
+        
+    }
+
+    private void PingActivePlayersInternal()
+    {
+        foreach(Player player in PlayersToPing)
+        {
+            SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
+        }
+    }
+
+    private void OnPingAckReceived(int actorNumber)
+    {
+        foreach(Player player in PlayersToPing)
+        {
+            if (player.ActorNumber == actorNumber)
+            {
+                PlayersToPing.Remove(player);
+            }
+        }
+    }
+
+    public void SetLocalPlayerPing(long pingInMilliseconds)
+    {
+        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerProperties[PlayerPingKey] = pingInMilliseconds;
+        PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+    }
+
     private void UpdatePing()
     {
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
-            if (activePlayers != null && activePlayers.Count >= 2)
+            if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
             {
                 int currentPing = 0;
 
@@ -402,14 +481,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
                     if (player != null)
                     {
-                        currentPing += (int)player.CustomProperties[PlayerPingKey];
+                        currentPing = player.CustomProperties.ContainsKey(ActivePlayerKey) ? Mathf.Max((int)player.CustomProperties[ActivePlayerKey], currentPing) : 0;
                     }
                 }
 
                 CurrentDelayInMilliSeconds = currentPing;
             }
         }
-
-        #endregion
     }
+
+    #endregion
 }
