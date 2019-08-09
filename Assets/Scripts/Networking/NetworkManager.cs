@@ -316,7 +316,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                Debug.LogWarning("ack received");
                 OnPingAckReceived(actorNumber);
             }
         }
@@ -369,9 +368,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     private void AddPlayerToActivePlayerTable(Player player)
     {
 
-        Debug.LogWarning("Adding active players");
-        // Add player to dictionary found in room custom properties
-        // Dictionary should contain players that are currently player (not observing).
+        // Add player to set found in room custom properties
+        // set should contain players that are currently player (not observing).
         ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
 
         ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new ExitGames.Client.Photon.Hashtable();
@@ -432,7 +430,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 PlayersToPing.Add(actorNumber);
             }
         }
-        Debug.LogWarning("players to ping: " + activePlayers.Count);
 
         PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
@@ -442,7 +439,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
-        Debug.LogWarning("Done pinging");
         rtt.Stop();
 
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
@@ -475,11 +471,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void UpdatePing()
     {
-        Debug.LogWarning("updating ping");
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
-            Debug.LogWarning("count: " + activePlayers.Count);
             if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
             {
                 long currentPing = 0;
@@ -491,7 +485,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     {
                         currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
                     }
-                    Debug.LogWarning("current ping: " + currentPing);
                 }
 
                 CurrentDelayInMilliSeconds = currentPing;
