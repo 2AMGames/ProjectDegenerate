@@ -16,13 +16,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte PlayerConnected = 0x00;
 
-    public const byte RemotePlayerReady = 0x01;
+    public const byte RemotePlayerReady = 0x10;
 
-    public const byte RemotePlayerReadyAck = 0x02;
+    public const byte RemotePlayerReadyAck = 0x11;
 
-    public const byte PlayerInputUpdate = 0x03;
+    public const byte PlayerInputUpdate = 0x20;
 
-    public const byte PlayerInputAck = 0x04;
+    public const byte PlayerInputAck = 0x21;
 
     public const byte EvaluateWinner = 0x05;
 
