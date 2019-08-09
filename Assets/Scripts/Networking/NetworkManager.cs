@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -63,7 +64,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     [HideInInspector]
     public string CurrentRoomId;
 
-    public int CurrentDelayFrames
+    public long CurrentDelayFrames
     {
         get
         {
@@ -71,7 +72,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public int CurrentDelayInMilliSeconds { get; private set; }
+    public long CurrentDelayInMilliSeconds { get; private set; }
 
     // Hash set of players we need to ping, sorted by actor number.
     private HashSet<int> PlayersToPing = new HashSet<int>(); 
@@ -345,6 +346,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        Debug.LogWarning("property update");
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
@@ -468,20 +470,23 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void UpdatePing()
     {
+        Debug.LogWarning("updating ping");
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+            Debug.LogWarning("count: " + activePlayers.Count);
             if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
             {
-                int currentPing = 0;
+                long currentPing = 0;
 
                 foreach(int actorNumber in activePlayers.Keys)
                 {
                     Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
                     if (player != null)
                     {
-                        currentPing = player.CustomProperties.ContainsKey(ActivePlayerKey) ? Mathf.Max((int)player.CustomProperties[ActivePlayerKey], currentPing) : 0;
+                        currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
                     }
+                    Debug.LogWarning("current ping: " + currentPing);
                 }
 
                 CurrentDelayInMilliSeconds = currentPing;
