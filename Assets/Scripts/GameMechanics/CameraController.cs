@@ -62,10 +62,7 @@ public class CameraController : MonoBehaviour
 
     private void OnGameReady(bool isReady)
     {
-        if (isReady)
-        {
-            enabled = true;
-        }
+        enabled = isReady;
     }
 
     private void UpdateCameraPosition()

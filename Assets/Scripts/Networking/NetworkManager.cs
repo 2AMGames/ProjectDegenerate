@@ -479,7 +479,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
                 foreach(int actorNumber in activePlayers.Keys)
                 {
-                    Player player = PhotonNetwork.CurrentRoom.Players[actorNumber] ?? null;
+                    Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
                     if (player != null)
                     {
                         currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;

@@ -252,7 +252,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             if (playerController.AssociatedPlayer == otherPlayer)
             {
                 Players.Remove(playerController);
+                break;
             }
+        }
+
+        if (Players.Count < NumberOfPlayers)
+        {
+            OnGameReady(false);
         }
     }
 

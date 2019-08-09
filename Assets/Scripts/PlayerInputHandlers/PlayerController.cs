@@ -183,7 +183,7 @@ public abstract class PlayerController : MonoBehaviour
 
     protected void OnGameReady(bool isReady)
     {
-        enabled = true;
+        enabled = isReady;
     }
 
     #endregion
