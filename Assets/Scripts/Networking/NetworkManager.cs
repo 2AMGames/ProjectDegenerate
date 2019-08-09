@@ -419,6 +419,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         CurrentlyPingingPlayers = true;
 
+        while (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        {
+            yield return null;
+        }
+
         ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
         foreach (int actorNumber in activePlayers.Keys)
         {
