@@ -10,7 +10,7 @@ using UnityEngine;
 
 using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
-public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
+public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmakingCallbacks
 {
 
     #region const variables
@@ -85,7 +85,29 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     #endregion
 
+    #region event callback
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == NetworkManager.PlayerInputAck)
+        {
+            int packetNumber = (int)photonEvent.CustomData;
+            HandlePlayerInputAck(packetNumber);
+        }
+    }
+
+    #endregion
+
     #region private interface
+
+    private void HandlePlayerInputAck(int packetNumber)
+    {
+        PlayerInputData data = DataSent.Find(x => x.PacketId == packetNumber);
+        if (data.IsValid())
+        {
+            DataSent.Remove(data);
+        }
+    }
 
     private void OnGameReady(bool isGameReady)
     {
@@ -117,12 +139,15 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 if (inputData.InputPattern > 0)
                 {
                     PlayerInputPacket packetToSend = new PlayerInputPacket();
-                    packetToSend.PlayerIndex = PlayerController.PlayerIndex;
-                    packetToSend.PacketId = PacketsSent;
-                    packetToSend.InputData = DataSent;
-                    packetToSend.InputData.Add(inputData);
 
+                    inputData.PacketId = PacketsSent;
+                    DataSent.Add(inputData);
+
+                    packetToSend.PlayerIndex = PlayerController.PlayerIndex;
+                    packetToSend.PacketId = PacketsSent;;
+                    packetToSend.InputData = new List<PlayerInputData>(DataSent);
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
+                    ++PacketsSent;
                 }
             }
         }

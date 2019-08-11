@@ -26,6 +26,9 @@ public class PlayerInputPacket
         [JsonProperty]
         public int PlayerIndex { get; set; }
 
+        [JsonProperty]
+        public uint PacketId { get; set; }
+
         // Pattern: 
         // Bit 0: LP
         // Bit 1: MP
@@ -39,6 +42,11 @@ public class PlayerInputPacket
         // Bit 9: Down Directional Input
         [JsonProperty]
         public ushort InputPattern { get; set; }
+
+        public bool IsValid()
+        {
+            return InputPattern > 0;
+        }
     }
 
     public static short Serialize(StreamBuffer outstream, object data)
@@ -88,6 +96,7 @@ public class PlayerInputPacket
         inStream.Read(customString, 0, stringSize);
 
         string jsonString = System.Text.Encoding.UTF8.GetString(customString);
+        Debug.LogWarning(jsonString);
         List<PlayerInputData> inputList = JsonConvert.DeserializeObject<List<PlayerInputData>>(jsonString);
         inputPacket.InputData = inputList;
         return inputPacket;
