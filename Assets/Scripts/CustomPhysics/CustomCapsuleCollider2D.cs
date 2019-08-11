@@ -134,4 +134,11 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+
+    }
 }

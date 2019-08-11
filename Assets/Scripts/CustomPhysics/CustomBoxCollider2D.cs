@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
@@ -318,5 +321,26 @@ public class CustomBoxCollider2D : CustomCollider2D
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
         return new Vector2(bounds.bottomLeft.x, y);
+    }
+
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    {
+        if (colliderToCheck is CustomBoxCollider2D)
+        {
+            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCircleCollider2D)
+        {
+            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCapsuleCollider2D)
+        {
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+        }
+        else
+        {
+            intersectionPoint = Vector2.zero;
+            return false;
+        }
     }
 }

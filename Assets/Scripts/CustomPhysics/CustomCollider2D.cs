@@ -139,6 +139,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <param name="y"></param>
     /// <returns></returns>
     public abstract Vector2 GetLeftBoundAtYValue(float y);
+
+    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
     
 
     /// <summary>
@@ -307,6 +309,24 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float distance = Vector2.Distance(c1.center, c2.center);
 
         return distance <= distanceMax;
+    }
+
+    public static bool CapsuleIntersectCapsule(BoundsRect c1, BoundsRect c2, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+    }
+
+    public static bool CapsuleIntersectCircle(BoundsRect cap, BoundsCircle cir, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+    }
+
+    public static bool CapsuleIntersectRect(BoundsRect cap, BoundsRect cir, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
     }
 
     public static bool LineIntersectCircle(BoundsCircle c, Vector2 pointA, Vector2 pointB)

@@ -44,9 +44,13 @@ public class CustomCircleCollider2D : CustomCollider2D
         return LineIntersectCircle(this.bounds, origin, origin + direction * length);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="collider"></param>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     /// <summary>
@@ -65,7 +69,10 @@ public class CustomCircleCollider2D : CustomCollider2D
             Vector2 originPoint = bounds.center + bounds.radius * direction;
             List<CustomCollider2D> colliderList;
             Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out colliderList);
+            if (colliderList.Count > 0)
+            {
 
+            }
         }
         return false;
     }
@@ -110,23 +117,73 @@ public class CustomCircleCollider2D : CustomCollider2D
         bounds = cBounds;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        throw new System.NotImplementedException();
+        float adjustedX = x - bounds.center.x;
+        float angle = Mathf.Acos(adjustedX / bounds.radius);
+        return new Vector2(x, Mathf.Sin(angle) * bounds.radius);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        throw new System.NotImplementedException();
+        float adjustedX = x - bounds.center.x;
+        float angle = Mathf.Acos(adjustedX / bounds.radius);
+        return new Vector2(x, -Mathf.Sin(angle) * bounds.radius);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public override Vector2 GetRighBoundAtYValue(float y)
     {
-        throw new System.NotImplementedException();
+        float adjustedY = y - bounds.center.y;
+        float angle = Mathf.Asin(adjustedY / bounds.radius);
+        return new Vector2(Mathf.Cos(angle) * bounds.radius, y);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        throw new System.NotImplementedException();
+        float adjustedY = y - bounds.center.y;
+        float angle = Mathf.Asin(adjustedY / bounds.radius);
+        return new Vector2(-Mathf.Cos(angle) * bounds.radius, y);
+    }
+
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    {
+        if (colliderToCheck is CustomBoxCollider2D)
+        {
+            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCircleCollider2D)
+        {
+            return CircleIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCapsuleCollider2D)
+        {
+            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+        }
+        else
+        {
+            Debug.LogError("Circle Collider does not support type: " + colliderToCheck.GetType());
+            intersectionPoint = Vector2.zero;
+            return false;
+        }
     }
 }
