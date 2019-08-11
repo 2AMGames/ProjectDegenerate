@@ -27,6 +27,8 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     private CommandInterpreter CommandInterpreter;
 
+    private List<PlayerInputData> InputDataToSend = new List<PlayerInputData>();
+
     #endregion
 
     #region Callbacks
@@ -85,7 +87,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
     {
         if (isGameReady)
         {
-
             StartCoroutine(CheckForPingUpdate());
             StartCoroutine(SendInputIfNeccessary());
             enabled = true;
@@ -113,8 +114,6 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                 {
                     inputData.PlayerIndex = PlayerController.PlayerIndex;
 
-                    Debug.LogWarning("Sent frame: " + GameStateManager.Instance.FrameCount);
-                    Debug.LogWarning("Sent time: " + DateTime.Now.ToString("hh.mm.ss.fff"));
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
                 }
             }

@@ -13,6 +13,12 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private const int MaxStackSize = 60;
 
+    private const int MillisecondsPerFrame = 16;
+
+    private const int MaxPacketFrameDelay = 11;
+
+    private const int MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
+
     #endregion
 
     #region static reference

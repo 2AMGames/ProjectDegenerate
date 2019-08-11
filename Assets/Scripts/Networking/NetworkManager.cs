@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
-
+using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -260,7 +260,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnConnectedToMaster()
     {
-        Debug.LogWarning("Connected to Master Server. Joining Lobby");
         PhotonNetwork.JoinLobby();
     }
 
@@ -345,7 +344,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        Debug.LogWarning("Actor number: " + targetPlayer.ActorNumber);
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey) && targetPlayer.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers.ContainsKey(targetPlayer.ActorNumber))
@@ -438,6 +438,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
+        Debug.LogWarning("ping finished");
         rtt.Stop();
 
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
@@ -482,6 +483,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
                     if (player != null)
                     {
+                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey] : (long) 0;
+                        if (playerPing > 0)
+                        {
+                            Debug.LogWarning("Frames: " + playerPing / MillisecondsPerFrame);
+                        }
                         currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
                     }
                 }
