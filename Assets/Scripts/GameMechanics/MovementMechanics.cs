@@ -10,12 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(CustomPhysics2D))]
 public class MovementMechanics : MonoBehaviour {
     #region enums
-    public enum MovementState
-    {
-        FreeMovement, //Player has full control of their movement
-        NoPlayerControlledMovement,//If the player is in hit stun or some other even, this movement type may be set
-        Dashing,//Player is dashing
-    }
+    
     #endregion enums
 
     #region const variables
@@ -50,9 +45,6 @@ public class MovementMechanics : MonoBehaviour {
     public float maximumAirSpeed = 8f;
     public float airAcceleration = 20f;
 
-    [Tooltip("Speed character will be knocked back when hit by attack")]
-    public float knockbackSpeed = 2f;
-
     [Header("Sprite Renderer Referneces")]
     [Tooltip("This indicates what direction our sprite will be facing. This will change based on input")]
     public bool isFacingRight;
@@ -84,15 +76,22 @@ public class MovementMechanics : MonoBehaviour {
     /// should not move, mark this value as true
     /// </summary>
     public bool ignoreJoystickInputs;
+    /// <summary>
+    /// Some characters may have the ability to move while they are crouching. Mark this value to true if they cay
+    /// </summary>
     public bool canMoveWhileCrouching;
     [HideInInspector]
     /// <summary>
     /// Ignores inputs related to the jump function
     /// </summary>
     public bool ignoreJumpButton;
+    /// <summary>
+    /// The number of jumps remaining that a character can pull off before landing. Once they land, their jumps will typically
+    /// be reset back to the max number of jumps they have
+    /// </summary>
     private int currentJumpsAvailable;
 
-    private MovementState currentMovementState = MovementState.FreeMovement;
+    private CharacterStats.CharacterState currentMovementState = CharacterStats.CharacterState.FreeMovement;
     /// <summary>
     /// Jump velocity is calculated based on the jump height and time to reach apex
     /// </summary>
@@ -147,7 +146,7 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        if (currentMovementState != MovementState.FreeMovement)
+        if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {
             return;
         }
@@ -462,6 +461,7 @@ public class MovementMechanics : MonoBehaviour {
         this.currentJumpsAvailable--;
     }
 
+
     private void JoystickDirectionSet(CommandInterpreter.DIRECTION direction, Vector2Int joystickDirectionVec)
     {
         SetHorizontalInput(joystickDirectionVec.x);
@@ -470,10 +470,12 @@ public class MovementMechanics : MonoBehaviour {
     #endregion jumping methods
 
     #region dashing methods
-
+    /// <summary>
+    /// Begins the coroutine to have our character dashing
+    /// </summary>
     public void Dash()
     {
-        if (currentMovementState != MovementState.FreeMovement)
+        if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {
             return;
         }
@@ -487,7 +489,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     private IEnumerator DashCoroutine()
     {
-        currentMovementState = MovementState.Dashing;
+        currentMovementState = CharacterStats.CharacterState.Dashing;
         rigid.useGravity = false;
         float timeThatHasPassed = 0;
         while (timeThatHasPassed < delayBeforeDashing)
@@ -509,7 +511,7 @@ public class MovementMechanics : MonoBehaviour {
             yield return null;
         }
 
-        currentMovementState = MovementState.FreeMovement;
+        currentMovementState = CharacterStats.CharacterState.FreeMovement;
         rigid.velocity.x = Mathf.Sign(rigid.velocity.x) * Mathf.Min(Mathf.Abs(rigid.velocity.x), maximumAirSpeed);
         rigid.useGravity = true;
     }
@@ -520,7 +522,6 @@ public class MovementMechanics : MonoBehaviour {
     /// <summary>
     /// Method that handles player state when their hurtbox is inflitrated by an active hitbox.
     /// </summary>
-
     public void HandlePlayerHit(Hitbox enemyHitbox, InteractionHandler.MoveData move)
     {
         if (ForcedMovementCoroutine != null)
@@ -535,14 +536,6 @@ public class MovementMechanics : MonoBehaviour {
 
         ForcedMovementCoroutine = TranslateForcedMovement(destination);
         StartCoroutine(ForcedMovementCoroutine);
-    }
-
-    /// <summary>
-    /// Player state when a hit is landed.
-    /// </summary>
-    public void HandlePlayerHitEnemy(InteractionHandler.MoveData move, bool didMoveHit)
-    {
-
     }
 
     #endregion
