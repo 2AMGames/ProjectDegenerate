@@ -463,7 +463,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void SetLocalPlayerPing(long pingInMilliseconds)
     {
         ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-        playerProperties[PlayerPingKey] = pingInMilliseconds;
+        playerProperties[PlayerPingKey] = pingInMilliseconds / 2;
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
@@ -481,8 +481,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
                     if (player != null)
                     {
-                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey] / 2: (long) 0;
-                        currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey] / 2, currentPing) : 0;
+                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey]: (long) 0;
+                        currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
                     }
                 }
 

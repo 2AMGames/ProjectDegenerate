@@ -8,7 +8,7 @@ public class LocalPlayerController : PlayerController
 {
     #region main variables
 
-    public ushort LastSavedInputPattern;
+    private ushort LastSavedInputPattern;
 
     #endregion
 
@@ -19,6 +19,8 @@ public class LocalPlayerController : PlayerController
         PlayerInputData currentFrameInputData = new PlayerInputData();
         currentFrameInputData.FrameNumber =(uint)GameStateManager.Instance.FrameCount;
         currentFrameInputData.PlayerIndex = PlayerIndex;
+
+        // Properties cannot be passed by reference, so create a local variable
         ushort inputPattern = currentFrameInputData.InputPattern;
 
         UpdateButtonInput(ref inputPattern);
@@ -26,6 +28,7 @@ public class LocalPlayerController : PlayerController
 
         if (inputPattern != LastSavedInputPattern)
         {
+            currentFrameInputData.InputPattern = inputPattern;
             CommandInterpreter.QueuePlayerInput(currentFrameInputData);
             LastSavedInputPattern = currentFrameInputData.InputPattern;
         }
