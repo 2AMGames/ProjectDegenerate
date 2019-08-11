@@ -436,7 +436,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
-        Debug.LogWarning("ping finished");
         rtt.Stop();
 
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);

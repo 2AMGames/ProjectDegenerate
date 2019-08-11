@@ -122,7 +122,7 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
                     packetToSend.InputData = DataSent;
                     packetToSend.InputData.Add(inputData);
 
-                    NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
+                    NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
                 }
             }
         }

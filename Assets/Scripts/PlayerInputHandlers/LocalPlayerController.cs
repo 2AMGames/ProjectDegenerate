@@ -19,13 +19,13 @@ public class LocalPlayerController : PlayerController
         PlayerInputData currentFrameInputData = new PlayerInputData();
         currentFrameInputData.FrameNumber =(uint)GameStateManager.Instance.FrameCount;
         currentFrameInputData.PlayerIndex = PlayerIndex;
+        currentFrameInputData.InputPattern = 0xF000;
 
         // Properties cannot be passed by reference, so create a local variable
         ushort inputPattern = currentFrameInputData.InputPattern;
 
         UpdateButtonInput(ref inputPattern);
         UpdateJoystickInput(ref inputPattern);
-
         if (inputPattern != LastSavedInputPattern)
         {
             currentFrameInputData.InputPattern = inputPattern;
