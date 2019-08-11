@@ -59,22 +59,52 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     protected override bool CheckCollisionUpFromVelocity()
     {
-        float degreeOffset = 180f / (verticalRayCount - 1);
+
+        float degreeOffset = 180f / (horizontalRayCount - 1);
         Vector2 direction = Vector2.zero;
-        int centerIndex = horizontalRayCount / 2 + 1;
+        int centerIndex = horizontalRayCount / 2;
+        List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
+        List<CustomCollider2D> tempList;
+        float highestYPosition = float.MinValue;
         for (int i = 0; i < horizontalRayCount; i++)
         {
-            float rads = Mathf.Deg2Rad * (degreeOffset + 180);
+            float rads = Mathf.Deg2Rad * (i * degreeOffset + 180);
             direction = new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
             Vector2 originPoint = bounds.center + bounds.radius * direction;
-            List<CustomCollider2D> colliderList;
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out colliderList);
-            if (colliderList.Count > 0)
+            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
+            if (tempList.Contains(this))
+                tempList.Remove(this);
+            foreach (CustomCollider2D col in tempList)
             {
-
+                if (!colliderList.Contains(col))
+                {
+                    
+                    float upperPoint = col.GetUpperBoundsAtXValue(originPoint.x).y;
+                    print(col.name + "   " + upperPoint);
+                    if (upperPoint > highestYPosition)
+                    {
+                        highestYPosition = upperPoint;
+                    }
+                    colliderList.Add(col);
+                }
+            }
+            if (tempList.Count > 0)
+            {
+                if (i == centerIndex)
+                {
+                    rigid.velocity.y = 0;
+                    
+                }
             }
         }
-        return false;
+        if (colliderList.Count == 0)
+        {
+            return false;
+        }
+
+        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y - GetLowerBoundsAtXValue(bounds.center.x).y), transform.position.z);
+        UpdateBoundsOfCollider();
+        return true;
     }
 
     /// <summary>
@@ -126,7 +156,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     {
         float adjustedX = x - bounds.center.x;
         float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, Mathf.Sin(angle) * bounds.radius);
+        return new Vector2(x, -Mathf.Sin(angle) * bounds.radius + bounds.center.y);
     }
 
     /// <summary>
@@ -138,7 +168,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     {
         float adjustedX = x - bounds.center.x;
         float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, -Mathf.Sin(angle) * bounds.radius);
+        return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
     }
 
     /// <summary>
@@ -150,7 +180,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     {
         float adjustedY = y - bounds.center.y;
         float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(Mathf.Cos(angle) * bounds.radius, y);
+        return new Vector2(Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
     }
 
     /// <summary>
@@ -162,7 +192,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     {
         float adjustedY = y - bounds.center.y;
         float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(-Mathf.Cos(angle) * bounds.radius, y);
+        return new Vector2(-Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
     }
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)

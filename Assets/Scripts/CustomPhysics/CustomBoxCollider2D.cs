@@ -270,6 +270,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return;
         }
+        if (!(collider is CustomBoxCollider2D))
+        {
+            return;
+        }
         CustomBoxCollider2D bCollider = (CustomBoxCollider2D)collider;
         Vector2 tr1 = previousBounds.topRight;
         Vector2 bl1 = previousBounds.bottomLeft;
