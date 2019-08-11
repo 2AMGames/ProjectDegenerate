@@ -44,15 +44,12 @@ public class PlayerInputPacket
     public static short Serialize(StreamBuffer outstream, object data)
     {
         PlayerInputPacket inputData = (PlayerInputPacket)data;
-        string inputDataListJson = JsonConvert.SerializeObject(inputData);
+        string inputDataListJson = JsonConvert.SerializeObject(inputData.InputData);
 
-        Debug.LogWarning("Input json: " + inputDataListJson);
 
         Encoding encoder = Encoding.UTF8;
         byte[] stringToByte = encoder.GetBytes(inputDataListJson);
         int stringSize = stringToByte.Length;
-
-        Debug.LogWarning("String size: " + stringSize);
         
 
         int byteArrayIndex = 0;
@@ -87,10 +84,11 @@ public class PlayerInputPacket
         Protocol.Deserialize(out inputPacket.PlayerIndex, output, ref index);
 
         Protocol.Deserialize(out stringSize, output, ref index);
-        byte[] customString = new byte[4 + stringSize];
-        inStream.Read(customString, index, stringSize);
+        byte[] customString = new byte[stringSize];
+        inStream.Read(customString, 0, stringSize);
 
         string jsonString = System.Text.Encoding.UTF8.GetString(customString);
+        Debug.LogWarning("jsonString: " + jsonString);
         List<PlayerInputData> inputList = JsonConvert.DeserializeObject<List<PlayerInputData>>(jsonString);
         inputPacket.InputData = inputList;
         return inputPacket;
