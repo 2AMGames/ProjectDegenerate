@@ -41,6 +41,7 @@ public class HitboxCircle : Hitbox
         Vector2 intersectVec;
         if (hboxToCheck is HitboxRect)
         {
+            
             return CustomCollider2D.RectIntersectCircle(((HitboxRect)hboxToCheck).bounds, this.bounds, out intersectVec);
         }
         else if (hboxToCheck is HitboxCircle)

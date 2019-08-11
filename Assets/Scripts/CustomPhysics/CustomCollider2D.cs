@@ -8,25 +8,31 @@ using UnityEngine;
 /// with other colliders.
 /// </summary>
 public abstract class CustomCollider2D : MonoBehaviour {
-	[Tooltip("Mark this value true if you would like to treat this value as a trigger")]
+
+    #region const variables
+    protected readonly Color GIZMO_COLOR = Color.green;
+    #endregion const variables
+    [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
+    [Tooltip("")]
     public float HorizontalBuffer = .02f;
+    [Tooltip("")]
     public float VerticalBuffer = .02f;
+    [Tooltip("")]
     public int verticalRayCount;
+    [Tooltip("")]
     public int horizontalRayCount;
 
+    /// <summary>
+    /// The attached Custom physics component that is attached to our custom collider
+    /// This is not required for components that are static.
+    /// </summary>
     public CustomPhysics2D rigid { get; set; }
+
+    [Tooltip("Indicates whether or not the object is static")]
     public bool isStatic;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public BoundsRect bounds { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected BoundsRect previousBounds { get; set; }
+    
 
     protected virtual void Awake()
     {
@@ -62,12 +68,9 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
 
     /// <summary>
-    /// Be sure to call this methodd
+    /// Be sure to call this method
     /// </summary>
-    public virtual void UpdateBoundsOfCollider()
-    {
-        previousBounds = bounds;
-    }
+    public abstract void UpdateBoundsOfCollider();
 
     /// <summary>
     /// 
@@ -82,14 +85,14 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// 
     /// </summary>
     /// <returns></returns>
-    protected abstract bool CheckCollisionDownFromVelocity();
+    protected abstract bool CheckCollisionUpFromVelocity();
 
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    protected abstract bool CheckCollisionUpFromVelocity();
+    protected abstract bool CheckCollisionDownFromVelocity();
 
 
     /// <summary>
@@ -108,6 +111,36 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     protected abstract bool CheckCollisionLeftFromVelocity();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetLowerBoundsAtXValue(float x);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetUpperBoundsAtXValue(float x);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetRighBoundAtYValue(float y);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public abstract Vector2 GetLeftBoundAtYValue(float y);
+
+    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
     
 
     /// <summary>
@@ -115,7 +148,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     public virtual void CheckForCollisions()
     {
-        if (CheckCollisionUpFromVelocity())
+        if (CheckCollisionDownFromVelocity())
         {
             if (rigid.isInAir)
             {
@@ -131,14 +164,34 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 rigid.OnPhysicsObjectAirborne();
             }
         }
-        CheckCollisionDownFromVelocity();
+        CheckCollisionUpFromVelocity();
         CheckCollisionLeftFromVelocity();
         CheckCollisionRightFromVelocity();
     }
 
     public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);
 
-    public abstract CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount);
+    public virtual CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
+    {
+        Vector2 offset = (v2 - v1) / (rayCount - 1);
+        List<CustomCollider2D> lineColliders;
+        HashSet<CustomCollider2D> allLines = new HashSet<CustomCollider2D>();
+        for (int i = 0; i < rayCount; i++)
+        {
+            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
+            foreach (CustomCollider2D c in lineColliders)
+            {
+                if (c != this)
+                {
+                    allLines.Add(c);
+                }
+            }
+        }
+
+        CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
+        allLines.CopyTo(allValidColliderList);
+        return allValidColliderList;
+    }
 
     /// <summary>
     /// Call this method to check if we intersect with a colider
@@ -178,7 +231,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     #region static methods
     /// <summary>
-    /// 
+    /// Use this method to check if a rect bounds intersects another rect bound
     /// </summary>
     /// <returns></returns>
     public static bool RectIntersectRect(BoundsRect r1, BoundsRect r2, out Vector2 intersectionPoint)
@@ -202,7 +255,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
+    /// Use this method to check if a rect bounds intersects a circle bounds
     /// </summary>
     /// <param name="r"></param>
     /// <param name="c"></param>
@@ -224,22 +277,26 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float APdotAD = Vector2.Dot(point - A, D - A);
         float ADdotAD = Vector2.Dot(D - A, D - A);
         if (0 <= APdotAB && APdotAB <= ABdotAB && 0 <= APdotAD && APdotAD < ADdotAD)
+        {
             return true;
-        float rectX = r.bottomLeft.x;
-        float recty = r.bottomLeft.y;
 
-        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + width));
-        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + height));
+        }
+        
+        return LineIntersectCircle(c, r.bottomLeft, r.topRight);
+        //float rectX = r.bottomLeft.x;
+        //float recty = r.bottomLeft.y;
 
-        float dX = point.x - nearestX;
-        float dY = point.y - nearestY;
+        //float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, rectX + width));
+        //float nearestY = Mathf.Max(recty, Mathf.Min(point.y, recty + height));
 
-        return (dX * dX + dY * dY) < c.radius * c.radius;
+        //float dX = point.x - nearestX;
+        //float dY = point.y - nearestY;
 
+        //return (dX * dX + dY * dY) < c.radius * c.radius;
     }
 
     /// <summary>
-    /// 
+    /// Use this method to check if two circle bounds are intersecting with each other
     /// </summary>
     /// <param name="c1"></param>
     /// <param name="c2"></param>
@@ -252,6 +309,40 @@ public abstract class CustomCollider2D : MonoBehaviour {
         float distance = Vector2.Distance(c1.center, c2.center);
 
         return distance <= distanceMax;
+    }
+
+    public static bool CapsuleIntersectCapsule(BoundsRect c1, BoundsRect c2, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+    }
+
+    public static bool CapsuleIntersectCircle(BoundsRect cap, BoundsCircle cir, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+    }
+
+    public static bool CapsuleIntersectRect(BoundsRect cap, BoundsRect cir, out Vector2 intersectionPoint)
+    {
+        intersectionPoint = Vector2.zero;
+        return false;
+    }
+
+    public static bool LineIntersectCircle(BoundsCircle c, Vector2 pointA, Vector2 pointB)
+    {
+        Vector2 point = c.center;
+
+        float rectX = pointA.x;
+        float recty = pointA.y;
+
+        float nearestX = Mathf.Max(rectX, Mathf.Min(point.x, pointB.x));
+        float nearestY = Mathf.Max(recty, Mathf.Min(point.y, pointB.y));
+
+        float dX = point.x - nearestX;
+        float dY = point.y - nearestY;
+
+        return (dX * dX + dY * dY) < c.radius * c.radius;
     }
     #endregion static methods
 }

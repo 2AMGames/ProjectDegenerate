@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(InteractionHandler))]
 public abstract class Hitbox : MonoBehaviour
 {
     #region const variables
@@ -52,7 +51,7 @@ public abstract class Hitbox : MonoBehaviour
         {
             return;
         }
-        foreach (HitboxRect hbox in currentIntersectingHitboxes.ToArray())
+        foreach (Hitbox hbox in currentIntersectingHitboxes.ToArray())
         {
             if (hbox)
             {

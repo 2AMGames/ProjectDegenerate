@@ -2,12 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
 
-    
+    /// <summary>
+    /// 
+    /// </summary>
+    public BoundsRect bounds { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected BoundsRect previousBounds { get; set; }
 
     protected virtual void OnDrawGizmos()
     {
@@ -16,7 +27,7 @@ public class CustomBoxCollider2D : CustomCollider2D
             UpdateBoundsOfCollider();
         }
 
-        Color colorToDraw = Color.green;
+        Color colorToDraw = GIZMO_COLOR;
 
         DebugSettings.DrawLine(bounds.bottomLeft, bounds.bottomRight, colorToDraw);
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
@@ -32,7 +43,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        base.UpdateBoundsOfCollider();
+        previousBounds = bounds;
         
         BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
@@ -109,42 +120,13 @@ public class CustomBoxCollider2D : CustomCollider2D
         return -v2.x * v1.y + v1.x * v2.y;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="v1"></param>
-    /// <param name="v2"></param>
-    /// <param name="direction"></param>
-    /// <param name="distance"></param>
-    /// <param name="rayCount"></param>
-    /// <returns></returns>
-    public override CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
-    {
-        Vector2 offset = (v2 - v1) / (rayCount - 1);
-        List<CustomCollider2D> lineColliders;
-        HashSet<CustomCollider2D> allLines = new HashSet<CustomCollider2D>();
-        for (int i = 0; i < rayCount; i++)
-        {
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(v1 + offset * i, direction, distance, out lineColliders);
-            foreach (CustomCollider2D c in lineColliders)
-            {
-                if (c != this)
-                {
-                    allLines.Add(c);
-                } 
-            }
-        }
-        
-        CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
-        allLines.CopyTo(allValidColliderList);
-        return allValidColliderList;
-    }
+   
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
+    protected override bool CheckCollisionUpFromVelocity()
     {
         if (rigid.velocity.y <= 0)
         {
@@ -158,10 +140,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        float lowestYValue = tileCollidersThatWeHit[0].bounds.bottomRight.y;
+        float lowestYValue = tileCollidersThatWeHit[0].GetLowerBoundsAtXValue(this.transform.position.x).y;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.bottomRight.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetLowerBoundsAtXValue(this.transform.position.x).y);
             if (pointThatWeCollidedWith.y < lowestYValue)
             {
                 lowestYValue = pointThatWeCollidedWith.y;
@@ -177,7 +159,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// 
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
+    protected override bool CheckCollisionDownFromVelocity()
     {
         if (rigid.velocity.y > 0)
         {
@@ -192,10 +174,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             return false;
         }
-        float highestYValue = tileCollidersThatWeHit[0].bounds.topLeft.y;
+        float highestYValue = tileCollidersThatWeHit[0].GetUpperBoundsAtXValue(this.transform.position.x).y;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.bounds.topLeft.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetUpperBoundsAtXValue(this.transform.position.x).y);
             if (pointThatWeCollidedWith.y > highestYValue)
             {
                 highestYValue = pointThatWeCollidedWith.y;
@@ -227,10 +209,10 @@ public class CustomBoxCollider2D : CustomCollider2D
             return false;
         }
         //print(tileCollidersThatWeHit[0].name);
-        float lowestXValue = tileCollidersThatWeHit[0].bounds.bottomLeft.x;
+        float lowestXValue = tileCollidersThatWeHit[0].GetLeftBoundAtYValue(this.transform.position.y).x;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomLeft.x, this.transform.position.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetLeftBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
             if (pointThatWeCollidedWith.x < lowestXValue)
             {
                 lowestXValue = pointThatWeCollidedWith.x;
@@ -263,10 +245,10 @@ public class CustomBoxCollider2D : CustomCollider2D
             return false;
         }
         //print(tileCollidersThatWeHit[0].name);
-        float highestXValue = tileCollidersThatWeHit[0].bounds.bottomRight.x;
+        float highestXValue = tileCollidersThatWeHit[0].GetRighBoundAtYValue(this.transform.position.y).x;
         foreach (CustomCollider2D tile in tileCollidersThatWeHit)
         {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.bounds.bottomRight.x, this.transform.position.y);
+            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetRighBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
             if (pointThatWeCollidedWith.x > highestXValue)
             {
                 highestXValue = pointThatWeCollidedWith.x;
@@ -285,6 +267,10 @@ public class CustomBoxCollider2D : CustomCollider2D
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
         if (collider.isStatic)
+        {
+            return;
+        }
+        if (!(collider is CustomBoxCollider2D))
         {
             return;
         }
@@ -319,5 +305,46 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
 
         bCollider.UpdateBoundsOfCollider();
+    }
+
+    public override Vector2 GetLowerBoundsAtXValue(float x)
+    {
+        return new Vector2(x, bounds.bottomLeft.y);
+    }
+
+    public override Vector2 GetUpperBoundsAtXValue(float x)
+    {
+        return new Vector2(x, bounds.topRight.y);
+    }
+
+    public override Vector2 GetRighBoundAtYValue(float y)
+    {
+        return new Vector2(bounds.topRight.x, y);
+    }
+
+    public override Vector2 GetLeftBoundAtYValue(float y)
+    {
+        return new Vector2(bounds.bottomLeft.x, y);
+    }
+
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    {
+        if (colliderToCheck is CustomBoxCollider2D)
+        {
+            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCircleCollider2D)
+        {
+            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+        }
+        else if (colliderToCheck is CustomCapsuleCollider2D)
+        {
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+        }
+        else
+        {
+            intersectionPoint = Vector2.zero;
+            return false;
+        }
     }
 }
