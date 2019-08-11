@@ -2426,6 +2426,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FrameCount: 0
+--- !u!114 &1749728941 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6728667214325178032, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4928876089398127172}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749728939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1161873af5d1e46a7863653a91748d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1749728942 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6728667214325178033, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4928876089398127172}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749728939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34f47cc6b2c7e8043acfe04940b78684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1814398916
 GameObject:
   m_ObjectHideFlags: 0
@@ -3347,6 +3371,16 @@ PrefabInstance:
       propertyPath: SelectedGameType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6728667214325178035, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: HitboxManager
+      value: 
+      objectReference: {fileID: 1749728942}
+    - target: {fileID: 6728667214325178035, guid: 36249abe33f974c4cbeae2e0d75bc28b,
+        type: 3}
+      propertyPath: ColliderManager
+      value: 
+      objectReference: {fileID: 1749728941}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}

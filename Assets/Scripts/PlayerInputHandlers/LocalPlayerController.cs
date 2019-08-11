@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
+
 public class LocalPlayerController : PlayerController
 {
     #region main variables
@@ -17,11 +19,12 @@ public class LocalPlayerController : PlayerController
         PlayerInputData currentFrameInputData = new PlayerInputData();
         currentFrameInputData.FrameNumber =(uint)GameStateManager.Instance.FrameCount;
         currentFrameInputData.PlayerIndex = PlayerIndex;
+        ushort inputPattern = currentFrameInputData.InputPattern;
 
-        UpdateButtonInput(ref currentFrameInputData.InputPattern);
-        UpdateJoystickInput(ref currentFrameInputData.InputPattern);
+        UpdateButtonInput(ref inputPattern);
+        UpdateJoystickInput(ref inputPattern);
 
-        if (currentFrameInputData.InputPattern != LastSavedInputPattern)
+        if (inputPattern != LastSavedInputPattern)
         {
             CommandInterpreter.QueuePlayerInput(currentFrameInputData);
             LastSavedInputPattern = currentFrameInputData.InputPattern;

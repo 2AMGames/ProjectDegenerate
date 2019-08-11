@@ -136,7 +136,7 @@ public class CommandInterpreter : MonoBehaviour
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
-    private Queue<PlayerInputData> InputBuffer = new Queue<PlayerInputData>();
+    private Queue<PlayerInputPacket.PlayerInputData> InputBuffer = new Queue<PlayerInputPacket.PlayerInputData>();
 
     #endregion
 
@@ -171,9 +171,9 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputData dataToQueue)
+    public void QueuePlayerInput(PlayerInputPacket.PlayerInputData dataToQueue)
     {
-        if (dataToQueue != null)
+        if (dataToQueue.InputPattern > 0)
         {
             InputBuffer.Enqueue(dataToQueue);
         }
@@ -211,29 +211,30 @@ public class CommandInterpreter : MonoBehaviour
 
     }
 
-    public PlayerInputData GetPlayerInputDataIfUpdated()
+    public PlayerInputPacket.PlayerInputData GetPlayerInputDataIfUpdated()
     {
         // If player button pattern has been updated, return input data
         // else return null
         if (lastButtonPattern != currentButtonPattern)
         {
-            PlayerInputData data = new PlayerInputData();
+            PlayerInputPacket.PlayerInputData data = new PlayerInputPacket.PlayerInputData();
 
             data.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
             data.InputPattern = GetPlayerInputByte();
 
             lastButtonPattern = currentButtonPattern;
+            data.PlayerIndex = characterStats.PlayerIndex;
 
             return data;
         }
-        return null;
+        return default;
     }
 
     #endregion
 
     #region private interface
 
-    private void ExecuteInput(PlayerInputData inputData)
+    private void ExecuteInput(PlayerInputPacket.PlayerInputData inputData)
     {
         if ((inputData.InputPattern & 1) == 1)
         {
@@ -348,7 +349,7 @@ public class CommandInterpreter : MonoBehaviour
         return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
     }
 
-    private Vector2Int GetJoystickInputFromData(PlayerInputData inputData)
+    private Vector2Int GetJoystickInputFromData(PlayerInputPacket.PlayerInputData inputData)
     {
         Vector2Int joystickVector = new Vector2Int();
 

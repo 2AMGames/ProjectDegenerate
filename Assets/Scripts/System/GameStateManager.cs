@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Photon.Realtime;
 using UnityEngine;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
+
 // Class responsible for maintaining the gamestate
 public class GameStateManager : MonoBehaviour, IOnEventCallback
 {

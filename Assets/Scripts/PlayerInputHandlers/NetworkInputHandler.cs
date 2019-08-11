@@ -8,6 +8,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
+
 public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 {
 
@@ -23,11 +25,13 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
 
     #region main variables
 
+    private uint PacketsSent;
+
     private PlayerController PlayerController;
 
     private CommandInterpreter CommandInterpreter;
 
-    private List<PlayerInputData> InputDataToSend = new List<PlayerInputData>();
+    private List<PlayerInputData> DataSent = new List<PlayerInputData>();
 
     #endregion
 
@@ -110,9 +114,13 @@ public class NetworkInputHandler : MonoBehaviour, IMatchmakingCallbacks
             if (Overseer.Instance.IsGameReady && CommandInterpreter != null)
             {
                 PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
-                if (inputData != null)
+                if (inputData.InputPattern > 0)
                 {
-                    inputData.PlayerIndex = PlayerController.PlayerIndex;
+                    PlayerInputPacket packetToSend = new PlayerInputPacket();
+                    packetToSend.PlayerIndex = PlayerController.PlayerIndex;
+                    packetToSend.PacketId = PacketsSent;
+                    packetToSend.InputData = DataSent;
+                    packetToSend.InputData.Add(inputData);
 
                     NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, inputData);
                 }

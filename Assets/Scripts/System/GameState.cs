@@ -15,8 +15,6 @@ public class GameState
     {
         public int PlayerIndex;
 
-        public PlayerInputData InputData;
-
         public Vector3 PlayerPosition;
 
         public string CurrentAnimationClip;

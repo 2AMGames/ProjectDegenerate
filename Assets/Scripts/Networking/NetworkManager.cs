@@ -161,7 +161,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void RegisterEventTypes()
     {
-        PhotonPeer.RegisterType(typeof(PlayerInputData), PlayerInputUpdate, PlayerInputData.Serialize, PlayerInputData.Deserialize);
+        PhotonPeer.RegisterType(typeof(PlayerInputPacket), PlayerInputUpdate, PlayerInputPacket.Serialize, PlayerInputPacket.Deserialize);
     }
 
     private void UpdateDelay()
@@ -343,7 +343,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        Debug.LogWarning("Actor number: " + targetPlayer.ActorNumber);
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey) && targetPlayer.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
@@ -483,10 +482,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     if (player != null)
                     {
                         long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey] : (long) 0;
-                        if (playerPing > 0)
-                        {
-                            Debug.LogWarning("Frames: " + playerPing / MillisecondsPerFrame);
-                        }
                         currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
                     }
                 }
