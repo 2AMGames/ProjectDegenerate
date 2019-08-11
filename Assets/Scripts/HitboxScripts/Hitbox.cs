@@ -14,9 +14,17 @@ public abstract class Hitbox : MonoBehaviour
         Hurtbox,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public HitboxType hitboxType = HitboxType.Hurtbox;
 
+    /// <summary>
+    /// All hitboxes should have a reference to an interaction handler. Required for sending events properly to the associated character
+    /// </summary>
     public InteractionHandler InteractionHandler;
+
+
     /// <summary>
     /// Hitboxes that we are currently intersecting
     /// </summary>
@@ -62,6 +70,10 @@ public abstract class Hitbox : MonoBehaviour
     }
     #endregion
     #region debug helper methods
+    /// <summary>
+    /// DEBGUG: Gets the color that is associated with the type of hitbox that we are using.
+    /// </summary>
+    /// <returns></returns>
     protected Color GetColorToDrawGizmos()
     {
         Color colorToDraw = Color.white;
@@ -96,7 +108,8 @@ public abstract class Hitbox : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Removes an intersecting hitbox from the list. Returns true if the object
+    /// was found in the list and successfully removed
     /// </summary>
     /// <param name="hitboxToRemove"></param>
     /// <returns></returns>
@@ -112,7 +125,16 @@ public abstract class Hitbox : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Method to updated the collider bounds of our hitbox
+    /// </summary>
     public abstract void UpdateColliderBounds();
-    public abstract bool CheckHitboxIntersect(Hitbox hboxToCheck);
 
+
+    /// <summary>
+    /// Checks whether or not we intersect with the hitbox that is passed in.
+    /// </summary>
+    /// <param name="hboxToCheck"></param>
+    /// <returns></returns>
+    public abstract bool CheckHitboxIntersect(Hitbox hboxToCheck);
 }
