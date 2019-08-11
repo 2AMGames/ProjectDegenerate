@@ -88,7 +88,6 @@ public class PlayerInputPacket
         inStream.Read(customString, 0, stringSize);
 
         string jsonString = System.Text.Encoding.UTF8.GetString(customString);
-        Debug.LogWarning("jsonString: " + jsonString);
         List<PlayerInputData> inputList = JsonConvert.DeserializeObject<List<PlayerInputData>>(jsonString);
         inputPacket.InputData = inputList;
         return inputPacket;
