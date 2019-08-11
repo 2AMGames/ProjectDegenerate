@@ -139,7 +139,6 @@ public class InteractionHandler : MonoBehaviour
     {
         //TODO Get current active move from animation and command interpreter. Pass null for now.
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
-        MovementMechanics.HandlePlayerHitEnemy(CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
     }

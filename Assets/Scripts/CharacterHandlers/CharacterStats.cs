@@ -17,12 +17,31 @@ public class CharacterStats : MonoBehaviour
         NEUTRAL,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum CharacterState
+    {
+        FreeMovement, //Player has full control of their movement
+        NoPlayerControlledMovement,//If the player is in hit stun or some other even, this movement type may be set
+        Dashing,//Player is dashing
+    }
     #endregion
 
     #region main variables
-
+    /// <summary>
+    /// 
+    /// </summary>
     public MovementMechanics MovementMechanics { get; private set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public CharacterState currentCharacterState { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public Animator Anim;
 
     [HideInInspector]
