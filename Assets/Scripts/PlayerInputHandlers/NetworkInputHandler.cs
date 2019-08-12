@@ -91,7 +91,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (photonEvent.Code == NetworkManager.PlayerInputAck)
         {
-            int packetNumber = (int)photonEvent.CustomData;
+            int packetNumber = (uint)photonEvent.CustomData;
             HandlePlayerInputAck(packetNumber);
         }
     }
@@ -105,6 +105,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         PlayerInputData data = DataSent.Find(x => x.PacketId == packetNumber);
         if (data.IsValid())
         {
+            Debug.LogWarning("Removing packet: " + packetNumber);
             DataSent.Remove(data);
         }
     }

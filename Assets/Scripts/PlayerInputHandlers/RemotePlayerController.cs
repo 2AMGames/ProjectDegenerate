@@ -82,7 +82,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
 
     private void SendInputAck(uint packetId)
     {
-        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputAck, packetId);
+        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputAck, (int)packetId);
     }
 
     #endregion
