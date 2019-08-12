@@ -436,12 +436,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
+
         rtt.Stop();
-
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
-
         UpdatePing();
-
         CurrentlyPingingPlayers = false;
         
     }
@@ -462,7 +460,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void SetLocalPlayerPing(long pingInMilliseconds)
     {
         ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-        playerProperties[PlayerPingKey] = pingInMilliseconds / 2;
+        playerProperties[PlayerPingKey] = pingInMilliseconds;
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
@@ -473,7 +471,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
             {
-                long currentPing = 0;
+                long highestPing = 0;
 
                 foreach(int actorNumber in activePlayers.Keys)
                 {
@@ -481,11 +479,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     if (player != null)
                     {
                         long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey]: (long) 0;
-                        currentPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], currentPing) : 0;
+                        highestPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], highestPing) : 0;
                     }
                 }
 
-                CurrentDelayInMilliSeconds = currentPing;
+                float calculatedDelay = Mathf.Ceil((highestPing + GameStateManager.Instance.LocalFrameDelay) / (2.0f * Time.deltaTime));
+                CurrentDelayInMilliSeconds = (long)calculatedDelay;
             }
         }
     }

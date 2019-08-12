@@ -69,7 +69,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                     SendInputAck(data.PacketId);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError(e);
             }

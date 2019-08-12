@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private const int MillisecondsPerFrame = 16;
 
-    private const int MaxPacketFrameDelay = 11;
+    private const int MaxPacketFrameDelay = 10;
 
     private const int MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
 
@@ -47,6 +47,8 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     #region main variables
 
+    public int LocalFrameDelay;
+
     public int FrameCount;
 
     public float RoundTime { get; private set; }
@@ -60,12 +62,18 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
     private void Awake()
     {
         FrameStack = new Stack<GameState>();
+        LocalFrameDelay = Math.Min(MaxPacketFrameDelay, LocalFrameDelay);
         Overseer.Instance.OnGameReady += OnGameReady;
     }
 
     private void Update()
     {
         RoundTime += Time.deltaTime;
+    }
+
+    private void OnValidate()
+    {
+        LocalFrameDelay = Math.Min(MaxPacketFrameDelay, LocalFrameDelay);
     }
 
     #endregion

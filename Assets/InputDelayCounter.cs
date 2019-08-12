@@ -28,6 +28,7 @@ public class InputDelayCounter : MonoBehaviour
         if (Overseer.Instance.SelectedGameType != Overseer.GameType.PlayerVsRemote)
         {
             enabled = false;
+            FrameDelayText.gameObject.SetActive(false);
         }
     }
 
