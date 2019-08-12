@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base class for all types of hitboxes.
+/// </summary>
 public abstract class Hitbox : MonoBehaviour
 {
     #region const variables

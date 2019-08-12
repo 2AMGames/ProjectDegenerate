@@ -14,7 +14,7 @@ public class FPSCounter : MonoBehaviour
     private void Update()
     {
         framesThatHavePassed += 1;
-        totalTimeThatHasPassed += Time.deltaTime;
+        totalTimeThatHasPassed += Overseer.TIME_STEP;
         if (framesThatHavePassed >= framesBetweenDisplayText)
         {
             

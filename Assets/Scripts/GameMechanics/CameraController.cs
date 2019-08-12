@@ -2,18 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class CameraController : MonoBehaviour
 {
     #region const variables
-
+    /// <summary>
+    /// COMMENT HERE
+    /// </summary>
     private const float CameraBoundHorizontalBuffer = .2f;
+    /// <summary>
+    /// COMMENT HERE
+    /// </summary>
     private const float CameraVerticalOffset = .75f;
+    /// <summary>
+    /// COMMENT HERE
+    /// </summary>
     private const float HorizontalDistanceThreshold = .15f;
-
     #endregion
 
     #region main variables
-
+    
     [SerializeField]
     private Camera MainCamera;
 
@@ -23,7 +33,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     public CustomBoxCollider2D RightCameraBound;
 
-    // How far from the center can the camera travel?
+    /// <summary>
+    /// How far from the center can the camera travel?
+    /// </summary>
     public float CameraWorldBounds = 10f;
 
     #endregion
@@ -59,7 +71,7 @@ public class CameraController : MonoBehaviour
     #endregion
 
     #region private methods
-
+    
     private void OnGameReady(bool isReady)
     {
         enabled = isReady;
@@ -102,6 +114,7 @@ public class CameraController : MonoBehaviour
             MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, .5f);
         }
     }
+
 
     private void SetCameraBounds()
     {
