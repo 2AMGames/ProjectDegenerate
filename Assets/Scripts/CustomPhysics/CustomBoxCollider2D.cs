@@ -135,7 +135,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
         Vector2 adjustedPoint2 = bounds.topRight + Vector2.left * HorizontalBuffer - VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up,
-            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
+            Mathf.Abs(rigid.velocity.y * Overseer.TIME_STEP) + VerticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {
             return false;
@@ -169,7 +169,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         Vector2 adjustedPoint1 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         Vector2 adjustedPoint2 = bounds.bottomRight + Vector2.left * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down,
-            Mathf.Abs(rigid.velocity.y * Time.deltaTime) + VerticalBuffer, verticalRayCount);
+            Mathf.Abs(rigid.velocity.y * Overseer.TIME_STEP) + VerticalBuffer, verticalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {
             return false;
@@ -203,7 +203,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         Vector2 adjustedPoint2 = bounds.bottomRight - Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
             adjustedPoint1, adjustedPoint2, Vector2.right,
-            Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
+            Mathf.Abs(rigid.velocity.x * Overseer.TIME_STEP) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {
             return false;
@@ -239,7 +239,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         Vector2 adjustedPoint2 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
         CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
             adjustedPoint1, adjustedPoint2,
-            Vector2.left, Mathf.Abs(rigid.velocity.x * Time.deltaTime) + HorizontalBuffer, horizontalRayCount);
+            Vector2.left, Mathf.Abs(rigid.velocity.x * Overseer.TIME_STEP) + HorizontalBuffer, horizontalRayCount);
         if (tileCollidersThatWeHit.Length == 0)
         {
             return false;

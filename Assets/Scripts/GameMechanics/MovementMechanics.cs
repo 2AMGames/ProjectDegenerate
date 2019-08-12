@@ -310,7 +310,7 @@ public class MovementMechanics : MonoBehaviour {
         }
         
         Vector2 newVelocityVector = new Vector2(rigid.velocity.x, rigid.velocity.y);
-        newVelocityVector.x = Mathf.MoveTowards(rigid.velocity.x, goalSpeed, Time.deltaTime * groundAcceleration);
+        newVelocityVector.x = Mathf.MoveTowards(rigid.velocity.x, goalSpeed, Overseer.TIME_STEP * groundAcceleration);
         rigid.velocity = newVelocityVector;
     }
 
@@ -327,7 +327,7 @@ public class MovementMechanics : MonoBehaviour {
 
         float updatedXVelocity = rigid.velocity.x;
         updatedXVelocity = Mathf.MoveTowards(updatedXVelocity, goalSpeed, 
-            Time.deltaTime * airAcceleration);
+            Overseer.TIME_STEP * airAcceleration);
         Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.velocity.y);
         rigid.velocity = updatedVectorVelocity;
     }
@@ -495,7 +495,7 @@ public class MovementMechanics : MonoBehaviour {
         while (timeThatHasPassed < delayBeforeDashing)
         {
             rigid.velocity = Vector2.zero;
-            timeThatHasPassed += Time.deltaTime;
+            timeThatHasPassed += Overseer.TIME_STEP;
             yield return null;
         }
         timeThatHasPassed = 0;
@@ -507,7 +507,7 @@ public class MovementMechanics : MonoBehaviour {
         while (timeThatHasPassed < timeToCompleteDash)
         {
             rigid.velocity = directionOfInput * dashVelocityAnimationCurve.Evaluate(timeThatHasPassed / timeToCompleteDash) * maxDashSpeed;
-            timeThatHasPassed += Time.deltaTime;
+            timeThatHasPassed += Overseer.TIME_STEP;
             yield return null;
         }
 
