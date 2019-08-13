@@ -50,7 +50,13 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <param name="collider"></param>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        
+        if (collider.isStatic)
+        {
+            return;
+        }
+        CustomPhysics2D rigidCol = collider.rigid;
+        Vector2 offsetFromCollider = this.bounds.center - collider.GetCenter();
+
     }
 
     /// <summary>
@@ -215,5 +221,10 @@ public class CustomCircleCollider2D : CustomCollider2D
             intersectionPoint = Vector2.zero;
             return false;
         }
+    }
+
+    public override Vector2 GetCenter()
+    {
+        return bounds.center;
     }
 }

@@ -140,6 +140,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract Vector2 GetLeftBoundAtYValue(float y);
 
+    public abstract Vector2 GetCenter();
+
     public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
     
 
@@ -209,6 +211,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         public Vector2 topRight;
         public Vector2 bottomLeft;
         public Vector2 bottomRight;
+        public Vector2 center;
 
         public Vector3[] GetVertices()
         {

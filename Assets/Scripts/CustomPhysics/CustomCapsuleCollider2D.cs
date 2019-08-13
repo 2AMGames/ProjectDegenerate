@@ -141,4 +141,9 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         return false;
 
     }
+
+    public override Vector2 GetCenter()
+    {
+        throw new System.NotImplementedException();
+    }
 }

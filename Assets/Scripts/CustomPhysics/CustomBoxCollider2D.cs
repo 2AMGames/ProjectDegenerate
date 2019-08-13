@@ -48,6 +48,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
 
+        b.center = origin;
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
         b.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
         b.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
@@ -325,6 +326,11 @@ public class CustomBoxCollider2D : CustomCollider2D
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
         return new Vector2(bounds.bottomLeft.x, y);
+    }
+
+    public override Vector2 GetCenter()
+    {
+        return bounds.center;
     }
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
