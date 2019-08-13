@@ -138,6 +138,18 @@ public class CommandInterpreter : MonoBehaviour
 
     private Queue<PlayerInputPacket.PlayerInputData> InputBuffer = new Queue<PlayerInputPacket.PlayerInputData>();
 
+    private long FrameDelay
+    {
+        get
+        {
+            if (Overseer.Instance == null || NetworkManager.Instance == null)
+            {
+                return 0;
+            }
+            return Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote ? (int)NetworkManager.Instance.CurrentDelayFrames : GameStateManager.Instance.LocalFrameDelay;
+        }
+    }
+
     #endregion
 
     #region monobehaviour methods
@@ -163,7 +175,13 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (InputBuffer.Count > 0)
         {
-            ExecuteInput(InputBuffer.Dequeue());
+            PlayerInputPacket.PlayerInputData dataToExecute = InputBuffer.Peek();
+            long currentFrame = GameStateManager.Instance.FrameCount;
+            long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
+            if (frameToExecute - currentFrame <= 0)
+            {
+                ExecuteInput(InputBuffer.Dequeue());
+            }
         }
     }
 

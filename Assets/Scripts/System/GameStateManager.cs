@@ -15,11 +15,11 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private const int MaxStackSize = 60;
 
-    private const int MillisecondsPerFrame = 16;
+    private const short MillisecondsPerFrame = 16;
 
-    private const int MaxPacketFrameDelay = 10;
+    private const short MaxPacketFrameDelay = 30;
 
-    private const int MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
+    private const long MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
 
     #endregion
 
@@ -47,13 +47,15 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     #region main variables
 
-    public int LocalFrameDelay;
+    public short LocalFrameDelay = 3;
 
-    public int FrameCount;
+    public long FrameCount;
 
     public float RoundTime { get; private set; }
 
     private Stack<GameState> FrameStack;
+
+    private bool SaveGameCoroutineRunning;
 
     #endregion
 
@@ -90,13 +92,18 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private void OnGameReady(bool isGameReady)
     {
-        if (isGameReady && Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
+        enabled = isGameReady;
+        if (isGameReady)
         {
-            StartCoroutine(SaveGameState());
+            if (!SaveGameCoroutineRunning)
+            {
+                StartCoroutine(SaveGameState());
+            }
         }
         else
         {
-            enabled = false;
+            StopCoroutine(SaveGameState());
+            SaveGameCoroutineRunning = false;
         }
     }
 
@@ -140,28 +147,22 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private IEnumerator SaveGameState()
     {
+        SaveGameCoroutineRunning = true;
         while (Overseer.Instance.IsGameReady)
         {
             if (FrameStack.Count > MaxStackSize)
             {
                 FrameStack = new Stack<GameState>();
             }
-            GameState gameStateToPush = CreateNewGameState();
-            FrameStack.Push(gameStateToPush);
+            // We only want to save the gamestate if we need to roll back (Network mode).
+            if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
+            {
+                GameState gameStateToPush = CreateNewGameState();
+                FrameStack.Push(gameStateToPush);
+            }
             ++FrameCount;
             yield return new WaitForEndOfFrame();
         }
-    }
-
-    private IEnumerator TestFrameRate()
-    {
-        float Seconds = 15f;
-        while (Seconds >= 0.0f)
-        {
-            Seconds -= Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        UnityEditor.EditorApplication.isPaused = true; 
     }
 
     #endregion
