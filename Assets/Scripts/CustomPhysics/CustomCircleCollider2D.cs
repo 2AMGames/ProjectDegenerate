@@ -16,6 +16,10 @@ public class CustomCircleCollider2D : CustomCollider2D
         {
             verticalRayCount += 1;
         }
+        if (horizontalRayCount % 2 == 0)
+        {
+            horizontalRayCount += 1;
+        }
     }
 
     private void OnDrawGizmos()
@@ -80,33 +84,9 @@ public class CustomCircleCollider2D : CustomCollider2D
             Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
             if (tempList.Contains(this))
                 tempList.Remove(this);
-            foreach (CustomCollider2D col in tempList)
-            {
-                if (!colliderList.Contains(col))
-                {
-                    
-                    float upperPoint = col.GetUpperBoundsAtXValue(originPoint.x).y;
-                    print(col.name + "   " + upperPoint);
-                    if (upperPoint > highestYPosition)
-                    {
-                        highestYPosition = upperPoint;
-                    }
-                    colliderList.Add(col);
-                }
-            }
-            if (tempList.Count > 0)
-            {
-                if (i == centerIndex)
-                {
-                    rigid.velocity.y = 0;
-                    
-                }
-            }
+
         }
-        if (colliderList.Count == 0)
-        {
-            return false;
-        }
+        
 
         this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y - GetLowerBoundsAtXValue(bounds.center.x).y), transform.position.z);
         UpdateBoundsOfCollider();

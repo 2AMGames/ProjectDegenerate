@@ -161,6 +161,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private void CreatePlayerController(int playerIndex, PlayerController.PlayerType playerType)
     {
         GameObject associatedPlayer = PlayerObjects[playerIndex];
+        if (associatedPlayer == null)
+        {
+            Debug.LogWarning("The Associated Player is null. Perhaps no characters were added to the game");
+            return;
+        }
         GameObject playerControllerGameObject = new GameObject();
         PlayerController playerController;
 

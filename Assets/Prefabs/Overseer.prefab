@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6728667214325178035}
   - component: {fileID: 6728667214325178033}
   - component: {fileID: 6728667214325178032}
-  - component: {fileID: 9207758887553089138}
+  - component: {fileID: 1749728940}
   m_Layer: 0
   m_Name: Overseer
   m_TagString: Untagged
@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e373b2c9750c2e41a7e98da9526b37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerObjects: []
+  PlayerObjects:
+  - {fileID: 0}
+  - {fileID: 0}
   Players: []
   HitboxManager: {fileID: 6728667214325178033}
   ColliderManager: {fileID: 6728667214325178032}
@@ -75,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae1161873af5d1e46a7863653a91748d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9207758887553089138
+--- !u!114 &1749728940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,10 +86,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6728667214325178036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ece018cf007276b4095749f2f5172e94, type: 3}
+  m_Script: {fileID: 11500000, guid: f24a2ba9a9f63cd46865c47f1c225778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 0}
-  LeftCameraBound: {fileID: 0}
-  RightCameraBound: {fileID: 0}
-  CameraWorldBounds: 10
+  LocalFrameDelay: 0
+  FrameCount: 0
