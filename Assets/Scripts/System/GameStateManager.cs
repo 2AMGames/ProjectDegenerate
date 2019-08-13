@@ -155,7 +155,7 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
                 FrameStack = new Stack<GameState>();
             }
             // We only want to save the gamestate if we need to roll back (Network mode).
-            if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
+            if (Overseer.Instance.IsNetworkedMode)
             {
                 GameState gameStateToPush = CreateNewGameState();
                 FrameStack.Push(gameStateToPush);

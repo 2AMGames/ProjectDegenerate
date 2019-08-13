@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -136,7 +137,8 @@ public class CommandInterpreter : MonoBehaviour
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
-    private Queue<PlayerInputPacket.PlayerInputData> InputBuffer = new Queue<PlayerInputPacket.PlayerInputData>();
+    private Dictionary<uint, PlayerInputPacket.PlayerInputData> FramesReceived = new Dictionary<uint, PlayerInputPacket.PlayerInputData>();
+    private List<PlayerInputPacket.PlayerInputData> InputBuffer = new List<PlayerInputPacket.PlayerInputData>();
 
     private long FrameDelay
     {
@@ -146,7 +148,7 @@ public class CommandInterpreter : MonoBehaviour
             {
                 return 0;
             }
-            return Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote ? (int)NetworkManager.Instance.CurrentDelayFrames : GameStateManager.Instance.LocalFrameDelay;
+            return Overseer.Instance.IsNetworkedMode ? NetworkManager.Instance.CurrentDelayFrames : GameStateManager.Instance.LocalFrameDelay;
         }
     }
 
@@ -175,12 +177,17 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (InputBuffer.Count > 0)
         {
-            PlayerInputPacket.PlayerInputData dataToExecute = InputBuffer.Peek();
+            PlayerInputPacket.PlayerInputData dataToExecute = InputBuffer[0];
             long currentFrame = GameStateManager.Instance.FrameCount;
             long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
             {
-                ExecuteInput(InputBuffer.Dequeue());
+                InputBuffer.RemoveAt(0);
+                if (FramesReceived.ContainsKey(dataToExecute.FrameNumber))
+                {
+                    FramesReceived.Remove(dataToExecute.FrameNumber);
+                }
+                ExecuteInput(dataToExecute);
             }
         }
     }
@@ -191,9 +198,20 @@ public class CommandInterpreter : MonoBehaviour
 
     public void QueuePlayerInput(PlayerInputPacket.PlayerInputData dataToQueue)
     {
-        if (dataToQueue.InputPattern > 0)
+        if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
         {
-            InputBuffer.Enqueue(dataToQueue);
+            FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
+            // We missed this frame by a wide margin and need to resync.
+            if (Overseer.Instance.IsNetworkedMode && GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber >= NetworkManager.Instance.CurrentDelayFrames)
+            {
+                NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
+            }
+
+            if (dataToQueue.InputPattern > 0)
+            {
+                InputBuffer.Add(dataToQueue);
+                InputBuffer.OrderBy(x => x.FrameNumber);
+            }
         }
     }
 

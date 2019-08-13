@@ -58,12 +58,20 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public GameType SelectedGameType;
 
+    public bool IsNetworkedMode
+    {
+        get
+        {
+            return SelectedGameType == GameType.PlayerVsRemote;
+        }
+    }
+
     public bool IsGameReady
     {
         get
         {
             bool isReady = true;
-            if (SelectedGameType == GameType.PlayerVsRemote)
+            if (IsNetworkedMode)
             {
                 isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2;
             }
@@ -194,7 +202,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
 
-        if (SelectedGameType == GameType.PlayerVsRemote && playerType == PlayerController.PlayerType.Local)
+        if (IsNetworkedMode && playerType == PlayerController.PlayerType.Local)
         {
             playerController.gameObject.AddComponent<NetworkInputHandler>();
         }

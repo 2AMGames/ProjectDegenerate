@@ -9,11 +9,15 @@ public class InputDelayCounter : MonoBehaviour
 {
     #region const variables
 
+    private const string LocalDelay = "Local Delay";
+
     private const string MillisecondsText = "Milliseconds";
 
     private const string FramesText = "Frames";
 
     private const string Space = " ";
+
+    private const string NewLineCharacter = "\n";
 
     #endregion
 
@@ -25,18 +29,19 @@ public class InputDelayCounter : MonoBehaviour
 
     void Start()
     {
-        if (Overseer.Instance.SelectedGameType != Overseer.GameType.PlayerVsRemote)
-        {
-            enabled = false;
-            FrameDelayText.gameObject.SetActive(false);
-        }
+        FrameDelayText.gameObject.SetActive(true);
     }
 
     void Update()
     {
         if (FrameDelayText != null)
         {
-            FrameDelayText.text = NetworkManager.Instance.CurrentDelayInMilliSeconds + Space + MillisecondsText + "\n" + "(" + NetworkManager.Instance.CurrentDelayFrames + Space + FramesText + ")";
+            string textToDisplay = LocalDelay + ": " + GameStateManager.Instance.LocalFrameDelay + Space + "Frames" + NewLineCharacter;
+            if (Overseer.Instance.IsNetworkedMode)
+            {
+               textToDisplay += NetworkManager.Instance.CurrentDelayInMilliSeconds + Space + MillisecondsText + NewLineCharacter + "(" + NetworkManager.Instance.CurrentDelayFrames + Space + FramesText + ")";
+            }
+            FrameDelayText.text = textToDisplay;
         }
     }
 }

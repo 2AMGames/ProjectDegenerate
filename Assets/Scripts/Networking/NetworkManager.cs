@@ -67,7 +67,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         get
         {
-            return CurrentDelayInMilliSeconds / MillisecondsPerFrame;
+            return Overseer.Instance.IsNetworkedMode ? CurrentDelayInMilliSeconds / MillisecondsPerFrame : GameStateManager.Instance.LocalFrameDelay;
         }
     }
 
@@ -107,7 +107,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void Awake()
     {
-        if (Overseer.Instance.SelectedGameType == Overseer.GameType.PlayerVsRemote)
+        if (Overseer.Instance.IsNetworkedMode)
         {
             ConnectToNetwork();
         }
@@ -487,6 +487,15 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 CurrentDelayInMilliSeconds = (long)calculatedDelay;
             }
         }
+    }
+
+    #endregion
+
+    #region Game Sync Methods
+
+    public void RequestSynchronization(uint FrameToSync)
+    {
+        Debug.LogWarning("Requesting Synchronization");
     }
 
     #endregion

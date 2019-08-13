@@ -65,7 +65,10 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 PlayerInputPacket data = eventData.CustomData as PlayerInputPacket;
                 if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
-                    CommandInterpreter.QueuePlayerInput(data.InputData[data.InputData.Count - 1]);
+                    foreach (PlayerInputPacket.PlayerInputData inputFrames in data.InputData)
+                    {
+                        CommandInterpreter.QueuePlayerInput(inputFrames);
+                    }
                     SendInputAck(data.PacketId);
                 }
             }
