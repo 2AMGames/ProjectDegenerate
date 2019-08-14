@@ -65,10 +65,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public long CurrentDelayFrames
     {
-        get
-        {
-            return Overseer.Instance.IsNetworkedMode ? CurrentDelayInMilliSeconds / MillisecondsPerFrame : GameStateManager.Instance.LocalFrameDelay;
-        }
+        get;  private set;
     }
 
     public long CurrentDelayInMilliSeconds { get; private set; }
@@ -483,8 +480,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     }
                 }
 
-                float calculatedDelay = Mathf.Ceil((highestPing + GameStateManager.Instance.LocalFrameDelay) / (2.0f * Time.deltaTime));
-                CurrentDelayInMilliSeconds = (long)calculatedDelay;
+                CurrentDelayInMilliSeconds = highestPing;
+
+                
+                float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
+                float frameTimeInMilliseconds = Time.deltaTime * 1000;
+                float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
+                CurrentDelayFrames = (long)calculatedDelay;
             }
         }
     }
