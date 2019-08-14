@@ -562,8 +562,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -100}
-  m_SizeDelta: {x: 250, y: 60}
+  m_AnchoredPosition: {x: 262.61, y: -110.18}
+  m_SizeDelta: {x: 275.21, y: 80.36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185739622
 MonoBehaviour:
@@ -612,7 +612,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 60fps
+  m_Text: '60fps
+
+    Frame #0'
 --- !u!222 &185739624
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3358,6 +3360,10 @@ PrefabInstance:
         type: 3}
       propertyPath: SelectedGameType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749728940, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}
+      propertyPath: LocalFrameDelay
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
