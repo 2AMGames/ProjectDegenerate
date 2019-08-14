@@ -6,6 +6,7 @@ using Photon.Realtime;
 
 using UnityEngine;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
 public abstract class PlayerController : MonoBehaviour
 {
 

@@ -14,7 +14,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 {
 
     #region const variables
-    
+
     // If the difference in ping we read from the custom player properties is more than this value, then we should
     // update the custom properties with the new value.
     private const int PingThreshold = 5;
@@ -96,6 +96,28 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
     }
 
+    public void SendInput(PlayerInputData input)
+    {
+        if (Overseer.Instance.IsGameReady)
+        {
+            if (input.InputPattern > 0)
+            {
+                PlayerInputPacket packetToSend = new PlayerInputPacket();
+
+                input.PacketId = PacketsSent;
+                DataSent.Add(input);
+
+                packetToSend.PlayerIndex = PlayerController.PlayerIndex;
+                packetToSend.PacketId = PacketsSent; ;
+                packetToSend.InputData = new List<PlayerInputData>(DataSent);
+
+                Debug.LogWarning("Sending");
+                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
+                ++PacketsSent;
+            }
+        }
+    }
+
     #endregion
 
     #region private interface
@@ -105,7 +127,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         PlayerInputData data = DataSent.Find(x => x.PacketId == packetNumber);
         if (data.IsValid())
         {
-            Debug.LogWarning("Removing packet: " + packetNumber);
             DataSent.Remove(data);
         }
     }
@@ -115,7 +136,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         if (isGameReady)
         {
             StartCoroutine(CheckForPingUpdate());
-            StartCoroutine(SendInputIfNeccessary());
             enabled = true;
         }
     }
@@ -126,31 +146,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             yield return new WaitForSeconds(SecondsToCheckForPing);
             NetworkManager.Instance.PingActivePlayers();
-        }
-    }
-
-    private IEnumerator SendInputIfNeccessary()
-    {
-        while (true)
-        {
-            yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady && CommandInterpreter != null)
-            {
-                PlayerInputData inputData = CommandInterpreter.GetPlayerInputDataIfUpdated();
-                if (inputData.InputPattern > 0)
-                {
-                    PlayerInputPacket packetToSend = new PlayerInputPacket();
-
-                    inputData.PacketId = PacketsSent;
-                    DataSent.Add(inputData);
-
-                    packetToSend.PlayerIndex = PlayerController.PlayerIndex;
-                    packetToSend.PacketId = PacketsSent;;
-                    packetToSend.InputData = new List<PlayerInputData>(DataSent);
-                    NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
-                    ++PacketsSent;
-                }
-            }
         }
     }
 

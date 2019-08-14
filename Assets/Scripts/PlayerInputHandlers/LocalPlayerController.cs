@@ -10,6 +10,8 @@ public class LocalPlayerController : PlayerController
 
     private ushort LastSavedInputPattern;
 
+    private NetworkInputHandler InputHandler;
+
     #endregion
 
     #region monobehaviour methods
@@ -31,13 +33,23 @@ public class LocalPlayerController : PlayerController
             currentFrameInputData.InputPattern = inputPattern;
             CommandInterpreter.QueuePlayerInput(currentFrameInputData);
             LastSavedInputPattern = currentFrameInputData.InputPattern;
+            if (InputHandler != null)
+            {
+                InputHandler.SendInput(currentFrameInputData);
+            }
         }
     }
 
     public void Awake()
     {
         enabled = false;
+        InputHandler = GetComponent<NetworkInputHandler>();
         Overseer.Instance.OnGameReady += OnGameReady;
+    }
+
+    public void Start()
+    {
+        InputHandler = GetComponent<NetworkInputHandler>();
     }
 
     #endregion

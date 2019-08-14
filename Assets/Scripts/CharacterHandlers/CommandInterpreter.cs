@@ -247,25 +247,6 @@ public class CommandInterpreter : MonoBehaviour
 
     }
 
-    public PlayerInputPacket.PlayerInputData GetPlayerInputDataIfUpdated()
-    {
-        // If player button pattern has been updated, return input data
-        // else return null
-        if (lastButtonPattern != currentButtonPattern)
-        {
-            PlayerInputPacket.PlayerInputData data = new PlayerInputPacket.PlayerInputData();
-
-            data.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
-            data.InputPattern = GetPlayerInputByte();
-
-            lastButtonPattern = currentButtonPattern;
-            data.PlayerIndex = characterStats.PlayerIndex;
-
-            return data;
-        }
-        return default;
-    }
-
     #endregion
 
     #region private interface
