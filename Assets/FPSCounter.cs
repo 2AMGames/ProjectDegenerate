@@ -17,8 +17,8 @@ public class FPSCounter : MonoBehaviour
         totalTimeThatHasPassed += Overseer.TIME_STEP;
         if (framesThatHavePassed >= framesBetweenDisplayText)
         {
-            
-            fpsText.text = (1f / (totalTimeThatHasPassed / framesBetweenDisplayText)).ToString("0.0") + "fps";
+
+            fpsText.text = (1f / (totalTimeThatHasPassed / framesBetweenDisplayText)).ToString("0.0") + "fps" + "\n" + "Frame # " + GameStateManager.Instance.FrameCount;
             framesThatHavePassed = 0;
             totalTimeThatHasPassed = 0;
         }
