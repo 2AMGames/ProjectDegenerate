@@ -70,27 +70,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     protected override bool CheckCollisionUpFromVelocity()
     {
 
-        float degreeOffset = 180f / (horizontalRayCount - 1);
-        Vector2 direction = Vector2.zero;
-        int centerIndex = horizontalRayCount / 2;
-        List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
-        List<CustomCollider2D> tempList;
-        float highestYPosition = float.MinValue;
-        for (int i = 0; i < horizontalRayCount; i++)
-        {
-            float rads = Mathf.Deg2Rad * (i * degreeOffset + 180);
-            direction = new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
-            Vector2 originPoint = bounds.center + bounds.radius * direction;
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
-            if (tempList.Contains(this))
-                tempList.Remove(this);
-
-        }
-        
-
-        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y - GetLowerBoundsAtXValue(bounds.center.x).y), transform.position.z);
-        UpdateBoundsOfCollider();
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -117,7 +97,46 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     protected override bool CheckCollisionDownFromVelocity()
     {
-        return false;
+        float degreeOffset = 180f / (horizontalRayCount - 1);
+        Vector2 direction = Vector2.zero;
+        int centerIndex = horizontalRayCount / 2;
+        HashSet<CustomCollider2D> colliderList = new HashSet<CustomCollider2D>();
+        List<CustomCollider2D> tempList;
+        float highestYPosition = float.MinValue;
+        for (int i = 0; i < horizontalRayCount; i++)
+        {
+            float rads = Mathf.Deg2Rad * (i * degreeOffset + 180);
+            direction = new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
+            Vector2 originPoint = bounds.center + bounds.radius * direction;
+            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
+            if (tempList.Contains(this))
+                tempList.Remove(this);
+            foreach (CustomCollider2D col in tempList)
+            {
+                colliderList.Add(col);
+                float pointThatWeHit = col.GetUpperBoundsAtXValue(originPoint.x).y;
+                float offset = -GetLowerBoundsAtXValue(bounds.center.x).y + GetLowerBoundsAtXValue(originPoint.x).y;
+                pointThatWeHit -= offset;
+                if (pointThatWeHit > highestYPosition)
+                {
+                    highestYPosition = pointThatWeHit;
+                }
+                if (i == centerIndex)
+                {
+                    rigid.velocity.y = 0;
+                }
+            }
+            
+        }
+        if (colliderList.Count <= 0)
+        {
+            return false;
+        }
+
+
+        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y - GetLowerBoundsAtXValue(bounds.center.x).y), transform.position.z);
+        UpdateBoundsOfCollider();
+        return true;
     }
 
     /// <summary>
