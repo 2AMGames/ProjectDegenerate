@@ -345,6 +345,16 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             Debug.LogWarning("Waiting for ping");
         }
 
+        Debug.LogWarning("Ticks to wait: " + NetworkManager.Instance.CurrentDelayFrames);
+        long ticksToWait = NetworkManager.Instance.CurrentDelayFrames;
+        while (ticksToWait > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            --ticksToWait;
+        }
+
+        Debug.LogWarning("Ready");
+
         OnGameReady?.Invoke(true);
     }
 
