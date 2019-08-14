@@ -310,6 +310,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
+            Debug.LogWarning("Ping ack received");
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
@@ -427,6 +428,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             }
         }
 
+        Debug.LogWarning("Sending ping");
         PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
         rtt.Start();
@@ -437,6 +439,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         rtt.Stop();
+        Debug.LogWarning("RTT: " + rtt.ElapsedMilliseconds);
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
         UpdatePing();
         CurrentlyPingingPlayers = false;
@@ -478,6 +481,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     if (player != null)
                     {
                         long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long)player.CustomProperties[PlayerPingKey] : 0;
+                        // If a player has not set their ping yet, return from this method and wait.
+                        if (playerPing == 0)
+                        {
+                            return;
+                        }
                         highestPing = Math.Max(playerPing, highestPing);
                     }
                 }
