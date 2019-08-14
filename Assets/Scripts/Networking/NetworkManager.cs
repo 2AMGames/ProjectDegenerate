@@ -56,7 +56,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private const int MillisecondsPerFrame = 16;
 
-    private const MillisecondsPerSecond = 1000;
+    private const long MillisecondsPerSecond = 1000;
 
     #endregion
 
