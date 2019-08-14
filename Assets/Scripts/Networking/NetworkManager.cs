@@ -486,7 +486,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
                 
                 float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-                float frameTimeInMilliseconds = Time.deltaTime * MillisecondsPerSecond;
+                float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;
                 float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
                 CurrentDelayFrames = (long)calculatedDelay;
             }
