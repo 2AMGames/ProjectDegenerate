@@ -477,13 +477,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
                     if (player != null)
                     {
-                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long) player.CustomProperties[PlayerPingKey]: (long) 0;
-                        highestPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? Math.Max((long)player.CustomProperties[PlayerPingKey], highestPing) : 0;
+                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long)player.CustomProperties[PlayerPingKey] : 0;
+                        highestPing = Math.Max(playerPing, highestPing);
                     }
                 }
 
+                Debug.LogWarning("Highest Ping: " + highestPing);
                 CurrentDelayInMilliSeconds = highestPing;
-
                 
                 float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
                 float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;

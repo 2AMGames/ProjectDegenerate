@@ -19,7 +19,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     // update the custom properties with the new value.
     private const int PingThreshold = 5;
 
-    private const float SecondsToCheckForPing = 15f;
+    private const float SecondsToCheckForPing = 6f;
 
     #endregion
 
