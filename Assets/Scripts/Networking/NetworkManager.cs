@@ -56,6 +56,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private const int MillisecondsPerFrame = 16;
 
+    private const MillisecondsPerSecond = 1000;
+
     #endregion
 
     #region Main Variables
@@ -484,7 +486,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
                 
                 float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-                float frameTimeInMilliseconds = Time.deltaTime * 1000;
+                float frameTimeInMilliseconds = Time.deltaTime * MillisecondsPerSecond;
                 float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
                 CurrentDelayFrames = (long)calculatedDelay;
             }
