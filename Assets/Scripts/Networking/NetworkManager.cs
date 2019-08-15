@@ -7,18 +7,26 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine;
 
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 using Debug = UnityEngine.Debug;
-// Class for managing network interaction between clients
-// Should monitor network connection, Average Latency, and send input data to other players in game.
-// Should also accept input data from other players
+
+/// <summary>
+/// Class for managing network interaction between clients
+/// Should monitor network connection, Average Latency, and game status
+/// </summary>
 public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, ILobbyCallbacks, IOnEventCallback, IInRoomCallbacks
 {
 
     #region Custom Photon Event Codes
 
-    public const byte RemotePlayerReady = 0x10;
+    public const byte StartGame = 0x00;
 
-    public const byte RemotePlayerReadyAck = 0x11;
+    public const byte StartGameAck = 0x01;
+
+    public const byte ClientReady = 0x10;
+
+    public const byte ClientReadyAck = 0x11;
 
     public const byte PlayerInputUpdate = 0x20;
 
@@ -40,6 +48,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const string PlayerPingKey = "Ping";
 
+    public const string PlayerReadyKey = "Ready";
+
+    public const string MasterClientKey = "Master";
+
     #endregion
 
     #region Photon Event Codes
@@ -50,6 +62,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
+    #region Unity Events
+
+
+
+    #endregion
+
     #region Const Variables
 
     private const string ActivePlayerKey = "ActivePlayers";
@@ -57,6 +75,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     private const int MillisecondsPerFrame = 16;
 
     private const long MillisecondsPerSecond = 1000;
+
+    private const short PingTimeoutInMilliseconds = 60;
 
     #endregion
 
@@ -76,6 +96,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     private HashSet<int> PlayersToPing = new HashSet<int>(); 
 
     private bool CurrentlyPingingPlayers;
+
+    public bool IsNetworkedGameReady;
 
     #endregion
 
@@ -149,6 +171,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, default);
     }
 
+    public void SetPlayerReady(bool isReady)
+    {
+        Hashtable properties = PhotonNetwork.LocalPlayer.CustomProperties;
+        properties[PlayerReadyKey] = isReady;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
+    }
+
     #endregion
 
     #region Private Interface
@@ -163,9 +192,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PhotonPeer.RegisterType(typeof(PlayerInputPacket), PlayerInputUpdate, PlayerInputPacket.Serialize, PlayerInputPacket.Deserialize);
     }
 
-    private void UpdateDelay()
+    private Hashtable GetActivePlayers()
     {
-
+        return PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey) ? (Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] : null;
     }
 
     #endregion
@@ -289,9 +318,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     // On photon event received callback
     public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
     {
-        if (photonEvent.Code == RemotePlayerReadyAck)
+        if (photonEvent.Code == ClientReadyAck)
         {
-            if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient)
+            if (PhotonNetwork.IsMasterClient)
             {
                 int actorNumber = (int)photonEvent.CustomData;
                 if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
@@ -317,6 +346,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 OnPingAckReceived(actorNumber);
             }
         }
+
+        if (photonEvent.Code == StartGame)
+        {
+            IsNetworkedGameReady = (bool)photonEvent.CustomData;
+        }
+
+        if (photonEvent.Code == StartGameAck)
+        {
+            IsNetworkedGameReady = (bool)photonEvent.CustomData;
+        }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -326,7 +365,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.LocalPlayer == PhotonNetwork.MasterClient && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+        if (PhotonNetwork.LocalPlayer.IsMasterClient && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
             if (activePlayers.ContainsKey(otherPlayer.ActorNumber))
@@ -356,6 +395,22 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnMasterClientSwitched(Player newMasterClient)
     {
         //
+    }
+
+    #endregion
+
+    #region Synchronization methods
+
+    public void SynchronizeGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(SynchronizePlayersInternal());
+        }
+        else
+        {
+            StartCoroutine(WaitForMasterClientSync());
+        }
     }
 
     #endregion
@@ -396,6 +451,108 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         hashtable[ActivePlayerKey] = activePlayers;
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+    }
+
+    private IEnumerator SynchronizePlayersInternal()
+    {
+        while(!CheckIfPlayersReady())
+        {
+            yield return new WaitForSeconds(2f);
+        }
+
+        SetMasterClientReady(true);
+
+        yield return new WaitForSeconds(1f);
+
+        CheckPlayerPing();
+
+        // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
+        while(CurrentDelayFrames <= 0)
+        {
+            yield return new WaitForSeconds(2f);
+            UpdatePing();
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        Stopwatch rtt = new Stopwatch();
+        SendEventData(StartGame, true, ReceiverGroup.Others);
+        rtt.Start();
+        while(!IsNetworkedGameReady)
+        {
+            yield return null;
+        }
+        rtt.Stop();
+
+        long frameDelay = rtt.ElapsedMilliseconds / MillisecondsPerFrame;
+        while(CurrentDelayFrames - frameDelay > 0)
+        {
+            Debug.LogWarning("Frame Delay: " + frameDelay);
+            yield return new WaitForEndOfFrame();
+            ++frameDelay;
+        }
+    }
+
+    private bool CheckIfPlayersReady()
+    {
+        Hashtable activePlayers = GetActivePlayers();
+        if (activePlayers == null || activePlayers.Count < Overseer.NumberOfPlayers)
+        {
+            return false;
+        }
+
+        bool ready = true;
+        foreach (int actorNumber in activePlayers.Values)
+        {
+            Player player = PhotonNetwork.CurrentRoom.Players[actorNumber];
+            ready &= player != null && player.CustomProperties.ContainsKey(PlayerReadyKey) ? (bool)player.CustomProperties[PlayerReadyKey] : false;
+        }
+        return ready;
+    }
+
+    private void SetMasterClientReady(bool isReady)
+    {
+        Hashtable prop = PhotonNetwork.LocalPlayer.CustomProperties;
+        prop[MasterClientKey + PlayerReadyKey] = isReady;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(prop);
+    }
+
+    #endregion
+
+    #region Slave Client Methods
+
+    private IEnumerator WaitForMasterClientSync()
+    {
+        while(!CheckIfMasterClientReady())
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        CheckPlayerPing();
+
+        while(!IsNetworkedGameReady)
+        {
+            yield return null;
+        }
+
+        long framesToWait = CurrentDelayFrames;
+
+        while(framesToWait > 0)
+        {
+            Debug.LogWarning("Frames to wait: " + framesToWait);
+            yield return new WaitForEndOfFrame();
+            --framesToWait;
+        }
+
+    }
+
+    private bool CheckIfMasterClientReady()
+    {
+        if (!PhotonNetwork.IsConnected || PhotonNetwork.CurrentRoom == null)
+        {
+            return false;
+        }
+        return PhotonNetwork.MasterClient.CustomProperties.ContainsKey(MasterClientKey + PlayerReadyKey) ? (bool)PhotonNetwork.MasterClient.CustomProperties[MasterClientKey + PlayerReadyKey] : false;
     }
 
     #endregion
@@ -468,36 +625,35 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void UpdatePing()
     {
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
+
+        Hashtable activePlayers = GetActivePlayers();
+        if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
         {
-            ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
-            if (activePlayers != null && activePlayers.Count >= Overseer.NumberOfPlayers)
+            long highestPing = 0;
+
+            foreach (int actorNumber in activePlayers.Keys)
             {
-                long highestPing = 0;
-
-                foreach(int actorNumber in activePlayers.Keys)
+                Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
+                if (player != null)
                 {
-                    Player player = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) ? PhotonNetwork.CurrentRoom.Players[actorNumber] : null;
-                    if (player != null)
+                    long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long)player.CustomProperties[PlayerPingKey] : 0;
+                    // If a player has not set their ping yet, return from this method and wait.
+                    if (playerPing == 0)
                     {
-                        long playerPing = player.CustomProperties.ContainsKey(PlayerPingKey) ? (long)player.CustomProperties[PlayerPingKey] : 0;
-                        // If a player has not set their ping yet, return from this method and wait.
-                        if (playerPing == 0)
-                        {
-                            return;
-                        }
-                        highestPing = Math.Max(playerPing, highestPing);
+                        Debug.LogWarning("Returning");
+                        return;
                     }
+                    highestPing = Math.Max(playerPing, highestPing);
                 }
-
-                Debug.LogWarning("Highest Ping: " + highestPing);
-                CurrentDelayInMilliSeconds = highestPing;
-                
-                float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-                float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;
-                float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
-                CurrentDelayFrames = (long)calculatedDelay;
             }
+
+            Debug.LogWarning("Highest Ping: " + highestPing);
+            CurrentDelayInMilliSeconds = highestPing;
+
+            float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
+            float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;
+            float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
+            CurrentDelayFrames = (long)calculatedDelay;
         }
     }
 

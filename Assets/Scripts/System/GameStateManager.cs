@@ -149,7 +149,7 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
     {
         SaveGameCoroutineRunning = true;
         while (Overseer.Instance.IsGameReady)
-        {
+        { 
             if (FrameStack.Count > MaxStackSize)
             {
                 FrameStack = new Stack<GameState>();

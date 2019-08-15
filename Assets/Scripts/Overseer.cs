@@ -239,14 +239,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     // On photon event received callback
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == NetworkManager.RemotePlayerReady && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReadyAck, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.All);
-        }
-        else if (photonEvent.Code == NetworkManager.RemotePlayerReadyAck && (int)photonEvent.CustomData != PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            NetworkedGameReady = true;
-        }
+
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -320,7 +313,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void SendGameReadyMessage()
     {
-        NetworkManager.Instance.SendEventData(NetworkManager.RemotePlayerReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.Others);
+        NetworkManager.Instance.SendEventData(NetworkManager.ClientReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.Others);
     }
 
     private IEnumerator WaitUntilNetworkedGameReady()
@@ -330,31 +323,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return null;
         }
 
-        SendGameReadyMessage();
-        
-        while(!NetworkedGameReady)
-        {
-            yield return null;
-        }
+        NetworkManager.Instance.SetPlayerReady(true);
 
-        // Establish ping before starting game.
-        NetworkManager.Instance.PingActivePlayers();
-        while (NetworkManager.Instance.CurrentDelayInMilliSeconds <= 0)
-        {
-            yield return null;
-        }
+        NetworkManager.Instance.SynchronizeGame();
 
-        Debug.LogWarning("Ticks to wait: " + NetworkManager.Instance.CurrentDelayFrames);
-        long ticksToWait = NetworkManager.Instance.CurrentDelayFrames;
-        while (ticksToWait > 0)
-        {
-            yield return new WaitForEndOfFrame();
-            --ticksToWait;
-        }
+        Debug.LogWarning("Starting game");
+        OnGameReady(true);
 
-        Debug.LogWarning("Ready");
-
-        OnGameReady?.Invoke(true);
     }
 
     #endregion
