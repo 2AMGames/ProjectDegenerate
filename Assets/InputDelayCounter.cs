@@ -39,7 +39,7 @@ public class InputDelayCounter : MonoBehaviour
             string textToDisplay = LocalDelay + ": " + GameStateManager.Instance.LocalFrameDelay + Space + "Frames" + NewLineCharacter;
             if (Overseer.Instance.IsNetworkedMode)
             {
-               textToDisplay += NetworkManager.Instance.CurrentDelayInMilliSeconds + Space + MillisecondsText + NewLineCharacter + "(" + NetworkManager.Instance.CurrentDelayFrames + Space + FramesText + ")";
+               textToDisplay += NetworkManager.Instance.CurrentDelayInMilliSeconds + Space + MillisecondsText + NewLineCharacter + "(" + NetworkManager.Instance.TotalDelayFrames + Space + FramesText + ")";
             }
             FrameDelayText.text = textToDisplay;
         }

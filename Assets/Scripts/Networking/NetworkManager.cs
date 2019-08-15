@@ -81,9 +81,17 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     [HideInInspector]
     public string CurrentRoomId;
 
-    public long CurrentDelayFrames
+    public long TotalDelayFrames
     {
         get;  private set;
+    }
+
+    public long NetworkDelayFrames
+    {
+        get
+        {
+            return TotalDelayFrames - GameStateManager.Instance.LocalFrameDelay;
+        }
     }
 
     public long CurrentDelayInMilliSeconds { get; private set; }
@@ -455,7 +463,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PingActivePlayers();
 
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
-        while (CurrentDelayFrames <= 0)
+        while (TotalDelayFrames <= 0)
         {
             yield return new WaitForSeconds(2f);
             UpdatePing();
@@ -474,10 +482,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         rtt.Stop();
 
         long frameDelay = rtt.ElapsedMilliseconds / MillisecondsPerFrame;
-        long actualFramesToWait = CurrentDelayFrames - GameStateManager.Instance.LocalFrameDelay;
-        Debug.LogWarning("Current delay frames: " + CurrentDelayFrames);
+        Debug.LogWarning("Current delay frames: " + TotalDelayFrames);
         Debug.LogWarning("Delay: " + frameDelay);
-        while(CurrentDelayFrames - frameDelay > 0)
+        while(NetworkDelayFrames - frameDelay > 0)
         {
             Debug.LogWarning("Frame Delay: " + frameDelay);
             yield return new WaitForEndOfFrame();
@@ -531,7 +538,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         SendEventData(StartGameAck, true, ReceiverGroup.Others);
-        long framesToWait = CurrentDelayFrames;
+        long framesToWait = NetworkDelayFrames;
         while(framesToWait > 0)
         {
             Debug.LogWarning("Frames to wait: " + framesToWait);
@@ -645,7 +652,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
             float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;
             float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
-            CurrentDelayFrames = (long)calculatedDelay;
+            TotalDelayFrames = (long)calculatedDelay;
         }
     }
 

@@ -148,7 +148,7 @@ public class CommandInterpreter : MonoBehaviour
             {
                 return 0;
             }
-            return Overseer.Instance.IsNetworkedMode ? NetworkManager.Instance.CurrentDelayFrames : GameStateManager.Instance.LocalFrameDelay;
+            return Overseer.Instance.IsNetworkedMode ? NetworkManager.Instance.TotalDelayFrames : GameStateManager.Instance.LocalFrameDelay;
         }
     }
 
@@ -202,7 +202,7 @@ public class CommandInterpreter : MonoBehaviour
         {
             FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
             // We missed this frame by a wide margin and need to resync.
-            if (Overseer.Instance.IsNetworkedMode && GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber >= NetworkManager.Instance.CurrentDelayFrames)
+            if (Overseer.Instance.IsNetworkedMode && GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber >= NetworkManager.Instance.TotalDelayFrames)
             {
                 NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
             }
