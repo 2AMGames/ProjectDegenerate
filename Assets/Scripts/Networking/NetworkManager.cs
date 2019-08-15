@@ -327,7 +327,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
-            Debug.LogWarning("Ping ack received");
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
@@ -475,6 +474,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         rtt.Stop();
 
         long frameDelay = rtt.ElapsedMilliseconds / MillisecondsPerFrame;
+        long actualFramesToWait = CurrentDelayFrames - GameStateManager.Instance.LocalFrameDelay;
+        Debug.LogWarning("Current delay frames: " + CurrentDelayFrames);
+        Debug.LogWarning("Delay: " + frameDelay);
         while(CurrentDelayFrames - frameDelay > 0)
         {
             Debug.LogWarning("Frame Delay: " + frameDelay);
@@ -498,7 +500,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             Player player = PhotonNetwork.CurrentRoom.Players[actorNumber];
             ready &= player != null && player.CustomProperties.ContainsKey(PlayerReadyKey) ? (bool)player.CustomProperties[PlayerReadyKey] : false;
-            Debug.LogWarning("PlayerId: " + actorNumber + ", Ready = " + ready);
+            //Debug.LogWarning("PlayerId: " + actorNumber + ", Ready = " + ready);
         }
         return ready;
     }
@@ -578,7 +580,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             }
         }
 
-        Debug.LogWarning("Sending ping");
         PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
         rtt.Start();
@@ -589,7 +590,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         rtt.Stop();
-        Debug.LogWarning("RTT: " + rtt.ElapsedMilliseconds);
         SetLocalPlayerPing(rtt.ElapsedMilliseconds);
         UpdatePing();
         CurrentlyPingingPlayers = false;
@@ -613,7 +613,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
         playerProperties[PlayerPingKey] = pingInMilliseconds;
-        Debug.LogWarning("Setting local ping: " + pingInMilliseconds);
+        //Debug.LogWarning("Setting local ping: " + pingInMilliseconds);
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
@@ -640,7 +640,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 }
             }
 
-            Debug.LogWarning("Highest Ping: " + highestPing);
             CurrentDelayInMilliSeconds = highestPing;
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
