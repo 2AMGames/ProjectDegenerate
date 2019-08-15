@@ -458,7 +458,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         Debug.LogWarning("All players ready");
         SetMasterClientReady(true);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         Debug.LogWarning("Checking player ping");
         PingActivePlayers();
 
@@ -482,11 +482,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         rtt.Stop();
 
         long frameDelay = rtt.ElapsedMilliseconds / MillisecondsPerFrame;
-        Debug.LogWarning("Current delay frames: " + TotalDelayFrames);
-        Debug.LogWarning("Delay: " + frameDelay);
-        while(NetworkDelayFrames - frameDelay > 0)
+        while(TotalDelayFrames - frameDelay > 0)
         {
-            Debug.LogWarning("Frame Delay: " + frameDelay);
+            Debug.LogWarning("Frames to wait: " + (TotalDelayFrames - frameDelay));
             yield return new WaitForEndOfFrame();
             ++frameDelay;
         }
@@ -539,7 +537,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         SendEventData(StartGameAck, true, ReceiverGroup.Others);
         long framesToWait = NetworkDelayFrames;
-        while(framesToWait > 0)
+        while(TotalDelayFrames > 0)
         {
             Debug.LogWarning("Frames to wait: " + framesToWait);
             yield return new WaitForEndOfFrame();
@@ -650,7 +648,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             CurrentDelayInMilliSeconds = highestPing;
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-            float frameTimeInMilliseconds = Overseer.TIME_STEP * MillisecondsPerSecond;
+            float frameTimeInMilliseconds = Time.deltaTime * MillisecondsPerSecond;
             float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
             TotalDelayFrames = (long)calculatedDelay;
         }

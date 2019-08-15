@@ -111,7 +111,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 packetToSend.PacketId = PacketsSent; ;
                 packetToSend.InputData = new List<PlayerInputData>(DataSent);
 
-                Debug.LogWarning("Sending");
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
                 ++PacketsSent;
             }
