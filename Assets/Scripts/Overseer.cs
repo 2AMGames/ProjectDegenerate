@@ -327,6 +327,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         NetworkManager.Instance.SynchronizeGame();
 
+        while(!NetworkManager.Instance.ShouldStartGame)
+        {
+            yield return null;
+        }
+
         Debug.LogWarning("Starting game");
         OnGameReady(true);
 

@@ -99,6 +99,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public bool IsNetworkedGameReady;
 
+    public bool ShouldStartGame;
+
     #endregion
 
     #region Singleton Instance
@@ -411,6 +413,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             StartCoroutine(WaitForMasterClientSync());
         }
+        Debug.LogWarning("Finished");
     }
 
     #endregion
@@ -455,15 +458,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private IEnumerator SynchronizePlayersInternal()
     {
+        Debug.LogWarning("Synchronize player internal");
         while(!CheckIfPlayersReady())
         {
             yield return new WaitForSeconds(2f);
         }
-
+        Debug.LogWarning("All players ready");
         SetMasterClientReady(true);
 
         yield return new WaitForSeconds(1f);
-
+        Debug.LogWarning("Checking player ping");
         CheckPlayerPing();
 
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
@@ -472,9 +476,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return new WaitForSeconds(2f);
             UpdatePing();
         }
-
+        Debug.LogWarning("Player ping ready");
         yield return new WaitForSeconds(2f);
 
+        Debug.LogWarning("sending start game message");
         Stopwatch rtt = new Stopwatch();
         SendEventData(StartGame, true, ReceiverGroup.Others);
         rtt.Start();
@@ -491,6 +496,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return new WaitForEndOfFrame();
             ++frameDelay;
         }
+
+        ShouldStartGame = true;
     }
 
     private bool CheckIfPlayersReady()
@@ -543,7 +550,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return new WaitForEndOfFrame();
             --framesToWait;
         }
-
+        ShouldStartGame = true;
     }
 
     private bool CheckIfMasterClientReady()
