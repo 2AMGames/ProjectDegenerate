@@ -453,10 +453,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         yield return new WaitForSeconds(1f);
         Debug.LogWarning("Checking player ping");
-        CheckPlayerPing();
+        PingActivePlayers();
 
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
-        while(CurrentDelayFrames <= 0)
+        while (CurrentDelayFrames <= 0)
         {
             yield return new WaitForSeconds(2f);
             UpdatePing();
@@ -528,8 +528,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
         }
 
+        SendEventData(StartGameAck, true, ReceiverGroup.Others);
         long framesToWait = CurrentDelayFrames;
-
         while(framesToWait > 0)
         {
             Debug.LogWarning("Frames to wait: " + framesToWait);
@@ -634,7 +634,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                     // If a player has not set their ping yet, return from this method and wait.
                     if (playerPing == 0)
                     {
-                        Debug.LogWarning("Returning");
                         return;
                     }
                     highestPing = Math.Max(playerPing, highestPing);
