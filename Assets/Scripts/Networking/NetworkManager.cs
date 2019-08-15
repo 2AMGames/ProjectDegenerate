@@ -348,7 +348,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     {
-        AddPlayerToActivePlayerTable(playerToAdd);
+        AddPlayerToActivePlayerTable(newPlayer);
     }
 
     public void OnPlayerLeftRoom(Player otherPlayer)
