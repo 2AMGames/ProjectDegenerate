@@ -487,9 +487,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private bool CheckIfPlayersReady()
     {
-        Debug.LogWarning("Check player ready");
         Hashtable activePlayers = GetActivePlayers();
-        Debug.LogWarning("Count: " + activePlayers.Count);
         if (activePlayers == null || activePlayers.Count < Overseer.NumberOfPlayers)
         {
             return false;
@@ -523,7 +521,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return new WaitForEndOfFrame();
         }
 
-        CheckPlayerPing();
+        PingActivePlayers();
 
         while(!IsNetworkedGameReady)
         {
@@ -571,7 +569,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
         }
 
-        ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey];
+        ExitGames.Client.Photon.Hashtable activePlayers = GetActivePlayers();
         foreach (int actorNumber in activePlayers.Keys)
         {
             if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -613,8 +611,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void SetLocalPlayerPing(long pingInMilliseconds)
     {
-        ExitGames.Client.Photon.Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
+        Hashtable playerProperties = PhotonNetwork.LocalPlayer.CustomProperties;
         playerProperties[PlayerPingKey] = pingInMilliseconds;
+        Debug.LogWarning("Setting local ping: " + pingInMilliseconds);
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
