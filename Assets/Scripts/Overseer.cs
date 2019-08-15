@@ -311,11 +311,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
-    private void SendGameReadyMessage()
-    {
-        NetworkManager.Instance.SendEventData(NetworkManager.ClientReady, PhotonNetwork.LocalPlayer.ActorNumber, ReceiverGroup.Others);
-    }
-
     private IEnumerator WaitUntilNetworkedGameReady()
     {
         while (!IsGameReady)

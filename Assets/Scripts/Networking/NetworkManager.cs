@@ -24,10 +24,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte StartGameAck = 0x01;
 
-    public const byte ClientReady = 0x10;
-
-    public const byte ClientReadyAck = 0x11;
-
     public const byte PlayerInputUpdate = 0x20;
 
     public const byte PlayerInputAck = 0x21;
@@ -261,6 +257,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         Debug.Log("Joined Room: " + PhotonNetwork.CurrentRoom.Name);
         CurrentRoomId = PhotonNetwork.CurrentRoom.Name;
         Overseer.Instance.HandleJoinedRoom();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            AddPlayerToActivePlayerTable(PhotonNetwork.LocalPlayer);
+        }
     }
 
     public void OnJoinRandomFailed(short returnCode, string message)
@@ -320,20 +320,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     // On photon event received callback
     public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
     {
-        if (photonEvent.Code == ClientReadyAck)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                int actorNumber = (int)photonEvent.CustomData;
-                if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber))
-                {
-                    Player playerToAdd = PhotonNetwork.CurrentRoom.Players[actorNumber];
-                    AddPlayerToActivePlayerTable(playerToAdd);
-                }
-
-            }
-        }
-
         if (photonEvent.Code == PingRequest)
         {
             SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber);
@@ -362,7 +348,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     {
-
+        AddPlayerToActivePlayerTable(playerToAdd);
     }
 
     public void OnPlayerLeftRoom(Player otherPlayer)
@@ -413,7 +399,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             StartCoroutine(WaitForMasterClientSync());
         }
-        Debug.LogWarning("Finished");
     }
 
     #endregion
@@ -502,7 +487,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private bool CheckIfPlayersReady()
     {
+        Debug.LogWarning("Check player ready");
         Hashtable activePlayers = GetActivePlayers();
+        Debug.LogWarning("Count: " + activePlayers.Count);
         if (activePlayers == null || activePlayers.Count < Overseer.NumberOfPlayers)
         {
             return false;
@@ -513,6 +500,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             Player player = PhotonNetwork.CurrentRoom.Players[actorNumber];
             ready &= player != null && player.CustomProperties.ContainsKey(PlayerReadyKey) ? (bool)player.CustomProperties[PlayerReadyKey] : false;
+            Debug.LogWarning("PlayerId: " + actorNumber + ", Ready = " + ready);
         }
         return ready;
     }
