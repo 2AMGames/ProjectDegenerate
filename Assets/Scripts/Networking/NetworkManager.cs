@@ -540,7 +540,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         SendEventData(StartGameAck, true, ReceiverGroup.Others);
         long framesToWait = TotalDelayFrames;
-        while(TotalDelayFrames > 0)
+        while(framesToWait > 0)
         {
             Debug.LogWarning("Frames to wait: " + framesToWait);
             yield return new WaitForEndOfFrame();
