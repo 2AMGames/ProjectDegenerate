@@ -481,7 +481,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
         rtt.Stop();
 
-        long frameDelay = rtt.ElapsedMilliseconds / MillisecondsPerFrame;
+        long frameDelay = (rtt.ElapsedMilliseconds / MillisecondsPerFrame);
+        Debug.LogWarning("frame delay: " + frameDelay);
         while(TotalDelayFrames - frameDelay > 0)
         {
             Debug.LogWarning("Frames to wait: " + (TotalDelayFrames - frameDelay));
@@ -536,7 +537,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         SendEventData(StartGameAck, true, ReceiverGroup.Others);
-        long framesToWait = NetworkDelayFrames;
+        long framesToWait = TotalDelayFrames;
         while(TotalDelayFrames > 0)
         {
             Debug.LogWarning("Frames to wait: " + framesToWait);
