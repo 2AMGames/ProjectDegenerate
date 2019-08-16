@@ -171,10 +171,16 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             if (SecondsUntilPing >= MaxSecondsTillCheckPing)
             {
+                Debug.LogWarning("Updating ping from seconds");
                 NetworkManager.Instance.PingActivePlayers();
                 SecondsUntilPing = 0;
                 PacketsReceivedByAck = 0;
             }
+            else
+            {
+                SecondsUntilPing += Time.deltaTime;
+            }
+
             yield return null;
         }
     }
