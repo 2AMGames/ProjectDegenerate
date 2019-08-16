@@ -187,6 +187,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void OnAckReceivedThresholdReached()
     {
+        Debug.LogWarning("Updating ping from ack values");
         long pingToSet = AveragePing / MaxPacketsTillUpdatePing;
         NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
         PacketsReceivedByAck = 0;
