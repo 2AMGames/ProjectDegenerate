@@ -11,6 +11,17 @@ public class FPSCounter : MonoBehaviour
     private float totalTimeThatHasPassed;
     private int framesThatHavePassed;
 
+    private void Awake()
+    {
+        enabled = false;
+        Overseer.Instance.OnGameReady += OnGameReady;
+    }
+
+    private void OnGameReady(bool isReady)
+    {
+        enabled = isReady;
+    }
+
     private void Update()
     {
         framesThatHavePassed += 1;

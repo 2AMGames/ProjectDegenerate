@@ -328,6 +328,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
 
         Debug.LogWarning("Starting game");
+        yield return new WaitForEndOfFrame();
         OnGameReady(true);
 
     }

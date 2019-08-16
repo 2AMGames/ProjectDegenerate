@@ -70,7 +70,7 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
 
     private void Update()
     {
-        RoundTime += Time.deltaTime;
+
     }
 
     private void OnValidate()
@@ -157,11 +157,11 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
             // We only want to save the gamestate if we need to roll back (Network mode).
             if (Overseer.Instance.IsNetworkedMode)
             {
-                GameState gameStateToPush = CreateNewGameState();
-                FrameStack.Push(gameStateToPush);
+                //GameState gameStateToPush = CreateNewGameState();
+                //FrameStack.Push(gameStateToPush);
             }
             ++FrameCount;
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 

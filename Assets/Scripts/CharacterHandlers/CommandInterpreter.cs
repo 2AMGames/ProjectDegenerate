@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -202,7 +203,10 @@ public class CommandInterpreter : MonoBehaviour
         {
             FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
             // We missed this frame by a wide margin and need to resync.
-            if (Overseer.Instance.IsNetworkedMode && GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber >= NetworkManager.Instance.TotalDelayFrames)
+            Debug.LogWarning("TICKS: " + Time.frameCount);
+            Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
+            Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
+            if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) > NetworkManager.Instance.TotalDelayFrames)
             {
                 NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
             }

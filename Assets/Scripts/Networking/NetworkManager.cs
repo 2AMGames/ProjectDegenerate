@@ -483,12 +483,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         long frameDelay = (rtt.ElapsedMilliseconds / MillisecondsPerFrame);
         Debug.LogWarning("frame delay: " + frameDelay);
-        while(TotalDelayFrames - frameDelay > 0)
+        while(TotalDelayFrames - frameDelay >= 0)
         {
             Debug.LogWarning("Frames to wait: " + (TotalDelayFrames - frameDelay));
             yield return new WaitForEndOfFrame();
             ++frameDelay;
         }
+
+        yield return new WaitForEndOfFrame();
 
         ShouldStartGame = true;
     }
