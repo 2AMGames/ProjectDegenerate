@@ -490,8 +490,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             ++frameDelay;
         }
 
-        yield return new WaitForEndOfFrame();
-
         ShouldStartGame = true;
     }
 

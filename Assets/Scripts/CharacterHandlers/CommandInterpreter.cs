@@ -202,8 +202,7 @@ public class CommandInterpreter : MonoBehaviour
         if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
         {
             FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
-            // We missed this frame by a wide margin and need to resync.
-            Debug.LogWarning("TICKS: " + Time.frameCount);
+            // We missed this frame by a wide margin and need to resync.  
             Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
             Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
             if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) > NetworkManager.Instance.TotalDelayFrames)

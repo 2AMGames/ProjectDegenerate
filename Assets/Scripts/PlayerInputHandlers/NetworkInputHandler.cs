@@ -19,7 +19,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     // update the custom properties with the new value.
     private const int PingThreshold = 5;
 
-    private const float SecondsToCheckForPing = 6f;
+    private const float MaxSecondsTillCheckPing = 10f;
+
+    private const short MaxPacketsTillUpdatePing = 16;
 
     #endregion
 
@@ -32,6 +34,14 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private CommandInterpreter CommandInterpreter;
 
     private List<PlayerInputData> DataSent = new List<PlayerInputData>();
+
+    private Dictionary<uint, long> SentPackets = new Dictionary<uint, long>();
+
+    private float SecondsUntilPing;
+
+    private short PacketsReceivedByAck;
+
+    private long AveragePing;
 
     #endregion
 
@@ -111,6 +121,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 packetToSend.PacketId = PacketsSent; ;
                 packetToSend.InputData = new List<PlayerInputData>(DataSent);
 
+                SentPackets.Add(packetToSend.PacketId, GameStateManager.Instance.FrameCount);
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
                 ++PacketsSent;
             }
@@ -128,12 +139,27 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             DataSent.Remove(data);
         }
+
+        if (SentPackets.ContainsKey(packetNumber))
+        {
+            ++PacketsReceivedByAck;
+            long rtt = GameStateManager.Instance.FrameCount - SentPackets[packetNumber];
+            AveragePing += rtt;
+            SentPackets.Remove(packetNumber);
+
+            if (PacketsReceivedByAck >= MaxPacketsTillUpdatePing)
+            {
+                OnAckReceivedThresholdReached();
+            }
+        }
     }
 
     private void OnGameReady(bool isGameReady)
     {
         if (isGameReady)
         {
+            PacketsReceivedByAck = MaxPacketsTillUpdatePing;
+            SecondsUntilPing = MaxSecondsTillCheckPing;
             StartCoroutine(CheckForPingUpdate());
             enabled = true;
         }
@@ -143,9 +169,22 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         while (Overseer.Instance.IsGameReady)
         {
-            yield return new WaitForSeconds(SecondsToCheckForPing);
-            NetworkManager.Instance.PingActivePlayers();
+            if (SecondsUntilPing >= MaxSecondsTillCheckPing)
+            {
+                NetworkManager.Instance.PingActivePlayers();
+                SecondsUntilPing = 0;
+                PacketsReceivedByAck = 0;
+            }
+            yield return null;
         }
+    }
+
+    private void OnAckReceivedThresholdReached()
+    {
+        long pingToSet = AveragePing / MaxPacketsTillUpdatePing;
+        NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
+        PacketsReceivedByAck = 0;
+        SecondsUntilPing = 0;
     }
 
     #endregion
