@@ -28,7 +28,7 @@ public class LocalPlayerController : PlayerController
 
         UpdateButtonInput(ref inputPattern);
         UpdateJoystickInput(ref inputPattern);
-        if (inputPattern != LastSavedInputPattern)
+        if (inputPattern != LastSavedInputPattern && !NetworkManager.Instance.IsSynchronizing)
         {
             currentFrameInputData.InputPattern = inputPattern;
             CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);

@@ -342,7 +342,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         Debug.LogWarning("Synchronize game state coroutine");
         if (GameStateManager.Instance.FrameCount < FrameToSync)
         {
-            Debug.LogWarning("?");
             // Run the game until we catch up to the desired frame.
             OnGameReady(true);
             while (GameStateManager.Instance.FrameCount <= FrameToSync)

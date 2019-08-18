@@ -150,7 +150,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             AveragePing += rtt;
             SentPackets.Remove(packetNumber);
 
-            if (PacketsReceivedByAck >= MaxPacketsTillUpdatePing)
+            if (PacketsReceivedByAck >= MaxPacketsTillUpdatePing && !NetworkManager.Instance.IsSynchronizing)
             {
                 OnAckReceivedThresholdReached();
             }
@@ -178,7 +178,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         while (Overseer.Instance.IsGameReady)
         {
-            if (SecondsUntilPing >= MaxSecondsTillCheckPing)
+            if (SecondsUntilPing >= MaxSecondsTillCheckPing && !NetworkManager.Instance.IsSynchronizing)
             {
                 Debug.LogWarning("Updating ping from seconds");
                 NetworkManager.Instance.PingActivePlayers();

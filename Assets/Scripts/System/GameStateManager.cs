@@ -174,10 +174,11 @@ public class GameStateManager : MonoBehaviour
 
     #endregion
 
-    #region Coroutines
+    #region Save Game State Methods
 
     private IEnumerator SaveGameState()
     {
+        Debug.LogError("Start save game coroutine");
         SaveGameCoroutineRunning = true;
         while (Overseer.Instance.IsGameReady)
         {
@@ -186,8 +187,7 @@ public class GameStateManager : MonoBehaviour
                 FrameStack = new Stack<GameState>();
             }
 
-            // We only want to save the gamestate if we need to roll back (Network mode).
-            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode && !NetworkManager.Instance.IsSynchronizing)
+            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
             {
                 GameState gameStateToPush = CreateNewGameState();
                 FrameStack.Push(gameStateToPush);
