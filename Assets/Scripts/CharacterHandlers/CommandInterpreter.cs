@@ -224,6 +224,11 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    public void ClearPlayerInputQueue()
+    {
+        InputBuffer.Clear();
+    }
+
     public ushort GetPlayerInputByte()
     {
         // Pattern: 

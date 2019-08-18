@@ -80,8 +80,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
-    private bool NetworkedGameReady;
-
     #endregion
 
     #region Events
@@ -100,7 +98,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 55;
         CreateGameType();
     }
 
@@ -322,7 +320,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         NetworkManager.Instance.SynchronizeGame();
 
-        while(!NetworkManager.Instance.ShouldStartGame)
+        while(NetworkManager.Instance.IsSynchronizing)
         {
             yield return null;
         }
@@ -331,6 +329,47 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         yield return new WaitForEndOfFrame();
         OnGameReady(true);
 
+    }
+
+    public void HandleSynchronizationRequest(uint FrameToSync)
+    {
+        OnGameReady(false);
+        StartCoroutine(SynchronizeGameState(FrameToSync));
+    }
+
+    private IEnumerator SynchronizeGameState(uint FrameToSync)
+    {
+        Debug.LogWarning("Synchronize game state coroutine");
+        if (GameStateManager.Instance.FrameCount < FrameToSync)
+        {
+            // Run the game until we catch up to the desired frame.
+            OnGameReady(true);
+            while (GameStateManager.Instance.FrameCount <= FrameToSync)
+            {
+                Debug.LogWarning("Catch up frames: " + GameStateManager.Instance.FrameCount);
+                yield return new WaitForEndOfFrame();
+            }
+            OnGameReady(false);
+        }
+        else
+        {
+            // Roll back the game state frames to match the intended frame.
+            GameStateManager.Instance.RequestRollback(FrameToSync);
+            while(GameStateManager.Instance.FrameCount > FrameToSync)
+            {
+                Debug.LogWarning("Rollback frames: " + GameStateManager.Instance.FrameCount);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        NetworkManager.Instance.SetPlayerReady(true);
+
+        while (NetworkManager.Instance.IsSynchronizing)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.LogWarning("Starting game again");
+        OnGameReady(true);
     }
 
     #endregion

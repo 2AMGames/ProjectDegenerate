@@ -7,7 +7,7 @@ public class GameState
 
     public ushort FrameCount;
 
-    public ushort RoundTimeElapsed;
+    public ushort RoundTime;
 
     public List<PlayerState> PlayerStates;
 

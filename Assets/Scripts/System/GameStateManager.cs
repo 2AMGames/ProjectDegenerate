@@ -8,7 +8,7 @@ using UnityEngine;
 using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
 // Class responsible for maintaining the gamestate
-public class GameStateManager : MonoBehaviour, IOnEventCallback
+public class GameStateManager : MonoBehaviour
 {
 
     #region const variables
@@ -81,9 +81,9 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
     #endregion
 
     #region public interface
-    public GameState GetMostRecentGameStateFrame()
+    public void RequestRollback(uint frameToRollbackTo)
     {
-        return FrameStack.Peek();
+        StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
     }
 
     #endregion
@@ -112,7 +112,7 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
         GameState NewGameState = new GameState();
 
         NewGameState.FrameCount = (ushort)FrameCount;
-        NewGameState.RoundTimeElapsed = (ushort)RoundTime;
+        NewGameState.RoundTime = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 
         foreach (PlayerController player in Overseer.Instance.Players)
@@ -131,14 +131,46 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
         return NewGameState;
     }
 
-    private void EvaluateRollbackRequest(int frameRequested)
+    private IEnumerator EvaluateRollbackRequest(uint frameRequested)
     {
         Debug.LogWarning("Evaluating rollback: " + frameRequested);
+        GameState targetGameState = null;
+        while(FrameStack.Count > 0)
+        {
+            Debug.LogWarning("Peek Count: " + FrameStack.Peek().FrameCount);
+            if (FrameStack.Peek().FrameCount == frameRequested)
+            {
+                targetGameState = FrameStack.Peek();
+                break;
+            }
+            FrameStack.Pop();
+            yield return null;
+        }
+
+        if (targetGameState != null)
+        {
+            RollbackGameState(targetGameState);
+        }
+        else
+        {
+            Debug.LogError("Game state to rollback to not found");
+        }
     }
 
-    private void RollbackGameState(uint FrameCount)
+    private void RollbackGameState(GameState gameState)
     {
-
+        Debug.LogWarning("Applying game state");
+        foreach (GameState.PlayerState playerState in gameState.PlayerStates)
+        {
+            PlayerController player = Overseer.Instance.Players[playerState.PlayerIndex];
+            if (player != null)
+            {
+                player.transform.position = playerState.PlayerPosition;
+                player.CommandInterpreter.ClearPlayerInputQueue();
+            }
+        }
+        FrameCount = gameState.FrameCount;
+        RoundTime = gameState.RoundTime;
     }
 
     #endregion
@@ -154,13 +186,15 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
             {
                 FrameStack = new Stack<GameState>();
             }
+
             // We only want to save the gamestate if we need to roll back (Network mode).
-            if (Overseer.Instance.IsNetworkedMode)
+            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
             {
-                //GameState gameStateToPush = CreateNewGameState();
-                //FrameStack.Push(gameStateToPush);
+                GameState gameStateToPush = CreateNewGameState();
+                FrameStack.Push(gameStateToPush);
+                ++FrameCount;
             }
-            ++FrameCount;
+
             yield return null;
         }
     }
@@ -168,14 +202,6 @@ public class GameStateManager : MonoBehaviour, IOnEventCallback
     #endregion
 
     #region Callbacks
-
-    public void OnEvent(ExitGames.Client.Photon.EventData photonEvent)
-    {
-        if (photonEvent.Code == NetworkManager.RollbackRequest)
-        {
-            EvaluateRollbackRequest((int)photonEvent.CustomData);   
-        }
-    }
 
     #endregion
 

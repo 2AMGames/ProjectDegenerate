@@ -182,7 +182,7 @@ public abstract class PlayerController : MonoBehaviour
 
     }
 
-    protected void OnGameReady(bool isReady)
+    protected virtual void OnGameReady(bool isReady)
     {
         enabled = isReady;
     }

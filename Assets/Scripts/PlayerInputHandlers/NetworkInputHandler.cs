@@ -108,7 +108,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     public void SendInput(PlayerInputData input)
     {
-        if (Overseer.Instance.IsGameReady)
+        // If we are currently synchronizing the game state by catching up to the highest frame, do not send off any inputs.
+        if (Overseer.Instance.IsGameReady && !NetworkManager.Instance.IsSynchronizing)
         {
             if (input.InputPattern > 0)
             {
@@ -158,10 +159,16 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (isGameReady)
         {
-            PacketsReceivedByAck = MaxPacketsTillUpdatePing;
-            SecondsUntilPing = MaxSecondsTillCheckPing;
+            PacketsReceivedByAck = 0;
+            SecondsUntilPing = 0;
             StartCoroutine(CheckForPingUpdate());
             enabled = true;
+        }
+        else
+        {
+            StopCoroutine(CheckForPingUpdate());
+            PacketsReceivedByAck = 0;
+            SecondsUntilPing = 0;
         }
     }
 
@@ -187,7 +194,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void OnAckReceivedThresholdReached()
     {
-        Debug.LogWarning("Updating ping from ack values");
         long pingToSet = AveragePing / MaxPacketsTillUpdatePing;
         NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
         PacketsReceivedByAck = 0;

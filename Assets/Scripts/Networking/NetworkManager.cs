@@ -24,6 +24,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte StartGameAck = 0x01;
 
+    public const byte SynchronizeNeeded = 0x10;
+
+    public const byte SynchronizeClient = 0x11;
+
     public const byte PlayerInputUpdate = 0x20;
 
     public const byte PlayerInputAck = 0x21;
@@ -31,12 +35,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public const byte PingRequest = 0x30;
 
     public const byte PingAck = 0x31;
-
-    public const byte EvaluateWinner = 0x40;
-
-    public const byte RollbackRequest = 0x50;
-
-    public const byte PlayerLeaving = 0x60;
 
     #endregion
 
@@ -59,8 +57,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #endregion
 
     #region Unity Events
-
-
 
     #endregion
 
@@ -86,24 +82,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         get;  private set;
     }
 
-    public long NetworkDelayFrames
-    {
-        get
-        {
-            return TotalDelayFrames - GameStateManager.Instance.LocalFrameDelay;
-        }
-    }
-
     public long CurrentDelayInMilliSeconds { get; private set; }
 
     // Hash set of players we need to ping, sorted by actor number.
-    private HashSet<int> PlayersToPing = new HashSet<int>(); 
+    private HashSet<int> PlayersToPing = new HashSet<int>();
+
+    public bool IsSynchronizing;
+
+    private bool IsNetworkedGameReady;
 
     private bool CurrentlyPingingPlayers;
-
-    public bool IsNetworkedGameReady;
-
-    public bool ShouldStartGame;
 
     #endregion
 
@@ -400,7 +388,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(SynchronizePlayersInternal());
+            StartCoroutine(SynchronizePlayersMaster());
         }
         else
         {
@@ -436,8 +424,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         // Remove player from dictionary after leaving
 
-        ExitGames.Client.Photon.Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
-        ExitGames.Client.Photon.Hashtable activePlayers = (ExitGames.Client.Photon.Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new ExitGames.Client.Photon.Hashtable();
+        Hashtable hashtable = PhotonNetwork.CurrentRoom.CustomProperties;
+        Hashtable activePlayers = (Hashtable)PhotonNetwork.CurrentRoom.CustomProperties[ActivePlayerKey] ?? new Hashtable();
 
         if (activePlayers.ContainsKey(player.ActorNumber))
         {
@@ -448,30 +436,25 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
     }
 
-    private IEnumerator SynchronizePlayersInternal()
+    private IEnumerator SynchronizePlayersMaster()
     {
-        Debug.LogWarning("Synchronize player internal");
         while(!CheckIfPlayersReady())
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
         }
-        Debug.LogWarning("All players ready");
+
         SetMasterClientReady(true);
-
         yield return new WaitForSeconds(1f);
-        Debug.LogWarning("Checking player ping");
-        PingActivePlayers();
 
+        PingActivePlayers();
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
         while (TotalDelayFrames <= 0)
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
             UpdatePing();
         }
-        Debug.LogWarning("Player ping ready");
         yield return new WaitForSeconds(2f);
 
-        Debug.LogWarning("sending start game message");
         Stopwatch rtt = new Stopwatch();
         SendEventData(StartGame, true, ReceiverGroup.Others);
         rtt.Start();
@@ -482,15 +465,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         rtt.Stop();
 
         long frameDelay = (rtt.ElapsedMilliseconds / MillisecondsPerFrame);
-        Debug.LogWarning("frame delay: " + frameDelay);
+        Debug.LogWarning("Frame delay: " + frameDelay);
         while(TotalDelayFrames - frameDelay >= 0)
         {
-            Debug.LogWarning("Frames to wait: " + (TotalDelayFrames - frameDelay));
             yield return new WaitForEndOfFrame();
             ++frameDelay;
         }
 
-        ShouldStartGame = true;
+        IsSynchronizing = false;
     }
 
     private bool CheckIfPlayersReady()
@@ -540,11 +522,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         long framesToWait = TotalDelayFrames;
         while(framesToWait > 0)
         {
-            Debug.LogWarning("Frames to wait: " + framesToWait);
             yield return new WaitForEndOfFrame();
             --framesToWait;
         }
-        ShouldStartGame = true;
+        IsSynchronizing = false;
     }
 
     private bool CheckIfMasterClientReady()
@@ -661,7 +642,43 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void RequestSynchronization(uint FrameToSync)
     {
-        Debug.LogWarning("Requesting Synchronization");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SendEventData(SynchronizeClient, (int)FrameToSync, ReceiverGroup.Others);
+            StartCoroutine(StartGameStateSynchronization(FrameToSync));
+        }
+        else
+        {
+            SendEventData(SynchronizeNeeded, (int)FrameToSync, ReceiverGroup.Others);
+        }
+    }
+
+    private IEnumerator StartGameStateSynchronization(uint FrameToSync)
+    {
+        if (IsSynchronizing)
+        {
+            yield break;
+        }
+        Debug.LogWarning("Start game state synchronization");
+        IsSynchronizing = true;
+
+        SetPlayerReady(false);
+        Overseer.Instance.HandleSynchronizationRequest(FrameToSync);
+
+        while(!(bool)PhotonNetwork.LocalPlayer.CustomProperties[PlayerReadyKey])
+        {
+            yield return null;
+        }
+
+        if(PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(SynchronizePlayersMaster());
+        }
+        else
+        {
+            StartCoroutine(WaitForMasterClientSync());
+        }
+
     }
 
     #endregion
