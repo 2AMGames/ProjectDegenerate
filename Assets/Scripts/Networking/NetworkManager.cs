@@ -339,6 +339,18 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
+
+        if (photonEvent.Code == SynchronizeNeeded)
+        {
+            uint frameCount = (uint)photonEvent.CustomData;
+            HandleSynchronizationRequest(frameCount);
+        }
+
+        if (photonEvent.Code == SynchronizeClient && !IsSynchronizing)
+        {
+            uint frameCount = (uint)photonEvent.CustomData;
+            StartCoroutine(StartGameStateSynchronization(frameCount));
+        }
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -653,13 +665,22 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
+    public void HandleSynchronizationRequest(uint FrameToSync)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SendEventData(SynchronizeClient, (int)FrameToSync, ReceiverGroup.Others);
+            StartCoroutine(StartGameStateSynchronization(FrameToSync));
+        }
+    }
+
     private IEnumerator StartGameStateSynchronization(uint FrameToSync)
     {
         if (IsSynchronizing)
         {
             yield break;
         }
-        Debug.LogWarning("Start game state synchronization");
+        Debug.LogWarning("Start game state synchronization. Frame to sync: " + FrameToSync);
         IsSynchronizing = true;
 
         SetPlayerReady(false);
