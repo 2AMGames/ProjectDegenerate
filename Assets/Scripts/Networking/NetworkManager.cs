@@ -342,14 +342,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         if (photonEvent.Code == SynchronizeNeeded)
         {
-            uint frameCount = (uint)photonEvent.CustomData;
-            HandleSynchronizationRequest(frameCount);
+            int frameCount = (int)photonEvent.CustomData;
+            HandleSynchronizationRequest((uint)frameCount);
         }
 
         if (photonEvent.Code == SynchronizeClient && !IsSynchronizing)
         {
-            uint frameCount = (uint)photonEvent.CustomData;
-            StartCoroutine(StartGameStateSynchronization(frameCount));
+            int frameCount = (int)photonEvent.CustomData;
+            StartCoroutine(StartGameStateSynchronization((uint)frameCount));
         }
     }
 
@@ -398,6 +398,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void SynchronizeGame()
     {
+        if (IsSynchronizing)
+            return;
+
+        IsSynchronizing = true;
         if (PhotonNetwork.IsMasterClient)
         {
             StartCoroutine(SynchronizePlayersMaster());
@@ -654,6 +658,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void RequestSynchronization(uint FrameToSync)
     {
+        Debug.LogWarning("Requesting synchronization for frame: " + FrameToSync);
         if (PhotonNetwork.IsMasterClient)
         {
             SendEventData(SynchronizeClient, (int)FrameToSync, ReceiverGroup.Others);

@@ -83,6 +83,7 @@ public class GameStateManager : MonoBehaviour
     #region public interface
     public void RequestRollback(uint frameToRollbackTo)
     {
+        StopCoroutine(SaveGameState());
         StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
     }
 
@@ -137,7 +138,7 @@ public class GameStateManager : MonoBehaviour
         GameState targetGameState = null;
         while(FrameStack.Count > 0)
         {
-            Debug.LogWarning("Peek Count: " + FrameStack.Peek().FrameCount);
+            Debug.LogWarning("Peek Game State Count: " + FrameStack.Peek().FrameCount);
             if (FrameStack.Peek().FrameCount == frameRequested)
             {
                 targetGameState = FrameStack.Peek();

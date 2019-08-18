@@ -207,10 +207,10 @@ public class CommandInterpreter : MonoBehaviour
             {
                 Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
                 Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
-                Debug.LogWarning("Diff: " + Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber));
+                Debug.LogWarning("Diff: " + Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) + 3);
                 Debug.LogWarning("Ping: " + NetworkManager.Instance.TotalDelayFrames);
 
-                if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) > NetworkManager.Instance.TotalDelayFrames)
+                if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) + 3 > NetworkManager.Instance.TotalDelayFrames)
                 {
                     NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
                 }
