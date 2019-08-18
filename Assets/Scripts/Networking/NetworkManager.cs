@@ -458,7 +458,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         Debug.LogWarning("All players ready");
         SetMasterClientReady(true);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         Debug.LogWarning("Checking player ping");
         PingActivePlayers();
 

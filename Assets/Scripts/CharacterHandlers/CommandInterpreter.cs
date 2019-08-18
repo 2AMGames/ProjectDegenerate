@@ -197,17 +197,23 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputPacket.PlayerInputData dataToQueue)
+    public void QueuePlayerInput(PlayerInputPacket.PlayerInputData dataToQueue, bool isRemotePlayer)
     {
         if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
         {
             FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
-            // We missed this frame by a wide margin and need to resync.  
-            Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
-            Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
-            if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) > NetworkManager.Instance.TotalDelayFrames)
+            // We missed this frame by a wide margin and need to resync.
+            if (isRemotePlayer)
             {
-                NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
+                Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
+                Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
+                Debug.LogWarning("Diff: " + Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber));
+                Debug.LogWarning("Ping: " + NetworkManager.Instance.TotalDelayFrames);
+
+                if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) > NetworkManager.Instance.TotalDelayFrames)
+                {
+                    NetworkManager.Instance.RequestSynchronization(dataToQueue.FrameNumber);
+                }
             }
 
             if (dataToQueue.InputPattern > 0)

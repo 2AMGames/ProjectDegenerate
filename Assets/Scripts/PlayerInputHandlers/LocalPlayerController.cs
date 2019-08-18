@@ -31,7 +31,7 @@ public class LocalPlayerController : PlayerController
         if (inputPattern != LastSavedInputPattern)
         {
             currentFrameInputData.InputPattern = inputPattern;
-            CommandInterpreter.QueuePlayerInput(currentFrameInputData);
+            CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);
             LastSavedInputPattern = currentFrameInputData.InputPattern;
             if (InputHandler != null)
             {
