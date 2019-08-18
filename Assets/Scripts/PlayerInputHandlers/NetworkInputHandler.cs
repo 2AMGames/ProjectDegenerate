@@ -43,6 +43,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private long AveragePing;
 
+    private Coroutine UpdatePingCoroutine;
+
     #endregion
 
     #region Callbacks
@@ -161,12 +163,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             PacketsReceivedByAck = 0;
             SecondsUntilPing = 0;
-            StartCoroutine(CheckForPingUpdate());
+            UpdatePingCoroutine = StartCoroutine(CheckForPingUpdate());
             enabled = true;
         }
         else
         {
-            StopCoroutine(CheckForPingUpdate());
+            StopCoroutine(UpdatePingCoroutine);
             PacketsReceivedByAck = 0;
             SecondsUntilPing = 0;
         }

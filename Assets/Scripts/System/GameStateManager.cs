@@ -57,6 +57,8 @@ public class GameStateManager : MonoBehaviour
 
     private bool SaveGameCoroutineRunning;
 
+    private Coroutine SaveGameCoroutine;
+
     #endregion
 
     #region monobehaviour methods
@@ -83,7 +85,7 @@ public class GameStateManager : MonoBehaviour
     #region public interface
     public void RequestRollback(uint frameToRollbackTo)
     {
-        StopCoroutine(SaveGameState());
+        StopSaveGameCoroutine();
         StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
     }
 
@@ -96,15 +98,11 @@ public class GameStateManager : MonoBehaviour
         enabled = isGameReady;
         if (isGameReady)
         {
-            if (!SaveGameCoroutineRunning)
-            {
-                StartCoroutine(SaveGameState());
-            }
+            StartSaveGameCoroutine();
         }
         else
         {
-            StopCoroutine(SaveGameState());
-            SaveGameCoroutineRunning = false;
+            StopSaveGameCoroutine();
         }
     }
 
@@ -182,14 +180,14 @@ public class GameStateManager : MonoBehaviour
     {
         SaveGameCoroutineRunning = true;
         while (Overseer.Instance.IsGameReady)
-        { 
+        {
             if (FrameStack.Count > MaxStackSize)
             {
                 FrameStack = new Stack<GameState>();
             }
 
             // We only want to save the gamestate if we need to roll back (Network mode).
-            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
+            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode && !NetworkManager.Instance.IsSynchronizing)
             {
                 GameState gameStateToPush = CreateNewGameState();
                 FrameStack.Push(gameStateToPush);
@@ -197,6 +195,23 @@ public class GameStateManager : MonoBehaviour
             }
 
             yield return null;
+        }
+    }
+
+    private void StartSaveGameCoroutine()
+    {
+        if (!SaveGameCoroutineRunning)
+        {
+            SaveGameCoroutine = StartCoroutine(SaveGameState());
+            SaveGameCoroutineRunning = true;
+        }
+    }
+    private void StopSaveGameCoroutine()
+    {
+        if (SaveGameCoroutineRunning)
+        {
+            StopCoroutine(SaveGameCoroutine);
+            SaveGameCoroutineRunning = false;
         }
     }
 

@@ -293,7 +293,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values.OrderBy((x) => x.ActorNumber))
             {
-                if (player.ActorNumber <= 2)
+                if (player.ActorNumber <= NumberOfPlayers)
                 {
                     if (player != PhotonNetwork.LocalPlayer)
                     {
@@ -342,6 +342,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         Debug.LogWarning("Synchronize game state coroutine");
         if (GameStateManager.Instance.FrameCount < FrameToSync)
         {
+            Debug.LogWarning("?");
             // Run the game until we catch up to the desired frame.
             OnGameReady(true);
             while (GameStateManager.Instance.FrameCount <= FrameToSync)

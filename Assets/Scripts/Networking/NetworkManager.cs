@@ -24,9 +24,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte StartGameAck = 0x01;
 
-    public const byte SynchronizeNeeded = 0x10;
+    public const byte SynchronizationNeeded = 0x10;
 
-    public const byte SynchronizeClient = 0x11;
+    public const byte SynchronizeClientGameState = 0x11;
 
     public const byte PlayerInputUpdate = 0x20;
 
@@ -208,7 +208,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     // Room list. Automatically called after joining lobby.
     public void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("Room List Count: " + roomList.Count);
         foreach (RoomInfo room in roomList)
         {
             Debug.Log("Room Name = " + room.Name + ", Player Count:" + room.PlayerCount);
@@ -340,13 +339,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
 
-        if (photonEvent.Code == SynchronizeNeeded)
+        if (photonEvent.Code == SynchronizationNeeded)
         {
             int frameCount = (int)photonEvent.CustomData;
             HandleSynchronizationRequest((uint)frameCount);
         }
 
-        if (photonEvent.Code == SynchronizeClient && !IsSynchronizing)
+        if (photonEvent.Code == SynchronizeClientGameState && !IsSynchronizing)
         {
             int frameCount = (int)photonEvent.CustomData;
             StartCoroutine(StartGameStateSynchronization((uint)frameCount));
@@ -656,17 +655,17 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Game Sync Methods
 
-    public void RequestSynchronization(uint FrameToSync)
+    public void RequestGameStateSynchronization(uint FrameToSync)
     {
         Debug.LogWarning("Requesting synchronization for frame: " + FrameToSync);
         if (PhotonNetwork.IsMasterClient)
         {
-            SendEventData(SynchronizeClient, (int)FrameToSync, ReceiverGroup.Others);
+            SendEventData(SynchronizeClientGameState, (int)FrameToSync, ReceiverGroup.Others);
             StartCoroutine(StartGameStateSynchronization(FrameToSync));
         }
         else
         {
-            SendEventData(SynchronizeNeeded, (int)FrameToSync, ReceiverGroup.Others);
+            SendEventData(SynchronizationNeeded, (int)FrameToSync, ReceiverGroup.Others);
         }
     }
 
@@ -674,7 +673,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            SendEventData(SynchronizeClient, (int)FrameToSync, ReceiverGroup.Others);
+            SendEventData(SynchronizeClientGameState, (int)FrameToSync, ReceiverGroup.Others);
             StartCoroutine(StartGameStateSynchronization(FrameToSync));
         }
     }
