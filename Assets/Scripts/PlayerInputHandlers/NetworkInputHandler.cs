@@ -45,6 +45,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private Coroutine UpdatePingCoroutine;
 
+    private bool UpdatingPing;
+
     #endregion
 
     #region Callbacks
@@ -147,7 +149,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             ++PacketsReceivedByAck;
             long rtt = GameStateManager.Instance.FrameCount - SentPackets[packetNumber];
-            AveragePing += rtt;
+            AveragePing += rtt - (long)(Time.deltaTime * 1000);
             SentPackets.Remove(packetNumber);
 
             if (PacketsReceivedByAck >= MaxPacketsTillUpdatePing && !NetworkManager.Instance.IsSynchronizing)
@@ -168,7 +170,10 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         else
         {
-            StopCoroutine(UpdatePingCoroutine);
+            if (UpdatingPing)
+            {
+                StopCoroutine(UpdatePingCoroutine);
+            }
             PacketsReceivedByAck = 0;
             SecondsUntilPing = 0;
         }
@@ -176,11 +181,11 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private IEnumerator CheckForPingUpdate()
     {
+        UpdatingPing = true;
         while (Overseer.Instance.IsGameReady)
         {
             if (SecondsUntilPing >= MaxSecondsTillCheckPing && !NetworkManager.Instance.IsSynchronizing)
             {
-                Debug.LogWarning("Updating ping from seconds");
                 NetworkManager.Instance.PingActivePlayers();
                 SecondsUntilPing = 0;
                 PacketsReceivedByAck = 0;

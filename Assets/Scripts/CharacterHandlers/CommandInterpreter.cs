@@ -206,11 +206,6 @@ public class CommandInterpreter : MonoBehaviour
             // We missed this frame by a wide margin and need to resync.
             if (isRemotePlayer)
             {
-                Debug.LogWarning("Current frame number: " + GameStateManager.Instance.FrameCount);
-                Debug.LogWarning("Frame number: " + dataToQueue.FrameNumber);
-                Debug.LogWarning("Diff: " + (Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) - 3));
-                Debug.LogWarning("Ping: " + NetworkManager.Instance.TotalDelayFrames);
-
                 if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) - 3 > NetworkManager.Instance.TotalDelayFrames)
                 {
                     //NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);

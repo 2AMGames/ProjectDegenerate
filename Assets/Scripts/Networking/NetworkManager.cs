@@ -472,6 +472,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         Stopwatch rtt = new Stopwatch();
         SendEventData(StartGame, true, ReceiverGroup.Others);
+
         rtt.Start();
         while(!IsNetworkedGameReady)
         {
@@ -479,8 +480,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
         rtt.Stop();
 
-        long frameDelay = (rtt.ElapsedMilliseconds / MillisecondsPerFrame);
-        Debug.LogWarning("Frame delay: " + frameDelay);
+        long frameDelay = (rtt.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame;
         while(TotalDelayFrames - frameDelay >= 0)
         {
             yield return new WaitForEndOfFrame();
