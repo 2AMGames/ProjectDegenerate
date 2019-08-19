@@ -178,7 +178,6 @@ public class GameStateManager : MonoBehaviour
 
     private IEnumerator SaveGameState()
     {
-        Debug.LogError("Start save game coroutine");
         SaveGameCoroutineRunning = true;
         while (Overseer.Instance.IsGameReady)
         {
@@ -191,8 +190,8 @@ public class GameStateManager : MonoBehaviour
             {
                 GameState gameStateToPush = CreateNewGameState();
                 FrameStack.Push(gameStateToPush);
-                ++FrameCount;
             }
+            ++FrameCount;
 
             yield return null;
         }

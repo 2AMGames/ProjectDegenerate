@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
 [RequireComponent(typeof(CharacterStats))]
 public class CommandInterpreter : MonoBehaviour
 {
@@ -139,7 +140,7 @@ public class CommandInterpreter : MonoBehaviour
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
     private Dictionary<uint, PlayerInputPacket.PlayerInputData> FramesReceived = new Dictionary<uint, PlayerInputPacket.PlayerInputData>();
-    private List<PlayerInputPacket.PlayerInputData> InputBuffer = new List<PlayerInputPacket.PlayerInputData>();
+    private Queue<PlayerInputData> InputBuffer = new Queue<PlayerInputData>();
 
     private long FrameDelay
     {
@@ -178,16 +179,16 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (InputBuffer.Count > 0)
         {
-            PlayerInputPacket.PlayerInputData dataToExecute = InputBuffer[0];
+            PlayerInputData dataToExecute = InputBuffer.Peek();
             long currentFrame = GameStateManager.Instance.FrameCount;
             long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
             {
-                InputBuffer.RemoveAt(0);
                 if (FramesReceived.ContainsKey(dataToExecute.FrameNumber))
                 {
                     FramesReceived.Remove(dataToExecute.FrameNumber);
                 }
+                InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
         }
@@ -197,7 +198,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputPacket.PlayerInputData dataToQueue, bool isRemotePlayer)
+    public void QueuePlayerInput(PlayerInputData dataToQueue, bool isRemotePlayer)
     {
         if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
         {
@@ -215,10 +216,9 @@ public class CommandInterpreter : MonoBehaviour
                     NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);
                 }
             }
-
             if (dataToQueue.InputPattern > 0)
             {
-                InputBuffer.Add(dataToQueue);
+                InputBuffer.Enqueue(dataToQueue);
                 InputBuffer.OrderBy(x => x.FrameNumber);
             }
         }
