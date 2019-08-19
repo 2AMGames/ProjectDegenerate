@@ -98,7 +98,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void Start()
     {
-        Application.targetFrameRate = 55;
+        Application.targetFrameRate = 60;
         CreateGameType();
     }
 
