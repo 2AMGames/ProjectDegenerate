@@ -573,7 +573,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
         }
 
-        ExitGames.Client.Photon.Hashtable activePlayers = GetActivePlayers();
+        Hashtable activePlayers = GetActivePlayers();
         foreach (int actorNumber in activePlayers.Keys)
         {
             if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -585,14 +585,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
         rtt.Start();
+        long tick = Time.frameCount;
 
-        while(PlayersToPing.Count > 0)
+        while (PlayersToPing.Count > 0)
         {
             yield return null;
         }
 
         rtt.Stop();
-        SetLocalPlayerPing(rtt.ElapsedMilliseconds);
+        long ping = rtt.ElapsedMilliseconds - (long)(Time.deltaTime * 1000);
+        SetLocalPlayerPing(ping);
         UpdatePing();
         CurrentlyPingingPlayers = false;
         

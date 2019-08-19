@@ -23,6 +23,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private const short MaxPacketsTillUpdatePing = 16;
 
+    private const long MillisecondsPerSecond = 1000;
+
     #endregion
 
     #region main variables
@@ -149,7 +151,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             ++PacketsReceivedByAck;
             long rtt = GameStateManager.Instance.FrameCount - SentPackets[packetNumber];
-            AveragePing += rtt - (long)(Time.deltaTime * 1000);
+            AveragePing += rtt - (long)(Time.deltaTime * MillisecondsPerSecond);
             SentPackets.Remove(packetNumber);
 
             if (PacketsReceivedByAck >= MaxPacketsTillUpdatePing && !NetworkManager.Instance.IsSynchronizing)
