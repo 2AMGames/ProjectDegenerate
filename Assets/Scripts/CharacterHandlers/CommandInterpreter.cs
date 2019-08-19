@@ -213,7 +213,7 @@ public class CommandInterpreter : MonoBehaviour
 
                 if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) - 3 > NetworkManager.Instance.TotalDelayFrames)
                 {
-                    NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);
+                    //NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);
                 }
             }
             if (dataToQueue.InputPattern > 0)
