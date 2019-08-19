@@ -110,7 +110,10 @@ public class CustomCircleCollider2D : CustomCollider2D
             Vector2 originPoint = bounds.center + bounds.radius * direction;
             Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
             if (tempList.Contains(this))
+            {
                 tempList.Remove(this);
+            }
+
             foreach (CustomCollider2D col in tempList)
             {
                 colliderList.Add(col);
