@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
+using PlayerInputData = PlayerInputPacket.PlayerInputData;
 public class RemotePlayerController : PlayerController, IOnEventCallback
 {
 
@@ -65,9 +66,9 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 PlayerInputPacket data = eventData.CustomData as PlayerInputPacket;
                 if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
                 {
-                    foreach (PlayerInputPacket.PlayerInputData inputFrames in data.InputData)
+                    foreach (PlayerInputData inputFrame in data.InputData)
                     {
-                        CommandInterpreter.QueuePlayerInput(inputFrames, true);
+                        CommandInterpreter.QueuePlayerInput(inputFrame, true);
                     }
                     SendInputAck(data.PacketId);
                 }

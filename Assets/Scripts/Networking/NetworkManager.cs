@@ -28,6 +28,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte SynchronizeClientGameState = 0x11;
 
+    public const byte HeartbeatPacket = 0x12;
+
     public const byte PlayerInputUpdate = 0x20;
 
     public const byte PlayerInputAck = 0x21;
@@ -80,6 +82,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public long TotalDelayFrames
     {
         get;  private set;
+    }
+
+    public long NetworkDelayFrames
+    {
+        get
+        {
+            return Math.Max(TotalDelayFrames - GameStateManager.Instance.LocalFrameDelay, 0);
+        }
     }
 
     public long CurrentDelayInMilliSeconds { get; private set; }
@@ -555,6 +565,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #endregion
 
     #region Ping Methods
+
+    public void SendHeartbeatMessage()
+    {
+        
+    }
 
     public void PingActivePlayers()
     {

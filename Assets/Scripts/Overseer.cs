@@ -146,7 +146,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void CreateGameType()
     {
-        if (SelectedGameType == GameType.PlayerVsPlayer)
+        if (SelectedGameType == GameType.Local)
         {
             for (int index = 0; index < 2; ++index)
             {
@@ -224,7 +224,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public enum GameType
     {
-        PlayerVsPlayer,
+        Local,
         PlayerVsRemote,
         PlayerVsAI,
         Observer
@@ -331,6 +331,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     }
 
+    public void DelayGame(long FramesToWait)
+    {
+
+    }
+
     public void HandleSynchronizationRequest(uint FrameToSync)
     {
         OnGameReady(false);
@@ -339,14 +344,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private IEnumerator SynchronizeGameState(uint FrameToSync)
     {
-        Debug.LogWarning("Synchronize game state coroutine");
         if (GameStateManager.Instance.FrameCount < FrameToSync)
         {
             // Run the game until we catch up to the desired frame.
             OnGameReady(true);
             while (GameStateManager.Instance.FrameCount <= FrameToSync)
             {
-                Debug.LogWarning("Catch up frames: " + GameStateManager.Instance.FrameCount);
                 yield return new WaitForEndOfFrame();
             }
             OnGameReady(false);
