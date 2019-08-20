@@ -110,12 +110,24 @@ public class CustomCircleCollider2D : CustomCollider2D
             Vector2 originPoint = bounds.center + bounds.radius * direction;
             Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
             if (tempList.Contains(this))
+            {
                 tempList.Remove(this);
+            }
+
             foreach (CustomCollider2D col in tempList)
             {
+                Vector2 pointWhereWeCollide = Vector2.down * float.MinValue;
+                if (col is CustomBoxCollider2D)
+                {
+                    pointWhereWeCollide = GetCollisionPointRect((CustomBoxCollider2D)col);
+                }
+                else
+                {
+
+                }
                 colliderList.Add(col);
-                float pointThatWeHit = col.GetUpperBoundsAtXValue(originPoint.x).y;
-                float offset = -GetLowerBoundsAtXValue(bounds.center.x).y + GetLowerBoundsAtXValue(originPoint.x).y;
+                float pointThatWeHit = pointWhereWeCollide.y;
+                float offset = GetLowerBoundsAtXValue(pointWhereWeCollide.x).y;
                 pointThatWeHit -= offset;
                 if (pointThatWeHit > highestYPosition)
                 {
@@ -126,7 +138,6 @@ public class CustomCircleCollider2D : CustomCollider2D
                     rigid.velocity.y = 0;
                 }
             }
-            
         }
         if (colliderList.Count <= 0)
         {
@@ -134,10 +145,45 @@ public class CustomCircleCollider2D : CustomCollider2D
         }
 
 
-        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y - GetLowerBoundsAtXValue(bounds.center.x).y), transform.position.z);
+        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y), transform.position.z);
         UpdateBoundsOfCollider();
         return true;
     }
+
+    #region circle collision methods
+    public Vector2 GetCollisionPointRect(CustomBoxCollider2D rect)
+    {
+        Vector2 c = bounds.center;
+        Vector2 collisionPoint;
+        if (c.x < rect.bounds.bottomLeft.x)
+        {
+            collisionPoint.x = rect.bounds.bottomLeft.x;
+        }
+        else if (c.x > rect.bounds.bottomRight.x)
+        {
+            collisionPoint.x = rect.bounds.bottomRight.x;
+        }
+        else
+        {
+            collisionPoint.x = c.x;
+        }
+
+        if (c.y < rect.bounds.bottomRight.y)
+        {
+            collisionPoint.y = rect.bounds.bottomRight.y;
+        }
+        else if (c.y > rect.bounds.topRight.y)
+        {
+            collisionPoint.y = rect.bounds.topRight.y;
+        }
+        else
+        {
+            collisionPoint.y = c.y;
+        }
+        return collisionPoint;
+    }
+    #endregion circle collision methods
+
 
     /// <summary>
     /// 

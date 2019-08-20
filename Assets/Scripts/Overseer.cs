@@ -17,8 +17,16 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private const string PlayerControllerString = "PlayerController";
 
-    public const float TIME_STEP = 1f / 60f;
+    private const float TIME_STEP = 1f / 60f;
 
+
+    public static float DELTA_TIME
+    {
+        get
+        {
+            return TIME_STEP * Time.timeScale;
+        }
+    }
     #endregion
 
     #region static reference
