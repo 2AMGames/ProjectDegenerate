@@ -21,7 +21,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private const long MillisecondsPerSecond = 1000;
 
-    private const long HeartbeatPingSampleCount = 10;
+    private const long MillisecondsPerFrame = 16;
+
+    private const long HeartbeatPingSampleCount = 6;
 
     #endregion
 
@@ -174,9 +176,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
     }
 
-    private void OnGameReady(bool isGameReady)
+    private void OnGameReady(bool isGameStarting)
     {
-        if (isGameReady)
+        if (isGameStarting)
         {
             UpdatePingCoroutine = StartCoroutine(UpdateHeartbeat());
             enabled = true;
@@ -196,15 +198,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         UpdatingPing = true;
         SamplesTillUpdatePing = HeartbeatPingSampleCount;
         SendHeartbeat();
-        while (Overseer.Instance.IsGameReady)
+        while (true)
         {
-            if (FramesTillCheckHeartbeat <= 0)
+            if (Overseer.Instance.IsGameReady)
             {
-                CheckHeartbeat();
-            }
-            else
-            {
-                --FramesTillCheckHeartbeat;
+                if (FramesTillCheckHeartbeat <= 0)
+                {
+                    CheckHeartbeat();
+                }
+                else
+                {
+                    --FramesTillCheckHeartbeat;
+                }
             }
             yield return null;
         }
@@ -213,7 +218,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private void SendHeartbeat()
     {
         HeartbeatReceived = false;
-        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 2;
+        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
 
         HeartbeatStopwatch.Reset();
         NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacket, (int)GameStateManager.Instance.FrameCount, ReceiverGroup.Others);
@@ -232,17 +237,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             HeartbeatReceived = false;
             SendHeartbeat();
-            FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 2;
+            FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
         }
     }
 
     private void HandleHeartbeatReceived(uint frameNumber)
     {
+        HeartbeatStopwatch.Stop();
         if (!HeartbeatReceived)
         {
-            HeartbeatStopwatch.Stop();
             HeartbeatReceived = true;
-
+            Debug.LogWarning("Elapsed milliseconds: " + HeartbeatStopwatch.ElapsedMilliseconds);
+            // Subtract the previous frame time in milliseconds to account for processing time.
             long ping = HeartbeatStopwatch.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond);
             AveragePing += ping;
             --SamplesTillUpdatePing;
@@ -250,17 +256,21 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             {
                 OnHeartbeatPingCountReached();
             }
-            HeartbeatStopwatch.Reset();
 
             if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
             {
-                Debug.LogWarning("Speed up client to: " + frameNumber);
+                Debug.LogWarning("Speed up needed");
             }
             else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
             {
-                Debug.LogWarning("Slow down needed to: " + frameNumber);
+                long frameDeficit = GameStateManager.Instance.FrameCount - frameNumber;
+                if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
+                {
+                    Overseer.Instance.DelayGame(frameDeficit);
+                }
             }
         }
+        HeartbeatStopwatch.Reset();
     }
 
     private void OnHeartbeatPingCountReached()

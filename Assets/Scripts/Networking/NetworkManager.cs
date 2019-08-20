@@ -705,7 +705,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         IsSynchronizing = true;
 
         SetPlayerReady(false);
-        Overseer.Instance.HandleSynchronizationRequest(FrameToSync);
+        Overseer.Instance.HandleRollbackRequest(FrameToSync);
 
         while(!(bool)PhotonNetwork.LocalPlayer.CustomProperties[PlayerReadyKey])
         {

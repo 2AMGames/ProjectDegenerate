@@ -18,24 +18,27 @@ public class LocalPlayerController : PlayerController
 
     public void Update()
     {
-        PlayerInputData currentFrameInputData = new PlayerInputData();
-        currentFrameInputData.FrameNumber =(uint)GameStateManager.Instance.FrameCount;
-        currentFrameInputData.PlayerIndex = PlayerIndex;
-        currentFrameInputData.InputPattern = 0xF000;
-
-        // Properties cannot be passed by reference, so create a local variable
-        ushort inputPattern = currentFrameInputData.InputPattern;
-
-        UpdateButtonInput(ref inputPattern);
-        UpdateJoystickInput(ref inputPattern);
-        if (inputPattern != LastSavedInputPattern && (!Overseer.Instance.IsNetworkedMode || !NetworkManager.Instance.IsSynchronizing))
+        if (Overseer.Instance.IsGameReady)
         {
-            currentFrameInputData.InputPattern = inputPattern;
-            CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);
-            LastSavedInputPattern = currentFrameInputData.InputPattern;
-            if (InputHandler != null)
+            PlayerInputData currentFrameInputData = new PlayerInputData();
+            currentFrameInputData.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
+            currentFrameInputData.PlayerIndex = PlayerIndex;
+            currentFrameInputData.InputPattern = 0xF000;
+
+            // Properties cannot be passed by reference, so create a local variable
+            ushort inputPattern = currentFrameInputData.InputPattern;
+
+            UpdateButtonInput(ref inputPattern);
+            UpdateJoystickInput(ref inputPattern);
+            if (inputPattern != LastSavedInputPattern && (!Overseer.Instance.IsNetworkedMode || !NetworkManager.Instance.IsSynchronizing))
             {
-                InputHandler.SendInput(currentFrameInputData);
+                currentFrameInputData.InputPattern = inputPattern;
+                CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);
+                LastSavedInputPattern = currentFrameInputData.InputPattern;
+                if (InputHandler != null)
+                {
+                    InputHandler.SendInput(currentFrameInputData);
+                }
             }
         }
     }

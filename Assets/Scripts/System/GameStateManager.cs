@@ -179,19 +179,21 @@ public class GameStateManager : MonoBehaviour
     private IEnumerator SaveGameState()
     {
         SaveGameCoroutineRunning = true;
-        while (Overseer.Instance.IsGameReady)
+        while (true)
         {
-            if (FrameStack.Count > MaxStackSize)
+            if (Overseer.Instance.IsGameReady)
             {
-                FrameStack = new Stack<GameState>();
+                if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
+                {
+                    if (FrameStack.Count > MaxStackSize)
+                    {
+                        FrameStack = new Stack<GameState>();
+                    }
+                    GameState gameStateToPush = CreateNewGameState();
+                    FrameStack.Push(gameStateToPush);
+                }
+                ++FrameCount;
             }
-
-            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
-            {
-                GameState gameStateToPush = CreateNewGameState();
-                FrameStack.Push(gameStateToPush);
-            }
-            ++FrameCount;
 
             yield return null;
         }
