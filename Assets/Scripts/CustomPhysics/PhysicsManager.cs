@@ -75,19 +75,7 @@ public class PhysicsManager : MonoBehaviour
                 rigid.UpdateVelocityFromGravity();
             }
         }
-        for (int i = 0; i < colliderList.Count; i++)
-        {
-            if (!colliderList[i].isStatic)
-                colliderList[i].CheckForCollisions();
-            //if (colliderList[i].enabled)
-            //{
-            //    for (int j = i + 1; j < colliderList.Count - 1; j++)
-            //    {
-            //        colliderList[i].IntersectWithCollider(colliderList[j]);
-            //    }
-                
-            //}
-        }
+        
 
         foreach (CustomPhysics2D rigid in customPhysicsList)
         {
@@ -95,6 +83,13 @@ public class PhysicsManager : MonoBehaviour
             {
                 rigid.UpdatePhysics();
             }
+        }
+
+        for (int i = 0; i < colliderList.Count; i++)
+        {
+            if (!colliderList[i].isStatic && colliderList[i].enabled)
+                colliderList[i].CheckForCollisions();
+            
         }
     }
     #endregion monobehaviour methods

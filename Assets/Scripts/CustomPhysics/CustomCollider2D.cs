@@ -81,36 +81,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected abstract bool CheckCollisionUpFromVelocity();
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected abstract bool CheckCollisionDownFromVelocity();
-
-
-    /// <summary>
-    /// Updates to see if we collided with any object to the Right
-    /// 
-    /// NOTE: Move this to CustomBoxCollider2D
-    /// </summary>
-    /// <returns></returns>
-    protected abstract bool CheckCollisionRightFromVelocity();
     
-
-    /// <summary>
-    /// Updates to check if we have collided with an object to the left
-    /// 
-    /// NOTE: Move this over to CustomBoxCollider2D
-    /// </summary>
-    /// <returns></returns>
-    protected abstract bool CheckCollisionLeftFromVelocity();
 
     /// <summary>
     /// 
@@ -150,25 +121,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     public virtual void CheckForCollisions()
     {
-        if (CheckCollisionDownFromVelocity())
-        {
-            if (rigid.isInAir)
-            {
-                rigid.isInAir = false;
-                rigid.OnPhysicsObjectGrounded();
-            }
-        }
-        else
-        {
-            if (!rigid.isInAir)
-            {
-                rigid.isInAir = true;
-                rigid.OnPhysicsObjectAirborne();
-            }
-        }
-        CheckCollisionUpFromVelocity();
-        CheckCollisionLeftFromVelocity();
-        CheckCollisionRightFromVelocity();
+        
     }
 
     public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);

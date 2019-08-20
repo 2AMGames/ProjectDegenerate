@@ -58,41 +58,6 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         throw new System.NotImplementedException();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionLeftFromVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionRightFromVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
     
     /// <summary>
     /// Updates the bounds of the capsule collider

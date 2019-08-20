@@ -5,6 +5,7 @@ using UnityEngine;
 public class CustomCircleCollider2D : CustomCollider2D
 {
     public float radius = 1;
+    public Vector2 centerOffset;
     public BoundsCircle previousBounds;
     public BoundsCircle bounds;
 
@@ -12,14 +13,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     protected override void OnValidate()
     {
         base.OnValidate();
-        if (verticalRayCount % 2 == 0)
-        {
-            verticalRayCount += 1;
-        }
-        if (horizontalRayCount % 2 == 0)
-        {
-            horizontalRayCount += 1;
-        }
+        
     }
 
     private void OnDrawGizmos()
@@ -48,6 +42,7 @@ public class CustomCircleCollider2D : CustomCollider2D
         return LineIntersectCircle(this.bounds, origin, origin + direction * length);
     }
 
+
     /// <summary>
     /// 
     /// </summary>
@@ -63,94 +58,13 @@ public class CustomCircleCollider2D : CustomCollider2D
 
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
-    {
-
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionLeftFromVelocity()
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionRightFromVelocity()
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
-    {
-        float degreeOffset = 180f / (horizontalRayCount - 1);
-        Vector2 direction = Vector2.zero;
-        int centerIndex = horizontalRayCount / 2;
-        HashSet<CustomCollider2D> colliderList = new HashSet<CustomCollider2D>();
-        List<CustomCollider2D> tempList;
-        float highestYPosition = float.MinValue;
-        for (int i = 0; i < horizontalRayCount; i++)
-        {
-            float rads = Mathf.Deg2Rad * (i * degreeOffset + 180);
-            direction = new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
-            Vector2 originPoint = bounds.center + bounds.radius * direction;
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
-            if (tempList.Contains(this))
-            {
-                tempList.Remove(this);
-            }
-
-            foreach (CustomCollider2D col in tempList)
-            {
-                Vector2 pointWhereWeCollide = Vector2.down * float.MinValue;
-                if (col is CustomBoxCollider2D)
-                {
-                    pointWhereWeCollide = GetCollisionPointRect((CustomBoxCollider2D)col);
-                }
-                else
-                {
-
-                }
-                colliderList.Add(col);
-                float pointThatWeHit = pointWhereWeCollide.y;
-                float offset = GetLowerBoundsAtXValue(pointWhereWeCollide.x).y;
-                pointThatWeHit -= offset;
-                if (pointThatWeHit > highestYPosition)
-                {
-                    highestYPosition = pointThatWeHit;
-                }
-                if (i == centerIndex)
-                {
-                    rigid.velocity.y = 0;
-                }
-            }
-        }
-        if (colliderList.Count <= 0)
-        {
-            return false;
-        }
-
-
-        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y), transform.position.z);
-        UpdateBoundsOfCollider();
-        return true;
-    }
 
     #region circle collision methods
+    /// <summary>
+    /// Returns the collision point that we hit if we intersect with a rect collider
+    /// </summary>
+    /// <param name="rect"></param>
+    /// <returns></returns>
     public Vector2 GetCollisionPointRect(CustomBoxCollider2D rect)
     {
         Vector2 c = bounds.center;
