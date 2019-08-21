@@ -33,7 +33,7 @@ public class LocalPlayerController : PlayerController
             if (inputPattern != LastSavedInputPattern && (!Overseer.Instance.IsNetworkedMode || !NetworkManager.Instance.IsSynchronizing))
             {
                 currentFrameInputData.InputPattern = inputPattern;
-                CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);
+                CommandInterpreter.QueuePlayerInput(currentFrameInputData);
                 LastSavedInputPattern = currentFrameInputData.InputPattern;
                 if (InputHandler != null)
                 {

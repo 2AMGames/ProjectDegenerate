@@ -130,8 +130,14 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
         if (photonEvent.Code == NetworkManager.HeartbeatPacket)
         {
+            NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacketAck, 0x00, ReceiverGroup.Others);
             int frameNumber = (int)photonEvent.CustomData;
             HandleHeartbeatReceived((uint)frameNumber);
+        }
+
+        if (photonEvent.Code == NetworkManager.HeartbeatPacketAck)
+        {
+            HandleHeartbeatAckReceived();
         }
     }
 
@@ -243,11 +249,26 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void HandleHeartbeatReceived(uint frameNumber)
     {
+        if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
+        {
+            //TODO: Catch up to game state frame number, but don't queue inputs from local player
+        }
+        else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
+        {
+            long frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
+            if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
+            {
+                Overseer.Instance.DelayGame(frameDeficit);
+            }
+        }
+    }
+
+    private void HandleHeartbeatAckReceived()
+    {
         HeartbeatStopwatch.Stop();
         if (!HeartbeatReceived)
         {
             HeartbeatReceived = true;
-            Debug.LogWarning("Elapsed milliseconds: " + HeartbeatStopwatch.ElapsedMilliseconds);
             // Subtract the previous frame time in milliseconds to account for processing time.
             long ping = HeartbeatStopwatch.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond);
             AveragePing += ping;
@@ -256,27 +277,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             {
                 OnHeartbeatPingCountReached();
             }
-
-            if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
-            {
-                Debug.LogWarning("Speed up needed");
-            }
-            else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
-            {
-                long frameDeficit = GameStateManager.Instance.FrameCount - frameNumber;
-                if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
-                {
-                    Overseer.Instance.DelayGame(frameDeficit);
-                }
-            }
         }
-        HeartbeatStopwatch.Reset();
     }
 
     private void OnHeartbeatPingCountReached()
     {
         long pingToSet = AveragePing / HeartbeatPingSampleCount;
-        Debug.LogWarning("Setting ping to: " + pingToSet);
         NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
 
         AveragePing = 0;

@@ -68,7 +68,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 {
                     foreach (PlayerInputData inputFrame in data.InputData)
                     {
-                        CommandInterpreter.QueuePlayerInput(inputFrame, true);
+                        CommandInterpreter.QueuePlayerInput(inputFrame);
                     }
                     SendInputAck(data.PacketId);
                 }

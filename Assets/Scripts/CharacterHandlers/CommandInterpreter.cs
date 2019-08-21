@@ -134,13 +134,19 @@ public class CommandInterpreter : MonoBehaviour
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
     private ushort lastButtonPattern;
-    private ushort currentButtonPattern;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
-    private Dictionary<uint, PlayerInputPacket.PlayerInputData> FramesReceived = new Dictionary<uint, PlayerInputPacket.PlayerInputData>();
+    /// <summary>
+    /// Input queue. Delays input front of line input data until frame to execute is >= Current frame number.
+    /// </summary>
     private Queue<PlayerInputData> InputBuffer = new Queue<PlayerInputData>();
+
+    /// <summary>
+    /// HighestReceivedFrame Added to prevent queuing a frame number less than the current one. This should also prevent spoofing inputs.
+    /// </summary>
+    private uint HighestReceivedFrameNumber;
 
     private long FrameDelay
     {
@@ -184,10 +190,7 @@ public class CommandInterpreter : MonoBehaviour
             long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
             {
-                if (FramesReceived.ContainsKey(dataToExecute.FrameNumber))
-                {
-                    FramesReceived.Remove(dataToExecute.FrameNumber);
-                }
+                Debug.LogWarning("Execute: " + dataToExecute.FrameNumber);
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
@@ -198,23 +201,14 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputData dataToQueue, bool isRemotePlayer)
+    public void QueuePlayerInput(PlayerInputData dataToQueue)
     {
-        if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
+        if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
-            FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
-            // We missed this frame by a wide margin and need to resync.
-            if (isRemotePlayer)
-            {
-                if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) - 3 > NetworkManager.Instance.TotalDelayFrames)
-                {
-                    //NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);
-                }
-            }
+            HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
                 InputBuffer.Enqueue(dataToQueue);
-                InputBuffer.OrderBy(x => x.FrameNumber);
             }
         }
     }
@@ -260,7 +254,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region private interface
 
-    private void ExecuteInput(PlayerInputPacket.PlayerInputData inputData)
+    private void ExecuteInput(PlayerInputData inputData)
     {
         if ((inputData.InputPattern & 1) == 1)
         {
@@ -323,8 +317,6 @@ public class CommandInterpreter : MonoBehaviour
         }
 
         UpdateJoystickInput(GetJoystickInputFromData(inputData));
-
-        currentButtonPattern = inputData.InputPattern;
     }
 
     public void OnButtonEventTriggered(string buttonEventName)

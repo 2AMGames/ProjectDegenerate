@@ -30,6 +30,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte HeartbeatPacket = 0x12;
 
+    public const byte HeartbeatPacketAck = 0x13;
+
     public const byte PlayerInputUpdate = 0x20;
 
     public const byte PlayerInputAck = 0x21;
