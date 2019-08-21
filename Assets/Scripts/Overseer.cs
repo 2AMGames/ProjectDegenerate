@@ -357,7 +357,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             return;
         }
-        Debug.LogWarning("Overseer delay game for: " + FramesToWait);
+        Debug.LogWarning("Overseer: Delaying game for: " + FramesToWait);
         DelayGameCoroutine = StartCoroutine(SynchronizeGameState(FramesToWait));
     }
 

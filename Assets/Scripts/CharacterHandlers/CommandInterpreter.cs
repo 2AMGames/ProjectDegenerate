@@ -190,7 +190,6 @@ public class CommandInterpreter : MonoBehaviour
             long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
             {
-                Debug.LogWarning("Execute: " + dataToExecute.FrameNumber);
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
