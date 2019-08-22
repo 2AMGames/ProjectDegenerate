@@ -248,11 +248,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         else
         {
-            if (!ShouldRunGame)
-            {
-                Overseer.Instance.SetHeartbeatReceived(true);
-                ShouldRunGame = true;
-            }
             HeartbeatReceived = false;
             SendHeartbeat();
             FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
@@ -272,6 +267,11 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             {
                 Overseer.Instance.DelayGame(frameDeficit);
             }
+        }
+        if (!ShouldRunGame)
+        {
+            Overseer.Instance.SetHeartbeatReceived(true);
+            ShouldRunGame = true;
         }
     }
 
