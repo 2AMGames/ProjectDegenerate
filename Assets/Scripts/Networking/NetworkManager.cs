@@ -52,14 +52,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
-    #region Photon Event Codes
-
-    // DO NOT CHANGE THESE.
-
-    public const float OnJoinedRoomEventCode = 254;
-
-    #endregion
-
     #region Unity Events
 
     #endregion
@@ -96,14 +88,18 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public long CurrentDelayInMilliSeconds { get; private set; }
 
-    // Hash set of players we need to ping, sorted by actor number.
-    private HashSet<int> PlayersToPing = new HashSet<int>();
-
-    public bool IsSynchronizing;
+    /// <summary>
+    /// Set to true if currently synchronizing game state (rolling back).
+    /// </summary>
+    [HideInInspector]
+    public bool IsSynchronizing { get; private set; }
 
     private bool IsNetworkedGameReady;
 
     private bool CurrentlyPingingPlayers;
+
+    // Hash set of players we need to ping, sorted by actor number.
+    private HashSet<int> PlayersToPing = new HashSet<int>();
 
     #endregion
 
@@ -492,7 +488,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
         rtt.Stop();
 
-        long frameDelay = (rtt.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame;
+        long frameDelay = (rtt.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame;
         while(TotalDelayFrames - frameDelay >= 0)
         {
             yield return new WaitForEndOfFrame();
@@ -610,7 +606,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         rtt.Stop();
-        long ping = rtt.ElapsedMilliseconds - (long)(Time.deltaTime * 1000);
+        long ping = rtt.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * 1000);
         SetLocalPlayerPing(ping);
         UpdatePing();
         CurrentlyPingingPlayers = false;
@@ -664,7 +660,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             CurrentDelayInMilliSeconds = highestPing;
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-            float frameTimeInMilliseconds = Time.deltaTime * MillisecondsPerSecond;
+            float frameTimeInMilliseconds = Time.unscaledDeltaTime * MillisecondsPerSecond;
             float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
             TotalDelayFrames = (long)calculatedDelay;
         }

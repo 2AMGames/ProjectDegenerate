@@ -57,6 +57,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private bool HeartbeatReceived;
 
+    private bool ShouldRunGame;
+
     private Stopwatch HeartbeatStopwatch;
 
     private long AveragePing;
@@ -237,6 +239,11 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             Debug.LogWarning("Heartbeat not received in time");
             HeartbeatReceived = false;
+            if (ShouldRunGame)
+            {
+                Overseer.Instance.SetHeartbeatReceived(false);
+            }
+            ShouldRunGame = false;
             SendHeartbeat();
         }
         else
@@ -270,13 +277,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             HeartbeatReceived = true;
             // Subtract the previous frame time in milliseconds to account for processing time.
-            long ping = HeartbeatStopwatch.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond);
+            long ping = HeartbeatStopwatch.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * MillisecondsPerSecond);
             AveragePing += ping;
             --SamplesTillUpdatePing;
             if (SamplesTillUpdatePing <= 0)
             {
                 OnHeartbeatPingCountReached();
             }
+        }
+        if (!ShouldRunGame)
+        {
+            Overseer.Instance.SetHeartbeatReceived(true);
+            ShouldRunGame = true;
         }
     }
 

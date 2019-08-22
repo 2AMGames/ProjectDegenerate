@@ -106,7 +106,7 @@ public class CustomPhysics2D : MonoBehaviour {
                 velocity = rightComponent + gravityDown * terminalVelocity;
             }
         }
-        float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Time.deltaTime;
+        float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Overseer.DELTA_TIME;
         velocity += gravityValueToApply * gravityVector;
     }
 
@@ -117,7 +117,7 @@ public class CustomPhysics2D : MonoBehaviour {
     {
         Vector3 velocityVector3 = new Vector3(velocity.x, velocity.y, 0);
         
-        this.transform.position += velocityVector3 * Time.deltaTime;
+        this.transform.position += velocityVector3 * Overseer.DELTA_TIME;
     }
 
     /// <summary>
