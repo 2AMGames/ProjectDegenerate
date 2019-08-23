@@ -23,7 +23,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private const long MillisecondsPerFrame = 16;
 
-    private const long HeartbeatPingSampleCount = 6;
+    private const long HeartbeatPingSampleCount = 30;
 
     #endregion
 
@@ -208,8 +208,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         SendHeartbeat();
         while (true)
         {
-            if (Overseer.Instance.IsGameReady)
-            {
                 if (FramesTillCheckHeartbeat <= 0)
                 {
                     CheckHeartbeat();
@@ -218,7 +216,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 {
                     --FramesTillCheckHeartbeat;
                 }
-            }
             yield return null;
         }
     }
@@ -244,18 +241,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 Overseer.Instance.SetHeartbeatReceived(false);
             }
             ShouldRunGame = false;
-            SendHeartbeat();
         }
         else
         {
             HeartbeatReceived = false;
-            SendHeartbeat();
             FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
         }
+        SendHeartbeat(); 
     }
 
     private void HandleHeartbeatReceived(uint frameNumber)
     {
+        Debug.LogWarning("Heartbeat received");
         if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
         {
             //TODO: Catch up to game state frame number, but don't queue inputs from local player
@@ -270,6 +267,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         if (!ShouldRunGame)
         {
+            Debug.LogWarning("Should run game");
             Overseer.Instance.SetHeartbeatReceived(true);
             ShouldRunGame = true;
         }

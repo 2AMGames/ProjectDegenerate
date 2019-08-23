@@ -148,7 +148,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private void SetGameReady(bool isGameReady)
     {
         IsGameReady = isGameReady;
-        //Time.timeScale = isGameReady ? 1 : 0;
+        Time.timeScale = isGameReady ? 1 : 0;
     }
 
     private void CreateGameType()
