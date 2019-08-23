@@ -94,7 +94,7 @@ namespace Photon.Pun
         }
 
 
-        protected void FixedUpdate()
+        protected void Update()
         {
             if (PhotonNetwork.NetworkingClient == null)
             {

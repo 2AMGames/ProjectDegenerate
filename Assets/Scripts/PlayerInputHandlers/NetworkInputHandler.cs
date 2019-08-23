@@ -226,6 +226,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
 
         HeartbeatStopwatch.Reset();
+        Debug.LogWarning("Send heartbeat");
         NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacket, (int)GameStateManager.Instance.FrameCount, ReceiverGroup.Others);
         HeartbeatStopwatch.Start();
     }
