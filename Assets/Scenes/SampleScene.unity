@@ -1627,12 +1627,12 @@ PrefabInstance:
     - target: {fileID: 6772816088428851026, guid: 03f71159bb5a0334c8b3614cc581d587,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.67
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 6772816088428851026, guid: 03f71159bb5a0334c8b3614cc581d587,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.58
+      value: -2.24
       objectReference: {fileID: 0}
     - target: {fileID: 6772816088428851026, guid: 03f71159bb5a0334c8b3614cc581d587,
         type: 3}
@@ -2861,6 +2861,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1895972998}
   m_CullTransparentMesh: 0
+--- !u!1 &1955549231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1955549232}
+  m_Layer: 8
+  m_Name: GameStateSubscribers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1955549232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955549231}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 489040384883500147}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1959519289
 GameObject:
   m_ObjectHideFlags: 0
@@ -3224,6 +3254,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 489040384883500141}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &489040384883500147 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
+    type: 3}
+  m_PrefabInstance: {fileID: 489040384883500141}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4928876089398127172
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3359,7 +3395,7 @@ PrefabInstance:
     - target: {fileID: 6728667214325178035, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
       propertyPath: SelectedGameType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1749728940, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}
       propertyPath: LocalFrameDelay

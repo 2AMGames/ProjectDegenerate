@@ -134,7 +134,7 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.LogWarning("Evaluating rollback: " + frameRequested);
         GameState targetGameState = null;
-        while(FrameStack.Count > 0)
+        while (FrameStack.Count > 0)
         {
             Debug.LogWarning("Peek Game State Count: " + FrameStack.Peek().FrameCount);
             if (FrameStack.Peek().FrameCount == frameRequested)
