@@ -226,7 +226,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private void SendHeartbeat()
     {
         PlayerPacketReceived = false;
-        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
+        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 1;
 
         HeartbeatStopwatch.Reset();
         NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacket, (int)GameStateManager.Instance.FrameCount, ReceiverGroup.Others);
@@ -247,7 +247,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         else
         {
             PlayerPacketReceived = false;
-            FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
         }
         SendHeartbeat(); 
     }
