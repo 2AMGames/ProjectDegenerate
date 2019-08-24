@@ -364,7 +364,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public void SetHeartbeatReceived(bool received)
     {
-        SetGameReady(received);
+        SetGameReady(received && CheckIfGameReady());
     }
 
     public void HandleRollbackRequest(uint FrameToSync)
