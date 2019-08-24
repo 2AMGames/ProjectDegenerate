@@ -57,6 +57,11 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private bool PlayerPacketReceived;
 
+    /// <summary>
+    /// Set to false when delaying game due to our frame count being ahead or we haven't received a heartbeat packet.
+    /// </summary>
+    private bool ShouldRunGame;
+
     private Stopwatch HeartbeatStopwatch;
 
     private long AveragePing;
@@ -232,15 +237,16 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (!PlayerPacketReceived && Overseer.Instance.IsGameReady)
         { 
-            PlayerPacketReceived = false;
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.IsGameReady && ShouldRunGame)
             {
+                ShouldRunGame = false;
                 Overseer.Instance.SetHeartbeatReceived(false);
             }
         }
         else
         {
             PlayerPacketReceived = false;
+            ShouldRunGame = true;
             FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
         }
         SendHeartbeat(); 
@@ -251,20 +257,17 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         if (!PlayerPacketReceived)
         {
             PlayerPacketReceived = true;
-            if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
-            {
-                //TODO: Catch up to game state frame number, but don't queue inputs from local player
-            }
-            else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
+
+            if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
             {
                 long frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
-                Debug.LogWarning("frame deficit: " + frameDeficit);
                 if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
                 {
                     Overseer.Instance.DelayGame(frameDeficit);
                 }
             }
-            else if (!Overseer.Instance.IsGameReady)
+            ShouldRunGame = true;
+            if (Overseer.Instance.IsGameReady && ShouldRunGame)
             {
                 Overseer.Instance.SetHeartbeatReceived(true);
             }
