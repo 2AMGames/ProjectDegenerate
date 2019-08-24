@@ -235,18 +235,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void CheckHeartbeat()
     {
-        if (!PlayerPacketReceived && Overseer.Instance.IsGameReady)
-        { 
+        if (!PlayerPacketReceived)
+        {
+            // Stop the game if it is not already stopped.
             if (Overseer.Instance.IsGameReady && ShouldRunGame)
             {
-                ShouldRunGame = false;
                 Overseer.Instance.SetHeartbeatReceived(false);
             }
+            ShouldRunGame = false;
         }
         else
         {
             PlayerPacketReceived = false;
-            ShouldRunGame = true;
             FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
         }
         SendHeartbeat(); 
@@ -266,11 +266,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     Overseer.Instance.DelayGame(frameDeficit);
                 }
             }
-            ShouldRunGame = true;
-            if (Overseer.Instance.IsGameReady && ShouldRunGame)
+            // Should run game was previously false, so we have stopped the game state due
+            if (!ShouldRunGame)
             {
                 Overseer.Instance.SetHeartbeatReceived(true);
             }
+            ShouldRunGame = true;
         }
     }
 
