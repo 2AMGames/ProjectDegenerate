@@ -60,9 +60,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private const string ActivePlayerKey = "ActivePlayers";
 
-    private const int MillisecondsPerFrame = 16;
+    private const uint MillisecondsPerFrame = 16;
 
-    private const long MillisecondsPerSecond = 1000;
+    private const uint MillisecondsPerSecond = 1000;
 
     private const short PingTimeoutInMilliseconds = 60;
 
@@ -73,12 +73,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     [HideInInspector]
     public string CurrentRoomId;
 
-    public long TotalDelayFrames
+    public int TotalDelayFrames
     {
         get;  private set;
     }
 
-    public long NetworkDelayFrames
+    public int NetworkDelayFrames
     {
         get
         {
@@ -476,7 +476,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return new WaitForSeconds(1f);
             UpdatePing();
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         Stopwatch rtt = new Stopwatch();
         SendEventData(StartGame, true, ReceiverGroup.Others);
@@ -488,7 +488,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
         rtt.Stop();
 
-        long frameDelay = (rtt.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame;
+        long frameDelay = (rtt.ElapsedMilliseconds - (uint)(Time.unscaledDeltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame / 2;
         while(TotalDelayFrames - frameDelay >= 0)
         {
             yield return new WaitForEndOfFrame();
@@ -598,7 +598,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         PingActivePlayersInternal();
         Stopwatch rtt = new Stopwatch();
         rtt.Start();
-        long tick = Time.frameCount;
 
         while (PlayersToPing.Count > 0)
         {
@@ -606,6 +605,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
 
         rtt.Stop();
+
         long ping = rtt.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * 1000);
         SetLocalPlayerPing(ping);
         UpdatePing();
@@ -662,7 +662,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
             float frameTimeInMilliseconds = Time.unscaledDeltaTime * MillisecondsPerSecond;
             float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
-            TotalDelayFrames = (long)calculatedDelay;
+            TotalDelayFrames = (int)calculatedDelay;
         }
     }
 

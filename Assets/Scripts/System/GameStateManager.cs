@@ -19,8 +19,6 @@ public class GameStateManager : MonoBehaviour
 
     private const short MaxPacketFrameDelay = 30;
 
-    private const long MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
-
     #endregion
 
     #region static reference
@@ -49,7 +47,7 @@ public class GameStateManager : MonoBehaviour
 
     public short LocalFrameDelay = 3;
 
-    public long FrameCount;
+    public uint FrameCount;
 
     public float RoundTime { get; private set; }
 

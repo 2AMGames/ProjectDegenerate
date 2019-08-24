@@ -352,7 +352,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     }
 
-    public void DelayGame(long FramesToWait)
+    public void DelayGame(uint FramesToWait)
     {
         if (DelayGameCoroutine != null)
         {
@@ -375,7 +375,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         //StartCoroutine(SynchronizeGameState(FrameToSync));
     }
 
-    private IEnumerator SynchronizeGameState(long frameToSync)
+    private IEnumerator SynchronizeGameState(uint frameToSync)
     {
         SetGameReady(false);
         while(frameToSync > 0)

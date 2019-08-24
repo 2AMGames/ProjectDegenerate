@@ -148,7 +148,7 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private uint HighestReceivedFrameNumber;
 
-    private long FrameDelay
+    private int FrameDelay
     {
         get
         {
@@ -156,7 +156,7 @@ public class CommandInterpreter : MonoBehaviour
             {
                 return 0;
             }
-            return Overseer.Instance.IsNetworkedMode ? NetworkManager.Instance.TotalDelayFrames : GameStateManager.Instance.LocalFrameDelay;
+            return Overseer.Instance.IsNetworkedMode ? (int)NetworkManager.Instance.TotalDelayFrames : (int)GameStateManager.Instance.LocalFrameDelay;
         }
     }
 
@@ -183,13 +183,13 @@ public class CommandInterpreter : MonoBehaviour
 
     private void Update()
     {
-        if (InputBuffer.Count > 0)
+        if (InputBuffer.Count > 0 && Overseer.Instance.IsGameReady)
         {
             PlayerInputData dataToExecute = InputBuffer.Peek();
-            long currentFrame = GameStateManager.Instance.FrameCount;
-            long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
+            uint currentFrame = GameStateManager.Instance.FrameCount;
+            int frameToExecute = (int)dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
-            {
+            { 
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
