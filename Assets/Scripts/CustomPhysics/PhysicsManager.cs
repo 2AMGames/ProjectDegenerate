@@ -38,7 +38,6 @@ public class PhysicsManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector2 vec;
         foreach (CustomCollider2D collider in colliderList)
         {
             if (collider.enabled)
@@ -58,6 +57,21 @@ public class PhysicsManager : MonoBehaviour
                 rigid.UpdateVelocityFromGravity();
             }
         }
+
+        for (int i = 0; i < colliderList.Count - 1; i++)
+        {
+            for (int j = i + 1; j < colliderList.Count; j++)
+            {
+                if (!colliderList[i].isStatic)
+                {
+                    colliderList[i].ColliderIntersectBasedOnVelocity(colliderList[j]);
+                }
+                if (!colliderList[j].isStatic)
+                {
+                    colliderList[j].ColliderIntersectBasedOnVelocity(colliderList[i]);
+                }
+            }
+        }
         
         //Updates our physics object based on its physics state
         foreach (CustomPhysics2D rigid in customPhysicsList)
@@ -68,24 +82,24 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < colliderList.Count - 1; i++)
-        {
-            for (int j = i + 1; j < colliderList.Count; j++)
-            {
-                if (colliderList[i].ColliderIntersect(colliderList[j], out vec))
-                {
-                    //print("I made it here");
-                    if (colliderList[i].isStatic)
-                    {
-                        colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
-                    }
-                    if (colliderList[j].isStatic)
-                    {
-                        colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
-                    }
-                }
-            }
-        }
+        //for (int i = 0; i < colliderList.Count - 1; i++)
+        //{
+        //    for (int j = i + 1; j < colliderList.Count; j++)
+        //    {
+        //        if (colliderList[i].ColliderIntersect(colliderList[j]))
+        //        {
+        //            //print("I made it here");
+        //            if (colliderList[i].isStatic)
+        //            {
+        //                colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
+        //            }
+        //            if (colliderList[j].isStatic)
+        //            {
+        //                colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
+        //            }
+        //        }
+        //    }
+        //}
     }
     #endregion monobehaviour methods
 

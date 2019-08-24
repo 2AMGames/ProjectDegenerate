@@ -105,11 +105,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="colliderToCheck"></param>
-    /// <param name="intersectionPoint"></param>
     /// <returns></returns>
-    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
+    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck);
 
-    public abstract bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection);
+    public abstract bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck);
 
     /// <summary>
     /// 
@@ -171,9 +170,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// Use this method to check if a rect bounds intersects another rect bound
     /// </summary>
     /// <returns></returns>
-    public static bool RectIntersectRect(BoundsRect r1, BoundsRect r2, out Vector2 intersectionPoint)
+    public static bool RectIntersectRect(BoundsRect r1, BoundsRect r2)
     {
-        intersectionPoint = Vector2.zero;
         Vector2 tl1 = r1.topLeft;
         Vector2 br1 = r1.bottomRight;
         Vector2 tl2 = r2.topLeft;
@@ -198,9 +196,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <param name="c"></param>
     /// <param name="intersectionPoint"></param>
     /// <returns></returns>
-    public static bool RectIntersectCircle(BoundsRect r, BoundsCircle c, out Vector2 intersectionPoint)
+    public static bool RectIntersectCircle(BoundsRect r, BoundsCircle c)
     {
-        intersectionPoint = Vector2.zero;
 
         Vector2 point = c.center;
 
@@ -239,30 +236,26 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <param name="c2"></param>
     /// <param name="intersectionPoint"></param>
     /// <returns></returns>
-    public static bool CircleIntersectCircle(BoundsCircle c1, BoundsCircle c2, out Vector2 intersectionPoint)
+    public static bool CircleIntersectCircle(BoundsCircle c1, BoundsCircle c2)
     {
-        intersectionPoint = Vector2.zero;
         float distanceMax = c1.radius + c2.radius;
         float distance = Vector2.Distance(c1.center, c2.center);
 
         return distance <= distanceMax;
     }
 
-    public static bool CapsuleIntersectCapsule(BoundsRect c1, BoundsRect c2, out Vector2 intersectionPoint)
+    public static bool CapsuleIntersectCapsule(BoundsRect c1, BoundsRect c2)
     {
-        intersectionPoint = Vector2.zero;
         return false;
     }
 
-    public static bool CapsuleIntersectCircle(BoundsRect cap, BoundsCircle cir, out Vector2 intersectionPoint)
+    public static bool CapsuleIntersectCircle(BoundsRect cap, BoundsCircle cir)
     {
-        intersectionPoint = Vector2.zero;
         return false;
     }
 
-    public static bool CapsuleIntersectRect(BoundsRect cap, BoundsRect cir, out Vector2 intersectionPoint)
+    public static bool CapsuleIntersectRect(BoundsRect cap, BoundsRect cir)
     {
-        intersectionPoint = Vector2.zero;
         return false;
     }
 

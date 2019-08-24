@@ -164,29 +164,28 @@ public class CustomCircleCollider2D : CustomCollider2D
         return new Vector2(-Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
     }
 
-    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
     {
-        return CircleColliderCollisionsAtBounds(this.bounds, colliderToCheck, out intersectionPoint);
+        return CircleColliderCollisionsAtBounds(this.bounds, colliderToCheck);
     }
 
-    private bool CircleColliderCollisionsAtBounds(CustomCollider2D.BoundsCircle cBounds, CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    private bool CircleColliderCollisionsAtBounds(CustomCollider2D.BoundsCircle cBounds, CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, cBounds, out intersectionPoint);
+            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, cBounds);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return CircleIntersectCircle(cBounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return CircleIntersectCircle(cBounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, cBounds, out intersectionPoint);
+            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, cBounds);
         }
         else
         {
             Debug.LogError("Circle Collider does not support type: " + colliderToCheck.GetType());
-            intersectionPoint = Vector2.zero;
             return false;
         }
     }
@@ -202,9 +201,9 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <param name="colliderToCheck"></param>
     /// <param name="offsetDirection"></param>
     /// <returns></returns>
-    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection)
+    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
     {
-        if (rigid == null)
+        if (rigid == null || colliderToCheck == this)
         {
             return false;
         }
@@ -214,6 +213,7 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         BoundsCircle adjustedVerticalBounds = bounds;
         adjustedVerticalBounds.radius = bounds.radius - radiusBuffer;
+
 
 
         if (rigid.velocity.y <= 0)
@@ -229,15 +229,33 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (rigid.velocity.x <= 0)
         {
-            adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.left * rigid.velocity * Overseer.DELTA_TIME;
+            adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.left * rigid.velocity.x * Overseer.DELTA_TIME;
         }
         else if (rigid.velocity.x > 0)
         {
-
+            adjustedHorizontalBounds.center = bounds.center + Vector2.right * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
         }
 #if UNITY_EDITOR
-
-
+        UnityEditor.Handles.color = Color.cyan;
+        UnityEditor.Handles.DrawWireDisc(adjustedHorizontalBounds.center, Vector3.forward, adjustedHorizontalBounds.radius);
+        UnityEditor.Handles.DrawWireDisc(adjustedVerticalBounds.center, Vector3.forward, adjustedVerticalBounds.radius);
 #endif
+        bool hasCollided = false;
+        if (CircleColliderCollisionsAtBounds(adjustedVerticalBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                rigid.velocity.y = 0;
+                Vector2 posntOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
+
+            }
+            hasCollided = true;
+        }
+        if (CircleColliderCollisionsAtBounds(adjustedHorizontalBounds, colliderToCheck))
+        {
+            hasCollided = true;
+        }
+        return hasCollided;
+        
     }
 }

@@ -42,11 +42,11 @@ public class HitboxCircle : Hitbox
         if (hboxToCheck is HitboxRect)
         {
             
-            return CustomCollider2D.RectIntersectCircle(((HitboxRect)hboxToCheck).bounds, this.bounds, out intersectVec);
+            return CustomCollider2D.RectIntersectCircle(((HitboxRect)hboxToCheck).bounds, this.bounds);
         }
         else if (hboxToCheck is HitboxCircle)
         {
-            return CustomCollider2D.CircleIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds, out intersectVec);
+            return CustomCollider2D.CircleIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds);
         }
         return false;
     }

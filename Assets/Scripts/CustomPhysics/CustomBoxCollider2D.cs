@@ -199,23 +199,22 @@ public class CustomBoxCollider2D : CustomCollider2D
         return bounds.center;
     }
 
-    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds);
         }
         else
         {
-            intersectionPoint = Vector2.zero;
             return false;
         }
     }
@@ -227,7 +226,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <param name="colliderToCheck"></param>
     /// <param name="offsetDirection"></param>
     /// <returns></returns>
-    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection)
+    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
     {
         throw new System.NotImplementedException();
     }

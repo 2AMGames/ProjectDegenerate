@@ -100,14 +100,18 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         throw new System.NotImplementedException();
     }
 
-    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
     {
-        intersectionPoint = Vector2.zero;
         return false;
 
     }
 
     public override Vector2 GetCenter()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
     {
         throw new System.NotImplementedException();
     }
