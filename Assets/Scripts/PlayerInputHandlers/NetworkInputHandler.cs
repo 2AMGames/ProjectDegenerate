@@ -55,7 +55,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private long SamplesTillUpdatePing;
 
-    private bool HeartbeatReceived;
+    private bool PlayerPacketReceived;
 
     private bool ShouldRunGame;
 
@@ -222,64 +222,64 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void SendHeartbeat()
     {
-        HeartbeatReceived = false;
-        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
+        PlayerPacketReceived = false;
+        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
 
         HeartbeatStopwatch.Reset();
-        Debug.LogWarning("Send heartbeat");
         NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacket, (int)GameStateManager.Instance.FrameCount, ReceiverGroup.Others);
         HeartbeatStopwatch.Start();
     }
 
     private void CheckHeartbeat()
     {
-        if (!HeartbeatReceived)
-        {
-            Debug.LogWarning("Heartbeat not received in time");
-            HeartbeatReceived = false;
-            if (ShouldRunGame)
+        if (!PlayerPacketReceived)
+        { 
+            PlayerPacketReceived = false;
+            if (ShouldRunGame && Overseer.Instance.IsGameReady)
             {
+                Debug.LogWarning("Heartbeat not received in time");
                 Overseer.Instance.SetHeartbeatReceived(false);
             }
             ShouldRunGame = false;
         }
         else
         {
-            HeartbeatReceived = false;
-            FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * 3;
+            PlayerPacketReceived = false;
+            FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames + 3;
         }
         SendHeartbeat(); 
     }
 
     private void HandleHeartbeatReceived(uint frameNumber)
     {
-        Debug.LogWarning("Heartbeat received");
-        if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
+        if (!PlayerPacketReceived)
         {
-            //TODO: Catch up to game state frame number, but don't queue inputs from local player
-        }
-        else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
-        {
-            long frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
-            if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
+            PlayerPacketReceived = true;
+            if (frameNumber >= GameStateManager.Instance.FrameCount + NetworkManager.Instance.TotalDelayFrames)
             {
-                Overseer.Instance.DelayGame(frameDeficit);
+                //TODO: Catch up to game state frame number, but don't queue inputs from local player
             }
-        }
-        if (!ShouldRunGame)
-        {
-            Debug.LogWarning("Should run game");
-            Overseer.Instance.SetHeartbeatReceived(true);
-            ShouldRunGame = true;
+            else if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
+            {
+                long frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
+                if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
+                {
+                    Overseer.Instance.DelayGame(frameDeficit);
+                }
+            }
+            if (!ShouldRunGame)
+            {
+                Overseer.Instance.SetHeartbeatReceived(true);
+                ShouldRunGame = true;
+            }
         }
     }
 
     private void HandleHeartbeatAckReceived()
     {
         HeartbeatStopwatch.Stop();
-        if (!HeartbeatReceived)
+        if (!PlayerPacketReceived)
         {
-            HeartbeatReceived = true;
             // Subtract the previous frame time in milliseconds to account for processing time.
             long ping = HeartbeatStopwatch.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * MillisecondsPerSecond);
             AveragePing += ping;
@@ -294,7 +294,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private void OnHeartbeatPingCountReached()
     {
         long pingToSet = AveragePing / HeartbeatPingSampleCount;
-        NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
+        //NetworkManager.Instance.SetLocalPlayerPing(pingToSet);
 
         AveragePing = 0;
         SamplesTillUpdatePing = HeartbeatPingSampleCount;

@@ -64,7 +64,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             try
             {
                 PlayerInputPacket data = eventData.CustomData as PlayerInputPacket;
-                if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
+                if (data != null && data.PlayerIndex == PlayerIndex)
                 {
                     foreach (PlayerInputData inputFrame in data.InputData)
                     {
