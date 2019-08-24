@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 /// <summary>
-/// 
+/// The manager that handles how we control all of our physics objects in the game. This updates objects that contain a custom physics object and any collider object
 /// </summary>
 public class PhysicsManager : MonoBehaviour
 {
@@ -48,6 +48,26 @@ public class PhysicsManager : MonoBehaviour
         }
 
 
+        
+        
+        //Updates the velocity based on gravity
+        foreach (CustomPhysics2D rigid in customPhysicsList)
+        {
+            if (rigid.enabled)
+            {
+                rigid.UpdateVelocityFromGravity();
+            }
+        }
+        
+        //Updates our physics object based on its physics state
+        foreach (CustomPhysics2D rigid in customPhysicsList)
+        {
+            if (rigid.enabled)
+            {
+                rigid.UpdatePhysics();
+            }
+        }
+
         for (int i = 0; i < colliderList.Count - 1; i++)
         {
             for (int j = i + 1; j < colliderList.Count; j++)
@@ -65,31 +85,6 @@ public class PhysicsManager : MonoBehaviour
                     }
                 }
             }
-        }
-        
-        
-        foreach (CustomPhysics2D rigid in customPhysicsList)
-        {
-            if (rigid.enabled)
-            {
-                rigid.UpdateVelocityFromGravity();
-            }
-        }
-        
-
-        foreach (CustomPhysics2D rigid in customPhysicsList)
-        {
-            if (rigid.enabled)
-            {
-                rigid.UpdatePhysics();
-            }
-        }
-
-        for (int i = 0; i < colliderList.Count; i++)
-        {
-            if (!colliderList[i].isStatic && colliderList[i].enabled)
-                colliderList[i].CheckForCollisions();
-            
         }
     }
     #endregion monobehaviour methods
@@ -135,6 +130,11 @@ public class PhysicsManager : MonoBehaviour
         colliderList.Add(collider);
     }
 
+    /// <summary>
+    /// Removes a collider object from our physics manager. This should typically only be called upon the collider
+    /// object being destroyed
+    /// </summary>
+    /// <param name="collider"></param>
     public void RemoveColliderFromManager(CustomCollider2D collider)
     {
         if (!colliderList.Contains(collider))
@@ -146,7 +146,7 @@ public class PhysicsManager : MonoBehaviour
     #endregion collider interaction methods
 
     /// <summary>
-    /// 
+    /// Override method
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="direction"></param>
@@ -159,7 +159,7 @@ public class PhysicsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Gets a list of all colliders that intersect the line that passes through
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="direction"></param>

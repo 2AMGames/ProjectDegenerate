@@ -9,7 +9,10 @@ public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
-
+    [Tooltip("")]
+    public float HorizontalBuffer = .02f;
+    [Tooltip("")]
+    public float VerticalBuffer = .02f;
     /// <summary>
     /// 
     /// </summary>
@@ -97,6 +100,8 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
         return false;
     }
+
+    
 
     /// <summary>
     /// 
@@ -213,5 +218,17 @@ public class CustomBoxCollider2D : CustomCollider2D
             intersectionPoint = Vector2.zero;
             return false;
         }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <param name="offsetDirection"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class CustomCircleCollider2D : CustomCollider2D
 {
+
+    [Header("Kinematic Collision Buffers")]
+    public float radiusBuffer;
+
     public float radius = 1;
     public Vector2 centerOffset;
     public BoundsCircle previousBounds;
@@ -162,17 +166,22 @@ public class CustomCircleCollider2D : CustomCollider2D
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
     {
+        return CircleColliderCollisionsAtBounds(this.bounds, colliderToCheck, out intersectionPoint);
+    }
+
+    private bool CircleColliderCollisionsAtBounds(CustomCollider2D.BoundsCircle cBounds, CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, cBounds, out intersectionPoint);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return CircleIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return CircleIntersectCircle(cBounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, cBounds, out intersectionPoint);
         }
         else
         {
@@ -185,5 +194,50 @@ public class CustomCircleCollider2D : CustomCollider2D
     public override Vector2 GetCenter()
     {
         return bounds.center;
+    }
+
+    /// <summary>
+    /// Checks to see if our circle would collide with the collider object that is passed in. 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <param name="offsetDirection"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection)
+    {
+        if (rigid == null)
+        {
+            return false;
+        }
+
+        BoundsCircle adjustedHorizontalBounds = bounds;
+        adjustedHorizontalBounds.radius = bounds.radius - radiusBuffer;
+
+        BoundsCircle adjustedVerticalBounds = bounds;
+        adjustedVerticalBounds.radius = bounds.radius - radiusBuffer;
+
+
+        if (rigid.velocity.y <= 0)
+        {
+            adjustedVerticalBounds.center = bounds.center + Vector2.down * radiusBuffer + Vector2.down * rigid.velocity.y * Overseer.DELTA_TIME;
+        }
+        else if (rigid.velocity.y > 0)
+        {
+            adjustedVerticalBounds.center = bounds.center + Vector2.up * radiusBuffer + Vector2.up * rigid.velocity.y * Overseer.DELTA_TIME;
+        }
+
+
+
+        if (rigid.velocity.x <= 0)
+        {
+            adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.left * rigid.velocity * Overseer.DELTA_TIME;
+        }
+        else if (rigid.velocity.x > 0)
+        {
+
+        }
+#if UNITY_EDITOR
+
+
+#endif
     }
 }

@@ -14,15 +14,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     #endregion const variables
     [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
-    [Tooltip("")]
-    public float HorizontalBuffer = .02f;
-    [Tooltip("")]
-    public float VerticalBuffer = .02f;
-    [Tooltip("")]
-    public int verticalRayCount;
-    [Tooltip("")]
-    public int horizontalRayCount;
-
+    
     /// <summary>
     /// The attached Custom physics component that is attached to our custom collider
     /// This is not required for components that are static.
@@ -56,15 +48,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     protected virtual void OnValidate()
     {
-        if (verticalRayCount < 2)
-        {
-            verticalRayCount = 2;
-        }
-        if (horizontalRayCount < 2)
-        {
-            horizontalRayCount = 2;
-        }
-
+        
     }
 
     /// <summary>
@@ -111,19 +95,26 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract Vector2 GetLeftBoundAtYValue(float y);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public abstract Vector2 GetCenter();
-
-    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
-    
 
     /// <summary>
     /// 
     /// </summary>
-    public virtual void CheckForCollisions()
-    {
-        
-    }
+    /// <param name="colliderToCheck"></param>
+    /// <param name="intersectionPoint"></param>
+    /// <returns></returns>
+    public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint);
 
+    public abstract bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck, Vector2 offsetDirection);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="collider"></param>
     public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);
 
     public virtual CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
@@ -146,16 +137,6 @@ public abstract class CustomCollider2D : MonoBehaviour {
         CustomCollider2D[] allValidColliderList = new CustomCollider2D[allLines.Count];
         allLines.CopyTo(allValidColliderList);
         return allValidColliderList;
-    }
-
-    /// <summary>
-    /// Call this method to check if we intersect with a colider
-    /// </summary>
-    /// <param name="colliderToCheck"></param>
-    /// <returns></returns>
-    public virtual bool IntersectWithCollider(CustomCollider2D colliderToCheck)
-    {
-        return false;
     }
 
     public struct BoundsRect
