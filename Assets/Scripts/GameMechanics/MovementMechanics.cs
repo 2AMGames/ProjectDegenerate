@@ -142,6 +142,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             commandInterpreter.OnDirectionSetEvent += JoystickDirectionSet;
         }
+        InitializeMovementParameters();
     }
 
     private void Update()
@@ -150,7 +151,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             return;
         }
-
         if (rigid.isInAir)
         {
             UpdateCurrentSpeedInAir();
@@ -187,21 +187,7 @@ public class MovementMechanics : MonoBehaviour {
             rigid = GetComponent<CustomPhysics2D>();
         }
         SetSpriteFlipped(isFacingRight);
-
-        float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
-        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
-        rigid.gravityScale = jumpingAcceleration;
-
-        if (maxAvailableJumps < 0)
-        {
-            maxAvailableJumps = 0;
-        }
-
-        if (maximumAirSpeed < 0)
-        {
-            maximumAirSpeed = 0;
-        }
+        InitializeMovementParameters();
     }
    
     private void OnDestroy()
@@ -386,6 +372,17 @@ public class MovementMechanics : MonoBehaviour {
         ignoreJoystickInputs = !enabled;
     }
 
+    private void InitializeMovementParameters()
+    {
+        float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
+        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
+        rigid.gravityScale = jumpingAcceleration;
+
+        maxAvailableJumps = Mathf.Max(maxAvailableJumps, 0);
+        maximumAirSpeed = Mathf.Max(maximumAirSpeed, 0);
+    }
+
     #endregion
 
     #region jumping methods
@@ -395,10 +392,12 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        if (ignoreJumpButton) return false;
+        if (ignoreJumpButton)
+        {
+            return false;
+        }
         if (!rigid.isInAir)
         {
-            
         }
         else if (currentJumpsAvailable > 0)
         {
