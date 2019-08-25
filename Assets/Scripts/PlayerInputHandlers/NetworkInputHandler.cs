@@ -127,7 +127,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
         if (photonEvent.Code == NetworkManager.HeartbeatPacket)
         {
-            NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacketAck, 0x00, ReceiverGroup.Others);
             int frameNumber = (int)photonEvent.CustomData;
             HandleHeartbeatReceived((uint)frameNumber);
         }
@@ -206,7 +205,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
                 if (FramesTillCheckHeartbeat <= 0)
                 {
-                    CheckHeartbeat();
+                    HeartbeatTimerExpired();
                 }
                 else
                 {
@@ -218,37 +217,26 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void SendHeartbeat()
     {
-        PlayerPacketReceived = false;
-
+        FramesTillCheckHeartbeat = (uint)NetworkManager.Instance.TotalDelayFrames + 1;
         HeartbeatStopwatch.Reset();
         NetworkManager.Instance.SendEventData(NetworkManager.HeartbeatPacket, (int)GameStateManager.Instance.FrameCount, ReceiverGroup.Others);
         HeartbeatStopwatch.Start();
     }
 
-    private void CheckHeartbeat()
+    private void HeartbeatTimerExpired()
     {
-        if (!PlayerPacketReceived)
+        // Stop the game if it is not already stopped.
+        if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            // Stop the game if it is not already stopped.
-            if (Overseer.Instance.IsGameReady && ShouldRunGame)
-            {
-                Debug.LogWarning("Not received in time");
-                Overseer.Instance.SetHeartbeatReceived(false);
-            }
-            ShouldRunGame = false;
+            Overseer.Instance.SetHeartbeatReceived(false);
         }
-        else
-        {
-            FramesTillCheckHeartbeat = (uint)NetworkManager.Instance.TotalDelayFrames + 1;
-            PlayerPacketReceived = false;
-        }
-        SendHeartbeat(); 
+        ShouldRunGame = false;
+        SendHeartbeat();
     }
 
     private void HandleHeartbeatReceived(uint frameNumber)
     {
-        Debug.LogWarning("Received: " + GameStateManager.Instance.FrameCount);
-        if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount && !PlayerPacketReceived)
+        if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
         {
             uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames);
             if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
@@ -257,12 +245,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             }
         }
         // Should run game was previously false, so we have stopped the game state due
-        if (!ShouldRunGame && !PlayerPacketReceived)
+        if (!ShouldRunGame)
         {
             Overseer.Instance.SetHeartbeatReceived(true);
         }
+        SendHeartbeat();
         ShouldRunGame = true;
-        PlayerPacketReceived = true;
     }
 
     private void HandleHeartbeatAckReceived()
