@@ -280,6 +280,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Sucessfully Left Photon Room");
         CurrentRoomId = null;
+        Overseer.Instance.HandleLeftRoom();
     }
 
     #endregion

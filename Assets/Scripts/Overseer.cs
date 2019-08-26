@@ -329,6 +329,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
+    public void HandleLeftRoom()
+    {
+        OnGameReady(false);
+    }
+
     private IEnumerator WaitUntilNetworkedGameReady()
     {
         while (!CheckIfGameReady())
