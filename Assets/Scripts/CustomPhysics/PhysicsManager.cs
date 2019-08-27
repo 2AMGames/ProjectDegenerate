@@ -25,11 +25,16 @@ public class PhysicsManager : MonoBehaviour
     /// <summary>
     /// A list of all the custom colliders in the scene
     /// </summary>
-    private List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
+    private List<CustomCollider2D> nonStaticColliderList = new List<CustomCollider2D>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private List<CustomCollider2D> staticColliderList = new List<CustomCollider2D>();
     /// <summary>
     /// A list of all the physics objects in the scene
     /// </summary>
-    private List<CustomPhysics2D> customPhysicsList = new List<CustomPhysics2D>();
+    private List<CustomPhysics2D> allCustomPhysicsObjectsList = new List<CustomPhysics2D>();
     #region monobehaviour methods
     private void Awake()
     {
@@ -38,7 +43,7 @@ public class PhysicsManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        foreach (CustomCollider2D collider in colliderList)
+        foreach (CustomCollider2D collider in nonStaticColliderList)
         {
             if (collider.enabled)
             {
@@ -46,11 +51,9 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-
-        
         
         //Updates the velocity based on gravity
-        foreach (CustomPhysics2D rigid in customPhysicsList)
+        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
@@ -58,23 +61,23 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < colliderList.Count - 1; i++)
+        for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
-            for (int j = i + 1; j < colliderList.Count; j++)
+            for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-                if (!colliderList[i].isStatic)
+                if (!nonStaticColliderList[i].isStatic)
                 {
-                    colliderList[i].ColliderIntersectBasedOnVelocity(colliderList[j]);
+                    nonStaticColliderList[i].ColliderIntersectBasedOnVelocity(nonStaticColliderList[j]);
                 }
-                if (!colliderList[j].isStatic)
+                if (!nonStaticColliderList[j].isStatic)
                 {
-                    colliderList[j].ColliderIntersectBasedOnVelocity(colliderList[i]);
+                    nonStaticColliderList[j].ColliderIntersectBasedOnVelocity(nonStaticColliderList[i]);
                 }
             }
         }
         
         //Updates our physics object based on its physics state
-        foreach (CustomPhysics2D rigid in customPhysicsList)
+        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
@@ -112,11 +115,11 @@ public class PhysicsManager : MonoBehaviour
     /// <param name="rigid"></param>
     public void AddCustomPhysics(CustomPhysics2D rigid) 
     {
-        if (customPhysicsList.Contains(rigid))
+        if (allCustomPhysicsObjectsList.Contains(rigid))
         {
             return;
         }
-        customPhysicsList.Add(rigid);
+        allCustomPhysicsObjectsList.Add(rigid);
     }
 
     /// <summary>
@@ -125,23 +128,41 @@ public class PhysicsManager : MonoBehaviour
     /// <param name="rigid"></param>
     public void RemoveCustomPhysics(CustomPhysics2D rigid)
     {
-        if (customPhysicsList.Contains(rigid))
+        if (allCustomPhysicsObjectsList.Contains(rigid))
         {
-            customPhysicsList.Remove(rigid);
+            allCustomPhysicsObjectsList.Remove(rigid);
         }
     }
 
     /// <summary>
-    /// Add a collider to the manager
+    /// This will add a collider to the appropriate list. The list that it is assigned to will be determined by whether or not
+    /// it uses a rigid body to move. (i.e. whether or not it is static
     /// </summary>
     /// <param name="collider"></param>
     public void AddColliderToManager(CustomCollider2D collider)
     {
-        if (colliderList.Contains(collider))
+        if (collider.isStatic)
         {
-            return;
+            if (staticColliderList.Contains(collider))
+            {
+                Debug.LogWarning("We are trying to add a collider to our static collider list multiplie times");
+            }
+            else
+            {
+                staticColliderList.Add(collider);
+            }
         }
-        colliderList.Add(collider);
+        else
+        {
+            if (nonStaticColliderList.Contains(collider))
+            {
+                Debug.LogWarning("We are trying to add a collider to our non static collider list multiplie times");
+            }
+            else
+            {
+                nonStaticColliderList.Add(collider);
+            }
+        }
     }
 
     /// <summary>
@@ -151,16 +172,25 @@ public class PhysicsManager : MonoBehaviour
     /// <param name="collider"></param>
     public void RemoveColliderFromManager(CustomCollider2D collider)
     {
-        if (!colliderList.Contains(collider))
+        if (collider.isStatic)
         {
-            return;
+            if (staticColliderList.Contains(collider))
+            {
+                staticColliderList.Remove(collider);
+            }
         }
-        colliderList.Remove(collider);
+        else
+        {
+            if (nonStaticColliderList.Contains(collider))
+            {
+                nonStaticColliderList.Remove(collider);
+            }
+        }
     }
     #endregion collider interaction methods
 
     /// <summary>
-    /// Override method
+    /// This will compile a list of all the colliders that intersect with the line that is passed into our method
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="direction"></param>
@@ -183,7 +213,7 @@ public class PhysicsManager : MonoBehaviour
     public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance, out List<CustomCollider2D> collidersHit)
     {
         collidersHit = new List<CustomCollider2D>();
-        foreach (CustomCollider2D coll in colliderList)
+        foreach (CustomCollider2D coll in nonStaticColliderList)
         {
             if (coll.enabled)
             {

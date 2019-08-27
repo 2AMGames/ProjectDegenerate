@@ -22,7 +22,13 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public CustomPhysics2D rigid { get; set; }
 
     [Tooltip("Indicates whether or not the object is static")]
-    public bool isStatic;
+    public bool isStatic
+    {
+        get
+        {
+            return rigid == null;
+        }
+    }
 
     
 
@@ -30,10 +36,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     {
         UpdateBoundsOfCollider();
         rigid = GetComponent<CustomPhysics2D>();
-        if (rigid == null)
-        {
-            isStatic = true;
-        }
+        
         Overseer.Instance.ColliderManager.AddColliderToManager(this);
     }
 
