@@ -155,11 +155,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             HandleHeartbeatAckReceived();
         }
-
-        if (!PacketReceivedThisFrame)
-        {
-            ResetFrameWaitTime();
-        }
+        ResetFrameWaitTime();
         PacketReceivedThisFrame = true;
     }
 
@@ -281,7 +277,10 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
         {
-            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames);
+            // We likely received this packet on the previous frame
+            uint frameBufferTime = (uint)((Time.unscaledDeltaTime * MillisecondsPerSecond) / MillisecondsPerFrame);
+            Debug.LogWarning("Frame time: " + frameBufferTime);
+            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames) - frameBufferTime;
             if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
             {
                 Overseer.Instance.DelayGame(frameDeficit);
