@@ -21,7 +21,9 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// </summary>
     public CustomPhysics2D rigid { get; set; }
 
-    [Tooltip("Indicates whether or not the object is static")]
+    /// <summary>
+    /// Indicates whether or not the object is static
+    /// </summary>
     public bool isStatic
     {
         get
