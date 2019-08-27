@@ -279,8 +279,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             // We likely received this packet on the previous frame
             uint frameBufferTime = (uint)((Time.unscaledDeltaTime * MillisecondsPerSecond) / MillisecondsPerFrame);
-            Debug.LogWarning("Frame time: " + frameBufferTime);
-            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames) - frameBufferTime;
+            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames + frameBufferTime);
             if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
             {
                 Overseer.Instance.DelayGame(frameDeficit);
