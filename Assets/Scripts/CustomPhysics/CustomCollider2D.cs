@@ -22,7 +22,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public CustomPhysics2D rigid { get; set; }
 
     /// <summary>
-    /// Indicates whether or not the object is static
+    /// IMPORTANT: If there is a Custom Physics object attached to the gameobject, this collider will be registered as a nonstatic collider
     /// </summary>
     public bool isStatic
     {

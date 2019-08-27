@@ -61,21 +61,23 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
+        
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-                if (!nonStaticColliderList[i].isStatic)
-                {
-                    nonStaticColliderList[i].ColliderIntersectBasedOnVelocity(nonStaticColliderList[j]);
-                }
-                if (!nonStaticColliderList[j].isStatic)
-                {
-                    nonStaticColliderList[j].ColliderIntersectBasedOnVelocity(nonStaticColliderList[i]);
-                }
+
             }
         }
-        
+
+
+        foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
+        {
+            foreach (CustomCollider2D staticCollider in staticColliderList)
+            {
+                nonStaticCollider.ColliderIntersectBasedOnVelocity(staticCollider);
+            }
+        }
         //Updates our physics object based on its physics state
         foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
