@@ -95,6 +95,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         instance = this;
         PhotonNetwork.AddCallbackTarget(this);
+#if !UNITY_EDITOR && UNITY_STANDALONE
+
+        Screen.fullScreen = false;
+        Screen.fullScreenMode = FullScreenMode.Windowed;
+
+#endif
     }
 
     private void Start()
