@@ -136,7 +136,9 @@ public class CustomCircleCollider2D : CustomCollider2D
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
         float adjustedX = x - bounds.center.x;
+        print(adjustedX / bounds.radius);
         float angle = Mathf.Acos(adjustedX / bounds.radius);
+        print(angle);
         return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
     }
 
@@ -218,7 +220,7 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (rigid.velocity.y <= 0)
         {
-            adjustedVerticalBounds.center = bounds.center + Vector2.down * radiusBuffer + Vector2.down * rigid.velocity.y * Overseer.DELTA_TIME;
+            adjustedVerticalBounds.center = bounds.center + Vector2.down * radiusBuffer + Vector2.up * rigid.velocity.y * Overseer.DELTA_TIME;
         }
         else if (rigid.velocity.y > 0)
         {
@@ -229,25 +231,34 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (rigid.velocity.x <= 0)
         {
-            adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.left * rigid.velocity.x * Overseer.DELTA_TIME;
+            adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
         }
         else if (rigid.velocity.x > 0)
         {
             adjustedHorizontalBounds.center = bounds.center + Vector2.right * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
         }
-#if UNITY_EDITOR
-        UnityEditor.Handles.color = Color.cyan;
-        UnityEditor.Handles.DrawWireDisc(adjustedHorizontalBounds.center, Vector3.forward, adjustedHorizontalBounds.radius);
-        UnityEditor.Handles.DrawWireDisc(adjustedVerticalBounds.center, Vector3.forward, adjustedVerticalBounds.radius);
-#endif
+
         bool hasCollided = false;
         if (CircleColliderCollisionsAtBounds(adjustedVerticalBounds, colliderToCheck))
         {
             if (colliderToCheck is CustomBoxCollider2D)
             {
                 rigid.velocity.y = 0;
-                Vector2 posntOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
+                Vector2 pointOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
+                Vector2 bottomOfCircleAtX = GetLowerBoundsAtXValue(pointOfCollision.x);
+                pointOfCollision.y = pointOfCollision.y - (bottomOfCircleAtX.y - bounds.center.y);
+                this.transform.position = new Vector3(this.transform.position.x, pointOfCollision.y, this.transform.position.z);
 
+            }
+            if (colliderToCheck is CustomCircleCollider2D)
+            {
+                rigid.velocity.y = 0;
+                CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
+                float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
+                float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
+                Vector2 collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
+                collisionPoint.y = collisionPoint.y - (GetLowerBoundsAtXValue(xCollision).y - bounds.center.y);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
             }
             hasCollided = true;
         }

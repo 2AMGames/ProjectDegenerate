@@ -9,9 +9,9 @@ public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
     public Vector2 boxColliderPosition;
-    [Tooltip("")]
+    [Tooltip("We will thin out the box collider horizontally when checking for collisions with our box collider")]
     public float HorizontalBuffer = .02f;
-    [Tooltip("")]
+    [Tooltip("We will thin our box collider vertically to check our horizontal collisions")]
     public float VerticalBuffer = .02f;
     /// <summary>
     /// 
@@ -199,26 +199,36 @@ public class CustomBoxCollider2D : CustomCollider2D
         return bounds.center;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
+    {
+        return ColliderIntersectBounds(this.bounds, colliderToCheck);
+    }
+
+
+    private bool ColliderIntersectBounds(BoundsRect boundsToCheck, CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds);
+            return RectIntersectRect(boundsToCheck, ((CustomBoxCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
+            return RectIntersectCircle(boundsToCheck, ((CustomCircleCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds);
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, boundsToCheck);
         }
         else
         {
             return false;
         }
     }
-
 
     /// <summary>
     /// 
