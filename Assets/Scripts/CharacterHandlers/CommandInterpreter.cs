@@ -160,6 +160,8 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    private int FramesHeld;
+
     #endregion
 
     #region monobehaviour methods
@@ -194,6 +196,7 @@ public class CommandInterpreter : MonoBehaviour
                 ExecuteInput(dataToExecute);
             }
         }
+        ++FramesHeld;
     }
 
     #endregion
@@ -348,6 +351,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (lastJoystickInput != currentJoystickVec)
         {
+            Debug.LogError("Frames held: " + FramesHeld);
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
             OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
             DirectionalinputStruct dInput = new DirectionalinputStruct();
@@ -358,6 +362,8 @@ public class CommandInterpreter : MonoBehaviour
 
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);
             currentDirectionalInputStruct.directionInput = currentJoystickVec;
+
+            FramesHeld = 0;
         }
     }
 

@@ -75,8 +75,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private bool UpdatingPing;
 
-    private bool PacketReceivedThisFrame;
-
     #endregion
 
     #region Callbacks
@@ -128,11 +126,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         PhotonNetwork.AddCallbackTarget(this);
     }
 
-    void Update()
-    {
-        PacketReceivedThisFrame = false;
-    }
-
     #endregion
 
     #region event callback
@@ -156,7 +149,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             HandleHeartbeatAckReceived();
         }
         ResetFrameWaitTime();
-        PacketReceivedThisFrame = true;
     }
 
     public void SendInput(PlayerInputData input)
@@ -267,7 +259,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            Debug.LogError("Timer expired");
             Overseer.Instance.SetHeartbeatReceived(false);
         }
         ShouldRunGame = false;
