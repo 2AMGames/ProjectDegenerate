@@ -151,6 +151,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             return;
         }
+
         if (rigid.isInAir)
         {
             UpdateCurrentSpeedInAir();
@@ -305,7 +306,7 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void UpdateCurrentSpeedInAir()
     {
-        if (this.horizontalInput < PlayerController.INPUT_THRESHOLD_RUNNING)
+        if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
             return;
         }

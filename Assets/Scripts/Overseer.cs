@@ -109,10 +109,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         CreateGameType();
     }
 
-    private void Update()
-    {
-    }
-
     #endregion
 
     #region public interface
