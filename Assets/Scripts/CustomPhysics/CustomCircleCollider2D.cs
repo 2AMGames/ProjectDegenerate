@@ -229,7 +229,7 @@ public class CustomCircleCollider2D : CustomCollider2D
 
 
 
-        if (rigid.velocity.x <= 0)
+        if (rigid.velocity.x < 0)
         {
             adjustedHorizontalBounds.center = bounds.center + Vector2.left * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
         }
@@ -241,13 +241,24 @@ public class CustomCircleCollider2D : CustomCollider2D
         bool hasCollided = false;
         if (CircleColliderCollisionsAtBounds(adjustedVerticalBounds, colliderToCheck))
         {
+            Vector2 closestCollisionPoint;
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                rigid.velocity.y = 0;
                 Vector2 pointOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
-                Vector2 bottomOfCircleAtX = GetLowerBoundsAtXValue(pointOfCollision.x);
-                pointOfCollision.y = pointOfCollision.y - (bottomOfCircleAtX.y - bounds.center.y);
+                if (rigid.velocity.y > 0)
+                {
+                    closestCollisionPoint = GetUpperBoundsAtXValue(pointOfCollision.x);
+                }
+                else
+                {
+                    closestCollisionPoint = GetLowerBoundsAtXValue(pointOfCollision.x);
+                }
+                
+                
+                pointOfCollision.y = pointOfCollision.y - (closestCollisionPoint.y - bounds.center.y);
                 this.transform.position = new Vector3(this.transform.position.x, pointOfCollision.y, this.transform.position.z);
+                rigid.velocity.y = 0;
+
 
             }
             if (colliderToCheck is CustomCircleCollider2D)

@@ -75,7 +75,10 @@ public class PhysicsManager : MonoBehaviour
         {
             foreach (CustomCollider2D staticCollider in staticColliderList)
             {
-                nonStaticCollider.ColliderIntersectBasedOnVelocity(staticCollider);
+                if (nonStaticCollider.ColliderIntersectBasedOnVelocity(staticCollider))
+                {
+                    nonStaticCollider.UpdateBoundsOfCollider();
+                }
             }
         }
         //Updates our physics object based on its physics state

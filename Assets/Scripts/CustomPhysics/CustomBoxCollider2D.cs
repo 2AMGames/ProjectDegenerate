@@ -238,6 +238,19 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
     {
-        throw new System.NotImplementedException();
+        //if (colliderToCheck is CustomBoxCollider2D)
+        //{
+
+        //}
+        //else if (colliderToCheck is CustomCircleCollider2D)
+        //{
+        //    if (CustomCollider2D.RectIntersectCircle())
+        //}
+        //else
+        //{
+        //    Debug.Log("There is no collisiosn set up for " + colliderToCheck.GetType() + " this in CustomBoxCollider");
+        //}
+        return false;
+
     }
 }
