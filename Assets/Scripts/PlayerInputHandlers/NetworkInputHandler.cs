@@ -259,7 +259,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            Debug.LogError("Timer expired");
             Overseer.Instance.SetHeartbeatReceived(false);
         }
         ShouldRunGame = false;
