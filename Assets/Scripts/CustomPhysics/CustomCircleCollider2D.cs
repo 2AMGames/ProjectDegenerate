@@ -136,9 +136,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
         float adjustedX = x - bounds.center.x;
-        print(adjustedX / bounds.radius);
         float angle = Mathf.Acos(adjustedX / bounds.radius);
-        print(angle);
         return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
     }
 
@@ -263,13 +261,24 @@ public class CustomCircleCollider2D : CustomCollider2D
             }
             if (colliderToCheck is CustomCircleCollider2D)
             {
-                rigid.velocity.y = 0;
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
                 float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
                 float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
-                Vector2 collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
-                collisionPoint.y = collisionPoint.y - (GetLowerBoundsAtXValue(xCollision).y - bounds.center.y);
+                Vector2 collisionPoint;
+                if (rigid.velocity.y > 0)
+                {
+                    collisionPoint = colliderToCheck.GetLowerBoundsAtXValue(xCollision);
+                    collisionPoint.y = collisionPoint.y - (GetUpperBoundsAtXValue(xCollision).y - bounds.center.y);
+                }
+                else
+                {
+                    collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
+                    collisionPoint.y = collisionPoint.y - (GetLowerBoundsAtXValue(xCollision).y - bounds.center.y);
+                }
+                
                 this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+                rigid.velocity.y = 0;
+
             }
             hasCollided = true;
         }
