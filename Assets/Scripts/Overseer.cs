@@ -98,6 +98,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 #if !UNITY_EDITOR && UNITY_STANDALONE
 
         Screen.fullScreen = false;
+        Screen.SetResolution(800, 600, false);
         Screen.fullScreenMode = FullScreenMode.Windowed;
 
 #endif

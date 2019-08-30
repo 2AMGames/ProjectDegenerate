@@ -259,6 +259,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
+            Debug.LogError("Timer expired");
             Overseer.Instance.SetHeartbeatReceived(false);
         }
         ShouldRunGame = false;
@@ -268,9 +269,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
         {
-            // We likely received this packet on the previous frame
-            uint frameBufferTime = (uint)((Time.unscaledDeltaTime * MillisecondsPerSecond) / MillisecondsPerFrame);
-            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames + frameBufferTime);
+            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames);
             if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
             {
                 Overseer.Instance.DelayGame(frameDeficit);
