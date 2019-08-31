@@ -196,7 +196,10 @@ public class CommandInterpreter : MonoBehaviour
                 ExecuteInput(dataToExecute);
             }
         }
-        ++FramesHeld;
+        if (Overseer.Instance.IsGameReady)
+        {
+            ++FramesHeld;
+        }
     }
 
     #endregion
@@ -351,6 +354,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (lastJoystickInput != currentJoystickVec)
         {
+            Debug.LogError("Frames held: " + FramesHeld);
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
             OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
             DirectionalinputStruct dInput = new DirectionalinputStruct();

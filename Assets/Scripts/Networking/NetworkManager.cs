@@ -479,21 +479,14 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
         yield return new WaitForSeconds(1f);
 
-        Stopwatch rtt = new Stopwatch();
+        IsNetworkedGameReady = true;
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
-        rtt.Start();
-        while(!IsNetworkedGameReady)
-        {
-            yield return null;
-        }
-        rtt.Stop();
-
-        long frameDelay = (rtt.ElapsedMilliseconds - (uint)(Time.unscaledDeltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame / 2;
-        while(TotalDelayFrames - frameDelay >= 0)
+        long frameDelay = TotalDelayFrames;
+        while (frameDelay > 0)
         {
             yield return new WaitForEndOfFrame();
-            ++frameDelay;
+            --frameDelay;
         }
 
         IsSynchronizing = false;
@@ -540,14 +533,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         while(!IsNetworkedGameReady)
         {
             yield return null;
-        }
-
-        SendEventData(StartGameAck, true, ReceiverGroup.Others);
-        long framesToWait = TotalDelayFrames;
-        while(framesToWait > 0)
-        {
-            yield return new WaitForEndOfFrame();
-            --framesToWait;
         }
         IsSynchronizing = false;
     }
