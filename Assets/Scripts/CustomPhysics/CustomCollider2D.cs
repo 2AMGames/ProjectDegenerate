@@ -143,6 +143,9 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return allValidColliderList;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public struct BoundsRect
     {
         public Vector2 topLeft;
@@ -163,12 +166,24 @@ public abstract class CustomCollider2D : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public struct BoundsCircle
     {
         public Vector2 center;
         public float radius;
     }
 
+    /// <summary>
+    /// Bounds collider for our capsule collider simply contains two circles and a rect collider
+    /// </summary>
+    public struct BoundsCapsule
+    {
+        public BoundsRect rectBounds;
+        public BoundsCircle topCircleBounds;
+        public BoundsCircle bottomCircleBounds;
+    }
 
     #region static methods
     /// <summary>

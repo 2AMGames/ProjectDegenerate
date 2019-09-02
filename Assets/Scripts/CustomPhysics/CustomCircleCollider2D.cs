@@ -6,7 +6,7 @@ public class CustomCircleCollider2D : CustomCollider2D
 {
 
     [Header("Kinematic Collision Buffers")]
-    public float radiusBuffer;
+    public float radiusBuffer = .01f;
 
     public float radius = 1;
     public Vector2 centerOffset;

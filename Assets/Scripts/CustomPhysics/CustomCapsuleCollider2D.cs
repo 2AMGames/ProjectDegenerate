@@ -12,6 +12,8 @@ public class CustomCapsuleCollider2D : CustomCollider2D
 
     public BoundsRect bounds;
     public BoundsRect previousBounds;
+    public BoundsCircle bottomCircle;
+    public BoundsCircle topCirlce
 
     #region monobehaviour methods
     private void OnDrawGizmos()
@@ -46,7 +48,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        throw new System.NotImplementedException();
+        return CustomCircleCollider2D.LineIntersectCircle(()
     }
 
     /// <summary>
