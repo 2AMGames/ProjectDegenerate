@@ -3399,7 +3399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1749728940, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}
       propertyPath: LocalFrameDelay
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}

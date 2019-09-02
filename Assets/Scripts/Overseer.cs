@@ -364,7 +364,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public void DelayGame(uint FramesToWait)
     {
-        if (DelayGameCoroutine != null)
+        if (DelayGameCoroutine != null || FramesToWait <= 0)
         {
             return;
         }

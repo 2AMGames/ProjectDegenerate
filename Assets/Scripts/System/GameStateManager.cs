@@ -187,8 +187,8 @@ public class GameStateManager : MonoBehaviour
                     {
                         FrameStack = new Stack<GameState>();
                     }
-                    GameState gameStateToPush = CreateNewGameState();
-                    FrameStack.Push(gameStateToPush);
+                    //GameState gameStateToPush = CreateNewGameState();
+                    //FrameStack.Push(gameStateToPush);
                 }
                 ++FrameCount;
             }

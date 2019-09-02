@@ -546,11 +546,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Ping Methods
 
-    public void SendHeartbeatMessage()
-    {
-        
-    }
-
     public void PingActivePlayers()
     {
         if (!CurrentlyPingingPlayers)
@@ -588,7 +583,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         rtt.Stop();
 
-        long ping = rtt.ElapsedMilliseconds - (long)(Time.unscaledDeltaTime * 1000);
+        long ping = rtt.ElapsedMilliseconds;
         SetLocalPlayerPing(ping);
         UpdatePing();
         CurrentlyPingingPlayers = false;
