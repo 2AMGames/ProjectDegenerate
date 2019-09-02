@@ -170,7 +170,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         RaiseEventOptions receiveOptions = new RaiseEventOptions();
         receiveOptions.Receivers = receivers;
-        PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, default);
+        SendOptions options = new SendOptions();
+        PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, SendOptions.SendUnreliable);
     }
 
     public void SetPlayerReady(bool isReady)

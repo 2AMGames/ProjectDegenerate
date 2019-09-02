@@ -360,7 +360,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (lastJoystickInput != currentJoystickVec)
         {
-            Debug.LogError("Frames held: " + FramesHeld);
+            //Debug.LogError("Frames held: " + FramesHeld);
             currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
             OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
             DirectionalinputStruct dInput = new DirectionalinputStruct();
