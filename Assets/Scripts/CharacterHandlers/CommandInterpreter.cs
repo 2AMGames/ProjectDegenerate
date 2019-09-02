@@ -213,6 +213,12 @@ public class CommandInterpreter : MonoBehaviour
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
+                if (GameStateManager.Instance.FrameCount > dataToQueue.FrameNumber + FrameDelay)
+                {
+                    Debug.LogError("Off");
+                    Debug.LogError("Off frame count: " + GameStateManager.Instance.FrameCount);
+                    Debug.LogError("Sent frame: " + dataToQueue.FrameNumber);
+                }
                 InputBuffer.Enqueue(dataToQueue);
             }
         }

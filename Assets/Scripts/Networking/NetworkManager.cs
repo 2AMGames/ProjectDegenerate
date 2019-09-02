@@ -328,8 +328,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber);
         }
-
-        if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
+        else if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -337,24 +336,20 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 OnPingAckReceived(actorNumber);
             }
         }
-
-        if (photonEvent.Code == StartGame)
+        else if (photonEvent.Code == StartGame)
         {
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
-
-        if (photonEvent.Code == StartGameAck)
+        else if (photonEvent.Code == StartGameAck)
         {
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
-
-        if (photonEvent.Code == SynchronizationNeeded)
+        else if (photonEvent.Code == SynchronizationNeeded)
         {
             int frameCount = (int)photonEvent.CustomData;
             HandleSynchronizationRequest((uint)frameCount);
         }
-
-        if (photonEvent.Code == SynchronizeClientGameState && !IsSynchronizing)
+        else if (photonEvent.Code == SynchronizeClientGameState && !IsSynchronizing)
         {
             int frameCount = (int)photonEvent.CustomData;
             StartCoroutine(StartGameStateSynchronization((uint)frameCount));
@@ -474,7 +469,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
         while (TotalDelayFrames <= 0)
         {
-            yield return new WaitForSeconds(1f);
+            yield return null;
             UpdatePing();
         }
         yield return new WaitForSeconds(1f);
@@ -646,7 +641,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             CurrentDelayInMilliSeconds = highestPing;
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-            float frameTimeInMilliseconds = Time.unscaledDeltaTime * MillisecondsPerSecond;
+            float frameTimeInMilliseconds = 16.66f;
             float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
             TotalDelayFrames = (int)calculatedDelay;
         }

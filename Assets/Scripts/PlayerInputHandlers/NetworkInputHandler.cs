@@ -132,17 +132,16 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             int packetNumber = (int)photonEvent.CustomData;
             HandlePlayerInputAck((uint)packetNumber);
         }
-
-        if (photonEvent.Code == NetworkManager.HeartbeatPacket)
+        else if (photonEvent.Code == NetworkManager.HeartbeatPacket)
         {
             int frameNumber = (int)photonEvent.CustomData;
             HandleHeartbeatReceived((uint)frameNumber);
         }
-
-        if (photonEvent.Code == NetworkManager.HeartbeatPacketAck)
+        else if (photonEvent.Code == NetworkManager.HeartbeatPacketAck)
         {
             HandleHeartbeatAckReceived();
         }
+
         if (!PacketReceived)
         {
             ResetFrameWaitTime();
@@ -263,7 +262,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            Debug.LogError("Timer expired");
+            //Debug.LogError("Timer expired");
             Overseer.Instance.SetHeartbeatReceived(false);
         }
         ShouldRunGame = false;

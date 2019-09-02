@@ -63,7 +63,6 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
         {
             try
             {
-                Debug.LogError("Received Frame: " + GameStateManager.Instance.FrameCount);
                 PlayerInputPacket data = eventData.CustomData as PlayerInputPacket;
                 if (data != null && data.PlayerIndex == PlayerIndex)
                 {

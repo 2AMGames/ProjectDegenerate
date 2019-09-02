@@ -107,6 +107,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private void Start()
     {
         Application.targetFrameRate = 60;
+        PhotonNetwork.SendRate = 30;
+        PhotonNetwork.SerializationRate = 30;
         CreateGameType();
     }
 
@@ -366,7 +368,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             return;
         }
-        Debug.LogError("Overseer: Delaying game for: " + FramesToWait);
+        //Debug.LogError("Overseer: Delaying game for: " + FramesToWait);
         DelayGameCoroutine = StartCoroutine(SynchronizeGameState(FramesToWait));
     }
 
