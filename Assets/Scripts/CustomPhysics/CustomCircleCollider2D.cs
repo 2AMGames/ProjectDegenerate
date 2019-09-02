@@ -140,6 +140,7 @@ public class CustomCircleCollider2D : CustomCollider2D
         return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
     }
 
+
     /// <summary>
     /// 
     /// </summary>
@@ -303,6 +304,27 @@ public class CustomCircleCollider2D : CustomCollider2D
                 rigid.velocity.x = 0;
 
 
+            }
+
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
+                float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
+                float xCollision = bounds.center.y + (colliderToCheck.GetCenter().y - bounds.center.y) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
+                Vector2 collisionPoint;
+                if (rigid.velocity.x > 0)
+                {
+                    collisionPoint = colliderToCheck.GetLowerBoundsAtXValue(xCollision);
+                    collisionPoint.x = collisionPoint.x - (GetUpperBoundsAtXValue(xCollision).x - bounds.center.x);
+                }
+                else
+                {
+                    collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
+                    collisionPoint.x = collisionPoint.x - (GetLowerBoundsAtXValue(xCollision).x - bounds.center.x);
+                }
+
+                this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+                rigid.velocity.x = 0;
             }
             hasCollided = true;
         }
