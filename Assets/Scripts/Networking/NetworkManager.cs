@@ -479,7 +479,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
         long frameDelay = TotalDelayFrames;
-        while (frameDelay > 0)
+        while (frameDelay > 1)
         {
             yield return new WaitForEndOfFrame();
             --frameDelay;
@@ -638,7 +638,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
             float frameTimeInMilliseconds = 16.66f;
-            float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
+            float calculatedDelay = Mathf.Ceil((highestPing + (localDelayInMilliseconds * 2)) / (2.0f * frameTimeInMilliseconds));
             TotalDelayFrames = (int)calculatedDelay;
         }
     }

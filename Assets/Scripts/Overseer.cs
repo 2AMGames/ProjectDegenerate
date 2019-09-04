@@ -81,6 +81,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         get; private set;
     }
 
+    public bool GameStarted { get; private set; }
     #endregion
 
     #region Events
@@ -356,8 +357,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
 
         Debug.LogWarning("Starting game");
-        yield return new WaitForEndOfFrame();
         SetGameReady(true);
+        GameStarted = true;
         OnGameReady(true);
 
     }
@@ -388,7 +389,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private IEnumerator SynchronizeGameState(uint frameToSync)
     {
         SetGameReady(false);
-        while(frameToSync > 0)
+        while(frameToSync > 1)
         {
             yield return null;
             --frameToSync;

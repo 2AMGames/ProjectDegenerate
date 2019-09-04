@@ -21,7 +21,7 @@ public class LocalPlayerController : PlayerController
         if (Overseer.Instance.IsGameReady)
         {
             PlayerInputData currentFrameInputData = new PlayerInputData();
-            currentFrameInputData.FrameNumber = (uint)GameStateManager.Instance.FrameCount;
+            currentFrameInputData.FrameNumber = GameStateManager.Instance.FrameCount;
             currentFrameInputData.PlayerIndex = PlayerIndex;
             currentFrameInputData.InputPattern = 0xF000;
 
@@ -30,7 +30,7 @@ public class LocalPlayerController : PlayerController
 
             UpdateButtonInput(ref inputPattern);
             UpdateJoystickInput(ref inputPattern);
-            if (inputPattern != LastSavedInputPattern && (!Overseer.Instance.IsNetworkedMode || !NetworkManager.Instance.IsSynchronizing))
+            if (inputPattern != LastSavedInputPattern)
             {
                 currentFrameInputData.InputPattern = inputPattern;
                 CommandInterpreter.QueuePlayerInput(currentFrameInputData);
