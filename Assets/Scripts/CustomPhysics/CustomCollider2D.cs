@@ -106,6 +106,11 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract Vector2 GetCenter();
 
+    public virtual void UpdateCollisionBounds()
+    {
+        return;
+    }
+
     /// <summary>
     /// 
     /// </summary>
