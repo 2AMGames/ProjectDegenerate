@@ -164,6 +164,15 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 bottomLeft,
             };
         }
+
+        public void SetOffset(Vector2 offset)
+        {
+            topLeft += offset;
+            topRight += offset;
+            bottomLeft += offset;
+            bottomRight += offset;
+            center += offset;
+        }
     }
 
     /// <summary>
