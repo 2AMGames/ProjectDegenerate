@@ -68,11 +68,11 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateCollisionBounds()
     {
-        BoundsRect verticalCheckBounds = this.bounds;
+        verticalCheckBounds = this.bounds;
         Vector2 verticalOffset = rigid.velocity.y * Overseer.DELTA_TIME * Vector2.up;
         verticalCheckBounds.SetOffset(verticalOffset);
 
-        BoundsRect horizontalCheckBounds = this.bounds;
+        horizontalCheckBounds = this.bounds;
         Vector2 horizontalOffset = rigid.velocity.x * Overseer.DELTA_TIME * Vector2.right;
         horizontalCheckBounds.SetOffset(horizontalOffset);
 
@@ -324,13 +324,18 @@ public class CustomBoxCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {
+                Vector2 collisionPoint = ((CustomCircleCollider2D)colliderToCheck).GetCollisionPointRect(this);
                 if (rigid.velocity.x >= 0)
                 {
-
+                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint.y).x - (GetRighBoundAtYValue(collisionPoint.y).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                    rigid.velocity.x = 0;
                 }
                 else
                 {
-
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint.y).x - (GetLeftBoundAtYValue(collisionPoint.y).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                    rigid.velocity.x = 0;
                 }
                 return false;
             }
@@ -361,13 +366,20 @@ public class CustomBoxCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {
+                Vector2 collisionPoint = ((CustomCircleCollider2D)colliderToCheck).GetCollisionPointRect(this);
                 if (rigid.velocity.y >= 0)
                 {
+                    float yPosition = colliderToCheck.GetLowerBoundsAtXValue(collisionPoint.x).y - (GetUpperBoundsAtXValue(collisionPoint.x).y - transform.position.y);
+                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
 
+                    rigid.velocity.y = 0;
                 }
                 else
                 {
+                    float yPosition = colliderToCheck.GetUpperBoundsAtXValue(collisionPoint.x).y - (GetLowerBoundsAtXValue(collisionPoint.x).y - transform.position.y);
+                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
 
+                    rigid.velocity.y = 0;
                 }
                 return false;
             }
