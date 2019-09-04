@@ -257,11 +257,34 @@ public class CustomBoxCollider2D : CustomCollider2D
         verticalCheckBounds.bottomLeft.x = verticalCheckBounds.topLeft.x;
         verticalCheckBounds.topRight.x = this.bounds.topRight.x - HorizontalBuffer / 2;
         verticalCheckBounds.bottomRight.x = verticalCheckBounds.topRight.x;
+        float verticalBufferOffset = Mathf.Max(VerticalBuffer / 2, Mathf.Abs(verticalOffset.y));
+        float horizontalBufferOffset = Mathf.Max(HorizontalBuffer / 2,Mathf.Abs(horizontalOffset.x));
+        if (rigid.velocity.y > 0)
+        {
+            verticalCheckBounds.bottomLeft.y = bounds.bottomLeft.y + verticalBufferOffset;
+            verticalCheckBounds.bottomRight.y = bounds.bottomRight.y + verticalBufferOffset;
+        }
+        else if (rigid.velocity.y < 0)
+        {
+            verticalCheckBounds.topLeft.y = bounds.topLeft.y - verticalBufferOffset;
+            verticalCheckBounds.topRight.y = bounds.topRight.y - verticalBufferOffset;
+        }
 
         horizontalCheckBounds.bottomLeft.y = this.bounds.bottomLeft.y + VerticalBuffer / 2;
         horizontalCheckBounds.bottomRight.y = horizontalCheckBounds.bottomLeft.y;
         horizontalCheckBounds.topLeft.y = this.bounds.topLeft.y - VerticalBuffer / 2;
         horizontalCheckBounds.topRight.y = horizontalCheckBounds.topLeft.y;
+
+        if (rigid.velocity.x > 0)
+        {
+            horizontalCheckBounds.topLeft.x = bounds.topLeft.x + horizontalBufferOffset;
+            horizontalCheckBounds.bottomLeft.x = bounds.bottomLeft.x + horizontalBufferOffset;
+        }
+        else if (rigid.velocity.x < 0)
+        {
+            horizontalCheckBounds.topRight.x = bounds.topRight.x - horizontalBufferOffset;
+            horizontalCheckBounds.bottomRight.x = bounds.bottomRight.x - horizontalBufferOffset;
+        }
 
         if (Mathf.Abs(rigid.velocity.x) > 0 && ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
         {
