@@ -210,6 +210,12 @@ public class CustomBoxCollider2D : CustomCollider2D
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="boundsToCheck"></param>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
     private bool ColliderIntersectBounds(BoundsRect boundsToCheck, CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
@@ -222,7 +228,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, boundsToCheck);
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds.rectBounds, boundsToCheck);
         }
         else
         {
@@ -238,6 +244,93 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
     {
+
+        BoundsRect verticalCheckBounds = this.bounds;
+        BoundsRect horizontalCheckBounds = this.bounds;
+
+        verticalCheckBounds.topLeft.x = this.bounds.bottomLeft.x + HorizontalBuffer / 2;
+        verticalCheckBounds.bottomLeft.x = verticalCheckBounds.topLeft.x;
+        verticalCheckBounds.topRight.x = this.bounds.topRight.x - HorizontalBuffer / 2;
+        verticalCheckBounds.bottomRight.x = verticalCheckBounds.topRight.x;
+
+        horizontalCheckBounds.bottomLeft.y = this.bounds.bottomLeft.y + VerticalBuffer / 2;
+        horizontalCheckBounds.bottomRight.y = horizontalCheckBounds.bottomLeft.y;
+        horizontalCheckBounds.topLeft.y = this.bounds.topLeft.y - VerticalBuffer / 2;
+        horizontalCheckBounds.topRight.y = horizontalCheckBounds.topLeft.y;
+
+        if (Mathf.Abs(rigid.velocity.x) > 0 && ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                if (rigid.velocity.x >= 0)
+                {
+                    float collisionPoint = bounds.topRight.y;
+
+                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint).x - (GetRighBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+                    rigid.velocity.x = 0;
+                }
+                else
+                {
+                    float collisionPoint = bounds.topRight.y;
+
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+                    rigid.velocity.x = 0;
+                }
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                if (rigid.velocity.x >= 0)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+        if (Mathf.Abs(rigid.velocity.y) > 0 && ColliderIntersectBounds(verticalCheckBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                if (rigid.velocity.y > 0)
+                {
+                    float collisionPoint = bounds.topRight.x;
+
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+                    rigid.velocity.x = 0;
+                }
+                else
+                {
+                    float collisionPoint = bounds.topRight.y;
+
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+                    rigid.velocity.x = 0;
+                }
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                if (rigid.velocity.y >= 0)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+
 
         return false;
     }

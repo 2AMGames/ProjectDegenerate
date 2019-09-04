@@ -10,10 +10,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     private bool drawHorizontal;
     public Vector2 capsuleOffset;
 
-    public BoundsRect bounds;
-    public BoundsRect previousBounds;
-    public BoundsCircle bottomCircle;
-    public BoundsCircle topCirlce
+    public BoundsCapsule bounds;
 
     #region monobehaviour methods
     private void OnDrawGizmos()
@@ -24,16 +21,17 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         }
 
         Color colorToDraw = GIZMO_COLOR;
+        
 #if UNITY_EDITOR
         if (!drawHorizontal)
         {
-            DebugSettings.DrawLine(bounds.topLeft, bounds.bottomLeft, colorToDraw);
-            DebugSettings.DrawLine(bounds.topRight, bounds.bottomRight, colorToDraw);
+            DebugSettings.DrawLine(bounds.rectBounds.topLeft, bounds.rectBounds.bottomLeft, colorToDraw);
+            DebugSettings.DrawLine(bounds.rectBounds.topRight, bounds.rectBounds.bottomRight, colorToDraw);
 
-            Vector2 offsetToCenter = (bounds.topRight - bounds.topLeft) / 2f;
+            Vector2 offsetToCenter = (bounds.rectBounds.topRight - bounds.rectBounds.topLeft) / 2f;
             UnityEditor.Handles.color = colorToDraw;
-            UnityEditor.Handles.DrawWireDisc(bounds.topLeft + offsetToCenter, Vector3.forward, radius);
-            UnityEditor.Handles.DrawWireDisc(bounds.bottomLeft + offsetToCenter, Vector3.forward, radius);
+            UnityEditor.Handles.DrawWireDisc(bounds.rectBounds.topLeft + offsetToCenter, Vector3.forward, radius);
+            UnityEditor.Handles.DrawWireDisc(bounds.rectBounds.bottomLeft + offsetToCenter, Vector3.forward, radius);
         }
 #endif
     }
@@ -48,7 +46,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        return CustomCircleCollider2D.LineIntersectCircle(()
+        throw new System.NotImplementedException();
     }
 
     /// <summary>
@@ -66,20 +64,20 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        previousBounds = bounds;
+        //previousBounds = bounds;
 
-        BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
-        float xSize = drawHorizontal ? size : radius * 2;
-        float ySize = drawHorizontal ? radius * 2 : size;
+        //BoundsRect b = new BoundsRect();
+        //Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
+        //float xSize = drawHorizontal ? size : radius * 2;
+        //float ySize = drawHorizontal ? radius * 2 : size;
 
 
-        b.topLeft = origin + Vector2.up * ySize / 2 - Vector2.right * xSize / 2;
-        b.topRight = origin + Vector2.up * ySize / 2 + Vector2.right * xSize / 2;
-        b.bottomLeft = origin - Vector2.up * ySize / 2 - Vector2.right * xSize / 2;
-        b.bottomRight = origin - Vector2.up * ySize / 2 + Vector2.right * xSize / 2;
+        //b.topLeft = origin + Vector2.up * ySize / 2 - Vector2.right * xSize / 2;
+        //b.topRight = origin + Vector2.up * ySize / 2 + Vector2.right * xSize / 2;
+        //b.bottomLeft = origin - Vector2.up * ySize / 2 - Vector2.right * xSize / 2;
+        //b.bottomRight = origin - Vector2.up * ySize / 2 + Vector2.right * xSize / 2;
 
-        this.bounds = b;
+        //this.bounds = b;
     }
 
     public override Vector2 GetLowerBoundsAtXValue(float x)

@@ -182,7 +182,7 @@ public class CustomCircleCollider2D : CustomCollider2D
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, cBounds);
+            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds.rectBounds, cBounds);
         }
         else
         {
