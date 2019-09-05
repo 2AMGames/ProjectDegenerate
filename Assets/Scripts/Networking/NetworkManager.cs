@@ -479,10 +479,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
         long frameDelay = TotalDelayFrames;
-        while (frameDelay > 1)
+        while (frameDelay > 0)
         {
-            yield return new WaitForEndOfFrame();
             --frameDelay;
+            yield return new WaitForEndOfFrame();
         }
 
         IsSynchronizing = false;

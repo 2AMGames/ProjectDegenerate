@@ -164,7 +164,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         else if (photonEvent.Code == NetworkManager.PlayerInputUpdate)
         {
-            Debug.LogWarning("Input received: " + FramesTillCheckHeartbeat);
             PacketReceivedInTime = true;
             if (Overseer.Instance.GameStarted)
             {
