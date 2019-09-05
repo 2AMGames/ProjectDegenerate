@@ -66,6 +66,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private const short PingTimeoutInMilliseconds = 60;
 
+    private const int PingSamples = 3;
+
     #endregion
 
     #region Main Variables
@@ -563,28 +565,25 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
         }
 
-        Hashtable activePlayers = GetActivePlayers();
-        foreach (int actorNumber in activePlayers.Keys)
+        long averagePing = 0;
+
+        for (int i = 0; i < PingSamples; ++i)
         {
-            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            PingActivePlayersInternal();
+            Stopwatch rtt = new Stopwatch();
+            rtt.Start();
+
+            while (PlayersToPing.Count > 0)
             {
-                PlayersToPing.Add(actorNumber);
+                yield return null;
             }
+
+            rtt.Stop();
+
+            averagePing += rtt.ElapsedMilliseconds;
         }
-
-        PingActivePlayersInternal();
-        Stopwatch rtt = new Stopwatch();
-        rtt.Start();
-
-        while (PlayersToPing.Count > 0)
-        {
-            yield return null;
-        }
-
-        rtt.Stop();
-
-        long ping = rtt.ElapsedMilliseconds;
-        SetLocalPlayerPing(ping);
+        averagePing /= PingSamples;
+        SetLocalPlayerPing(averagePing);
         UpdatePing();
         CurrentlyPingingPlayers = false;
         
@@ -592,6 +591,15 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void PingActivePlayersInternal()
     {
+        Hashtable activePlayers = GetActivePlayers();
+        PlayersToPing.Clear();
+        foreach (int actorNumber in activePlayers.Keys)
+        {
+            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                PlayersToPing.Add(actorNumber);
+            }
+        }
         SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 

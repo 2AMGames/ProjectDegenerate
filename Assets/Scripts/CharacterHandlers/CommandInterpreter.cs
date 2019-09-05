@@ -193,6 +193,7 @@ public class CommandInterpreter : MonoBehaviour
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
+                Debug.LogError("Executing on frame: " + GameStateManager.Instance.FrameCount);
                 ExecuteInput(dataToExecute);
             }
         }
