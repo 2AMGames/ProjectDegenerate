@@ -265,22 +265,25 @@ public class CustomCircleCollider2D : CustomCollider2D
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
                 float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
                 float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
+                //float xCollision = bounds.center.y + (colliderToCheck.GetCenter().y - bounds.center.y) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
                 Vector2 collisionPoint;
                 if (rigid.velocity.y > 0)
                 {
-                    collisionPoint = colliderToCheck.GetLowerBoundsAtXValue(xCollision);
-                    collisionPoint.y = collisionPoint.y - (GetUpperBoundsAtXValue(xCollision).y - bounds.center.y);
+                    collisionPoint = colliderToCheck.GetRighBoundAtYValue(xCollision);
+                    collisionPoint.y = collisionPoint.y - (GetLeftBoundAtYValue(xCollision).y - bounds.center.y);
+                    //print(collisionPoint.y);
                 }
                 else
                 {
-                    collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
-                    collisionPoint.y = collisionPoint.y - (GetLowerBoundsAtXValue(xCollision).y - bounds.center.y);
+                    collisionPoint = colliderToCheck.GetLeftBoundAtYValue(xCollision);
+                    collisionPoint.y = collisionPoint.y - (GetRighBoundAtYValue(xCollision).y - bounds.center.y);
                 }
                 
                 this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
                 rigid.velocity.y = 0;
 
             }
+            UpdateBoundsOfCollider();
             hasCollided = true;
         }
         if (CircleColliderCollisionsAtBounds(adjustedHorizontalBounds, colliderToCheck))
