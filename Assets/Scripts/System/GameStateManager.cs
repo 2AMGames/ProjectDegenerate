@@ -179,6 +179,7 @@ public class GameStateManager : MonoBehaviour
         SaveGameCoroutineRunning = true;
         while (true)
         {
+            yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
                 if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)

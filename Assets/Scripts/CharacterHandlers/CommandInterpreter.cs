@@ -193,7 +193,7 @@ public class CommandInterpreter : MonoBehaviour
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
-                Debug.LogError("Executing on frame: " + GameStateManager.Instance.FrameCount);
+                //Debug.LogError("Executing on frame: " + GameStateManager.Instance.FrameCount);
                 ExecuteInput(dataToExecute);
             }
         }
@@ -553,12 +553,15 @@ public class CommandInterpreter : MonoBehaviour
 
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
-            yield return new WaitForFixedUpdate();
+            yield return null;
             //if (buttonEventName == BUTTON_ACTION_TRIGGER)
             //{
             //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
             //}
-            --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
+            if (Overseer.Instance.IsGameReady)
+            {
+                --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
+            }
         }
 
         Anim.ResetTrigger(buttonEventName);
@@ -569,8 +572,11 @@ public class CommandInterpreter : MonoBehaviour
         int framesThatHavePassed = 0;
         while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
         {
-            yield return new WaitForFixedUpdate();
-            ++framesThatHavePassed;
+            yield return null;
+            if (Overseer.Instance.IsGameReady)
+            {
+                ++framesThatHavePassed;
+            }
         }
 
         directionalInputRecordList.RemoveAt(0);

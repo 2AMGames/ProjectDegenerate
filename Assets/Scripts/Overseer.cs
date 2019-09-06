@@ -363,14 +363,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     }
 
-    public void DelayGame(uint FramesToWait)
+    public void DelayGame(int FramesToWait)
     {
         if (DelayGameCoroutine != null || FramesToWait <= 0)
         {
             return;
         }
-        Debug.LogError("Overseer: Delaying game for: " + FramesToWait);
-        DelayGameCoroutine = StartCoroutine(SynchronizeGameState(FramesToWait));
+        Debug.LogError("Overseer: Delaying game for: " + FramesToWait + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
+        DelayGameCoroutine = StartCoroutine(SynchronizeGameState((uint)FramesToWait));
     }
 
     public void SetHeartbeatReceived(bool received)
@@ -389,11 +389,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private IEnumerator SynchronizeGameState(uint frameToSync)
     {
         SetGameReady(false);
-        while(frameToSync > 1)
+        while (frameToSync > 0)
         {
             yield return null;
             --frameToSync;
         }
+        yield return new WaitForEndOfFrame();
         SetGameReady(true);
         DelayGameCoroutine = null;
     }

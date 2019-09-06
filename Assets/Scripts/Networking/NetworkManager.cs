@@ -483,8 +483,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         long frameDelay = TotalDelayFrames;
         while (frameDelay > 0)
         {
+            yield return null;
             --frameDelay;
-            yield return new WaitForEndOfFrame();
         }
 
         IsSynchronizing = false;

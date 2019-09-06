@@ -135,6 +135,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     public void OnEvent(EventData photonEvent)
     {
+        uint receivedFrame = GameStateManager.Instance.FrameCount;
+
         if (photonEvent.Code == NetworkManager.PlayerInputAck)
         {
             int packetNumber = (int)photonEvent.CustomData;
@@ -142,8 +144,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         else if (photonEvent.Code == NetworkManager.HeartbeatPacket)
         {
-            //Debug.LogError("Heartbeat received: " + FramesTillCheckHeartbeat);
-            //Debug.LogError("Frame count: " + GameStateManager.Instance.FrameCount);
             PacketReceivedInTime = true;
             int frameNumber = (int)photonEvent.CustomData;
             //HandlePacketReceived((uint)frameNumber);
@@ -152,14 +152,19 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             {
                 PacketReceived = true;
             }
-            RestartGameIfNeeded();
-            if (GameStateManager.Instance.FrameCount > frameNumber + NetworkManager.Instance.NetworkDelayFrames)
+            if (receivedFrame > (frameNumber + NetworkManager.Instance.TotalDelayFrames))
             {
-                uint FramesToWait = GameStateManager.Instance.FrameCount - (uint)(frameNumber + NetworkManager.Instance.NetworkDelayFrames);
-                if (FramesToWait > 1)
+                int FramesToWait = (int)receivedFrame - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
+                Debug.LogError("Frame deficit: " + (receivedFrame - (frameNumber + NetworkManager.Instance.TotalDelayFrames)));
+                if (FramesToWait >= 1)
                 {
+                    Debug.LogError("Frame number: " + frameNumber);
                     Overseer.Instance.DelayGame(FramesToWait);
                 }
+            }
+            else
+            {
+                RestartGameIfNeeded();
             }
         }
         else if (photonEvent.Code == NetworkManager.PlayerInputUpdate)
@@ -258,13 +263,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             //Debug.LogError("Frames till check: " + FramesTillCheckHeartbeat);
             //Debug.LogError("Frames till send: " + FramesTillSendHeartbeat);
+            yield return new WaitForEndOfFrame();
+
             if (FramesTillCheckHeartbeat < 1)
             {
                 if (!PacketReceivedInTime)
                 {
                     HeartbeatTimerExpired();
                 }
-                ResetFrameWaitTime();
+                if (ShouldRunGame)
+                {
+                    ResetFrameWaitTime();
+                }
                 PacketReceivedInTime = false;
             }
 
@@ -290,7 +300,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void ResetFrameWaitTime()
     {
-        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames * (FramesTillCheckHeartbeat < 0 ? 2 : 1);
+        // If the timer was expired, add the time we spent waiting to the next number of frames to wait.
+        // This is to keep in sync with how often the other client is sending heartbeats
+        int frameBuffer = Math.Abs(FramesTillCheckHeartbeat);
+        FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames;
+        if (frameBuffer < (NetworkManager.Instance.TotalDelayFrames * 2))
+        {
+            FramesTillCheckHeartbeat += frameBuffer;
+        }
+        if (FramesTillCheckHeartbeat > NetworkManager.Instance.TotalDelayFrames)
+        {
+            Debug.LogError("Frames till check: " + FramesTillCheckHeartbeat);
+        }
     }
 
     private void ResetFramesTillSendHeartbeat()
@@ -319,7 +340,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
         {
-            uint frameDeficit = GameStateManager.Instance.FrameCount - (frameNumber + (uint)NetworkManager.Instance.TotalDelayFrames);
+            int frameDeficit = (int)GameStateManager.Instance.FrameCount - (int)(frameNumber + NetworkManager.Instance.TotalDelayFrames);
             if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
             {
                 Overseer.Instance.DelayGame(frameDeficit);
