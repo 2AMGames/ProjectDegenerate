@@ -155,10 +155,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             if (receivedFrame > (frameNumber + NetworkManager.Instance.TotalDelayFrames))
             {
                 int FramesToWait = (int)receivedFrame - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
-                Debug.LogError("Frame deficit: " + (receivedFrame - (frameNumber + NetworkManager.Instance.TotalDelayFrames)));
                 if (FramesToWait >= 1)
                 {
-                    Debug.LogError("Frame number: " + frameNumber);
                     Overseer.Instance.DelayGame(FramesToWait);
                 }
             }
@@ -304,13 +302,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // This is to keep in sync with how often the other client is sending heartbeats
         int frameBuffer = Math.Abs(FramesTillCheckHeartbeat);
         FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames;
-        if (frameBuffer < (NetworkManager.Instance.TotalDelayFrames * 2))
+        if (frameBuffer < NetworkManager.Instance.TotalDelayFrames)
         {
             FramesTillCheckHeartbeat += frameBuffer;
-        }
-        if (FramesTillCheckHeartbeat > NetworkManager.Instance.TotalDelayFrames)
-        {
-            Debug.LogError("Frames till check: " + FramesTillCheckHeartbeat);
         }
     }
 
