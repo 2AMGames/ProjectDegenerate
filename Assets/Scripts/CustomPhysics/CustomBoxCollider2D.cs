@@ -337,8 +337,8 @@ public class CustomBoxCollider2D : CustomCollider2D
                     this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
                     rigid.velocity.x = 0;
                 }
-                return false;
             }
+            return true;
         }
 
         if (Mathf.Abs(rigid.velocity.y) > 0 && ColliderIntersectBounds(verticalCheckBounds, colliderToCheck))
@@ -381,16 +381,10 @@ public class CustomBoxCollider2D : CustomCollider2D
 
                     rigid.velocity.y = 0;
                 }
-                return false;
             }
-
+            return true;
         }
+        return false;
 
-        
-       
-
-
-
-        return true;
     }
 }

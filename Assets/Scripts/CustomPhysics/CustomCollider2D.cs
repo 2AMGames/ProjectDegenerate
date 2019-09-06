@@ -178,6 +178,11 @@ public abstract class CustomCollider2D : MonoBehaviour {
             bottomRight += offset;
             center += offset;
         }
+
+        public override string ToString()
+        {
+            return "TL: " + topLeft + "\nTR: " + topRight + "\nBL: " + bottomLeft + "\nBR: " + bottomRight;
+        }
     }
 
     /// <summary>
