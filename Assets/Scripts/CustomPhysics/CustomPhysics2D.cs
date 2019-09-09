@@ -14,6 +14,7 @@ public class CustomPhysics2D : MonoBehaviour {
     #region main variables
     [System.NonSerialized]
     public Vector2 velocity = Vector2.zero;
+    private Vector2 adjustedVelocityFromCollision;
     [Header("Gravity Values")]
     [Tooltip("When this is marked true, gravity will effect the object based on the gravity scale and gravity vector")]
     public bool useGravity = true;
@@ -61,6 +62,18 @@ public class CustomPhysics2D : MonoBehaviour {
             Overseer.Instance.ColliderManager.RemoveCustomPhysics(this);
         }
     }
+
+    /// <summary>
+    /// Be sure to run this method before checking for collisions with all of our nonstatic colliders
+    /// </summary>
+    public void KinematickCollisionUpdate()
+    {
+        adjustedVelocityFromCollision = this.velocity;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public void UpdatePhysics()
     {
         UpdatePositionFromVelocity();
@@ -115,7 +128,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     private void UpdatePositionFromVelocity()
     {
-        Vector3 velocityVector3 = new Vector3(velocity.x, velocity.y, 0);
+        Vector3 velocityVector3 = new Vector3(adjustedVelocityFromCollision.x, adjustedVelocityFromCollision.y, 0);
         
         this.transform.position += velocityVector3 * Time.deltaTime;
     }

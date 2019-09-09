@@ -58,17 +58,24 @@ public class PhysicsManager : MonoBehaviour
             if (rigid.enabled)
             {
                 rigid.UpdateVelocityFromGravity();
+                rigid.KinematickCollisionUpdate();
             }
         }
 
+        foreach (CustomCollider2D collider in nonStaticColliderList)
+        {
+            collider.UpdateBoundsOfCollider();
+        }
         
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-
+                
             }
         }
+
+
 
 
         foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
@@ -81,6 +88,8 @@ public class PhysicsManager : MonoBehaviour
                 }
             }
         }
+
+
         //Updates our physics object based on its physics state
         foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
