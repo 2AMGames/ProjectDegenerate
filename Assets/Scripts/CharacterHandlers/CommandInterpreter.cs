@@ -219,6 +219,8 @@ public class CommandInterpreter : MonoBehaviour
                     Debug.LogError("Off");
                     Debug.LogError("Off frame count: " + GameStateManager.Instance.FrameCount);
                     Debug.LogError("Sent frame: " + dataToQueue.FrameNumber);
+                    ExecuteInput(dataToQueue);
+                    return;
                 }
                 InputBuffer.Enqueue(dataToQueue);
             }

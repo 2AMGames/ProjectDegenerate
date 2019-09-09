@@ -121,7 +121,7 @@ public class GameStateManager : MonoBehaviour
             state.PlayerIndex = player.PlayerIndex;
 
             PlayerInputData inputData = new PlayerInputData();
-            inputData.FrameNumber = (ushort)FrameCount;
+            inputData.FrameNumber = FrameCount;
             inputData.InputPattern = interpreter.GetPlayerInputByte();
         }
 
