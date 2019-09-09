@@ -388,8 +388,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private IEnumerator SynchronizeGameState(uint frameToSync)
     {
-        SetGameReady(false);
         yield return new WaitForEndOfFrame();
+        SetGameReady(false);
         while (frameToSync > 0)
         {
             yield return null;
