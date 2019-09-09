@@ -481,6 +481,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
         long frameDelay = TotalDelayFrames;
+        yield return new WaitForEndOfFrame();
         while (frameDelay > 0)
         {
             yield return null;
@@ -577,7 +578,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             {
                 yield return null;
             }
-
             rtt.Stop();
 
             averagePing += rtt.ElapsedMilliseconds;
