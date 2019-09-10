@@ -270,6 +270,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
+        Debug.LogError("Executing on frame: " + GameStateManager.Instance.FrameCount);
         if ((inputData.InputPattern & 1) == 1)
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);
