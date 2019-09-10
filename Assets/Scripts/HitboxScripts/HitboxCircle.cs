@@ -38,7 +38,6 @@ public class HitboxCircle : Hitbox
             return false;
         }
 
-        Vector2 intersectVec;
         if (hboxToCheck is HitboxRect)
         {
             

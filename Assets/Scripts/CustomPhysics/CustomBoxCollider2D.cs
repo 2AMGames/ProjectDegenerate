@@ -226,7 +226,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds.rectBounds, boundsToCheck);
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, boundsToCheck);
         }
         else
         {
