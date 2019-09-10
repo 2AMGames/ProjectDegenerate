@@ -31,8 +31,8 @@ public class CustomCapsuleCollider2D : CustomCollider2D
 
             Vector2 offsetToCenter = (bounds.rectBounds.topRight - bounds.rectBounds.topLeft) / 2f;
             UnityEditor.Handles.color = colorToDraw;
-            UnityEditor.Handles.DrawWireDisc(bounds.rectBounds.topLeft + offsetToCenter, Vector3.forward, radius);
-            UnityEditor.Handles.DrawWireDisc(bounds.rectBounds.bottomLeft + offsetToCenter, Vector3.forward, radius);
+            UnityEditor.Handles.DrawWireDisc(bounds.topCircleBounds.center, Vector3.forward, radius);
+            UnityEditor.Handles.DrawWireDisc(bounds.bottomCircleBounds.center, Vector3.forward, radius);
         }
 #endif
     }

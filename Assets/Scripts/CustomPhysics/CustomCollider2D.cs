@@ -491,8 +491,60 @@ public abstract class CustomCollider2D : MonoBehaviour {
     {
         return -v2.x * v1.y + v1.x * v2.y;
     }
-
-
     #endregion line intersection methods
+
+
+    #region get outter bounds of collider
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public static Vector2 GetLowerBoundsAtXValueCircle(BoundsCircle cBounds, float x)
+    {
+        float adjustedX = x - cBounds.center.x;
+        float angle = Mathf.Acos(adjustedX / cBounds.radius);
+        return new Vector2(x, -Mathf.Sin(angle) * cBounds.radius + cBounds.center.y);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public static Vector2 GetUpperBoundsAtXValueCircle(BoundsCircle cBounds, float x)
+    {
+        float adjustedX = x - cBounds.center.x;
+        float angle = Mathf.Acos(adjustedX / cBounds.radius);
+        return new Vector2(x, Mathf.Sin(angle) * cBounds.radius + cBounds.center.y);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static Vector2 GetRighBoundAtYValueCircle(BoundsCircle cBounds, float y)
+    {
+        float adjustedY = y - cBounds.center.y;
+        float angle = Mathf.Asin(adjustedY / cBounds.radius);
+        return new Vector2(Mathf.Cos(angle) * cBounds.radius + cBounds.center.x, y);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static Vector2 GetLeftBoundAtYValueCircle(BoundsCircle cBounds, float y)
+    {
+        float adjustedY = y - cBounds.center.y;
+        float angle = Mathf.Asin(adjustedY / cBounds.radius);
+        return new Vector2(-Mathf.Cos(angle) * cBounds.radius + cBounds.center.x, y);
+    }
+
+    #endregion get outter bounds of collider
     #endregion static methods
 }
