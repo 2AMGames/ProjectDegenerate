@@ -150,9 +150,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             {
                 PacketReceivedThisFrame = true;
             }
-            if (receivedFrame > (frameNumber + NetworkManager.Instance.TotalDelayFrames))
+            if (receivedFrame > (frameNumber + NetworkManager.Instance.NetworkDelayFrames))
             {
-                int FramesToWait = (int)receivedFrame - (frameNumber + NetworkManager.Instance.TotalDelayFrames);
+                int FramesToWait = (int)receivedFrame - (frameNumber + NetworkManager.Instance.NetworkDelayFrames);
                 if (FramesToWait >= 1)
                 {
                     Overseer.Instance.DelayGame(FramesToWait);
@@ -341,11 +341,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         packet.FrameSent = GameStateManager.Instance.FrameCount;
         packet.PacketId = PacketsSent;
         packet.PlayerIndex = PlayerController.PlayerIndex;
-        packet.InputData = new List<PlayerInputData>();
-        foreach(PlayerInputData dataNotAcked in DataSent)
-        {
-            packet.InputData.Add(dataNotAcked);
-        }
+        packet.InputData = new List<PlayerInputData>(DataSent);
         NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others);
     }
 
