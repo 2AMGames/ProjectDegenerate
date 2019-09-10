@@ -22,6 +22,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public CustomPhysics2D rigid { get; set; }
 
     /// <summary>
+    /// Due to the fact that non static colliders will have the chance to have their velocity adjusted when colliding with other non static colliders
+    /// it is good to keep a reference of the original velocity
+    /// </summary>
+    public Vector2 originalVelocity;
+
+    /// <summary>
     /// IMPORTANT: If there is a Custom Physics object attached to the gameobject, this collider will be registered as a nonstatic collider
     /// </summary>
     public bool isStatic
