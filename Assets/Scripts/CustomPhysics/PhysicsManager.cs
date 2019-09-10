@@ -65,6 +65,7 @@ public class PhysicsManager : MonoBehaviour
         foreach (CustomCollider2D collider in nonStaticColliderList)
         {
             collider.UpdateBoundsOfCollider();
+            collider.originalVelocity = collider.rigid.velocity;
         }
         
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
@@ -97,6 +98,11 @@ public class PhysicsManager : MonoBehaviour
             {
                 rigid.UpdatePhysics();
             }
+        }
+
+        foreach (CustomCollider2D collider in nonStaticColliderList)
+        {
+            collider.rigid.velocity = collider.originalVelocity;
         }
 
         //for (int i = 0; i < colliderList.Count - 1; i++)
