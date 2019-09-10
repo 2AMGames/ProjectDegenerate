@@ -160,7 +160,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    private int FramesHeld;
+    private int InputsReceived;
 
     #endregion
 
@@ -193,13 +193,8 @@ public class CommandInterpreter : MonoBehaviour
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
-                //Debug.LogError("Executing on frame: " + GameStateManager.Instance.FrameCount);
                 ExecuteInput(dataToExecute);
             }
-        }
-        if (Overseer.Instance.IsGameReady)
-        {
-            ++FramesHeld;
         }
     }
 
@@ -214,6 +209,7 @@ public class CommandInterpreter : MonoBehaviour
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
+                ++InputsReceived;
                 if (GameStateManager.Instance.FrameCount > dataToQueue.FrameNumber + FrameDelay)
                 {
                     Debug.LogError("Off");
@@ -374,8 +370,6 @@ public class CommandInterpreter : MonoBehaviour
 
             CheckForJumpInput(lastJoystickInput, currentJoystickVec);
             currentDirectionalInputStruct.directionInput = currentJoystickVec;
-
-            FramesHeld = 0;
         }
     }
 

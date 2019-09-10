@@ -353,7 +353,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         while(NetworkManager.Instance.IsSynchronizing)
         {
-            Debug.LogWarning("Synchronize");
             yield return null;
         }
 
