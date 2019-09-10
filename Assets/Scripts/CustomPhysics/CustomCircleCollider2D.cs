@@ -123,9 +123,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        float adjustedX = x - bounds.center.x;
-        float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, -Mathf.Sin(angle) * bounds.radius + bounds.center.y);
+        return GetLowerBoundsAtXValueCircle(this.bounds, x);
     }
 
     /// <summary>
@@ -135,9 +133,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        float adjustedX = x - bounds.center.x;
-        float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
+        return GetUpperBoundsAtXValueCircle(this.bounds, x);
     }
 
 
@@ -148,9 +144,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetRighBoundAtYValue(float y)
     {
-        float adjustedY = y - bounds.center.y;
-        float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
+        return GetRighBoundAtYValueCircle(this.bounds, y);
     }
 
     /// <summary>
@@ -160,9 +154,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        float adjustedY = y - bounds.center.y;
-        float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(-Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
+        return GetLeftBoundAtYValueCircle(this.bounds, y);
     }
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
