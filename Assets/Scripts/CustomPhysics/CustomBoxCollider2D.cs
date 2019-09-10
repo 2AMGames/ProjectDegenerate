@@ -119,62 +119,10 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        
-        Vector2 v0 = direction * length;
-        Vector2 endpoint = origin + v0;
-
-        Vector2 tr = bounds.topRight;
-        Vector2 bl = bounds.bottomLeft;
-
-        if (bl.x < origin.x && origin.x < tr.x && bl.y < origin.y && origin.y < tr.y)
-        {
-            return true;
-        }
-
-
-        if (LineCrossLine(origin, v0, bounds.bottomLeft, (bounds.bottomRight - bounds.bottomLeft)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.bottomRight, (bounds.topRight - bounds.bottomRight)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.topRight, (bounds.topLeft - bounds.topRight)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.topLeft, (bounds.bottomLeft - bounds.topLeft)))
-        {
-            return true;
-        }
-        return false;
+        return LineIntersectRect(this.bounds, origin, direction, length);
     }
 
     
-
-    /// <summary>
-    /// 
-    /// </summary>
-    private bool LineCrossLine(Vector2 u0, Vector2 v0, Vector2 u1, Vector2 v1)
-    {
-        float d1 = GetDeterminant(v1, v0);
-        if (d1 == 0)
-        {
-            return false;
-        }
-        
-
-        float s = (1 / d1) * (((u0.x - u1.x) * v0.y) - ((u0.y - u1.y) * v0.x));
-        float t = (1 / d1) * -((-(u0.x - u1.x) * v1.y) + ((u0.y - u1.y) * v1.x));
-       
-        return s > 0 && s < 1 && t > 0 && t < 1;
-    }
-
-    private float GetDeterminant(Vector2 v1, Vector2 v2)
-    {
-        return -v2.x * v1.y + v1.x * v2.y;
-    }
 
    
    

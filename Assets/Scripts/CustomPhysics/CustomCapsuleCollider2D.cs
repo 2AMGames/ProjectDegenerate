@@ -46,7 +46,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     /// <summary>

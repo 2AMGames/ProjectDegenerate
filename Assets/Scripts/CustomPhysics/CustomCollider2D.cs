@@ -298,8 +298,19 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return false;
     }
 
+    #region Line Intersection methods
+
+    /// <summary>
+    /// Returns true if the line that was passed in intersect with the given circle
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public static bool LineIntersectCircle(BoundsCircle c, Vector2 pointA, Vector2 pointB)
     {
+        
         Vector2 point = c.center;
 
         float rectX = pointA.x;
@@ -313,5 +324,119 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
         return (dX * dX + dY * dY) < c.radius * c.radius;
     }
+
+    /// <summary>
+    /// Overload method of our line intersect method
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static bool LineIntersectCircle(BoundsCircle c, Vector2 origin, Vector2 direction, float length)
+    {
+        Vector2 pointA = origin;
+        Vector2 pointB = origin + direction * length;
+        return LineIntersectCircle(c, pointA, pointB);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="bounds"></param>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static bool LineIntersectRect(BoundsRect bounds, Vector2 origin, Vector2 direction, float length)
+    {
+        Vector2 v0 = direction * length;
+        Vector2 endpoint = origin + v0;
+
+        Vector2 tr = bounds.topRight;
+        Vector2 bl = bounds.bottomLeft;
+
+        if (bl.x < origin.x && origin.x < tr.x && bl.y < origin.y && origin.y < tr.y)
+        {
+            return true;
+        }
+
+
+        if (LineCrossLine(origin, v0, bounds.bottomLeft, (bounds.bottomRight - bounds.bottomLeft)))
+        {
+            return true;
+        }
+        if (LineCrossLine(origin, v0, bounds.bottomRight, (bounds.topRight - bounds.bottomRight)))
+        {
+            return true;
+        }
+        if (LineCrossLine(origin, v0, bounds.topRight, (bounds.topLeft - bounds.topRight)))
+        {
+            return true;
+        }
+        if (LineCrossLine(origin, v0, bounds.topLeft, (bounds.bottomLeft - bounds.topLeft)))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if the line passes through the given capsule
+    /// </summary>
+    /// <param name="bounds"></param>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static bool LineIntersectsCapsule(BoundsCapsule bounds, Vector2 origin, Vector2 direction, float length)
+    {
+        if (LineIntersectCircle(bounds.topCircleBounds, origin, direction, length))
+        {
+            return true;
+        }
+        if (LineIntersectCircle(bounds.bottomCircleBounds, origin, direction, length))
+        {
+            return true;
+        }
+        if (LineIntersectRect(bounds.rectBounds, origin, direction, length))
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    /// <summary>
+    /// Return true if the two lines intersect. u0 and v0 are line 1 and u1 and v1 are line 2
+    /// </summary>
+    public static bool LineCrossLine(Vector2 u0, Vector2 v0, Vector2 u1, Vector2 v1)
+    {
+        float d1 = GetDeterminant(v1, v0);
+        if (d1 == 0)
+        {
+            return false;
+        }
+
+
+        float s = (1 / d1) * (((u0.x - u1.x) * v0.y) - ((u0.y - u1.y) * v0.x));
+        float t = (1 / d1) * -((-(u0.x - u1.x) * v1.y) + ((u0.y - u1.y) * v1.x));
+
+        return s > 0 && s < 1 && t > 0 && t < 1;
+    }
+
+    /// <summary>
+    /// Returns the determinant of the two 2D vectors
+    /// </summary>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    /// <returns></returns>
+    public static float GetDeterminant(Vector2 v1, Vector2 v2)
+    {
+        return -v2.x * v1.y + v1.x * v2.y;
+    }
+
+
+    #endregion line intersection methods
     #endregion static methods
 }

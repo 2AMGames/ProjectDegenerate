@@ -43,7 +43,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        return LineIntersectCircle(this.bounds, origin, origin + direction * length);
+        return LineIntersectCircle(this.bounds, origin, direction, length);
     }
 
 
