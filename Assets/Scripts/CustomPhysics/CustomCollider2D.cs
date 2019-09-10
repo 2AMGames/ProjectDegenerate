@@ -545,6 +545,45 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return new Vector2(-Mathf.Cos(angle) * cBounds.radius + cBounds.center.x, y);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public static Vector2 GetLowerBoundsAtXValueRect(BoundsRect rBounds, float x)
+    {
+        return new Vector2(x, rBounds.bottomLeft.y);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    public static Vector2 GetUpperBoundsAtXValueRect(BoundsRect rBounds, float x)
+    {
+        return new Vector2(x, rBounds.topRight.y);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static Vector2 GetRighBoundAtYValueRect(BoundsRect rBounds, float y)
+    {
+        return new Vector2(rBounds.topRight.x, y);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static Vector2 GetLeftBoundAtYValueRect(BoundsRect rBounds, float y)
+    {
+        return new Vector2(rBounds.bottomLeft.x, y);
+    }
     #endregion get outter bounds of collider
     #endregion static methods
 }

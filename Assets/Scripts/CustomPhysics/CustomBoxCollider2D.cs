@@ -172,24 +172,44 @@ public class CustomBoxCollider2D : CustomCollider2D
         bCollider.UpdateBoundsOfCollider();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        return new Vector2(x, bounds.bottomLeft.y);
+        return GetLowerBoundsAtXValueRect(this.bounds, x);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        return new Vector2(x, bounds.topRight.y);
+        return GetUpperBoundsAtXValueRect(this.bounds, x);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public override Vector2 GetRighBoundAtYValue(float y)
     {
-        return new Vector2(bounds.topRight.x, y);
+        return GetRighBoundAtYValueRect(this.bounds, y);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        return new Vector2(bounds.bottomLeft.x, y);
+        return GetLeftBoundAtYValueRect(this.bounds, y);
     }
 
     public override Vector2 GetCenter()
