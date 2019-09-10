@@ -96,20 +96,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         instance = this;
         PhotonNetwork.AddCallbackTarget(this);
-#if !UNITY_EDITOR && UNITY_STANDALONE
-
-        Screen.fullScreen = false;
-        Screen.SetResolution(800, 600, false);
-        Screen.fullScreenMode = FullScreenMode.Windowed;
-
-#endif
+        SetGameSettings();
+        SetGameReady(false);
     }
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
-        PhotonNetwork.SendRate = 30;
-        PhotonNetwork.SerializationRate = 30;
         CreateGameType();
     }
 
@@ -243,6 +235,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             return isReady;
     }
 
+    private void SetGameSettings()
+    {
+        Application.targetFrameRate = 60;
+        PhotonNetwork.SendRate = 30;
+        PhotonNetwork.SerializationRate = 30;
+        Screen.SetResolution(800, 600, false, 60);
+    }
+
     #endregion
 
     #region Enum
@@ -353,6 +353,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         while(NetworkManager.Instance.IsSynchronizing)
         {
+            Debug.LogWarning("Synchronize");
             yield return null;
         }
 

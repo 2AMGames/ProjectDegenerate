@@ -462,11 +462,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         while(!CheckIfPlayersReady())
         {
-            yield return new WaitForSeconds(1f);
+            yield return null;
         }
 
         SetMasterClientReady(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForEndOfFrame();
 
         PingActivePlayers();
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
@@ -475,7 +475,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
             UpdatePing();
         }
-        yield return new WaitForSeconds(1f);
+        yield return null;
 
         IsNetworkedGameReady = true;
         SendEventData(StartGame, true, ReceiverGroup.Others);
