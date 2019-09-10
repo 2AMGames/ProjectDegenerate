@@ -283,18 +283,74 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return distance <= distanceMax;
     }
 
-    public static bool CapsuleIntersectCapsule(BoundsRect c1, BoundsRect c2)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public static bool CapsuleIntersectCapsule(BoundsCapsule c, BoundsCapsule r)
     {
+        if (CapsuleIntersectRect(c, r.rectBounds))
+        {
+            return true;
+        }
+        if (CapsuleIntersectCircle(c, r.topCircleBounds))
+        {
+            return true;
+        }
+        if (CapsuleIntersectCircle(c, r.bottomCircleBounds)) ;
+        {
+            return true;
+        }
+
         return false;
     }
 
-    public static bool CapsuleIntersectCircle(BoundsRect cap, BoundsCircle cir)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cap"></param>
+    /// <param name="cir"></param>
+    /// <returns></returns>
+    public static bool CapsuleIntersectCircle(BoundsCapsule cap, BoundsCircle cir)
     {
+        if (CircleIntersectCircle(cap.bottomCircleBounds, cir))
+        {
+            return true;
+        }
+        if (CircleIntersectCircle(cap.topCircleBounds, cir))
+        {
+            return true;
+        }
+        if (RectIntersectCircle(cap.rectBounds, cir))
+        {
+            return true;
+        }
         return false;
     }
 
-    public static bool CapsuleIntersectRect(BoundsRect cap, BoundsRect cir)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public static bool CapsuleIntersectRect(BoundsCapsule c, BoundsRect r)
     {
+        if (RectIntersectCircle(r, c.bottomCircleBounds))
+        {
+            return true;
+        }
+        if (RectIntersectCircle(r, c.bottomCircleBounds))
+        {
+            return true;
+        }
+        if (RectIntersectRect(r, c.rectBounds))
+        {
+            return true;
+        }
+
         return false;
     }
 
