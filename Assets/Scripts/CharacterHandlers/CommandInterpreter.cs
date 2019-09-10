@@ -206,6 +206,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
+            Debug.LogWarning("Queuing on : " + GameStateManager.Instance.FrameCount);
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {

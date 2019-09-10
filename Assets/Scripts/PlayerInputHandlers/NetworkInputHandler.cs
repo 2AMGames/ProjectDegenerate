@@ -142,27 +142,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             int packetNumber = (int)photonEvent.CustomData;
             HandlePlayerInputAck((uint)packetNumber);
         }
-        else if (photonEvent.Code == NetworkManager.HeartbeatPacket)
-        {
-            PacketReceivedInTime = true;
-            int frameNumber = (int)photonEvent.CustomData;
-            if (Overseer.Instance.GameStarted)
-            {
-                PacketReceivedThisFrame = true;
-            }
-            if (receivedFrame > (frameNumber + NetworkManager.Instance.NetworkDelayFrames))
-            {
-                int FramesToWait = (int)receivedFrame - (frameNumber + NetworkManager.Instance.NetworkDelayFrames);
-                if (FramesToWait >= 1)
-                {
-                    Overseer.Instance.DelayGame(FramesToWait);
-                }
-            }
-            else
-            {
-                RestartGameIfNeeded();
-            }
-        }
         else if (photonEvent.Code == NetworkManager.PlayerInputUpdate)
         {
             PacketReceivedInTime = true;
@@ -171,18 +150,18 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 PacketReceivedThisFrame = true;
             }
 
-            uint frameReceived = GameStateManager.Instance.FrameCount;
             PlayerInputPacket packet = photonEvent.CustomData as PlayerInputPacket;
             if (packet != null)
             {
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    if (frameReceived > (packet.FrameSent + NetworkManager.Instance.TotalDelayFrames))
+                    if (receivedFrame > (packet.FrameSent + NetworkManager.Instance.TotalDelayFrames))
                     {
                         int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent + NetworkManager.Instance.TotalDelayFrames);
                         if (FramesToWait >= 1)
                         {
+                            Debug.LogError("Frame received: " + receivedFrame);
                             Overseer.Instance.DelayGame(FramesToWait);
                         }
                         else
@@ -196,11 +175,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     }
                 }
             }
-        }
-        else if (photonEvent.Code == NetworkManager.HeartbeatPacketAck)
-        {
-            int frameNumber = (int)photonEvent.CustomData;
-            HandleHeartbeatAckReceived((uint)frameNumber);
         }
     }
 

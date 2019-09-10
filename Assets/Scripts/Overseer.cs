@@ -398,6 +398,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         yield return new WaitForEndOfFrame();
         SetGameReady(true);
         DelayGameCoroutine = null;
+        Debug.LogError("Current frame: " + GameStateManager.Instance.FrameCount);
     }
 
     #endregion
