@@ -360,6 +360,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
+        Debug.Log("Update Joystick Input: " + currentJoystickVec + ", Last: " + lastJoystickInput);
         if (lastJoystickInput != currentJoystickVec)
         {
             //Debug.LogError("Frames held: " + FramesHeld);
@@ -397,7 +398,8 @@ public class CommandInterpreter : MonoBehaviour
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
     {
-        if (prevInput.y < 1 && currentInput.y >= 1)
+        Debug.LogError("Prev Input: " + prevInput + ", CurrentInput: " + currentInput);
+        if (prevInput.y < 1 && currentInput.y >= 1) 
         {
             characterStats.MovementMechanics.Jump();
         }

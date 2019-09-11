@@ -149,7 +149,7 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (Overseer.Instance.GameStarted)
         {
-            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "Input: " + horizontalInput);
+            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "HInput: " + horizontalInput + ",VInput: " + verticalInput);
         }
         if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {
@@ -401,8 +401,10 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
+        Debug.LogError("Jump.RigidIsInAir = " + rigid.isInAir + "currentJumpsAvailable = " + currentJumpsAvailable);
         if (ignoreJumpButton)
         {
+            Debug.LogError("Ignore jump button");
             return false;
         }
         if (!rigid.isInAir)
@@ -422,6 +424,7 @@ public class MovementMechanics : MonoBehaviour {
 
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
+        Debug.LogError("New Velocity: " + rigid.velocity);
         SetCharacterFastFalling(false);
         return true;
     }
