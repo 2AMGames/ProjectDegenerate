@@ -161,7 +161,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                         int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent + NetworkManager.Instance.TotalDelayFrames);
                         if (FramesToWait >= 1)
                         {
-                            Debug.LogError("Frame received: " + receivedFrame);
+                            Debug.LogError("Frame received before delay: " + receivedFrame);
                             Overseer.Instance.DelayGame(FramesToWait);
                         }
                         else

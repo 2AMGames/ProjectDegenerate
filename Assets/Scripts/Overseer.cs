@@ -205,6 +205,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         playerController.CommandInterpreter = associatedPlayer.GetComponent<CommandInterpreter>();
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
+        playerController.CharacterStats.PlayerIndex = playerIndex;
 
         if (IsNetworkedMode && playerType == PlayerController.PlayerType.Local)
         {
@@ -369,7 +370,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             return;
         }
-        Debug.LogError("Overseer: Delaying game for: " + FramesToWait + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
         DelayGameCoroutine = StartCoroutine(SynchronizeGameState((uint)FramesToWait));
     }
 
@@ -389,6 +389,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private IEnumerator SynchronizeGameState(uint frameToSync)
     {
         yield return new WaitForEndOfFrame();
+        Debug.LogError("Overseer: Delaying game for: " + frameToSync + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
         SetGameReady(false);
         while (frameToSync > 0)
         {
@@ -398,7 +399,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         yield return new WaitForEndOfFrame();
         SetGameReady(true);
         DelayGameCoroutine = null;
-        Debug.LogError("Current frame: " + GameStateManager.Instance.FrameCount);
     }
 
     #endregion

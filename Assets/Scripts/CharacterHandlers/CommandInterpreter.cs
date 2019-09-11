@@ -193,6 +193,7 @@ public class CommandInterpreter : MonoBehaviour
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
+                Debug.LogError("Executing frame: " + dataToExecute.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
                 ExecuteInput(dataToExecute);
             }
         }
@@ -206,12 +207,12 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
-            Debug.LogWarning("Queuing on : " + GameStateManager.Instance.FrameCount);
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
+                Debug.LogError("Queueing on frame: " + GameStateManager.Instance.FrameCount);
                 ++InputsReceived;
-                if (GameStateManager.Instance.FrameCount > dataToQueue.FrameNumber + FrameDelay)
+                if (GameStateManager.Instance.FrameCount >= dataToQueue.FrameNumber + FrameDelay)
                 {
                     Debug.LogError("Off");
                     Debug.LogError("Off frame count: " + GameStateManager.Instance.FrameCount);
