@@ -239,8 +239,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     private void SetGameSettings()
     {
         Application.targetFrameRate = 60;
-        PhotonNetwork.SendRate = 30;
-        PhotonNetwork.SerializationRate = 30;
+        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SerializationRate = 60;
         Screen.SetResolution(800, 600, false, 60);
     }
 

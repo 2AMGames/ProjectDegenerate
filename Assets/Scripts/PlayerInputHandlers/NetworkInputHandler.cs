@@ -156,9 +156,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    if (receivedFrame > (packet.FrameSent + NetworkManager.Instance.TotalDelayFrames))
+                    if (receivedFrame > (packet.FrameSent + NetworkManager.Instance.NetworkDelayFrames))
                     {
-                        int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent + NetworkManager.Instance.TotalDelayFrames);
+                        int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent + NetworkManager.Instance.NetworkDelayFrames);
                         if (FramesToWait >= 1)
                         {
                             Debug.LogError("Frame received before delay: " + receivedFrame);

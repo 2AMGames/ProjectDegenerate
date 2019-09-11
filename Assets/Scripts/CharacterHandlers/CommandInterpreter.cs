@@ -193,7 +193,6 @@ public class CommandInterpreter : MonoBehaviour
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
-                Debug.LogError("Executing frame: " + dataToExecute.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
                 ExecuteInput(dataToExecute);
             }
         }
@@ -210,7 +209,7 @@ public class CommandInterpreter : MonoBehaviour
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
-                Debug.LogError("Queueing on frame: " + GameStateManager.Instance.FrameCount);
+                Debug.LogError("Queueing Frame: " + dataToQueue.FrameNumber + ". On frame: " + GameStateManager.Instance.FrameCount);
                 ++InputsReceived;
                 if (GameStateManager.Instance.FrameCount >= dataToQueue.FrameNumber + FrameDelay)
                 {
@@ -268,6 +267,8 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
+        Debug.LogError("Executing frame: " + inputData.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
+
         if ((inputData.InputPattern & 1) == 1)
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);

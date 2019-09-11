@@ -151,10 +151,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             return;
         }
-        if (Overseer.Instance.GameStarted && GetComponent<CommandInterpreter>().characterStats.PlayerIndex == 0)
-        {
-            Debug.LogError("Updating on frame: " + GameStateManager.Instance.FrameCount + ".GameReady = " + Overseer.Instance.IsGameReady + ".HVeloc = " + rigid.velocity.x);
-        }
         if (rigid.isInAir)
         {
             UpdateCurrentSpeedInAir();
