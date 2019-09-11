@@ -72,20 +72,30 @@ public class PhysicsManager : MonoBehaviour
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-                
+                if (nonStaticColliderList[i].ColliderIntersect(nonStaticColliderList[j]))
+                {
+                    nonStaticColliderList[i].rigid.velocity += nonStaticColliderList[j].originalVelocity;
+                    nonStaticColliderList[j].rigid.velocity += nonStaticColliderList[i].originalVelocity;
+                }
             }
         }
-
-
 
 
         foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
         {
             foreach (CustomCollider2D staticCollider in staticColliderList)
             {
-                if (nonStaticCollider.ColliderIntersectBasedOnVelocity(staticCollider))
+                if (nonStaticCollider.ColliderIntersectVertically(staticCollider))
                 {
+                    nonStaticCollider.rigid.velocity.y = 0;
                     nonStaticCollider.UpdateBoundsOfCollider();
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+                else if (nonStaticCollider.ColliderIntersectHorizontally(staticCollider))
+                {
+                    nonStaticCollider.rigid.velocity.x = 0;
+                    nonStaticCollider.UpdateBoundsOfCollider();
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
                 }
             }
         }
@@ -99,6 +109,7 @@ public class PhysicsManager : MonoBehaviour
                 rigid.UpdatePhysics();
             }
         }
+
 
         foreach (CustomCollider2D collider in nonStaticColliderList)
         {

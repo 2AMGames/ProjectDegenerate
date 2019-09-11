@@ -121,7 +121,12 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         throw new System.NotImplementedException();
     }
 
-    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
+    public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
         throw new System.NotImplementedException();
     }

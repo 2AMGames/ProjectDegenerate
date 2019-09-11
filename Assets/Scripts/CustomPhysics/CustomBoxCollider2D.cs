@@ -61,55 +61,55 @@ public class CustomBoxCollider2D : CustomCollider2D
         b.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
 
         this.bounds = b;
+
+        if (!isStatic)
+        {
+            verticalCheckBounds = this.bounds;
+            Vector2 verticalOffset = rigid.velocity.y * Overseer.DELTA_TIME * Vector2.up;
+            verticalCheckBounds.SetOffset(verticalOffset);
+
+            horizontalCheckBounds = this.bounds;
+            Vector2 horizontalOffset = rigid.velocity.x * Overseer.DELTA_TIME * Vector2.right;
+            horizontalCheckBounds.SetOffset(horizontalOffset);
+
+            verticalCheckBounds.topLeft.x = this.bounds.bottomLeft.x + HorizontalBuffer / 2f;
+            verticalCheckBounds.bottomLeft.x = verticalCheckBounds.topLeft.x;
+            verticalCheckBounds.topRight.x = this.bounds.topRight.x - HorizontalBuffer / 2f;
+            verticalCheckBounds.bottomRight.x = verticalCheckBounds.topRight.x;
+
+            float verticalBufferOffset = Mathf.Max(VerticalBuffer / 2, Mathf.Abs(verticalOffset.y));
+            float horizontalBufferOffset = Mathf.Max(HorizontalBuffer / 2, Mathf.Abs(horizontalOffset.x));
+
+            if (rigid.velocity.y > 0)
+            {
+                verticalCheckBounds.bottomLeft.y = bounds.bottomLeft.y + verticalBufferOffset;
+                verticalCheckBounds.bottomRight.y = bounds.bottomRight.y + verticalBufferOffset;
+            }
+            else if (rigid.velocity.y < 0)
+            {
+                verticalCheckBounds.topLeft.y = bounds.topLeft.y - verticalBufferOffset;
+                verticalCheckBounds.topRight.y = bounds.topRight.y - verticalBufferOffset;
+            }
+
+            horizontalCheckBounds.bottomLeft.y = this.bounds.bottomLeft.y + VerticalBuffer / 2f;
+            horizontalCheckBounds.bottomRight.y = horizontalCheckBounds.bottomLeft.y;
+            horizontalCheckBounds.topLeft.y = this.bounds.topLeft.y - VerticalBuffer / 2f;
+            horizontalCheckBounds.topRight.y = horizontalCheckBounds.topLeft.y;
+
+            if (rigid.velocity.x > 0)
+            {
+                horizontalCheckBounds.topLeft.x = bounds.topLeft.x + horizontalBufferOffset;
+                horizontalCheckBounds.bottomLeft.x = bounds.bottomLeft.x + horizontalBufferOffset;
+            }
+            else if (rigid.velocity.x < 0)
+            {
+                horizontalCheckBounds.topRight.x = bounds.topRight.x - horizontalBufferOffset;
+                horizontalCheckBounds.bottomRight.x = bounds.bottomRight.x - horizontalBufferOffset;
+            }
+        }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public override void UpdateCollisionBounds()
-    {
-        verticalCheckBounds = this.bounds;
-        Vector2 verticalOffset = rigid.velocity.y * Overseer.DELTA_TIME * Vector2.up;
-        verticalCheckBounds.SetOffset(verticalOffset);
-
-        horizontalCheckBounds = this.bounds;
-        Vector2 horizontalOffset = rigid.velocity.x * Overseer.DELTA_TIME * Vector2.right;
-        horizontalCheckBounds.SetOffset(horizontalOffset);
-
-        verticalCheckBounds.topLeft.x = this.bounds.bottomLeft.x + HorizontalBuffer / 2;
-        verticalCheckBounds.bottomLeft.x = verticalCheckBounds.topLeft.x;
-        verticalCheckBounds.topRight.x = this.bounds.topRight.x - HorizontalBuffer / 2;
-        verticalCheckBounds.bottomRight.x = verticalCheckBounds.topRight.x;
-        float verticalBufferOffset = Mathf.Max(VerticalBuffer / 2, Mathf.Abs(verticalOffset.y));
-        float horizontalBufferOffset = Mathf.Max(HorizontalBuffer / 2, Mathf.Abs(horizontalOffset.x));
-        if (rigid.velocity.y > 0)
-        {
-            verticalCheckBounds.bottomLeft.y = bounds.bottomLeft.y + verticalBufferOffset;
-            verticalCheckBounds.bottomRight.y = bounds.bottomRight.y + verticalBufferOffset;
-        }
-        else if (rigid.velocity.y < 0)
-        {
-            verticalCheckBounds.topLeft.y = bounds.topLeft.y - verticalBufferOffset;
-            verticalCheckBounds.topRight.y = bounds.topRight.y - verticalBufferOffset;
-        }
-
-        horizontalCheckBounds.bottomLeft.y = this.bounds.bottomLeft.y + VerticalBuffer / 2;
-        horizontalCheckBounds.bottomRight.y = horizontalCheckBounds.bottomLeft.y;
-        horizontalCheckBounds.topLeft.y = this.bounds.topLeft.y - VerticalBuffer / 2;
-        horizontalCheckBounds.topRight.y = horizontalCheckBounds.topLeft.y;
-
-        if (rigid.velocity.x > 0)
-        {
-            horizontalCheckBounds.topLeft.x = bounds.topLeft.x + horizontalBufferOffset;
-            horizontalCheckBounds.bottomLeft.x = bounds.bottomLeft.x + horizontalBufferOffset;
-        }
-        else if (rigid.velocity.x < 0)
-        {
-            horizontalCheckBounds.topRight.x = bounds.topRight.x - horizontalBufferOffset;
-            horizontalCheckBounds.bottomRight.x = bounds.bottomRight.x - horizontalBufferOffset;
-        }
-    }
-
+    
     /// <summary>
     /// 
     /// </summary>
@@ -260,56 +260,17 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <param name="colliderToCheck"></param>
     /// <param name="offsetDirection"></param>
     /// <returns></returns>
-    public override bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck)
+    public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck == this) return false;
 
-        //REMOVE THIS LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        UpdateCollisionBounds();
 
-        if (Mathf.Abs(rigid.velocity.x) > 0 && ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
+        if (rigid.velocity.y == 0)
         {
-            if (colliderToCheck is CustomBoxCollider2D)
-            {
-                if (rigid.velocity.x >= 0)
-                {
-                    float collisionPoint = bounds.topRight.y;
-
-                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint).x - (GetRighBoundAtYValue(collisionPoint).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-
-                    rigid.velocity.x = 0;
-                }
-                else
-                {
-                    float collisionPoint = bounds.topRight.y;
-
-                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-
-                    rigid.velocity.x = 0;
-                }
-            }
-            else if (colliderToCheck is CustomCircleCollider2D)
-            {
-                Vector2 collisionPoint = ((CustomCircleCollider2D)colliderToCheck).GetCollisionPointRect(this);
-                if (rigid.velocity.x >= 0)
-                {
-                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint.y).x - (GetRighBoundAtYValue(collisionPoint.y).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                    rigid.velocity.x = 0;
-                }
-                else
-                {
-                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint.y).x - (GetLeftBoundAtYValue(collisionPoint.y).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                    rigid.velocity.x = 0;
-                }
-            }
-            return true;
+            return false;
         }
 
-        if (Mathf.Abs(rigid.velocity.y) > 0 && ColliderIntersectBounds(verticalCheckBounds, colliderToCheck))
+        if (ColliderIntersectBounds(verticalCheckBounds, colliderToCheck))
         {
             if (colliderToCheck is CustomBoxCollider2D)
             {
@@ -354,5 +315,54 @@ public class CustomBoxCollider2D : CustomCollider2D
         }
         return false;
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
+    {
+        if (colliderToCheck == this) return false;
+
+        if (rigid.velocity.x == 0) return false;
+
+        if (ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                if (rigid.velocity.x >= 0)
+                {
+                    float collisionPoint = bounds.topRight.y;
+
+                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint).x - (GetRighBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                }
+                else
+                {
+                    float collisionPoint = bounds.topRight.y;
+
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                }
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                Vector2 collisionPoint = ((CustomCircleCollider2D)colliderToCheck).GetCollisionPointRect(this);
+                if (rigid.velocity.x >= 0)
+                {
+                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint.y).x - (GetRighBoundAtYValue(collisionPoint.y).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                }
+                else
+                {
+                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint.y).x - (GetLeftBoundAtYValue(collisionPoint.y).x - transform.position.x);
+                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

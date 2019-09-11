@@ -112,11 +112,6 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract Vector2 GetCenter();
 
-    public virtual void UpdateCollisionBounds()
-    {
-        return;
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -124,7 +119,9 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract bool ColliderIntersect(CustomCollider2D colliderToCheck);
 
-    public abstract bool ColliderIntersectBasedOnVelocity(CustomCollider2D colliderToCheck);
+    public abstract bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck);
+
+    public abstract bool ColliderIntersectVertically(CustomCollider2D colliderToCheck);
 
     /// <summary>
     /// 
@@ -510,6 +507,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public static Vector2 GetLowerBoundsAtXValueCircle(BoundsCircle cBounds, float x)
     {
         float adjustedX = x - cBounds.center.x;
+
         float angle = Mathf.Acos(adjustedX / cBounds.radius);
         return new Vector2(x, -Mathf.Sin(angle) * cBounds.radius + cBounds.center.y);
     }
@@ -522,6 +520,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     public static Vector2 GetUpperBoundsAtXValueCircle(BoundsCircle cBounds, float x)
     {
         float adjustedX = x - cBounds.center.x;
+
         float angle = Mathf.Acos(adjustedX / cBounds.radius);
         return new Vector2(x, Mathf.Sin(angle) * cBounds.radius + cBounds.center.y);
     }
