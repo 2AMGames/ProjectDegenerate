@@ -147,6 +147,10 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
+        if (Overseer.Instance.GameStarted)
+        {
+            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity);
+        }
         if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {
             return;
@@ -314,6 +318,7 @@ public class MovementMechanics : MonoBehaviour {
         float updatedXVelocity = rigid.velocity.x;
         updatedXVelocity = Mathf.MoveTowards(updatedXVelocity, goalSpeed, 
             Overseer.DELTA_TIME * airAcceleration);
+
         Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.velocity.y);
         rigid.velocity = updatedVectorVelocity;
     }
