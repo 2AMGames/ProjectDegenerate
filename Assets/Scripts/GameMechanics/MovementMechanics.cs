@@ -311,7 +311,10 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
-            Debug.LogError("Returning");
+            if (Overseer.Instance.IsGameReady)
+            {
+                Debug.LogError("Returning");
+            }
             return;
         }
         float goalSpeed = Mathf.Sign(horizontalInput) * maximumAirSpeed;
