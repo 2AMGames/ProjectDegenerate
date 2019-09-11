@@ -396,8 +396,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return null;
             --frameToSync;
         }
-        SetGameReady(true);
         yield return new WaitForEndOfFrame();
+        SetGameReady(true);
         DelayGameCoroutine = null;
     }
 
