@@ -267,7 +267,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
-        Debug.LogError("Executing frame: " + inputData.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
+        Debug.LogError("Executing frame: " + inputData.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount + ", Data: " + inputData.InputPattern);
 
         if ((inputData.InputPattern & 1) == 1)
         {
