@@ -149,7 +149,7 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (Overseer.Instance.GameStarted)
         {
-            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity);
+            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "Input: " + horizontalInput);
         }
         if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {
@@ -311,6 +311,7 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
+            Debug.LogError("Returning");
             return;
         }
         float goalSpeed = Mathf.Sign(horizontalInput) * maximumAirSpeed;
