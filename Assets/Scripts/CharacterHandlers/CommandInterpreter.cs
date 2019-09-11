@@ -209,7 +209,6 @@ public class CommandInterpreter : MonoBehaviour
             HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
-                Debug.LogError("Queueing Frame: " + dataToQueue.FrameNumber + ". On frame: " + GameStateManager.Instance.FrameCount);
                 ++InputsReceived;
                 if (GameStateManager.Instance.FrameCount >= dataToQueue.FrameNumber + FrameDelay)
                 {
@@ -360,7 +359,6 @@ public class CommandInterpreter : MonoBehaviour
 
     private void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        Debug.Log("Update Joystick Input: " + currentJoystickVec + ", Last: " + lastJoystickInput);
         if (lastJoystickInput != currentJoystickVec)
         {
             //Debug.LogError("Frames held: " + FramesHeld);
@@ -398,7 +396,6 @@ public class CommandInterpreter : MonoBehaviour
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
     {
-        Debug.LogError("Prev Input: " + prevInput + ", CurrentInput: " + currentInput);
         if (prevInput.y < 1 && currentInput.y >= 1) 
         {
             characterStats.MovementMechanics.Jump();

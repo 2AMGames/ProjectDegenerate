@@ -311,10 +311,6 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
-            if (Overseer.Instance.IsGameReady)
-            {
-                Debug.LogError("Returning");
-            }
             return;
         }
         float goalSpeed = Mathf.Sign(horizontalInput) * maximumAirSpeed;
@@ -401,7 +397,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        Debug.LogError("Jump.RigidIsInAir = " + rigid.isInAir + "currentJumpsAvailable = " + currentJumpsAvailable);
+        Debug.LogError("Jump.RigidIsInAir = " + rigid.isInAir);
         if (ignoreJumpButton)
         {
             Debug.LogError("Ignore jump button");

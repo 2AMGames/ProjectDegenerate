@@ -38,8 +38,6 @@ public class PhysicsManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Overseer.Instance.IsGameReady)
-            return;
 
         Vector2 vec;
         foreach (CustomCollider2D collider in colliderList)
