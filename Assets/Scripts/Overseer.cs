@@ -157,6 +157,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             {
                 CreateLocalPlayer(index);
             }
+            GameStarted = true;
             SetGameReady(true);
             OnGameReady?.Invoke(true);
         }

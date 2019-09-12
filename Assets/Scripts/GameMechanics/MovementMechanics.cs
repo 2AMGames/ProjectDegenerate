@@ -150,6 +150,7 @@ public class MovementMechanics : MonoBehaviour {
         if (Overseer.Instance.GameStarted)
         {
             Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "HInput: " + horizontalInput + ",VInput: " + verticalInput);
+            Debug.LogError("AnimationName: " + anim.GetCurrentAnimatorStateInfo(0).fullPathHash + ". Animation Time: " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
         if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
         {

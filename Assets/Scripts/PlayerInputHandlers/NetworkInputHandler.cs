@@ -221,8 +221,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             if (GameStateManager.Instance.FrameCount - SentPackets[packetNumber] >= (NetworkManager.Instance.TotalDelayFrames * 2))
             {
                 uint latency = GameStateManager.Instance.FrameCount - SentPackets[packetNumber];
-                Debug.LogError("Latency: " + latency);
-                Debug.LogError("Took too long for frame: " + SentPackets[packetNumber]);
             }
             SentPackets.Remove(packetNumber);
         }
