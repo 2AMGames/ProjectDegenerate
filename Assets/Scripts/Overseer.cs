@@ -81,6 +81,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         get; private set;
     }
 
+    public bool IsDelayingGame
+    {
+        get
+        {
+            return DelayGameCoroutine != null;
+        }
+    }
+
     public bool GameStarted { get; private set; }
     #endregion
 

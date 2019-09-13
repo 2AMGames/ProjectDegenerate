@@ -6,6 +6,12 @@ using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
 public class LocalPlayerController : PlayerController
 {
+
+    #region const variables
+
+    private const ushort DefaultInputPattern = 0xF000;
+
+    #endregion
     #region main variables
 
     private ushort LastSavedInputPattern;
@@ -23,14 +29,14 @@ public class LocalPlayerController : PlayerController
             PlayerInputData currentFrameInputData = new PlayerInputData();
             currentFrameInputData.FrameNumber = GameStateManager.Instance.FrameCount;
             currentFrameInputData.PlayerIndex = PlayerIndex;
-            currentFrameInputData.InputPattern = 0xF000;
+            currentFrameInputData.InputPattern = DefaultInputPattern;
 
             // Properties cannot be passed by reference, so create a local variable
             ushort inputPattern = currentFrameInputData.InputPattern;
 
             UpdateButtonInput(ref inputPattern);
             UpdateJoystickInput(ref inputPattern);
-            if (inputPattern != LastSavedInputPattern)
+            if (inputPattern != LastSavedInputPattern || inputPattern != DefaultInputPattern)
             {
                 currentFrameInputData.InputPattern = inputPattern;
                 CommandInterpreter.QueuePlayerInput(currentFrameInputData);

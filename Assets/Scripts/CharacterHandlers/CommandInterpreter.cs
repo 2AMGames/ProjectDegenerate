@@ -266,7 +266,6 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
-        Debug.LogError("Executing frame: " + inputData.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount + ", Data: " + inputData.InputPattern);
 
         if ((inputData.InputPattern & 1) == 1)
         {
@@ -359,20 +358,17 @@ public class CommandInterpreter : MonoBehaviour
 
     private void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        if (lastJoystickInput != currentJoystickVec)
-        {
-            //Debug.LogError("Frames held: " + FramesHeld);
-            currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
-            DirectionalinputStruct dInput = new DirectionalinputStruct();
-            dInput.direction = CurrentDirection;
-            dInput.directionInput = currentJoystickVec;
-            directionalInputRecordList.Add(dInput);
-            StartCoroutine(RemoveDirectionalInputAfterTime());
+        //Debug.LogError("Frames held: " + FramesHeld);
+        currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
+        OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
+        DirectionalinputStruct dInput = new DirectionalinputStruct();
+        dInput.direction = CurrentDirection;
+        dInput.directionInput = currentJoystickVec;
+        directionalInputRecordList.Add(dInput);
+        StartCoroutine(RemoveDirectionalInputAfterTime());
 
-            CheckForJumpInput(lastJoystickInput, currentJoystickVec);
-            currentDirectionalInputStruct.directionInput = currentJoystickVec;
-        }
+        CheckForJumpInput(lastJoystickInput, currentJoystickVec);
+        currentDirectionalInputStruct.directionInput = currentJoystickVec;
     }
 
     private int IsButtonPressed(string buttonTrigger)
@@ -399,6 +395,10 @@ public class CommandInterpreter : MonoBehaviour
         if (prevInput.y < 1 && currentInput.y >= 1) 
         {
             characterStats.MovementMechanics.Jump();
+        }
+        else
+        {
+            Debug.LogError("Jump input ignored");
         }
     }
 

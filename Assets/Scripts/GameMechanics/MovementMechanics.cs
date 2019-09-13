@@ -147,12 +147,12 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        if (Overseer.Instance.GameStarted)
+        if (Overseer.Instance.GameStarted && Overseer.Instance.IsNetworkedMode)
         {
-            Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "HInput: " + horizontalInput + ",VInput: " + verticalInput);
-            Debug.LogError("AnimationName: " + anim.GetCurrentAnimatorStateInfo(0).fullPathHash + ". Animation Time: " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            //Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "HInput: " + horizontalInput + ",VInput: " + verticalInput);
+            //Debug.LogError("AnimationName: " + anim.GetCurrentAnimatorStateInfo(0).fullPathHash + ". Animation Time: " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
-        if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
+        if (currentMovementState != CharacterStats.CharacterState.FreeMovement || !Overseer.Instance.IsGameReady)
         {
             return;
         }
@@ -398,7 +398,10 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        Debug.LogError("Jump.RigidIsInAir = " + rigid.isInAir);
+        if (Overseer.Instance.IsNetworkedMode)
+        {
+            Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ",Anim State: " + anim.GetCurrentAnimatorStateInfo(0).tagHash + ",Time = " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime + ",RigidIsInAir = " + rigid.isInAir);
+        }
         if (ignoreJumpButton)
         {
             Debug.LogError("Ignore jump button");

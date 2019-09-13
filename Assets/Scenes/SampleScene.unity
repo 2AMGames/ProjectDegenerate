@@ -3405,7 +3405,7 @@ PrefabInstance:
     - target: {fileID: 6728667214325178035, guid: 36249abe33f974c4cbeae2e0d75bc28b,
         type: 3}
       propertyPath: SelectedGameType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1749728940, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}
       propertyPath: LocalFrameDelay

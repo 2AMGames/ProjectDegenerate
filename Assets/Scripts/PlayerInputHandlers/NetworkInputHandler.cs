@@ -156,12 +156,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    if (receivedFrame > (packet.FrameSent + NetworkManager.Instance.NetworkDelayFrames))
+                    if (receivedFrame - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
                     {
-                        int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent + NetworkManager.Instance.NetworkDelayFrames);
+                        int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
                         if (FramesToWait >= 1)
                         {
-                            Debug.LogError("Frame received before delay: " + receivedFrame);
+                            Debug.LogError("Frame received to delay: " + packet.FrameSent);
                             Overseer.Instance.DelayGame(FramesToWait);
                         }
                         else
@@ -255,6 +255,16 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             //Debug.LogError("Frames till check: " + FramesTillCheckHeartbeat);
             //Debug.LogError("Frames till send: " + FramesTillSendHeartbeat);
+            if (FramesTillSendHeartbeat < 1)
+            {
+                SendHeartbeat();
+                ResetFramesTillSendHeartbeat();
+            }
+            else
+            {
+                --FramesTillSendHeartbeat;
+            }
+
             yield return new WaitForEndOfFrame();
 
             if (FramesTillCheckHeartbeat < 1)
@@ -268,16 +278,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     ResetFrameWaitTime();
                 }
                 PacketReceivedInTime = false;
-            }
-
-            if (FramesTillSendHeartbeat < 1)
-            {
-                SendHeartbeat();
-                ResetFramesTillSendHeartbeat();
-            }
-            else
-            {
-                --FramesTillSendHeartbeat;
             }
 
             if (!PacketReceivedThisFrame)
@@ -308,9 +308,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void SendHeartbeat()
     {
-        //Debug.LogError("Send heartbeat");
         PlayerInputPacket packet = new PlayerInputPacket();
-        packet.FrameSent = GameStateManager.Instance.FrameCount;
+        packet.FrameSent = GameStateManager.Instance.FrameCount + 1;
+        if (Overseer.Instance.IsDelayingGame)
+        {
+            Debug.LogError("Delaying game while sending heartbeat");
+        }
         packet.PacketId = PacketsSent;
         packet.PlayerIndex = PlayerController.PlayerIndex;
         packet.InputData = new List<PlayerInputData>(DataSent);
