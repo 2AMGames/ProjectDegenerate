@@ -396,10 +396,6 @@ public class CommandInterpreter : MonoBehaviour
         {
             characterStats.MovementMechanics.Jump();
         }
-        else
-        {
-            Debug.LogError("Jump input ignored");
-        }
     }
 
     /// <summary>
