@@ -266,7 +266,18 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
-
+        AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
+        AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
+        string clipName = state.shortNameHash.ToString();
+        for (int index = 0; index < clips.Length; ++index)
+        {
+            if (state.IsName(clips[index].name))
+            {
+                clipName = clips[index].name;
+                break;
+            }
+        }
+        Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidIsInAir = " + characterStats.MovementMechanics.IsInAir + ",Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime);
         if ((inputData.InputPattern & 1) == 1)
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);

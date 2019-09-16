@@ -28,7 +28,7 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
-        float speedModifier = Overseer.DELTA_TIME > 0 ? Time.deltaTime / Overseer.DELTA_TIME : 0f;
+        float speedModifier = Time.deltaTime > 0 ? Overseer.DELTA_TIME / Time.deltaTime: 0f;
         Animator.speed = speedModifier;
     }
 

@@ -398,18 +398,6 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
-        AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
-        string clipName = "";
-        for (int index = 0; index < clips.Length; ++index)
-        {
-            if (state.IsName(clips[index].name))
-            {
-                clipName = clips[index].name;
-                break;
-            }
-        }
-        Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidIsInAir = " + rigid.isInAir + ",Y pos: " + gameObject.transform.position.y);
         if (ignoreJumpButton)
         {
             Debug.LogError("Ignore jump button");
