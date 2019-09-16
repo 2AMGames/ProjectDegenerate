@@ -496,6 +496,74 @@ public abstract class CustomCollider2D : MonoBehaviour {
     }
     #endregion line intersection methods
 
+    #region intersection point methods
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="r1"></param>
+    /// <param name="r2"></param>
+    /// <returns></returns>
+    public static Vector2 IntersectionPointRectOnRect(BoundsRect r1, BoundsRect r2)
+    {
+        return Vector2.zero;
+
+    }
+
+    /// <summary>
+    /// Returns the collision point of the of the two collider bounds
+    /// </summary>
+    /// <param name="r1"></param>
+    /// <param name="c1"></param>
+    /// <returns></returns>
+    public static Vector2 IntersectionPointRectOnCircle(BoundsRect r1, BoundsCircle c1)
+    {
+        Vector2 c = c1.center;
+        Vector2 collisionPoint;
+        if (c.x < r1.bottomLeft.x)
+        {
+            collisionPoint.x = r1.bottomLeft.x;
+        }
+        else if (c.x > r1.bottomRight.x)
+        {
+            collisionPoint.x = r1.bottomRight.x;
+        }
+        else
+        {
+            collisionPoint.x = c.x;
+        }
+
+        if (c.y < r1.bottomRight.y)
+        {
+            collisionPoint.y = r1.bottomRight.y;
+        }
+        else if (c.y > r1.topRight.y)
+        {
+            collisionPoint.y = r1.topRight.y;
+        }
+        else
+        {
+            collisionPoint.y = c.y;
+        }
+        return collisionPoint;
+    }
+
+    /// <summary>
+    /// 
+    /// 
+    /// </summary>
+    /// <param name="c1"></param>
+    /// <param name="c2"></param>
+    /// <returns></returns>
+    public static Vector2 IntersectionPointCircleOnCircle(BoundsCircle c1, BoundsCircle c2)
+    {
+
+
+        return Vector2.zero;
+    }
+
+    #endregion intersection point methods
+
 
     #region get outter bounds of collider
 

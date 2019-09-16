@@ -68,46 +68,6 @@ public class CustomCircleCollider2D : CustomCollider2D
     }
 
 
-    #region circle collision methods
-    /// <summary>
-    /// Returns the collision point that we hit if we intersect with a rect collider
-    /// </summary>
-    /// <param name="rect"></param>
-    /// <returns></returns>
-    public Vector2 GetCollisionPointRect(CustomBoxCollider2D rect)
-    {
-        Vector2 c = bounds.center;
-        Vector2 collisionPoint;
-        if (c.x < rect.bounds.bottomLeft.x)
-        {
-            collisionPoint.x = rect.bounds.bottomLeft.x;
-        }
-        else if (c.x > rect.bounds.bottomRight.x)
-        {
-            collisionPoint.x = rect.bounds.bottomRight.x;
-        }
-        else
-        {
-            collisionPoint.x = c.x;
-        }
-
-        if (c.y < rect.bounds.bottomRight.y)
-        {
-            collisionPoint.y = rect.bounds.bottomRight.y;
-        }
-        else if (c.y > rect.bounds.topRight.y)
-        {
-            collisionPoint.y = rect.bounds.topRight.y;
-        }
-        else
-        {
-            collisionPoint.y = c.y;
-        }
-        return collisionPoint;
-    }
-    #endregion circle collision methods
-
-
     /// <summary>
     /// 
     /// </summary>
@@ -243,13 +203,12 @@ public class CustomCircleCollider2D : CustomCollider2D
             return false;
         }
 
-
         if (CircleColliderCollisionsAtBounds(verticalBoundsFromVelocity, colliderToCheck))
         {
             Vector2 closestCollisionPoint;
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                Vector2 pointOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
+                Vector2 pointOfCollision = IntersectionPointRectOnCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds);
                 if (rigid.velocity.y > 0)
                 {
                     closestCollisionPoint = GetUpperBoundsAtXValue(pointOfCollision.x);
@@ -270,7 +229,7 @@ public class CustomCircleCollider2D : CustomCollider2D
             {
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
                 float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
-                float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
+                float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (bounds.radius) / totalRadiusSize;
                 Vector2 collisionPoint;
                 if (rigid.velocity.y > 0)
                 {
@@ -305,7 +264,7 @@ public class CustomCircleCollider2D : CustomCollider2D
             Vector2 closestCollisionPoint;
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                Vector2 pointOfCollision = GetCollisionPointRect((CustomBoxCollider2D)colliderToCheck);
+                Vector2 pointOfCollision = IntersectionPointRectOnCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds);
                 if (rigid.velocity.x > 0)
                 {
                     closestCollisionPoint = GetRighBoundAtYValue(pointOfCollision.y);
@@ -325,7 +284,7 @@ public class CustomCircleCollider2D : CustomCollider2D
             {
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
                 float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
-                float yCollision = bounds.center.y + (colliderToCheck.GetCenter().y - bounds.center.y) * (totalRadiusSize - bounds.radius) / totalRadiusSize;
+                float yCollision = bounds.center.y + (colliderToCheck.GetCenter().y - bounds.center.y) * (bounds.radius) / totalRadiusSize;
                 Vector2 collisionPoint;
                 if (rigid.velocity.x > 0)
                 {
