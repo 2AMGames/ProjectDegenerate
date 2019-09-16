@@ -121,6 +121,14 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
+    public Vector2 Velocty
+    {
+        get
+        {
+            return rigid.velocity;
+        }
+    }
+
     private IEnumerator ForcedMovementCoroutine;
 
     #endregion main variables

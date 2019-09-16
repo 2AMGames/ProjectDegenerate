@@ -277,7 +277,7 @@ public class CommandInterpreter : MonoBehaviour
                 break;
             }
         }
-        Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidIsInAir = " + characterStats.MovementMechanics.IsInAir + ",Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime);
+        Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ",Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime);
         if ((inputData.InputPattern & 1) == 1)
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);
