@@ -329,7 +329,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (photonEvent.Code == PingRequest)
         {
-            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber, true);
+            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber, default, true);
         }
         else if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
