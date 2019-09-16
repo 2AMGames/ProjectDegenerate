@@ -139,17 +139,12 @@ namespace Photon.Pun
             {
                 SendAsap = false;
                 bool doSend = true;
-                bool doDispatch = true;
                 int sendCounter = 0;
                 while (PhotonNetwork.IsMessageQueueRunning && doSend && sendCounter < MaxDatagrams)
                 {
                     // Send all outgoing commands
                     Profiler.BeginSample("SendOutgoingCommands");
                     doSend = PhotonNetwork.NetworkingClient.LoadBalancingPeer.SendOutgoingCommands();
-                    if (doDispatch)
-                    {
-                        doDispatch = PhotonNetwork.NetworkingClient.LoadBalancingPeer.DispatchIncomingCommands();
-                    }
                     sendCounter++;
                     Profiler.EndSample();
                 }
