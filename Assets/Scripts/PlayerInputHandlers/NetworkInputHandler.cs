@@ -198,7 +198,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 packetToSend.InputData = new List<PlayerInputData>(DataSent);
 
                 SentPackets.Add(packetToSend.PacketId, GameStateManager.Instance.FrameCount);
-                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend);
+                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, default, true);
                 ++PacketsSent;
             }
         }
@@ -316,7 +316,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         packet.PacketId = PacketsSent;
         packet.PlayerIndex = PlayerController.PlayerIndex;
         packet.InputData = new List<PlayerInputData>(DataSent);
-        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others);
+        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
     }
 
     private void HeartbeatTimerExpired()

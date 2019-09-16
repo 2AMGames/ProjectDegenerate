@@ -168,10 +168,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public void SendEventData(byte eventCode, object eventData, ReceiverGroup receivers = 0)
+    public void SendEventData(byte eventCode, object eventData, ReceiverGroup receivers = 0, bool sendImmediate = false)
     {
         RaiseEventOptions receiveOptions = new RaiseEventOptions();
         receiveOptions.Receivers = receivers;
+        PhotonNetwork.SendAsap(sendImmediate);
         PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, SendOptions.SendUnreliable);
     }
 
@@ -328,7 +329,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (photonEvent.Code == PingRequest)
         {
-            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber);
+            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber, true);
         }
         else if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
@@ -577,8 +578,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             {
                 yield return null;
             }
-            rtt.Stop();
 
+            rtt.Stop();
             averagePing += rtt.ElapsedMilliseconds;
         }
         averagePing /= PingSamples;
@@ -599,7 +600,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 PlayersToPing.Add(actorNumber);
             }
         }
-        SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
+        SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber, default, true);
     }
 
     private void OnPingAckReceived(int actorNumber)
