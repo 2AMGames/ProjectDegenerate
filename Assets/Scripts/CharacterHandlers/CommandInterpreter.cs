@@ -277,7 +277,7 @@ public class CommandInterpreter : MonoBehaviour
                 break;
             }
         }
-        Debug.LogError("Jump: FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ",Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime);
+        Debug.LogError("FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ",Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime + " ButtonTrigger: " + Anim.GetBool("ButtonAction"));
         if ((inputData.InputPattern & 1) == 1)
         {
             OnButtonEventTriggered(LP_ANIM_TRIGGER);
@@ -350,15 +350,14 @@ public class CommandInterpreter : MonoBehaviour
 
             if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
             {
+                FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
                 StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
             }
             if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
             {
+                FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
                 StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
             }
-
-            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
 
             ButtonsPressed[buttonEventName] = true;
 
@@ -553,8 +552,7 @@ public class CommandInterpreter : MonoBehaviour
     #region Coroutines
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
-    {
-        yield return null;
+    { 
 
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {

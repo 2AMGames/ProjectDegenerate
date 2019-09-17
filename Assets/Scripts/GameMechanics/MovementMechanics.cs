@@ -425,7 +425,7 @@ public class MovementMechanics : MonoBehaviour {
         }
 
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
-
+        UnityEditor.EditorApplication.isPaused = true;
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
         Debug.LogError("New Velocity: " + rigid.velocity);
