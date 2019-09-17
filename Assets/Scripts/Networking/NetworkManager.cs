@@ -480,8 +480,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         IsNetworkedGameReady = true;
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
-        long frameDelay = TotalDelayFrames;
-        yield return new WaitForEndOfFrame();
+        long frameDelay = NetworkDelayFrames;
         while (frameDelay > 0)
         {
             yield return null;

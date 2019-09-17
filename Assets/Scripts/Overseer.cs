@@ -397,8 +397,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private IEnumerator SynchronizeGameState(uint frameToSync)
     {
-        yield return new WaitForEndOfFrame();
         Debug.LogError("Overseer: Delaying game for: " + frameToSync + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
+        yield return new WaitForEndOfFrame();
         SetGameReady(false);
         while (frameToSync > 0)
         {

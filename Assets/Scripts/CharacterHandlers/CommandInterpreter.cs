@@ -206,7 +206,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
-            HighestReceivedFrameNumber = dataToQueue.FrameNumber > HighestReceivedFrameNumber ? dataToQueue.FrameNumber : HighestReceivedFrameNumber;
+            HighestReceivedFrameNumber = dataToQueue.FrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
                 ++InputsReceived;
