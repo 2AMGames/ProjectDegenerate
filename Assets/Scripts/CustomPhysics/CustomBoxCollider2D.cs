@@ -33,13 +33,25 @@ public class CustomBoxCollider2D : CustomCollider2D
             UpdateBoundsOfCollider();
         }
 
+
+        
+
+#if UNITY_EDITOR
+        if (!isStatic)
+        {
+            UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.verticalCheckBounds.topLeft.x, this.verticalCheckBounds.topLeft.y, verticalCheckBounds.bottomRight.x - verticalCheckBounds.topLeft.x, verticalCheckBounds.bottomRight.y - verticalCheckBounds.topLeft.y),
+                Color.cyan, Color.blue);
+            UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.horizontalCheckBounds.topLeft.x, this.horizontalCheckBounds.topLeft.y, horizontalCheckBounds.bottomRight.x - horizontalCheckBounds.topLeft.x, horizontalCheckBounds.bottomRight.y - horizontalCheckBounds.topLeft.y),
+                Color.red, Color.yellow);
+        }
+
+#endif
         Color colorToDraw = GIZMO_COLOR;
 
         DebugSettings.DrawLine(bounds.bottomLeft, bounds.bottomRight, colorToDraw);
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
         DebugSettings.DrawLine(bounds.topRight, bounds.topLeft, colorToDraw);
         DebugSettings.DrawLine(bounds.topLeft, bounds.bottomLeft, colorToDraw);
-        
     }
 
 
@@ -65,11 +77,11 @@ public class CustomBoxCollider2D : CustomCollider2D
         if (!isStatic)
         {
             verticalCheckBounds = this.bounds;
-            Vector2 verticalOffset = rigid.velocity.y * Overseer.DELTA_TIME * Vector2.up;
+            Vector2 verticalOffset = Mathf.Sign(rigid.velocity.y) * Mathf.Max(Mathf.Abs(rigid.velocity.y * Overseer.DELTA_TIME), VerticalBuffer) * Vector2.up;
             verticalCheckBounds.SetOffset(verticalOffset);
 
             horizontalCheckBounds = this.bounds;
-            Vector2 horizontalOffset = rigid.velocity.x * Overseer.DELTA_TIME * Vector2.right;
+            Vector2 horizontalOffset = Mathf.Sign(rigid.velocity.x) * Mathf.Max(Mathf.Abs(rigid.velocity.x * Overseer.DELTA_TIME), HorizontalBuffer) * Vector2.right;
             horizontalCheckBounds.SetOffset(horizontalOffset);
 
             verticalCheckBounds.topLeft.x = this.bounds.bottomLeft.x + HorizontalBuffer / 2f;

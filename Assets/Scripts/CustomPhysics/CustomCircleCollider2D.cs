@@ -33,6 +33,15 @@ public class CustomCircleCollider2D : CustomCollider2D
         }
 
 #if UNITY_EDITOR
+        
+
+        if (!isStatic)
+        {
+            UnityEditor.Handles.color = Color.red;
+            UnityEditor.Handles.DrawSolidDisc(horizontalBoundsFromVelocity.center, Vector3.forward, horizontalBoundsFromVelocity.radius);
+            UnityEditor.Handles.color = Color.cyan;
+            UnityEditor.Handles.DrawSolidDisc(verticalBoundsFromVelocity.center, Vector3.forward, verticalBoundsFromVelocity.radius);
+        }
         UnityEditor.Handles.color = GIZMO_COLOR;
         UnityEditor.Handles.DrawWireDisc(bounds.center, Vector3.forward, bounds.radius);
 
@@ -259,6 +268,12 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
+
+        if (rigid.velocity.x == 0)
+        {
+            return false;
+        }
+
         if (CircleColliderCollisionsAtBounds(horizontalBoundsFromVelocity, colliderToCheck))
         {
             Vector2 closestCollisionPoint;

@@ -85,17 +85,23 @@ public class PhysicsManager : MonoBehaviour
         {
             foreach (CustomCollider2D staticCollider in staticColliderList)
             {
-                if (nonStaticCollider.ColliderIntersectVertically(staticCollider))
+                bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
+                bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
+
+                if (collidedVertically)
                 {
                     nonStaticCollider.rigid.velocity.y = 0;
-                    nonStaticCollider.UpdateBoundsOfCollider();
                     nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
                 }
-                else if (nonStaticCollider.ColliderIntersectHorizontally(staticCollider))
+                if (collidedHorizontally)
                 {
                     nonStaticCollider.rigid.velocity.x = 0;
-                    nonStaticCollider.UpdateBoundsOfCollider();
                     nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+
+                if (collidedVertically || collidedHorizontally)
+                {
+                    nonStaticCollider.UpdateBoundsOfCollider();
                 }
             }
         }
