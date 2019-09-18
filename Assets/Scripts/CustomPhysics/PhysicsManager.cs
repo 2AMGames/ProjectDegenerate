@@ -73,6 +73,9 @@ public class PhysicsManager : MonoBehaviour
             {
                 if (nonStaticColliderList[i].ColliderIntersect(nonStaticColliderList[j]))
                 {
+                    float xi = nonStaticColliderList[i].originalVelocity.x;
+                    float xj = nonStaticColliderList[j].originalVelocity.x;
+
                     nonStaticColliderList[i].rigid.velocity += nonStaticColliderList[j].originalVelocity;
                     nonStaticColliderList[j].rigid.velocity += nonStaticColliderList[i].originalVelocity;
                 }

@@ -330,7 +330,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                if (rigid.velocity.x >= 0)
+                if (rigid.velocity.x > 0)
                 {
                     float collisionPoint = bounds.topRight.y;
 
