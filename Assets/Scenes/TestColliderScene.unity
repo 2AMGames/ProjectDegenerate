@@ -789,8 +789,8 @@ MonoBehaviour:
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 2.26}
   boxColliderPosition: {x: 0, y: 0}
-  HorizontalBuffer: 0.02
-  VerticalBuffer: 0.02
+  HorizontalBuffer: 0.3
+  VerticalBuffer: 0.3
 --- !u!212 &2060661513
 SpriteRenderer:
   m_ObjectHideFlags: 0
