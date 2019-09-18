@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &561082423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,6 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 5
   acceleration: 25
+  player: 0
 --- !u!1 &608627517
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,13 +584,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1733251983}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c2526562b018ab4aa0cafe60ba26113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 5
   acceleration: 25
+  player: 1
 --- !u!114 &1733251985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,8 +625,8 @@ MonoBehaviour:
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 2.26}
   boxColliderPosition: {x: 0, y: 0}
-  HorizontalBuffer: 0.01
-  VerticalBuffer: 0.01
+  HorizontalBuffer: 0.02
+  VerticalBuffer: 0.02
 --- !u!212 &1733251987
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -789,8 +791,8 @@ MonoBehaviour:
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 2.26}
   boxColliderPosition: {x: 0, y: 0}
-  HorizontalBuffer: 0.3
-  VerticalBuffer: 0.3
+  HorizontalBuffer: 0.02
+  VerticalBuffer: 0.02
 --- !u!212 &2060661513
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -868,3 +870,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 5
   acceleration: 25
+  player: 0
