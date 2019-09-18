@@ -135,7 +135,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     public void OnEvent(EventData photonEvent)
     {
-        uint receivedFrame = GameStateManager.Instance.FrameCount;
+        uint frameReceived = GameStateManager.Instance.FrameCount;
 
         if (photonEvent.Code == NetworkManager.PlayerInputAck)
         {
@@ -156,9 +156,10 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    if (receivedFrame - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
+                    Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
+                    if (frameReceived - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
                     {
-                        int FramesToWait = (int)receivedFrame - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
+                        int FramesToWait = (int)frameReceived - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
                         if (FramesToWait >= GameStateManager.Instance.LocalFrameDelay)
                         {
                             Overseer.Instance.DelayGame(FramesToWait);

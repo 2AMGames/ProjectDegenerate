@@ -168,7 +168,7 @@ public class MovementMechanics : MonoBehaviour {
                     break;
                 }
             }
-            Debug.LogError("FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + rigid.velocity + ", X pos: " + gameObject.transform.position.x + ", Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime + " ButtonTrigger: " + anim.GetBool("ButtonAction"));
+            //Debug.LogError("DELAYING GAME - FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + rigid.velocity + ", X pos: " + gameObject.transform.position.x + ", Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime + " ButtonTrigger: " + anim.GetBool("ButtonAction"));
             //Debug.LogError("Frame Number: " + GameStateManager.Instance.FrameCount + ", Velocity: " + rigid.velocity + "HInput: " + horizontalInput + ",VInput: " + verticalInput);
             //Debug.LogError("AnimationName: " + anim.GetCurrentAnimatorStateInfo(0).fullPathHash + ". Animation Time: " + anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
