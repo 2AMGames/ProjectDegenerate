@@ -58,7 +58,6 @@ public class PhysicsManager : MonoBehaviour
             if (rigid.enabled)
             {
                 rigid.UpdateVelocityFromGravity();
-                rigid.KinematickCollisionUpdate();
             }
         }
 
