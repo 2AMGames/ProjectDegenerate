@@ -133,7 +133,7 @@ public class CommandInterpreter : MonoBehaviour
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
-    private ushort lastButtonPattern;
+    private ushort lastInputPattern;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
@@ -266,79 +266,87 @@ public class CommandInterpreter : MonoBehaviour
 
     private void ExecuteInput(PlayerInputData inputData)
     {
-        AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
-        AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
-        string clipName = state.shortNameHash.ToString();
-        for (int index = 0; index < clips.Length; ++index)
+        if (lastInputPattern != inputData.InputPattern)
         {
-            if (state.IsName(clips[index].name))
+            AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
+            AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
+            string clipName = state.shortNameHash.ToString();
+            for (int index = 0; index < clips.Length; ++index)
             {
-                clipName = clips[index].name;
-                break;
+                if (state.IsName(clips[index].name))
+                {
+                    clipName = clips[index].name;
+                    break;
+                }
             }
-        }
-        //Debug.LogError("FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime + " ButtonTrigger: " + Anim.GetBool("ButtonAction"));
-        if ((inputData.InputPattern & 1) == 1)
-        {
-            OnButtonEventTriggered(LP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(LP_ANIM_TRIGGER);
-        }
+            /*
+                We probably need a method to check if the button was held.
+            */
 
-        if (((inputData.InputPattern >> 1) & 1) == 1)
-        {
-            OnButtonEventTriggered(MP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(MP_ANIM_TRIGGER);
-        }
+            //Debug.LogError("FrameToExecute: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", Time.DeltaTime: " + Time.deltaTime + " ButtonTrigger: " + Anim.GetBool("ButtonAction"));
+            if ((inputData.InputPattern & 1) == 1)
+            {
+                OnButtonEventTriggered(LP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(LP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 2) & 1) == 1)
-        {
-            OnButtonEventTriggered(HP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(HP_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 1) & 1) == 1)
+            {
+                OnButtonEventTriggered(MP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(MP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 3) & 1) == 1)
-        {
-            OnButtonEventTriggered(LK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(LK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 2) & 1) == 1)
+            {
+                OnButtonEventTriggered(HP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(HP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 4) & 1) == 1)
-        {
-            OnButtonEventTriggered(MK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(MK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 3) & 1) == 1)
+            {
+                OnButtonEventTriggered(LK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(LK_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 5) & 1) == 1)
-        {
-            OnButtonEventTriggered(HK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(HK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 4) & 1) == 1)
+            {
+                OnButtonEventTriggered(MK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(MK_ANIM_TRIGGER);
+            }
 
-        UpdateJoystickInput(GetJoystickInputFromData(inputData));
+            if (((inputData.InputPattern >> 5) & 1) == 1)
+            {
+                OnButtonEventTriggered(HK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(HK_ANIM_TRIGGER);
+            }
+
+            UpdateJoystickInput(GetJoystickInputFromData(inputData));
+            lastInputPattern = inputData.InputPattern;
+        }   
     }
 
     public void OnButtonEventTriggered(string buttonEventName)
