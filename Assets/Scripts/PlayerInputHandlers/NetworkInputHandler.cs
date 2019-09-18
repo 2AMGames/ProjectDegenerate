@@ -156,7 +156,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    //Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
+                    Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
                     if (frameReceived - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
                     {
                         int FramesToWait = (int)frameReceived - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
@@ -205,6 +205,20 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             }
         }
     }
+
+    public void SendHeartbeat()
+    {
+        PlayerInputPacket packet = new PlayerInputPacket();
+        packet.FrameSent = GameStateManager.Instance.FrameCount + 1;
+        if (Overseer.Instance.IsDelayingGame)
+        {
+            Debug.LogError("Delaying game while sending heartbeat");
+        }
+        packet.PacketId = PacketsSent;
+        packet.PlayerIndex = PlayerController.PlayerIndex;
+        packet.InputData = new List<PlayerInputData>(DataSent);
+        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
+    }
     #endregion
 
     #region private interface
@@ -250,7 +264,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         SamplesTillUpdatePing = HeartbeatPingSampleCount;
         ResetFrameWaitTime();
         ResetFramesTillSendHeartbeat();
-        SendHeartbeat();
 
         while (true)
         {
@@ -288,20 +301,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private void ResetFramesTillSendHeartbeat()
     {
         FramesTillSendHeartbeat = NetworkManager.Instance.NetworkDelayFrames;
-    }
-
-    private void SendHeartbeat()
-    {
-        PlayerInputPacket packet = new PlayerInputPacket();
-        packet.FrameSent = GameStateManager.Instance.FrameCount + 1;
-        if (Overseer.Instance.IsDelayingGame)
-        {
-            Debug.LogError("Delaying game while sending heartbeat");
-        }
-        packet.PacketId = PacketsSent;
-        packet.PlayerIndex = PlayerController.PlayerIndex;
-        packet.InputData = new List<PlayerInputData>(DataSent);
-        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
     }
 
     private void HeartbeatTimerExpired()
