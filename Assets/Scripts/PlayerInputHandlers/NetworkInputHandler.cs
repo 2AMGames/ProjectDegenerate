@@ -156,7 +156,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
+                    //Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
                     if (frameReceived - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
                     {
                         int FramesToWait = (int)frameReceived - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
@@ -174,6 +174,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                         RestartGameIfNeeded();
                     }
                 }
+                ResetFrameWaitTime();
             }
         }
     }
@@ -253,18 +254,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
         while (true)
         {
-            //Debug.LogError("Frames till check: " + FramesTillCheckHeartbeat);
-            //Debug.LogError("Frames till send: " + FramesTillSendHeartbeat);
-            if (FramesTillSendHeartbeat < 1)
-            {
-                SendHeartbeat();
-                ResetFramesTillSendHeartbeat();
-            }
-            else
-            {
-                --FramesTillSendHeartbeat;
-            }
-
             yield return new WaitForEndOfFrame();
 
             if (FramesTillCheckHeartbeat < 1)
@@ -272,10 +261,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (!PacketReceivedInTime)
                 {
                     HeartbeatTimerExpired();
-                }
-                if (ShouldRunGame)
-                {
-                    ResetFrameWaitTime();
                 }
                 PacketReceivedInTime = false;
             }
@@ -291,14 +276,13 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void ResetFrameWaitTime()
     {
+        /*
         // If the timer was expired, add the time we spent waiting to the next number of frames to wait.
         // This is to keep in sync with how often the other client is sending heartbeats
         int frameBuffer = Math.Abs(FramesTillCheckHeartbeat);
+        add frame buffer to frames till check heartbeat
+        */
         FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames;
-        if (frameBuffer < NetworkManager.Instance.TotalDelayFrames)
-        {
-            FramesTillCheckHeartbeat += frameBuffer;
-        }
     }
 
     private void ResetFramesTillSendHeartbeat()
