@@ -47,13 +47,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     /// </summary>
     private int FramesTillCheckHeartbeat;
 
-    /// <summary>
-    /// Frames until we send a heartbeat message to the other player. Value is independent of number of frames that we last received
-    /// a heartbeat message.
-    /// </summary>
-    private int FramesTillSendHeartbeat;
-
-    private uint SamplesTillUpdatePing;
+    private uint FrameReceivedFromPlayerOnUpdate;
 
     private bool PlayerPacketReceived;
 
@@ -156,23 +150,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    Debug.LogError("Frame sent: " + packet.FrameSent + ", Frame Received: " + frameReceived);
-                    if (frameReceived - packet.FrameSent > NetworkManager.Instance.NetworkDelayFrames)
-                    {
-                        int FramesToWait = (int)frameReceived - (int)(packet.FrameSent) - NetworkManager.Instance.NetworkDelayFrames;
-                        if (FramesToWait >= GameStateManager.Instance.LocalFrameDelay)
-                        {
-                            Overseer.Instance.DelayGame(FramesToWait);
-                        }
-                        else
-                        {
-                            RestartGameIfNeeded();
-                        }
-                    }
-                    else
-                    {
-                        RestartGameIfNeeded();
-                    }
+                    FrameReceivedFromPlayerOnUpdate = packet.FrameSent;
                 }
                 ResetFrameWaitTime();
             }
@@ -261,12 +239,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private IEnumerator UpdateHeartbeat()
     {
         UpdatingPing = true;
-        SamplesTillUpdatePing = HeartbeatPingSampleCount;
         ResetFrameWaitTime();
         ResetFramesTillSendHeartbeat();
 
         while (true)
         {
+            uint currentFrame = GameStateManager.Instance.FrameCount;
             yield return new WaitForEndOfFrame();
 
             if (FramesTillCheckHeartbeat < 1)
@@ -281,6 +259,24 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             if (!PacketReceivedThisFrame)
             {
                 --FramesTillCheckHeartbeat;
+            }
+            else
+            {
+                if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames >= currentFrame)
+                {
+                    if (!ShouldRunGame)
+                    {
+                        Debug.LogError("Restart ticks: " + Time.frameCount);
+                        Overseer.Instance.SetHeartbeatReceived(true);
+                        ShouldRunGame = true;
+                    }
+                }
+                else if (ShouldRunGame)
+                {
+                    Debug.LogError("Stop ticks: " + Time.frameCount);
+                    Overseer.Instance.SetHeartbeatReceived(false);
+                    ShouldRunGame = false;
+                }
             }
             PacketReceivedThisFrame = false;
             yield return null;
@@ -300,7 +296,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void ResetFramesTillSendHeartbeat()
     {
-        FramesTillSendHeartbeat = NetworkManager.Instance.NetworkDelayFrames;
     }
 
     private void HeartbeatTimerExpired()
@@ -345,7 +340,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     private void OnHeartbeatPingCountReached()
     {
         AveragePing = 0;
-        SamplesTillUpdatePing = HeartbeatPingSampleCount;
     }
 
     #endregion

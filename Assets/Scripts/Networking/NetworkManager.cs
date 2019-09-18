@@ -160,11 +160,27 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public void DisconnectToNetwork()
+    public void DisconnectFromNetwork()
     {
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.Disconnect();
+        }
+    }
+
+    public void DisconnectFromLobby()
+    {
+        if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentLobby != null)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+    }
+
+    public void DisconnectFromRoom()
+    {
+        if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom != null)
+        {
+            PhotonNetwork.LeaveRoom();
         }
     }
 

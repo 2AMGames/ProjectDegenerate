@@ -297,10 +297,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             }
         }
 
-        if (Players.Count < NumberOfPlayers)
+        if (Players.Count < NumberOfPlayers && Overseer.Instance.GameStarted)
         {
             SetGameReady(false);
             OnGameReady(false);
+            NetworkManager.Instance.DisconnectFromNetwork();
         }
     }
 
