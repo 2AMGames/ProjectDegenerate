@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// The manager that handles how we control all of our physics objects in the game. This updates objects that contain a custom physics object and any collider object
 /// </summary>
@@ -71,6 +70,10 @@ public class PhysicsManager : MonoBehaviour
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
+                if (!nonStaticColliderList[i].isActiveAndEnabled || !nonStaticColliderList[j].isActiveAndEnabled)
+                {
+                    continue;
+                }
                 if (nonStaticColliderList[i].ColliderIntersect(nonStaticColliderList[j]))
                 {
                     float xi = nonStaticColliderList[i].originalVelocity.x;
@@ -87,6 +90,10 @@ public class PhysicsManager : MonoBehaviour
         {
             foreach (CustomCollider2D staticCollider in staticColliderList)
             {
+                if (!staticCollider.isActiveAndEnabled || !nonStaticCollider.isActiveAndEnabled)
+                {
+                    continue;//Skip if either collider is inactive
+                }
                 bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
                 bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
 
@@ -101,10 +108,20 @@ public class PhysicsManager : MonoBehaviour
                     nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
                 }
 
+
+                if (collidedVertically && collidedHorizontally)
+                {
+                    Debug.Break();
+
+                    print("I hit twice");
+                }
+
                 if (collidedVertically || collidedHorizontally)
                 {
                     nonStaticCollider.UpdateBoundsOfCollider();
                 }
+
+                
             }
         }
 
