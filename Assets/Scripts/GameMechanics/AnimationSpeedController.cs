@@ -6,7 +6,7 @@ public class AnimationSpeedController : MonoBehaviour
 {
     #region main variables
 
-    private Animator Animator;
+    private Animator Anim;
 
     #endregion
 
@@ -14,7 +14,8 @@ public class AnimationSpeedController : MonoBehaviour
 
     void Start()
     {
-        Animator = GetComponent<Animator>();
+        Anim = GetComponent<Animator>();
+        Anim.enabled = false;
     }
 
     void Update()
@@ -28,8 +29,7 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
-        float speedModifier = Time.deltaTime > 0 ? Overseer.DELTA_TIME / Time.deltaTime: 0f;
-        Animator.speed = speedModifier;
+        Anim.Update(Overseer.DELTA_TIME);
     }
 
     #endregion
