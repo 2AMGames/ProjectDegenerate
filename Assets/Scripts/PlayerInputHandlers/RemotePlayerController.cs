@@ -70,7 +70,10 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                     {
                         CommandInterpreter.QueuePlayerInput(inputFrame);
                     }
-                    SendInputAck(data.PacketId);
+                    if (data.InputData.Count > 0)
+                    {
+                        SendInputAck(data.PacketId);
+                    }
                 }
             }
             catch (Exception e)

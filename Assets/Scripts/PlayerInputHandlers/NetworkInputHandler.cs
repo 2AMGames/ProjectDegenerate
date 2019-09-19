@@ -37,8 +37,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private List<PlayerInputData> DataSent = new List<PlayerInputData>();
 
-    private Dictionary<uint, uint> SentPackets = new Dictionary<uint, uint>();
-
     private Dictionary<uint, uint> HeartbeatPacketsSent = new Dictionary<uint, uint>();
 
     /// <summary>
@@ -55,8 +53,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     /// Set to false when delaying game due to our frame count being ahead or we haven't received a heartbeat packet.
     /// </summary>
     private bool ShouldRunGame = true;
-
-    private Stopwatch HeartbeatStopwatch;
 
     private uint AveragePing;
 
@@ -118,7 +114,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         PlayerController = GetComponent<PlayerController>();
         CommandInterpreter = PlayerController.CommandInterpreter;
-        HeartbeatStopwatch = new Stopwatch();
         Overseer.Instance.OnGameReady += OnGameReady;
         PhotonNetwork.AddCallbackTarget(this);
     }
@@ -160,27 +155,27 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     #endregion
 
     #region public interface
-    public void SendInput(PlayerInputData input)
+    public void SendInput(PlayerInputData input, bool addDataToList)
     {
         // If we are currently synchronizing the game state by catching up to the highest frame, do not send off any inputs.
         if (Overseer.Instance.IsGameReady && !NetworkManager.Instance.IsSynchronizing)
         {
-            if (input.InputPattern > 0)
-            {
-                PlayerInputPacket packetToSend = new PlayerInputPacket();
+            PlayerInputPacket packetToSend = new PlayerInputPacket();
 
+            if (addDataToList)
+            {
                 input.PacketId = PacketsSent;
                 DataSent.Add(input);
-
-                packetToSend.FrameSent = GameStateManager.Instance.FrameCount;
-                packetToSend.PlayerIndex = PlayerController.PlayerIndex;
-                packetToSend.PacketId = PacketsSent;
-                packetToSend.InputData = new List<PlayerInputData>(DataSent);
-
-                SentPackets.Add(packetToSend.PacketId, GameStateManager.Instance.FrameCount);
-                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, default, true);
-                ++PacketsSent;
             }
+
+            packetToSend.FrameSent = GameStateManager.Instance.FrameCount;
+            packetToSend.PlayerIndex = PlayerController.PlayerIndex;
+            packetToSend.PacketId = PacketsSent;
+            packetToSend.InputData = new List<PlayerInputData>(DataSent);
+
+            NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, default, true);
+            ++PacketsSent;
+
         }
     }
 
@@ -207,15 +202,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         if (data.IsValid())
         {
             DataSent.Remove(data);
-        }
-
-        if (SentPackets.ContainsKey(packetNumber))
-        {
-            if (GameStateManager.Instance.FrameCount - SentPackets[packetNumber] >= (NetworkManager.Instance.TotalDelayFrames * 2))
-            {
-                uint latency = GameStateManager.Instance.FrameCount - SentPackets[packetNumber];
-            }
-            SentPackets.Remove(packetNumber);
         }
     }
 

@@ -37,11 +37,13 @@ public class LocalPlayerController : PlayerController
             UpdateButtonInput(ref inputPattern);
             UpdateJoystickInput(ref inputPattern);
             currentFrameInputData.InputPattern = inputPattern;
+
+            bool addDataToInputHandlerList = currentFrameInputData.InputPattern != LastSavedInputPattern;
             CommandInterpreter.QueuePlayerInput(currentFrameInputData);
             LastSavedInputPattern = currentFrameInputData.InputPattern;
             if (InputHandler != null)
             {
-                InputHandler.SendInput(currentFrameInputData);
+                InputHandler.SendInput(currentFrameInputData, addDataToInputHandlerList);
             }
         }
         else if (Overseer.Instance.GameStarted && InputHandler != null)
