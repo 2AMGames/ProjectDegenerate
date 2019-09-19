@@ -29,6 +29,7 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
+        Debug.LogWarning("Set speed to: " + Overseer.DELTA_TIME);
         Anim.Update(Overseer.DELTA_TIME);
     }
 

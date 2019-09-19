@@ -150,7 +150,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     {
                         if (!ShouldRunGame)
                         {
-                            //Debug.LogError("Restart ticks: " + Time.frameCount);
+                            Debug.LogError("Restart ticks: " + Time.frameCount);
                             Overseer.Instance.SetHeartbeatReceived(true);
                             ShouldRunGame = true;
                         }
@@ -192,10 +192,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     {
         PlayerInputPacket packet = new PlayerInputPacket();
         packet.FrameSent = GameStateManager.Instance.FrameCount + 1;
-        if (Overseer.Instance.IsDelayingGame)
-        {
-            Debug.LogError("Delaying game while sending heartbeat");
-        }
         packet.PacketId = PacketsSent;
         packet.PlayerIndex = PlayerController.PlayerIndex;
         packet.InputData = new List<PlayerInputData>(DataSent);
