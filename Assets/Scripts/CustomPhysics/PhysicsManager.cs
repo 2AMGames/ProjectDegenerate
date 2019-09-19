@@ -109,11 +109,9 @@ public class PhysicsManager : MonoBehaviour
                 }
 
 
-                if (collidedVertically && collidedHorizontally)
+                if (collidedVertically)
                 {
-                    Debug.Break();
-
-                    print("I hit twice");
+                    print("Collided Vertically");
                 }
 
                 if (collidedVertically || collidedHorizontally)
