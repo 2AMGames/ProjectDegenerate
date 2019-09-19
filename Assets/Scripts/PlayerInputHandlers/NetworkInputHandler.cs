@@ -146,6 +146,15 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 {
                     HighestFrameCountReceived = packet.FrameSent;
                     FrameReceivedFromPlayerOnUpdate = packet.FrameSent;
+                    if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames >= frameReceived)
+                    {
+                        if (!ShouldRunGame)
+                        {
+                            //Debug.LogError("Restart ticks: " + Time.frameCount);
+                            Overseer.Instance.SetHeartbeatReceived(true);
+                            ShouldRunGame = true;
+                        }
+                    }
                 }
                 ResetFrameWaitTime();
             }
