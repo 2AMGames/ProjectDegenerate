@@ -238,10 +238,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
             if (FramesTillCheckHeartbeat < 1)
             {
-                if (!PacketReceivedInTime)
-                {
-                    HeartbeatTimerExpired();
-                }
+                HeartbeatTimerExpired();
                 PacketReceivedInTime = false;
             }
 
