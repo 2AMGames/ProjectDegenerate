@@ -19,11 +19,6 @@ public class CustomCircleCollider2D : CustomCollider2D
     private BoundsCircle verticalBoundsFromVelocity;
 
     #region monobehaviour methods
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-        
-    }
 
     private void OnDrawGizmos()
     {

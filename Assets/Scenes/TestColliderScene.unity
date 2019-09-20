@@ -300,6 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 5
   acceleration: 25
+  jumpVelocity: 5
   player: 0
 --- !u!1 &608627517
 GameObject:
@@ -477,7 +478,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 863860113}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.09, y: 1.51, z: 0}
+  m_LocalPosition: {x: 7.09, y: -12.47, z: 0}
   m_LocalScale: {x: 1, y: 15, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -589,8 +590,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2526562b018ab4aa0cafe60ba26113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 5
-  acceleration: 25
+  maxVelocity: 6
+  acceleration: 500
+  jumpVelocity: 25
   player: 1
 --- !u!114 &1733251985
 MonoBehaviour:
@@ -604,11 +606,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64792a47924876c4bb38b81715a4d8e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGravity: 0
+  useGravity: 1
   useTerminalVelocity: 1
   gravityVector: {x: 0, y: -1}
-  gravityScale: 1
-  terminalVelocity: 10
+  gravityScale: 5
+  terminalVelocity: 50
 --- !u!114 &1733251986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -770,11 +772,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64792a47924876c4bb38b81715a4d8e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGravity: 0
+  useGravity: 1
   useTerminalVelocity: 1
   gravityVector: {x: 0, y: -1}
-  gravityScale: 1
-  terminalVelocity: 10
+  gravityScale: 5
+  terminalVelocity: 50
 --- !u!114 &2060661512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -868,6 +870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2526562b018ab4aa0cafe60ba26113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 50
+  maxVelocity: 7
   acceleration: 500
+  jumpVelocity: 25
   player: 0

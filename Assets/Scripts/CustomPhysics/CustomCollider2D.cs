@@ -56,12 +56,6 @@ public abstract class CustomCollider2D : MonoBehaviour {
             Overseer.Instance.ColliderManager.RemoveColliderFromManager(this);
         }
     }
-
-    protected virtual void OnValidate()
-    {
-        
-    }
-
     /// <summary>
     /// Be sure to call this method
     /// </summary>
@@ -76,8 +70,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public abstract bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length);
 
-    
 
+    public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);
     /// <summary>
     /// 
     /// </summary>
@@ -123,11 +117,6 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     public abstract bool ColliderIntersectVertically(CustomCollider2D colliderToCheck);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="collider"></param>
-    public abstract void PushObjectOutsideOfCollider(CustomCollider2D collider);
 
     public virtual CustomCollider2D[] GetAllTilesHitFromRayCasts(Vector2 v1, Vector2 v2, Vector2 direction, float distance, int rayCount)
     {

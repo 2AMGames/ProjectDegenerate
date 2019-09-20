@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 /// <summary>
@@ -76,11 +77,34 @@ public class PhysicsManager : MonoBehaviour
                 }
                 if (nonStaticColliderList[i].ColliderIntersect(nonStaticColliderList[j]))
                 {
+                    
                     float xi = nonStaticColliderList[i].originalVelocity.x;
                     float xj = nonStaticColliderList[j].originalVelocity.x;
-
-                    nonStaticColliderList[i].rigid.velocity += nonStaticColliderList[j].originalVelocity;
-                    nonStaticColliderList[j].rigid.velocity += nonStaticColliderList[i].originalVelocity;
+                    if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                    {
+                        if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (!nonStaticColliderList[i].ColliderIntersectHorizontally(nonStaticColliderList[j]))
+                        {
+                            continue;
+                        }
+                    }
+                    float combinedVelocity = 0;
+                    if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
+                    {
+                        combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
+                    }
+                    else
+                    {
+                        combinedVelocity = xi + xj;
+                    }
+                    nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
+                    nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
                 }
             }
         }
@@ -109,11 +133,7 @@ public class PhysicsManager : MonoBehaviour
                 }
 
 
-                if (collidedVertically)
-                {
-                    print("Collided Vertically");
-                }
-
+                
                 if (collidedVertically || collidedHorizontally)
                 {
                     nonStaticCollider.UpdateBoundsOfCollider();
