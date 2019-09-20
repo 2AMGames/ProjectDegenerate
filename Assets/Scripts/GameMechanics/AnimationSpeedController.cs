@@ -27,6 +27,7 @@ public class AnimationSpeedController : MonoBehaviour
     {
         if (Overseer.Instance.HasGameStarted)
         {
+            /*
             AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
             AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
             string clipName = state.shortNameHash.ToString();
@@ -38,11 +39,9 @@ public class AnimationSpeedController : MonoBehaviour
                     break;
                 }
             }
-            /*
-                We probably need a method to check if the button was held.
-            */
 
-            Debug.LogError("Late update frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
+            //Debug.LogError("Late update frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
+            */
         }
     }
 
