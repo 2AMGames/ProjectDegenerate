@@ -89,7 +89,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
-    public bool GameStarted { get; private set; }
+    public bool HasGameStarted { get; private set; }
     #endregion
 
     #region Events
@@ -165,7 +165,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             {
                 CreateLocalPlayer(index);
             }
-            GameStarted = true;
+            HasGameStarted = true;
             SetGameReady(true);
             OnGameReady?.Invoke(true);
         }
@@ -297,7 +297,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             }
         }
 
-        if (Players.Count < NumberOfPlayers && Overseer.Instance.GameStarted)
+        if (Players.Count < NumberOfPlayers && Overseer.Instance.HasGameStarted)
         {
             SetGameReady(false);
             OnGameReady(false);
@@ -369,7 +369,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         Debug.LogWarning("Starting game");
         SetGameReady(true);
-        GameStarted = true;
+        HasGameStarted = true;
         OnGameReady(true);
 
     }

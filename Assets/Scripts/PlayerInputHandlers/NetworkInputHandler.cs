@@ -8,8 +8,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-using Stopwatch = System.Diagnostics.Stopwatch;
-
 using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
 public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmakingCallbacks
@@ -134,7 +132,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         else if (photonEvent.Code == NetworkManager.PlayerInputUpdate)
         {
             PacketReceivedInTime = true;
-            if (Overseer.Instance.GameStarted)
+            if (Overseer.Instance.HasGameStarted)
             {
                 PacketReceivedThisFrame = true;
             }

@@ -155,7 +155,7 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        if (Overseer.Instance.GameStarted && !Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.HasGameStarted && !Overseer.Instance.IsGameReady)
         {
             AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
             AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);

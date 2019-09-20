@@ -23,13 +23,35 @@ public class AnimationSpeedController : MonoBehaviour
         SetAnimationSpeed();
     }
 
+    private void LateUpdate()
+    {
+        if (Overseer.Instance.HasGameStarted)
+        {
+            AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
+            AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
+            string clipName = state.shortNameHash.ToString();
+            for (int index = 0; index < clips.Length; ++index)
+            {
+                if (state.IsName(clips[index].name))
+                {
+                    clipName = clips[index].name;
+                    break;
+                }
+            }
+            /*
+                We probably need a method to check if the button was held.
+            */
+
+            Debug.LogError("Late update frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
+        }
+    }
+
     #endregion
 
     #region private methods
 
     private void SetAnimationSpeed()
     {
-        Debug.LogWarning("Set speed to: " + Overseer.DELTA_TIME);
         Anim.Update(Overseer.DELTA_TIME);
     }
 

@@ -46,7 +46,7 @@ public class LocalPlayerController : PlayerController
                 InputHandler.SendInput(currentFrameInputData, addDataToInputHandlerList);
             }
         }
-        else if (Overseer.Instance.GameStarted && InputHandler != null)
+        else if (Overseer.Instance.HasGameStarted && InputHandler != null)
         {
                 InputHandler.SendHeartbeat();
         }
