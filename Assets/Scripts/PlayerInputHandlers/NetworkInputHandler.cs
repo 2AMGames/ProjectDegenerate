@@ -153,8 +153,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                             ShouldRunGame = true;
                         }
                     }
+                    ResetFrameWaitTime();
                 }
-                ResetFrameWaitTime();
             }
         }
     }
@@ -274,12 +274,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private void ResetFrameWaitTime()
     {
-        /*
-        // If the timer was expired, add the time we spent waiting to the next number of frames to wait.
-        // This is to keep in sync with how often the other client is sending heartbeats
-        int frameBuffer = Math.Abs(FramesTillCheckHeartbeat);
-        add frame buffer to frames till check heartbeat
-        */
         FramesTillCheckHeartbeat = NetworkManager.Instance.TotalDelayFrames;
     }
 

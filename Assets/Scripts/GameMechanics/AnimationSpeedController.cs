@@ -52,7 +52,10 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
-        Anim.Update(Overseer.DELTA_TIME);
+        if (Overseer.Instance.IsGameReady)
+        {
+            Anim.Update(Overseer.DELTA_TIME);
+        }
     }
 
     #endregion
