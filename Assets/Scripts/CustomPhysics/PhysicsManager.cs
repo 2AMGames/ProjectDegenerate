@@ -78,12 +78,14 @@ public class PhysicsManager : MonoBehaviour
                     
                 float xi = nonStaticColliderList[i].rigid.velocity.x;
                 float xj = nonStaticColliderList[j].rigid.velocity.x;
+                CustomCollider2D slowerColliderToCheckCollisions = null;
                 if (Mathf.Abs(xj) > Mathf.Abs(xi))
                 {
                     if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
                     {
                         continue;
                     }
+                    slowerColliderToCheckCollisions = nonStaticColliderList[i];
                 }
                 else
                 {
@@ -91,8 +93,11 @@ public class PhysicsManager : MonoBehaviour
                     {
                         continue;
                     }
+                    slowerColliderToCheckCollisions = nonStaticColliderList[j];
                 }
                 float combinedVelocity = 0;
+                
+                
                 if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
                 {
                     combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
@@ -103,6 +108,16 @@ public class PhysicsManager : MonoBehaviour
                 }
                 nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
                 nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
+                nonStaticColliderList[i].UpdateBoundsOfCollider();
+                nonStaticColliderList[j].UpdateBoundsOfCollider();
+                if (CheckForHorizontalCollisions(slowerColliderToCheckCollisions))
+                {
+                    nonStaticColliderList[i].rigid.velocity.x = 0;
+                    nonStaticColliderList[j].rigid.velocity.x = 0;
+                    nonStaticColliderList[i].UpdateBoundsOfCollider();
+                    nonStaticColliderList[j].UpdateBoundsOfCollider();
+                }
+
                 //else
                 //{
                 //    print("I did not collide with anything");
@@ -179,6 +194,18 @@ public class PhysicsManager : MonoBehaviour
         //        }
         //    }
         //}
+    }
+
+    public bool CheckForHorizontalCollisions(CustomCollider2D colliderToCheck)
+    {
+        foreach (CustomCollider2D staticCollider in staticColliderList)
+        {
+            if (colliderToCheck.ColliderIntersectHorizontally(staticCollider))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     #endregion monobehaviour methods
 
