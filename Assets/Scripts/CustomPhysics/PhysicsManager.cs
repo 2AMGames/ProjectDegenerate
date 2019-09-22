@@ -75,37 +75,39 @@ public class PhysicsManager : MonoBehaviour
                 {
                     continue;
                 }
-                if (nonStaticColliderList[i].ColliderIntersect(nonStaticColliderList[j]))
-                {
                     
-                    float xi = nonStaticColliderList[i].originalVelocity.x;
-                    float xj = nonStaticColliderList[j].originalVelocity.x;
-                    if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                float xi = nonStaticColliderList[i].rigid.velocity.x;
+                float xj = nonStaticColliderList[j].rigid.velocity.x;
+                if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                {
+                    if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
                     {
-                        if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
-                        {
-                            continue;
-                        }
+                        continue;
                     }
-                    else
-                    {
-                        if (!nonStaticColliderList[i].ColliderIntersectHorizontally(nonStaticColliderList[j]))
-                        {
-                            continue;
-                        }
-                    }
-                    float combinedVelocity = 0;
-                    if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
-                    {
-                        combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
-                    }
-                    else
-                    {
-                        combinedVelocity = xi + xj;
-                    }
-                    nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
-                    nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
                 }
+                else
+                {
+                    if (!nonStaticColliderList[i].ColliderIntersectHorizontally(nonStaticColliderList[j]))
+                    {
+                        continue;
+                    }
+                }
+                float combinedVelocity = 0;
+                if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
+                {
+                    combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
+                }
+                else
+                {
+                    combinedVelocity = xi + xj;
+                }
+                nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
+                nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
+                //else
+                //{
+                //    print("I did not collide with anything");
+                //    Debug.Break();
+                //}
             }
         }
 
