@@ -183,6 +183,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             packetToSend.InputData = new List<PlayerInputData>(DataSent);
 
             float rand = Random.Range(0.0f, 1.0f);
+            rand = 1;
             if (rand >= 0.0f)
             {
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, default, true);
@@ -200,7 +201,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         packet.PlayerIndex = PlayerController.PlayerIndex;
         packet.InputData = new List<PlayerInputData>(DataSent);
         float rand = Random.Range(0.0f, 1.0f);
-        if (rand >= 0.0)
+        rand = 1;
+        if (rand >= 0.0f)
         {
             NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
         }
