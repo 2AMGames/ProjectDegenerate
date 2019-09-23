@@ -177,6 +177,7 @@ public class GameStateManager : MonoBehaviour
     private IEnumerator SaveGameState()
     {
         SaveGameCoroutineRunning = true;
+        yield return null;
         while (true)
         {
             yield return new WaitForEndOfFrame();

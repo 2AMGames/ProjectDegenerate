@@ -383,7 +383,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         DelayGameCoroutine = StartCoroutine(SynchronizeGameState((uint)FramesToWait));
     }
 
-    public void SetHeartbeatReceived(bool received)
+    public void SetShouldRunGame(bool received)
     {
         bool isDelayingGame = DelayGameCoroutine != null;
         SetGameReady(received && CheckIfGameReady() && !isDelayingGame);

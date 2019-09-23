@@ -483,7 +483,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
         SetMasterClientReady(true);
         yield return new WaitForEndOfFrame();
-
         PingActivePlayers();
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
         while (TotalDelayFrames <= 0)
@@ -592,6 +591,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             while (PlayersToPing.Count > 0)
             {
                 yield return null;
+                Debug.LogWarning("Ping: " + rtt.ElapsedMilliseconds);
             }
 
             rtt.Stop();

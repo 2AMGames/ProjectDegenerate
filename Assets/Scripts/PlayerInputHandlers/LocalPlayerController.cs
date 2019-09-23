@@ -9,8 +9,6 @@ public class LocalPlayerController : PlayerController
 
     #region const variables
 
-    private const ushort DefaultInputPattern = 0xF000;
-
     #endregion
     #region main variables
 
