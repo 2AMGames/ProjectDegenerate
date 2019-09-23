@@ -174,7 +174,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             ++PacketsSent;
 
             float rand = Random.Range(0.0f, 1.0f);
-            if (rand >= NetworkManager.Instance.SendPercentage)
+            if (rand <= NetworkManager.Instance.SendPercentage)
             {
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, ReceiverGroup.Others, true);
             }
@@ -189,7 +189,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         packet.PlayerIndex = PlayerController.PlayerIndex;
         packet.InputData = DataSent;
         float rand = Random.Range(0.0f, 1.0f);
-        if (rand >= NetworkManager.Instance.SendPercentage)
+        if (rand <= NetworkManager.Instance.SendPercentage)
         {
             NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
         }
@@ -240,18 +240,15 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 OnFrameLimitReached();
                 PacketReceivedInTime = false;
             }
-            else if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames >= currentFrame)
+            else if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
             {
-                if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
-                {
-                    Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
-                    Overseer.Instance.SetShouldRunGame(true);
-                    ShouldRunGame = true;
-                }
+                Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                Overseer.Instance.SetShouldRunGame(true);
+                ShouldRunGame = true;
             }
-            PacketReceivedThisFrame = false;
             yield return null;
         }
+
     }
 
     private void ResetFrameWaitTime(uint frameLimit)
@@ -272,39 +269,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             Overseer.Instance.SetShouldRunGame(false);
             ShouldRunGame = false;
         }
-    }
-
-    private void HandlePacketReceived(uint frameNumber)
-    {
-        if (frameNumber + NetworkManager.Instance.TotalDelayFrames < GameStateManager.Instance.FrameCount)
-        {
-            int frameDeficit = (int)GameStateManager.Instance.FrameCount - (int)(frameNumber + NetworkManager.Instance.TotalDelayFrames);
-            if (frameDeficit > 0 && Overseer.Instance.IsGameReady)
-            {
-                Overseer.Instance.DelayGame(frameDeficit);
-            }
-        }
-
-    }
-
-    private void RestartGameIfNeeded()
-    {
-        // If ShouldRunGame is false at this point, than we have stopped running the game to wait for a heartbeat packet.
-        if (!ShouldRunGame)
-        {
-            Overseer.Instance.SetShouldRunGame(true);
-        }
-        ShouldRunGame = true;
-    }
-
-    private void HandleHeartbeatAckReceived(uint frameNumber)
-    {
-
-    }
-
-    private void OnHeartbeatPingCountReached()
-    {
-        AveragePing = 0;
     }
 
     #endregion
