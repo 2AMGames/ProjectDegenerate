@@ -200,10 +200,14 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputData dataToQueue)
+    public bool QueuePlayerInput(PlayerInputData dataToQueue)
     {
         if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
+            if (Overseer.Instance.Players[characterStats.PlayerIndex] is RemotePlayerController)
+            {
+                //Debug.LogError("Queueing frame: " + dataToQueue.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
+            }
             HighestReceivedFrameNumber = dataToQueue.FrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
@@ -215,15 +219,16 @@ public class CommandInterpreter : MonoBehaviour
                     if (Overseer.Instance.IsGameReady && GameStateManager.Instance.FrameCount == dataToQueue.FrameNumber + FrameDelay)
                     {
                         ExecuteInput(dataToQueue);
-                        return;
+                        return true;
                     }
-                }
-                if (Overseer.Instance.Players[characterStats.PlayerIndex] is RemotePlayerController)
-                {
-                    Debug.LogError("Queueing frame: " + dataToQueue.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
                 }
                 InputBuffer.Enqueue(dataToQueue);
             }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

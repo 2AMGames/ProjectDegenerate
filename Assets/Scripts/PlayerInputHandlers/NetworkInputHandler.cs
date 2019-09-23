@@ -151,7 +151,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     {
                         if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
                         {
-                            Debug.LogError("Restart ticks: " + Time.frameCount + ", Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                            Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
                             Overseer.Instance.SetShouldRunGame(true);
                             ShouldRunGame = true;
                         }
@@ -171,23 +171,21 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         {
             PlayerInputPacket packetToSend = new PlayerInputPacket();
 
+            packetToSend.FrameSent = GameStateManager.Instance.FrameCount;
+            packetToSend.PlayerIndex = PlayerController.PlayerIndex;
             if (addDataToList)
             {
                 input.PacketId = PacketsSent;
                 DataSent.Add(input);
             }
+            packetToSend.InputData = DataSent;
 
-            packetToSend.FrameSent = GameStateManager.Instance.FrameCount;
-            packetToSend.PlayerIndex = PlayerController.PlayerIndex;
-            packetToSend.PacketId = PacketsSent;
-            packetToSend.InputData = new List<PlayerInputData>(DataSent);
+            ++PacketsSent;
 
             float rand = Random.Range(0.0f, 1.0f);
-            rand = 1;
-            if (rand >= 0.0f)
+            if (rand >= 0.5f)
             {
-                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, default, true);
-                ++PacketsSent;
+                NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, ReceiverGroup.Others, true);
             }
 
         }
@@ -196,13 +194,11 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     public void SendHeartbeat()
     {
         PlayerInputPacket packet = new PlayerInputPacket();
-        packet.FrameSent = GameStateManager.Instance.FrameCount + 1;
-        packet.PacketId = PacketsSent;
+        packet.FrameSent = GameStateManager.Instance.FrameCount;
         packet.PlayerIndex = PlayerController.PlayerIndex;
-        packet.InputData = new List<PlayerInputData>(DataSent);
+        packet.InputData = DataSent;
         float rand = Random.Range(0.0f, 1.0f);
-        rand = 1;
-        if (rand >= 0.0f)
+        if (rand >= 0.5f)
         {
             NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packet, ReceiverGroup.Others, true);
         }
@@ -258,7 +254,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 //Debug.LogError("Stop ticks: " + Time.frameCount + ", Game frame count: " + GameStateManager.Instance.FrameCount + ", Frame received on update: " + FrameReceivedFromPlayerOnUpdate);
                 //Overseer.Instance.SetShouldRunGame(false);
                 //ShouldRunGame = false;
-                Debug.LogError("Client is ahead: Last Received Frame: " + FrameReceivedFromPlayerOnUpdate + ", Current Frame: " + GameStateManager.Instance.FrameCount);
+                //Debug.LogError("Client is ahead: Last Received Frame: " + FrameReceivedFromPlayerOnUpdate + ", Current Frame: " + GameStateManager.Instance.FrameCount);
             }
             PacketReceivedThisFrame = false;
             yield return null;
