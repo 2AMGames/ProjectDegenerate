@@ -88,26 +88,50 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         bottomCircle.center = b.bottomLeft + (b.bottomRight - b.bottomLeft) / 2f;
         bottomCircle.radius = radius;
         bounds.bottomCircleBounds = bottomCircle;
+
+
     }
 
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        throw new System.NotImplementedException();
+        return CustomCollider2D.GetLowerBoundsAtXValueCircle(bounds.bottomCircleBounds, x);
     }
 
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        throw new System.NotImplementedException();
+        return CustomCollider2D.GetUpperBoundsAtXValueCircle(bounds.topCircleBounds, x);
     }
 
     public override Vector2 GetRighBoundAtYValue(float y)
     {
-        throw new System.NotImplementedException();
+        if (y > bounds.rectBounds.topLeft.y)
+        {
+            return CustomCollider2D.GetRighBoundAtYValueCircle(bounds.topCircleBounds, y);
+        }
+        else if (y < bounds.rectBounds.bottomLeft.y)
+        {
+            return CustomCollider2D.GetRighBoundAtYValueCircle(bounds.bottomCircleBounds, y);
+        }
+        else
+        {
+            return CustomCollider2D.GetRighBoundAtYValueRect(bounds.rectBounds, y);
+        }
     }
 
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        throw new System.NotImplementedException();
+        if (y > bounds.rectBounds.topLeft.y)
+        {
+            return CustomCollider2D.GetLeftBoundAtYValueCircle(bounds.topCircleBounds, y);
+        }
+        else if (y < bounds.rectBounds.bottomLeft.y)
+        {
+            return CustomCollider2D.GetLeftBoundAtYValueCircle(bounds.bottomCircleBounds, y);
+        }
+        else
+        {
+            return CustomCollider2D.GetLeftBoundAtYValueRect(bounds.rectBounds, y);
+        }
     }
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
@@ -118,7 +142,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
 
     public override Vector2 GetCenter()
     {
-        throw new System.NotImplementedException();
+        return bounds.bottomCircleBounds.center + (bounds.topCircleBounds.center - bounds.bottomCircleBounds.center) / 2f;
     }
 
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)

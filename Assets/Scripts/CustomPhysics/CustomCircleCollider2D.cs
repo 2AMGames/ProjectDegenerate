@@ -12,7 +12,6 @@ public class CustomCircleCollider2D : CustomCollider2D
     public Vector2 centerOffset;
 
 
-    public BoundsCircle previousBounds;
     public BoundsCircle bounds;
 
     private BoundsCircle horizontalBoundsFromVelocity;
@@ -62,12 +61,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <param name="collider"></param>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        if (collider.isStatic)
-        {
-            return;
-        }
-        CustomPhysics2D rigidCol = collider.rigid;
-        Vector2 offsetFromCollider = this.bounds.center - collider.GetCenter();
+        
 
     }
 
@@ -77,7 +71,6 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        previousBounds = bounds;
 
         BoundsCircle cBounds = new BoundsCircle();
         cBounds.center = this.transform.position;
