@@ -194,6 +194,13 @@ public abstract class CustomCollider2D : MonoBehaviour {
         public BoundsRect rectBounds;
         public BoundsCircle topCircleBounds;
         public BoundsCircle bottomCircleBounds;
+
+        public void SetOffset(Vector2 offset)
+        {
+            rectBounds.SetOffset(offset);
+            topCircleBounds.center += offset;
+            bottomCircleBounds.center += offset;
+        }
     }
 
     #region static methods
@@ -539,16 +546,47 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     /// <summary>
     /// 
-    /// 
     /// </summary>
-    /// <param name="c1"></param>
-    /// <param name="c2"></param>
+    /// <param name="upperCircle"></param>
+    /// <param name="lowerCircle"></param>
+    /// <param name="collidedVertically"></param>
     /// <returns></returns>
-    public static Vector2 IntersectionPointCircleOnCircle(BoundsCircle c1, BoundsCircle c2)
+    public static Vector2 IntersectionPointCircleOnCircle(CustomCircleCollider2D nonstaticCircle, CustomCircleCollider2D staticCircle, bool collidedVertically = true)
     {
+        Vector2 intersectionPoint = Vector2.zero;
+        float totalRadiusSize = nonstaticCircle.radius + staticCircle.radius;
 
+        if (collidedVertically)
+        {
+            float xCollision = nonstaticCircle.bounds.center.x + (staticCircle.bounds.center.x - nonstaticCircle.bounds.center.x) * nonstaticCircle.bounds.radius / totalRadiusSize;
+            if (nonstaticCircle.rigid.velocity.y > 0)
+            {
+                intersectionPoint = GetLowerBoundsAtXValueCircle(staticCircle.bounds, xCollision);
+                intersectionPoint.y = intersectionPoint.y - (GetUpperBoundsAtXValueCircle(nonstaticCircle.bounds, xCollision).y - nonstaticCircle.bounds.center.y);
+            }
+            else
+            {
+                intersectionPoint = GetUpperBoundsAtXValueCircle(staticCircle.bounds, xCollision);
+                intersectionPoint.y = intersectionPoint.y - (GetLowerBoundsAtXValueCircle(nonstaticCircle.bounds, xCollision).y - nonstaticCircle.bounds.center.y);
+            }
+            return intersectionPoint;
+        }
+        else
+        {
+            float yCollision = nonstaticCircle.bounds.center.y + (staticCircle.bounds.center.y - nonstaticCircle.bounds.center.y) * (nonstaticCircle.bounds.radius / totalRadiusSize);
+            if (nonstaticCircle.rigid.velocity.x > 0)
+            {
+                intersectionPoint = GetLeftBoundAtYValueCircle(staticCircle.bounds, yCollision);
+                intersectionPoint.x = intersectionPoint.x - (GetRighBoundAtYValueCircle(nonstaticCircle.bounds, yCollision).x - nonstaticCircle.bounds.center.x);
+            }
+            else
+            {
+                intersectionPoint = GetRighBoundAtYValueCircle(staticCircle.bounds, yCollision);
+                intersectionPoint.x = intersectionPoint.x - (GetLeftBoundAtYValueCircle(nonstaticCircle.bounds, yCollision).x - nonstaticCircle.bounds.center.x);
+            }
+            return intersectionPoint;
 
-        return Vector2.zero;
+        }
     }
 
     #endregion intersection point methods

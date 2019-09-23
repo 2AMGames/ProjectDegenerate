@@ -91,19 +91,19 @@ public class CustomCircleCollider2D : CustomCollider2D
 
             if (rigid.velocity.y < 0)
             {
-                verticalBoundsFromVelocity.center = bounds.center + Vector2.down * radiusBuffer + Vector2.up * rigid.velocity.y * Overseer.DELTA_TIME;
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Min(-radiusBuffer,  rigid.velocity.y * Overseer.DELTA_TIME);
             }
             else if (rigid.velocity.y > 0)
             {
-                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * radiusBuffer + Vector2.up * rigid.velocity.y * Overseer.DELTA_TIME;
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Max(radiusBuffer, rigid.velocity.y * Overseer.DELTA_TIME);
             }
             if (rigid.velocity.x < 0)
             {
-                horizontalBoundsFromVelocity.center = bounds.center + Vector2.left * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Min(-radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
             }
             else if (rigid.velocity.x > 0)
             {
-                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * radiusBuffer + Vector2.right * rigid.velocity.x * Overseer.DELTA_TIME;
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Max(radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
             }
         }
     }
@@ -188,13 +188,6 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
-        if (rigid == null || colliderToCheck == this)
-        {
-            return false;
-        }
-
-        
-
         if (rigid.velocity.y == 0)
         {
             return false;
@@ -222,25 +215,27 @@ public class CustomCircleCollider2D : CustomCollider2D
 
                 return true;
             }
-            if (colliderToCheck is CustomCircleCollider2D)
+            else if (colliderToCheck is CustomCircleCollider2D)
             {
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
-                float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
-                float xCollision = bounds.center.x + (colliderToCheck.GetCenter().x - bounds.center.x) * (bounds.radius) / totalRadiusSize;
-                Vector2 collisionPoint;
+                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck);
+               
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                CustomCapsuleCollider2D capsuleToCheck = (CustomCapsuleCollider2D)colliderToCheck;
+
+
                 if (rigid.velocity.y > 0)
                 {
-                    collisionPoint = colliderToCheck.GetLowerBoundsAtXValue(xCollision);
-                    collisionPoint.y = collisionPoint.y - (GetUpperBoundsAtXValue(xCollision).y - bounds.center.y);
-                    //print(collisionPoint.y);
+
                 }
                 else
                 {
-                    collisionPoint = colliderToCheck.GetUpperBoundsAtXValue(xCollision);
-                    collisionPoint.y = collisionPoint.y - (GetLowerBoundsAtXValue(xCollision).y - bounds.center.y);
-                }
-                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
 
+                }
             }
             return true;
         }
@@ -286,19 +281,9 @@ public class CustomCircleCollider2D : CustomCollider2D
             else if (colliderToCheck is CustomCircleCollider2D)
             {
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
-                float totalRadiusSize = bounds.radius + customcircleToCheck.bounds.radius;
-                float yCollision = bounds.center.y + (colliderToCheck.GetCenter().y - bounds.center.y) * (bounds.radius) / totalRadiusSize;
-                Vector2 collisionPoint;
-                if (rigid.velocity.x > 0)
-                {
-                    collisionPoint = colliderToCheck.GetLeftBoundAtYValue(yCollision);
-                    collisionPoint.x = collisionPoint.x - (GetRighBoundAtYValue(yCollision).x - bounds.center.x);
-                }
-                else
-                {
-                    collisionPoint = colliderToCheck.GetRighBoundAtYValue(yCollision);
-                    collisionPoint.x = collisionPoint.x - (GetLeftBoundAtYValue(yCollision).x - bounds.center.x);
-                }
+                
+                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck, false);
+               
 
                 this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
             }

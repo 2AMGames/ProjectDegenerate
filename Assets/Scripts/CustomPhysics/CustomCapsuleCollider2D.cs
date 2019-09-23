@@ -10,8 +10,10 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     private bool drawHorizontal;
     public Vector2 capsuleOffset;
 
+    public float colliderBuffer = .01f;
     public BoundsCapsule bounds;
-    public BoundsCapsule previousBounds;
+    public BoundsCapsule verticalBounds;
+    public BoundsCapsule horizontalBounds;
 
     #region monobehaviour methods
     private void OnDrawGizmos()
@@ -65,8 +67,6 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        previousBounds = bounds;
-
         BoundsRect b = new BoundsRect();
         Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
         float xSize = drawHorizontal ? size : radius * 2;
@@ -89,7 +89,46 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         bottomCircle.radius = radius;
         bounds.bottomCircleBounds = bottomCircle;
 
+        if (!isStatic)
+        {
+            verticalBounds = bounds;
 
+            verticalBounds.topCircleBounds.radius = bounds.topCircleBounds.radius - colliderBuffer;
+            verticalBounds.bottomCircleBounds.radius = bounds.bottomCircleBounds.radius - colliderBuffer;
+            verticalBounds.rectBounds.topLeft.x = bounds.rectBounds.topLeft.x + colliderBuffer / 2;
+            verticalBounds.rectBounds.topRight.x = bounds.rectBounds.topRight.x - colliderBuffer / 2;
+            verticalBounds.rectBounds.bottomLeft.x = verticalBounds.rectBounds.topLeft.x;
+            verticalBounds.rectBounds.bottomRight.x = verticalBounds.rectBounds.topRight.x;
+
+
+            horizontalBounds = bounds;
+            horizontalBounds.topCircleBounds.center += Vector2.down * colliderBuffer;
+            horizontalBounds.bottomCircleBounds.center += Vector2.up * colliderBuffer;
+
+            Vector2 horizontalOffset = Vector2.zero;
+            Vector2 verticalOffset = Vector2.zero;
+
+            if (rigid.velocity.y > 0)
+            {
+                verticalOffset = Vector2.up * Mathf.Max(colliderBuffer, rigid.velocity.y * Overseer.DELTA_TIME);
+            }
+            else if(rigid.velocity.y < 0)
+            {
+                verticalOffset = Vector2.up * Mathf.Min(-colliderBuffer, rigid.velocity.y * Overseer.DELTA_TIME);
+            }
+
+            if (rigid.velocity.x > 0)
+            {
+                horizontalOffset = Vector2.right * Mathf.Max(colliderBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+            }
+            else if (rigid.velocity.x < 0)
+            {
+                horizontalOffset = Vector2.right * Mathf.Min(-colliderBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+            }
+
+            verticalBounds.SetOffset(verticalOffset);
+            horizontalBounds.SetOffset(horizontalOffset);
+        }
     }
 
     public override Vector2 GetLowerBoundsAtXValue(float x)
@@ -133,6 +172,31 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             return CustomCollider2D.GetLeftBoundAtYValueRect(bounds.rectBounds, y);
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="boundsToCheck"></param>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    private bool ColliderIntersectBounds(BoundsCapsule boundsToCheck, CustomCollider2D colliderToCheck)
+    {
+        if (colliderToCheck is CustomBoxCollider2D)
+        {
+            return CapsuleIntersectRect(boundsToCheck, ((CustomBoxCollider2D)colliderToCheck).bounds);
+        }
+        else if (colliderToCheck is CustomCircleCollider2D)
+        {
+            return CapsuleIntersectCircle(boundsToCheck, ((CustomCircleCollider2D)colliderToCheck).bounds);
+        }
+        else if (colliderToCheck is CustomCapsuleCollider2D)
+        {
+            return CapsuleIntersectCapsule(((CustomCapsuleCollider2D)colliderToCheck).bounds, boundsToCheck);
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
     {
@@ -145,13 +209,26 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         return bounds.bottomCircleBounds.center + (bounds.topCircleBounds.center - bounds.bottomCircleBounds.center) / 2f;
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
-        throw new System.NotImplementedException();
+
+
+        return false;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
     public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
-        throw new System.NotImplementedException();
+        return false;
     }
 }
