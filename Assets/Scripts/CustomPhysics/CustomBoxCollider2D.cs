@@ -230,24 +230,9 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                if (rigid.velocity.y >= 0)
-                {
-                    float collisionPoint = bounds.topLeft.x;
+                float yPosition = IntersectionPointRectOnRect(this, (CustomBoxCollider2D)colliderToCheck, true).y;
+                this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
 
-                    float yPosition = colliderToCheck.GetLowerBoundsAtXValue(collisionPoint).y - (GetUpperBoundsAtXValue(collisionPoint).y - transform.position.y);
-                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
-
-                    rigid.velocity.y = 0;
-                }
-                else
-                {
-                    float collisionPoint = bounds.topRight.x;
-
-                    float yPosition = colliderToCheck.GetUpperBoundsAtXValue(collisionPoint).y - (GetLowerBoundsAtXValue(collisionPoint).y - transform.position.y);
-                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
-
-                    rigid.velocity.y = 0;
-                }
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {
@@ -257,14 +242,12 @@ public class CustomBoxCollider2D : CustomCollider2D
                     float yPosition = colliderToCheck.GetLowerBoundsAtXValue(collisionPoint.x).y - (GetUpperBoundsAtXValue(collisionPoint.x).y - transform.position.y);
                     this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
 
-                    rigid.velocity.y = 0;
                 }
                 else
                 {
                     float yPosition = colliderToCheck.GetUpperBoundsAtXValue(collisionPoint.x).y - (GetLowerBoundsAtXValue(collisionPoint.x).y - transform.position.y);
                     this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
 
-                    rigid.velocity.y = 0;
                 }
             }
             return true;
@@ -288,20 +271,9 @@ public class CustomBoxCollider2D : CustomCollider2D
         {
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                if (rigid.velocity.x > 0)
-                {
-                    float collisionPoint = bounds.topRight.y;
+                float xPosition = IntersectionPointRectOnRect(this, (CustomBoxCollider2D)colliderToCheck, false).x;
+                this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
 
-                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint).x - (GetRighBoundAtYValue(collisionPoint).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                }
-                else
-                {
-                    float collisionPoint = bounds.topRight.y;
-
-                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint).x - (GetLeftBoundAtYValue(collisionPoint).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                }
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {

@@ -228,14 +228,7 @@ public class CustomCircleCollider2D : CustomCollider2D
                 CustomCapsuleCollider2D capsuleToCheck = (CustomCapsuleCollider2D)colliderToCheck;
 
 
-                if (rigid.velocity.y > 0)
-                {
-
-                }
-                else
-                {
-
-                }
+                
             }
             return true;
         }

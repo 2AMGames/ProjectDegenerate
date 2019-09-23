@@ -500,10 +500,37 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <param name="r1"></param>
     /// <param name="r2"></param>
     /// <returns></returns>
-    public static Vector2 IntersectionPointRectOnRect(BoundsRect r1, BoundsRect r2)
+    public static Vector2 IntersectionPointRectOnRect(CustomBoxCollider2D nonstaticCollider, CustomBoxCollider2D staticCollider, bool collidedVertically = true)
     {
-        return Vector2.zero;
-
+        Vector2 intersedctionPoint = Vector2.zero;
+        float yPoint;
+        float xPoint;
+        if (collidedVertically)
+        {
+            xPoint = nonstaticCollider.bounds.topLeft.x;
+            if (nonstaticCollider.rigid.velocity.y > 0)
+            {
+                yPoint = staticCollider.GetLowerBoundsAtXValue(xPoint).y - (nonstaticCollider.GetUpperBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
+            }
+            else
+            {
+                yPoint = staticCollider.GetUpperBoundsAtXValue(xPoint).y - (nonstaticCollider.GetLowerBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
+            }
+            return new Vector2(xPoint, yPoint);
+        }
+        else
+        {
+            yPoint = nonstaticCollider.bounds.bottomRight.y;
+            if (nonstaticCollider.rigid.velocity.x > 0)
+            {
+                xPoint = staticCollider.GetLeftBoundAtYValue(yPoint).x - (nonstaticCollider.GetRighBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
+            }
+            else
+            {
+                xPoint = staticCollider.GetRighBoundAtYValue(yPoint).x - (nonstaticCollider.GetLeftBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
+            }
+            return new Vector2(xPoint, yPoint);
+        }
     }
 
     /// <summary>
