@@ -151,7 +151,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     {
                         if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
                         {
-                            //Debug.LogError("Restart ticks: " + Time.frameCount + ", Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                            Debug.LogError("Restart ticks: " + Time.frameCount + ", Frame Received: " + FrameReceivedFromPlayerOnUpdate);
                             Overseer.Instance.SetShouldRunGame(true);
                             ShouldRunGame = true;
                         }
@@ -254,8 +254,9 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             else if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames < currentFrame && ShouldRunGame)
             {
                 //Debug.LogError("Stop ticks: " + Time.frameCount + ", Game frame count: " + GameStateManager.Instance.FrameCount + ", Frame received on update: " + FrameReceivedFromPlayerOnUpdate);
-                Overseer.Instance.SetShouldRunGame(false);
-                ShouldRunGame = false;
+                //Overseer.Instance.SetShouldRunGame(false);
+                //ShouldRunGame = false;
+                Debug.LogError("Client is ahead: Last Received Frame: " + FrameReceivedFromPlayerOnUpdate + ", Current Frame: " + GameStateManager.Instance.FrameCount);
             }
             PacketReceivedThisFrame = false;
             yield return null;
@@ -276,7 +277,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            Debug.LogError("Frame limit reached at: " + GameStateManager.Instance.FrameCount);
+            Debug.LogError("Frame limit reached at: " + GameStateManager.Instance.FrameCount + ", Last received frame: " + FrameReceivedFromPlayerOnUpdate);
             Overseer.Instance.SetShouldRunGame(false);
             ShouldRunGame = false;
         }

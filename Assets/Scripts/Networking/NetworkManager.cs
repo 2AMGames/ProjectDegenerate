@@ -591,7 +591,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             while (PlayersToPing.Count > 0)
             {
                 yield return null;
-                Debug.LogWarning("Ping: " + rtt.ElapsedMilliseconds);
             }
 
             rtt.Stop();
