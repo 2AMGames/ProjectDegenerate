@@ -147,15 +147,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                     FrameReceivedFromPlayerOnUpdate = packet.FrameSent;
                     uint highestFrame = FrameReceivedFromPlayerOnUpdate + (uint)NetworkManager.Instance.TotalDelayFrames;
                     ResetFrameWaitTime(highestFrame);
-                    if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames >= frameReceived)
-                    {
-                        if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
-                        {
-                            Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
-                            Overseer.Instance.SetShouldRunGame(true);
-                            ShouldRunGame = true;
-                        }
-                    }
                 }
             }
         }
@@ -249,12 +240,14 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 OnFrameLimitReached();
                 PacketReceivedInTime = false;
             }
-            else if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames < currentFrame && ShouldRunGame)
+            else if (FrameReceivedFromPlayerOnUpdate + NetworkManager.Instance.NetworkDelayFrames >= currentFrame)
             {
-                //Debug.LogError("Stop ticks: " + Time.frameCount + ", Game frame count: " + GameStateManager.Instance.FrameCount + ", Frame received on update: " + FrameReceivedFromPlayerOnUpdate);
-                //Overseer.Instance.SetShouldRunGame(false);
-                //ShouldRunGame = false;
-                //Debug.LogError("Client is ahead: Last Received Frame: " + FrameReceivedFromPlayerOnUpdate + ", Current Frame: " + GameStateManager.Instance.FrameCount);
+                if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
+                {
+                    Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                    Overseer.Instance.SetShouldRunGame(true);
+                    ShouldRunGame = true;
+                }
             }
             PacketReceivedThisFrame = false;
             yield return null;
