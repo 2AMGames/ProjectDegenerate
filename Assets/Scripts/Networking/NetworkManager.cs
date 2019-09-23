@@ -105,6 +105,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
+    #region Debug Variables
+
+    public bool DebugEnabled;
+    /// <summary>
+    /// Chance that packet will send. Use this to simulate packet loss (we though we sent something, but it got lost in transmission).
+    /// </summary>
+    public float SendPercentage;
+
+    #endregion
+
     #region Singleton Instance
 
     private static NetworkManager instance;
@@ -144,6 +154,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             PhotonNetwork.Disconnect();
         }
+    }
+
+    void OnValidate()
+    {
+        SendPercentage = DebugEnabled ? Mathf.Min(1.0f, Mathf.Max(0.0f, SendPercentage)) : 1.0f;
     }
 
     #endregion
