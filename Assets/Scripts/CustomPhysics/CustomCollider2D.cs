@@ -564,7 +564,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 collisionPoint.x = centerPointOfCircle.x;
             }
             float yPoint = 0;
-            if (nonstaticRectCollider.rigid.velocity.y > 0)
+            if (nonstaticRectCollider.GetCenter().y < staticCircleCollider.GetCenter().y)
             {
                 yPoint = staticCircleCollider.GetLowerBoundsAtXValue(collisionPoint.x).y;
                 yPoint -= (nonstaticRectCollider.GetUpperBoundsAtXValue(collisionPoint.x).y - nonstaticRectCollider.transform.position.y);
@@ -592,7 +592,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 collisionPoint.y = centerPointOfCircle.y;
             }
             float xPoint = 0;
-            if (nonstaticRectCollider.rigid.velocity.x > 0)
+            if (nonstaticRectCollider.GetCenter().x < staticCircleCollider.GetCenter().x)
             {
                 xPoint = staticCircleCollider.GetLeftBoundAtYValue(collisionPoint.y).x;
                 xPoint -= (nonstaticRectCollider.GetRightBoundAtYValue(collisionPoint.y).x - nonstaticRectCollider.transform.position.x);
@@ -630,7 +630,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 collisionPoint.x = centerPointOfCircle.x;
             }
             float yPoint = 0;
-            if (nonstaticCircle.rigid.velocity.y > 0)
+            if (nonstaticCircle.GetCenter().y < staticRect.GetCenter().y)
             {
                 yPoint = staticRect.GetLowerBoundsAtXValue(collisionPoint.x).y;
                 yPoint -= (nonstaticCircle.GetUpperBoundsAtXValue(collisionPoint.x).y - nonstaticCircle.transform.position.y);
@@ -658,7 +658,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 collisionPoint.y = centerPointOfCircle.y;
             }
             float xPoint = 0;
-            if (nonstaticCircle.rigid.velocity.x > 0)
+            if (nonstaticCircle.GetCenter().x < staticRect.GetCenter().x)
             {
                 xPoint = staticRect.GetLeftBoundAtYValue(collisionPoint.y).x;
                 xPoint -= (nonstaticCircle.GetRightBoundAtYValue(collisionPoint.y).x - nonstaticCircle.transform.position.x);
@@ -688,7 +688,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         if (collidedVertically)
         {
             float xCollision = nonstaticCircle.bounds.center.x + (staticCircle.bounds.center.x - nonstaticCircle.bounds.center.x) * nonstaticCircle.bounds.radius / totalRadiusSize;
-            if (nonstaticCircle.rigid.velocity.y > 0)
+            if (nonstaticCircle.GetCenter().y < staticCircle.GetCenter().y)
             {
                 intersectionPoint = GetLowerBoundsAtXValueCircle(staticCircle.bounds, xCollision);
                 intersectionPoint.y = intersectionPoint.y - (GetUpperBoundsAtXValueCircle(nonstaticCircle.bounds, xCollision).y - nonstaticCircle.bounds.center.y);
@@ -703,7 +703,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         else
         {
             float yCollision = nonstaticCircle.bounds.center.y + (staticCircle.bounds.center.y - nonstaticCircle.bounds.center.y) * (nonstaticCircle.bounds.radius / totalRadiusSize);
-            if (nonstaticCircle.rigid.velocity.x > 0)
+            if (nonstaticCircle.GetCenter().x < staticCircle.GetCenter().x)
             {
                 intersectionPoint = GetLeftBoundAtYValueCircle(staticCircle.bounds, yCollision);
                 intersectionPoint.x = intersectionPoint.x - (GetRighBoundAtYValueCircle(nonstaticCircle.bounds, yCollision).x - nonstaticCircle.bounds.center.x);

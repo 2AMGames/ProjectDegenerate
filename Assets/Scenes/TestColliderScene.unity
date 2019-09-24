@@ -150,10 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 44.55, y: 11.3}
-  boxColliderPosition: {x: 0, y: 0}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!212 &116709371
@@ -250,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2336470276aa5124696c0424b4c1aa25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   radiusBuffer: 0.01
@@ -416,10 +417,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 33.6}
-  boxColliderPosition: {x: 0, y: 0}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!212 &863860115
@@ -625,10 +626,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 2.26}
-  boxColliderPosition: {x: 0, y: 0}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!212 &1733251987
@@ -723,6 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2336470276aa5124696c0424b4c1aa25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   radiusBuffer: 0.01
@@ -760,7 +762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1951173904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,6 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9c8e5824e871e743878407ff3400629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   size: 2
@@ -876,10 +879,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.26, y: 2.26}
-  boxColliderPosition: {x: 0, y: 0}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!212 &2060661513
