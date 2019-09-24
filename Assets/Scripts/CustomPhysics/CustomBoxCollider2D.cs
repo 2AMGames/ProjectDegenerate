@@ -8,7 +8,6 @@ using UnityEngine;
 public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
-    public Vector2 boxColliderPosition;
     [Tooltip("We will thin out the box collider horizontally when checking for collisions with our box collider")]
     public float HorizontalBuffer = .02f;
     [Tooltip("We will thin our box collider vertically to check our horizontal collisions")]
@@ -60,7 +59,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
+        Vector2 origin = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
 
         b.center = origin;
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
