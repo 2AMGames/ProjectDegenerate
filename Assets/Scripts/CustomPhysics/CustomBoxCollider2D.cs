@@ -153,7 +153,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     /// <param name="y"></param>
     /// <returns></returns>
-    public override Vector2 GetRighBoundAtYValue(float y)
+    public override Vector2 GetRightBoundAtYValue(float y)
     {
         return GetRighBoundAtYValueRect(this.bounds, y);
     }
@@ -236,19 +236,8 @@ public class CustomBoxCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {
-                Vector2 collisionPoint = IntersectionPointRectOnCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
-                if (rigid.velocity.y >= 0)
-                {
-                    float yPosition = colliderToCheck.GetLowerBoundsAtXValue(collisionPoint.x).y - (GetUpperBoundsAtXValue(collisionPoint.x).y - transform.position.y);
-                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
-
-                }
-                else
-                {
-                    float yPosition = colliderToCheck.GetUpperBoundsAtXValue(collisionPoint.x).y - (GetLowerBoundsAtXValue(collisionPoint.x).y - transform.position.y);
-                    this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
-
-                }
+                Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
             }
             return true;
         }
@@ -277,17 +266,8 @@ public class CustomBoxCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCircleCollider2D)
             {
-                Vector2 collisionPoint = IntersectionPointRectOnCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
-                if (rigid.velocity.x >= 0)
-                {
-                    float xPosition = colliderToCheck.GetLeftBoundAtYValue(collisionPoint.y).x - (GetRighBoundAtYValue(collisionPoint.y).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                }
-                else
-                {
-                    float xPosition = colliderToCheck.GetRighBoundAtYValue(collisionPoint.y).x - (GetLeftBoundAtYValue(collisionPoint.y).x - transform.position.x);
-                    this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
-                }
+                Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), false);
+                transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
             }
             return true;
         }

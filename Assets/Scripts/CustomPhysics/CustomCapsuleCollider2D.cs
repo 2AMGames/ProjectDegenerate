@@ -141,7 +141,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         return CustomCollider2D.GetUpperBoundsAtXValueCircle(bounds.topCircleBounds, x);
     }
 
-    public override Vector2 GetRighBoundAtYValue(float y)
+    public override Vector2 GetRightBoundAtYValue(float y)
     {
         if (y > bounds.rectBounds.topLeft.y)
         {

@@ -134,7 +134,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// </summary>
     /// <param name="y"></param>
     /// <returns></returns>
-    public override Vector2 GetRighBoundAtYValue(float y)
+    public override Vector2 GetRightBoundAtYValue(float y)
     {
         return GetRighBoundAtYValueCircle(this.bounds, y);
     }
@@ -195,21 +195,11 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (CircleColliderCollisionsAtBounds(verticalBoundsFromVelocity, colliderToCheck))
         {
-            Vector2 closestCollisionPoint;
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                Vector2 pointOfCollision = IntersectionPointRectOnCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds);
-                if (rigid.velocity.y > 0)
-                {
-                    closestCollisionPoint = GetUpperBoundsAtXValue(pointOfCollision.x);
-                }
-                else 
-                {
-                    closestCollisionPoint = GetLowerBoundsAtXValue(pointOfCollision.x);
-                }
+                Vector2 pointOfCollision = IntersectionPointNonstaticRectOnStaticCircle(((CustomBoxCollider2D)colliderToCheck), this, true);
                 
                 
-                pointOfCollision.y = pointOfCollision.y - (closestCollisionPoint.y - bounds.center.y);
                 this.transform.position = new Vector3(this.transform.position.x, pointOfCollision.y, this.transform.position.z);
                 rigid.velocity.y = 0;
 
@@ -252,21 +242,12 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (CircleColliderCollisionsAtBounds(horizontalBoundsFromVelocity, colliderToCheck))
         {
-            Vector2 closestCollisionPoint;
             if (colliderToCheck is CustomBoxCollider2D)
             {
-                Vector2 pointOfCollision = IntersectionPointRectOnCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds);
-                if (rigid.velocity.x > 0)
-                {
-                    closestCollisionPoint = GetRighBoundAtYValue(pointOfCollision.y);
-                }
-                else
-                {
-                    closestCollisionPoint = GetLeftBoundAtYValue(pointOfCollision.y);
-                }
+                Vector2 pointOfCollision = IntersectionPointNonstaticRectOnStaticCircle(((CustomBoxCollider2D)colliderToCheck), this, false);
+                
 
 
-                pointOfCollision.x = pointOfCollision.x - (closestCollisionPoint.x - bounds.center.x);
                 this.transform.position = new Vector3(pointOfCollision.x, this.transform.position.y, this.transform.position.z);
 
                 return true;
