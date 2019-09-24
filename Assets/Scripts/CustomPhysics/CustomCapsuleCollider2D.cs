@@ -198,10 +198,38 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         }
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="capsuleBounds"></param>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    private bool CheckColliderIntersectFromBounds(BoundsCapsule capsuleBounds, CustomCollider2D colliderToCheck)
+    {
+        if (colliderToCheck is CustomBoxCollider2D)
+        {
+            return CapsuleIntersectRect(capsuleBounds, ((CustomBoxCollider2D)colliderToCheck).bounds);
+        }
+        else if (colliderToCheck is CustomCircleCollider2D)
+        {
+            return CapsuleIntersectCircle(capsuleBounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
+        }
+        else if (colliderToCheck is CustomCapsuleCollider2D)
+        {
+            return CapsuleIntersectCapsule(capsuleBounds, ((CustomCapsuleCollider2D)colliderToCheck).bounds);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
     public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
     {
-        return false;
-
+        return CheckColliderIntersectFromBounds(this.bounds, colliderToCheck);
     }
 
     public override Vector2 GetCenter()
