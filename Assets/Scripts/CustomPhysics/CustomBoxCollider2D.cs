@@ -239,6 +239,10 @@ public class CustomBoxCollider2D : CustomCollider2D
                 Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), true);
                 this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
             }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+
+            }
             return true;
         }
         return false;
@@ -268,6 +272,10 @@ public class CustomBoxCollider2D : CustomCollider2D
             {
                 Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), false);
                 transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+
             }
             return true;
         }

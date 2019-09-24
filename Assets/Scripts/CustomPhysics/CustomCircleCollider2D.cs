@@ -73,7 +73,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     {
 
         BoundsCircle cBounds = new BoundsCircle();
-        cBounds.center = this.transform.position;
+        cBounds.center = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
         cBounds.radius = radius;
         bounds = cBounds;
 
@@ -260,6 +260,10 @@ public class CustomCircleCollider2D : CustomCollider2D
                
 
                 this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+
             }
             return true;
         }

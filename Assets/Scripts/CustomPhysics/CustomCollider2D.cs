@@ -12,6 +12,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
     #region const variables
     protected readonly Color GIZMO_COLOR = Color.green;
     #endregion const variables
+    public Vector2 colliderOffset;
+
     [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
     
@@ -508,7 +510,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         if (collidedVertically)
         {
             xPoint = nonstaticCollider.bounds.topLeft.x;
-            if (nonstaticCollider.rigid.velocity.y > 0)
+            if (nonstaticCollider.GetCenter().y < staticCollider.GetCenter().y)
             {
                 yPoint = staticCollider.GetLowerBoundsAtXValue(xPoint).y - (nonstaticCollider.GetUpperBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
             }
@@ -521,7 +523,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         else
         {
             yPoint = nonstaticCollider.bounds.bottomRight.y;
-            if (nonstaticCollider.rigid.velocity.x > 0)
+            if (nonstaticCollider.GetCenter().x < staticCollider.GetCenter().x)
             {
                 xPoint = staticCollider.GetLeftBoundAtYValue(yPoint).x - (nonstaticCollider.GetRightBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
             }
