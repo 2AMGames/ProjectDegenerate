@@ -246,7 +246,34 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
 
+        if (colliderToCheck == this) return false;
 
+
+        if (rigid.velocity.y == 0)
+        {
+            return false;
+        }
+
+        if (ColliderIntersectBounds(verticalBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                float yPosition = IntersectionPointNonstaticCapsuleStaticRect(this, (CustomBoxCollider2D)colliderToCheck, true).y;
+                this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointNonstaticCapsuleStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                //Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this);
+                //this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+            }
+            return true;
+        }
         return false;
     }
 
@@ -257,6 +284,31 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
+        if (colliderToCheck == this) return false;
+
+        if (rigid.velocity.x == 0) return false;
+
+        if (ColliderIntersectBounds(horizontalBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                float xPosition = IntersectionPointNonstaticCapsuleStaticRect(this, (CustomBoxCollider2D)colliderToCheck, false).x;
+                this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointNonstaticCapsuleStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), false);
+                transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                //Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this, false);
+                //transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            return true;
+        }
         return false;
+
     }
 }

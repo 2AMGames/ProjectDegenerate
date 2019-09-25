@@ -208,7 +208,7 @@ public class CustomCircleCollider2D : CustomCollider2D
             else if (colliderToCheck is CustomCircleCollider2D)
             {
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
-                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck);
+                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck, true);
                
                 this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
 
@@ -217,7 +217,8 @@ public class CustomCircleCollider2D : CustomCollider2D
             {
                 CustomCapsuleCollider2D capsuleToCheck = (CustomCapsuleCollider2D)colliderToCheck;
 
-
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonstaticCircle(capsuleToCheck, this, true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
                 
             }
             return true;
@@ -246,8 +247,6 @@ public class CustomCircleCollider2D : CustomCollider2D
             {
                 Vector2 pointOfCollision = IntersectionPointNonstaticRectOnStaticCircle(((CustomBoxCollider2D)colliderToCheck), this, false);
                 
-
-
                 this.transform.position = new Vector3(pointOfCollision.x, this.transform.position.y, this.transform.position.z);
 
                 return true;
@@ -257,13 +256,14 @@ public class CustomCircleCollider2D : CustomCollider2D
                 CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
                 
                 Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck, false);
-               
-
                 this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
             }
             else if (colliderToCheck is CustomCapsuleCollider2D)
             {
+                CustomCapsuleCollider2D capCollider = (CustomCapsuleCollider2D)colliderToCheck;
 
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonstaticCircle(capCollider, this, false);
+                this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
             }
             return true;
         }
