@@ -10,6 +10,7 @@ public class LocalPlayerController : PlayerController
     #region const variables
 
     #endregion
+
     #region main variables
 
     private ushort LastSavedInputPattern;

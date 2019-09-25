@@ -232,7 +232,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         yield return null;
         while (true)
         {
-            uint currentFrame = GameStateManager.Instance.FrameCount;
             yield return new WaitForEndOfFrame();
             //Debug.LogWarning("Frame limit: " + FramesTillWait + ", Frame count: " + GameStateManager.Instance.FrameCount + ", Frame received " + FrameReceivedFromPlayerOnUpdate);
             if (FramesTillWait <= GameStateManager.Instance.FrameCount)

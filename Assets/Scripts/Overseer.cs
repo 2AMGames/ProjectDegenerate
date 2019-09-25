@@ -302,6 +302,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             SetGameReady(false);
             OnGameReady(false);
             NetworkManager.Instance.DisconnectFromNetwork();
+            HasGameStarted = false;
         }
     }
 

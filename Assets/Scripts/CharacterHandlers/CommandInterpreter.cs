@@ -183,6 +183,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void Update()
     {
+
         if (InputBuffer.Count > 0 && Overseer.Instance.IsGameReady)
         {
             PlayerInputData dataToExecute = InputBuffer.Peek();
@@ -193,6 +194,14 @@ public class CommandInterpreter : MonoBehaviour
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (Overseer.Instance.HasGameStarted)
+        {
+            //Debug.LogError("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position: " + this.transform.position + ", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y);
         }
     }
 
@@ -569,11 +578,11 @@ public class CommandInterpreter : MonoBehaviour
     #region Coroutines
 
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
-    { 
-
+    {
+        yield return null;
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
-            yield return null;
+            yield return new WaitForEndOfFrame();
             //if (buttonEventName == BUTTON_ACTION_TRIGGER)
             //{
             //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
@@ -582,6 +591,7 @@ public class CommandInterpreter : MonoBehaviour
             {
                 --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
             }
+            yield return null;
         }
 
         Anim.ResetTrigger(buttonEventName);
@@ -590,13 +600,15 @@ public class CommandInterpreter : MonoBehaviour
     private IEnumerator RemoveDirectionalInputAfterTime()
     {
         int framesThatHavePassed = 0;
+        yield return null;
         while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
         {
-            yield return null;
+            yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
                 ++framesThatHavePassed;
             }
+            yield return null;
         }
 
         directionalInputRecordList.RemoveAt(0);

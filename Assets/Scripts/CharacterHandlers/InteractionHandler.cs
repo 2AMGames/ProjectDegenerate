@@ -156,11 +156,12 @@ public class InteractionHandler : MonoBehaviour
     {
         while (Hitstun > 0)
         {
-            yield return null;
+            yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
                 --Hitstun;
             }
+            yield return null;
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
