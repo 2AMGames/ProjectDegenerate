@@ -568,11 +568,18 @@ public class MovementMechanics : MonoBehaviour {
         ignoreJoystickInputs = true;
         while(InteractionHandler.Hitstun > 0)
         {
+            yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
-                rigid.velocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
+                Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
+                //Debug.LogError("New velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME);
+                rigid.velocity = newVelocity;
             }
-            yield return new WaitForEndOfFrame();
+            else
+            {
+                //Debug.LogError("Hitstun: Game is not ready");
+            }
+            yield return null;
         }
     }
 
