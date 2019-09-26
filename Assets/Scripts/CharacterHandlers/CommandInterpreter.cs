@@ -201,7 +201,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (Overseer.Instance.HasGameStarted)
         {
-            //Debug.LogError("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position: " + this.transform.position + ", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y);
+            Debug.LogError("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y +", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y);
         }
     }
 
