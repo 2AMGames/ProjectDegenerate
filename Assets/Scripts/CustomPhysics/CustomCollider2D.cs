@@ -301,7 +301,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
         {
             return true;
         }
-        if (CapsuleIntersectCircle(c, r.bottomCircleBounds)) ;
+        if (CapsuleIntersectCircle(c, r.bottomCircleBounds))
         {
             return true;
         }
@@ -804,9 +804,13 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.topCircleBounds, staticCapsule.bounds.bottomCircleBounds);
             }
+            else if (nonstaticCapsule.bounds.topCircleBounds.center.y < staticCapsule.bounds.topCircleBounds.center.y)
+            {
+                collisionPoint = nonstaticCapsule.bounds.topCircleBounds.center;
+            }
             else
             {
-                collisionPoint = capCenter1;
+                collisionPoint = nonstaticCapsule.bounds.bottomCircleBounds.center;
             }
             return IntersectionPointColliderHorizontalAtYPoint(nonstaticCapsule, staticCapsule, collisionPoint.y);
         }

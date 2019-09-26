@@ -269,8 +269,8 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCapsuleCollider2D)
             {
-                //Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this);
-                //this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+                Vector2 collisionPoint = IntersectionPointCapsuleOnCapsule(this, (CustomCapsuleCollider2D)colliderToCheck, true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
             }
             return true;
         }
@@ -303,8 +303,8 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             }
             else if (colliderToCheck is CustomCapsuleCollider2D)
             {
-                //Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this, false);
-                //transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+                Vector2 collisionPoint = IntersectionPointCapsuleOnCapsule(this, (CustomCapsuleCollider2D)colliderToCheck, false);
+                transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
             }
             return true;
         }
