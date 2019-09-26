@@ -14,6 +14,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
     #endregion const variables
     public Vector2 colliderOffset;
 
+    
     [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
     
@@ -510,28 +511,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
         if (collidedVertically)
         {
             xPoint = nonstaticCollider.bounds.topLeft.x;
-            if (nonstaticCollider.GetCenter().y < staticCollider.GetCenter().y)
-            {
-                yPoint = staticCollider.GetLowerBoundsAtXValue(xPoint).y - (nonstaticCollider.GetUpperBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
-            }
-            else
-            {
-                yPoint = staticCollider.GetUpperBoundsAtXValue(xPoint).y - (nonstaticCollider.GetLowerBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
-            }
-            return new Vector2(xPoint, yPoint);
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCollider, staticCollider, xPoint);
         }
         else
         {
             yPoint = nonstaticCollider.bounds.bottomRight.y;
-            if (nonstaticCollider.GetCenter().x < staticCollider.GetCenter().x)
-            {
-                xPoint = staticCollider.GetLeftBoundAtYValue(yPoint).x - (nonstaticCollider.GetRightBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
-            }
-            else
-            {
-                xPoint = staticCollider.GetRightBoundAtYValue(yPoint).x - (nonstaticCollider.GetLeftBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
-            }
-            return new Vector2(xPoint, yPoint);
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCollider, staticCollider, yPoint);
         }
     }
 
@@ -563,19 +548,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 collisionPoint.x = centerPointOfCircle.x;
             }
-            float yPoint = 0;
-            if (nonstaticRectCollider.GetCenter().y < staticCircleCollider.GetCenter().y)
-            {
-                yPoint = staticCircleCollider.GetLowerBoundsAtXValue(collisionPoint.x).y;
-                yPoint -= (nonstaticRectCollider.GetUpperBoundsAtXValue(collisionPoint.x).y - nonstaticRectCollider.transform.position.y);
-            }
-            else
-            {
-                yPoint = staticCircleCollider.GetUpperBoundsAtXValue(collisionPoint.x).y;
-                yPoint -= (nonstaticRectCollider.GetLowerBoundsAtXValue(collisionPoint.x).y - nonstaticRectCollider.transform.position.y);
-            }
-            collisionPoint.y = yPoint;
-            return collisionPoint;
+
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticRectCollider, staticCircleCollider, collisionPoint.x);
         }
         else
         {
@@ -591,19 +565,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 collisionPoint.y = centerPointOfCircle.y;
             }
-            float xPoint = 0;
-            if (nonstaticRectCollider.GetCenter().x < staticCircleCollider.GetCenter().x)
-            {
-                xPoint = staticCircleCollider.GetLeftBoundAtYValue(collisionPoint.y).x;
-                xPoint -= (nonstaticRectCollider.GetRightBoundAtYValue(collisionPoint.y).x - nonstaticRectCollider.transform.position.x);
-            }
-            else
-            {
-                xPoint = staticCircleCollider.GetRightBoundAtYValue(collisionPoint.y).x;
-                xPoint -= (nonstaticRectCollider.GetLeftBoundAtYValue(collisionPoint.y).x - nonstaticRectCollider.transform.position.x);
-            }
-            collisionPoint.x = xPoint;
-            return collisionPoint;
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticRectCollider, staticCircleCollider, collisionPoint.y);
         }
     }
 
@@ -629,19 +591,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 collisionPoint.x = centerPointOfCircle.x;
             }
-            float yPoint = 0;
-            if (nonstaticCircle.GetCenter().y < staticRect.GetCenter().y)
-            {
-                yPoint = staticRect.GetLowerBoundsAtXValue(collisionPoint.x).y;
-                yPoint -= (nonstaticCircle.GetUpperBoundsAtXValue(collisionPoint.x).y - nonstaticCircle.transform.position.y);
-            }
-            else
-            {
-                yPoint = staticRect.GetUpperBoundsAtXValue(collisionPoint.x).y;
-                yPoint -= (nonstaticCircle.GetLowerBoundsAtXValue(collisionPoint.x).y - nonstaticCircle.transform.position.y);
-            }
-            collisionPoint.y = yPoint;
-            return collisionPoint;
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCircle, staticRect, collisionPoint.x);
         }
         else
         {
@@ -657,21 +607,11 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 collisionPoint.y = centerPointOfCircle.y;
             }
-            float xPoint = 0;
-            if (nonstaticCircle.GetCenter().x < staticRect.GetCenter().x)
-            {
-                xPoint = staticRect.GetLeftBoundAtYValue(collisionPoint.y).x;
-                xPoint -= (nonstaticCircle.GetRightBoundAtYValue(collisionPoint.y).x - nonstaticCircle.transform.position.x);
-            }
-            else
-            {
-                xPoint = staticRect.GetRightBoundAtYValue(collisionPoint.y).x;
-                xPoint -= (nonstaticCircle.GetLeftBoundAtYValue(collisionPoint.y).x - nonstaticCircle.transform.position.x);
-            }
-            collisionPoint.x = xPoint;
-            return collisionPoint;
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCircle, staticRect, collisionPoint.y);
         }
     }
+
+    
 
     /// <summary>
     /// 
@@ -682,39 +622,15 @@ public abstract class CustomCollider2D : MonoBehaviour {
     /// <returns></returns>
     public static Vector2 IntersectionPointCircleOnCircle(CustomCircleCollider2D nonstaticCircle, CustomCircleCollider2D staticCircle, bool collidedVertically = true)
     {
-        Vector2 intersectionPoint = Vector2.zero;
-        float totalRadiusSize = nonstaticCircle.radius + staticCircle.radius;
+        Vector2 collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCircle.bounds, staticCircle.bounds);
 
         if (collidedVertically)
         {
-            float xCollision = nonstaticCircle.GetCenter().x + (staticCircle.GetCenter().x - nonstaticCircle.GetCenter().x) * nonstaticCircle.bounds.radius / totalRadiusSize;
-            if (nonstaticCircle.GetCenter().y < staticCircle.GetCenter().y)
-            {
-                intersectionPoint = GetLowerBoundsAtXValueCircle(staticCircle.bounds, xCollision);
-                intersectionPoint.y = intersectionPoint.y - (GetUpperBoundsAtXValueCircle(nonstaticCircle.bounds, xCollision).y - nonstaticCircle.bounds.center.y);
-            }
-            else
-            {
-                intersectionPoint = GetUpperBoundsAtXValueCircle(staticCircle.bounds, xCollision);
-                intersectionPoint.y = intersectionPoint.y - (GetLowerBoundsAtXValueCircle(nonstaticCircle.bounds, xCollision).y - nonstaticCircle.bounds.center.y);
-            }
-            return intersectionPoint;
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCircle, staticCircle, collisionPoint.x);
         }
         else
         {
-            float yCollision = nonstaticCircle.bounds.center.y + (staticCircle.bounds.center.y - nonstaticCircle.bounds.center.y) * (nonstaticCircle.bounds.radius / totalRadiusSize);
-            if (nonstaticCircle.GetCenter().x < staticCircle.GetCenter().x)
-            {
-                intersectionPoint = GetLeftBoundAtYValueCircle(staticCircle.bounds, yCollision);
-                intersectionPoint.x = intersectionPoint.x - (GetRighBoundAtYValueCircle(nonstaticCircle.bounds, yCollision).x - nonstaticCircle.bounds.center.x);
-            }
-            else
-            {
-                intersectionPoint = GetRighBoundAtYValueCircle(staticCircle.bounds, yCollision);
-                intersectionPoint.x = intersectionPoint.x - (GetLeftBoundAtYValueCircle(nonstaticCircle.bounds, yCollision).x - nonstaticCircle.bounds.center.x);
-            }
-            return intersectionPoint;
-
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCircle, staticCircle, collisionPoint.y);
         }
     }
 
@@ -723,69 +639,74 @@ public abstract class CustomCollider2D : MonoBehaviour {
     {
         Vector2 cCenter = staticCircle.GetCenter();
         Vector2 capCenter = nonstaticCapsule.GetCenter();
-        Vector2 intersectionPoint = Vector2.zero;
+        Vector2 collisionPoint;
+
         if (collidedVertically)
         {
-            if (capCenter.y < cCenter.y)
+            if (cCenter.y < capCenter.y)
             {
-                intersectionPoint = staticCircle.GetLowerBoundsAtXValue(cCenter.x);
-                intersectionPoint.y -= (nonstaticCapsule.GetUpperBoundsAtXValue(cCenter.x).y - nonstaticCapsule.transform.position.y);
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.bottomCircleBounds, staticCircle.bounds);
             }
             else
             {
-                intersectionPoint = staticCircle.GetUpperBoundsAtXValue(cCenter.x);
-                intersectionPoint.y -= (nonstaticCapsule.GetLowerBoundsAtXValue(cCenter.x).y - nonstaticCapsule.transform.position.y);
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.topCircleBounds, staticCircle.bounds);
             }
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCapsule, staticCircle, collisionPoint.x);
         }
         else
         {
-            if (capCenter.x < cCenter.x)
+            if (cCenter.y > nonstaticCapsule.bounds.rectBounds.topLeft.y)
             {
-                intersectionPoint = staticCircle.GetLeftBoundAtYValue(cCenter.y);
-                intersectionPoint.x -= (nonstaticCapsule.GetRightBoundAtYValue(cCenter.y).x - nonstaticCapsule.transform.position.x);
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.topCircleBounds, staticCircle.bounds);
+            }
+            else if (cCenter.y < nonstaticCapsule.bounds.rectBounds.bottomLeft.y)
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.bottomCircleBounds, staticCircle.bounds);
             }
             else
             {
-                intersectionPoint = staticCircle.GetRightBoundAtYValue(cCenter.y);
-                intersectionPoint.x -= (nonstaticCapsule.GetLeftBoundAtYValue(cCenter.y).x - nonstaticCapsule.transform.position.x);
+                collisionPoint = cCenter;
             }
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCapsule, staticCircle, collisionPoint.y);
         }
-        return intersectionPoint;
     }
 
     public static Vector2 IntersectionPointStaticCapsuleNonstaticCircle(CustomCapsuleCollider2D staticCapsule, CustomCircleCollider2D nonstaticCircle, bool collidedVertically = true)
     {
         Vector2 capCenter = staticCapsule.GetCenter();
         Vector2 cCenter = nonstaticCircle.GetCenter();
-        Vector2 intersectionPoint = Vector2.zero;
+
+        Vector2 collisionPoint;
         if (collidedVertically)
         {
             if (cCenter.y < capCenter.y)
             {
-                intersectionPoint = staticCapsule.GetLowerBoundsAtXValue(capCenter.x);
-                intersectionPoint.y -= (nonstaticCircle.GetUpperBoundsAtXValue(capCenter.x).y - nonstaticCircle.transform.position.y);
+                collisionPoint = CollisionPointCircleOnCircleBounds(staticCapsule.bounds.bottomCircleBounds, nonstaticCircle.bounds);
             }
             else
             {
-                intersectionPoint = staticCapsule.GetUpperBoundsAtXValue(capCenter.x);
-                intersectionPoint.y -= (nonstaticCircle.GetLowerBoundsAtXValue(capCenter.x).y - nonstaticCircle.transform.position.y);
+                collisionPoint = CollisionPointCircleOnCircleBounds(staticCapsule.bounds.topCircleBounds, nonstaticCircle.bounds);
             }
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCircle, staticCapsule, collisionPoint.x);
         }
         else
         {
-            if (cCenter.x < capCenter.x)
+            if (cCenter.y > staticCapsule.bounds.rectBounds.topLeft.y)
             {
-                intersectionPoint = staticCapsule.GetLeftBoundAtYValue(capCenter.y);
-                intersectionPoint.x -= nonstaticCircle.GetRightBoundAtYValue(capCenter.y).x - nonstaticCircle.transform.position.x;
+                collisionPoint = CollisionPointCircleOnCircleBounds(staticCapsule.bounds.topCircleBounds, nonstaticCircle.bounds);
+            }
+            else if (cCenter.y < staticCapsule.bounds.rectBounds.bottomLeft.y)
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(staticCapsule.bounds.bottomCircleBounds, nonstaticCircle.bounds);
             }
             else
             {
-                intersectionPoint = staticCapsule.GetRightBoundAtYValue(capCenter.y);
-                intersectionPoint.x -= nonstaticCircle.GetLeftBoundAtYValue(capCenter.y).x - nonstaticCircle.transform.position.x;
+                collisionPoint = cCenter;
             }
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCircle, staticCapsule, collisionPoint.y);
         }
-        return intersectionPoint;
     }
+
 
     public static Vector2 IntersectionPointNonstaticCapsuleStaticRect(CustomCapsuleCollider2D nonstaticCapsule, CustomBoxCollider2D staticRect, bool collidedVertically = true)
     {
@@ -803,16 +724,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 xPoint = staticRect.bounds.topLeft.x;
             }
-            if (capCenter.y < rCenter.y)
-            {
-                intersectionPoint = staticRect.GetLowerBoundsAtXValue(xPoint);
-                intersectionPoint.y -= (nonstaticCapsule.GetUpperBoundsAtXValue(xPoint).y - nonstaticCapsule.transform.position.y);
-            }
-            else
-            {
-                intersectionPoint = staticRect.GetUpperBoundsAtXValue(xPoint);
-                intersectionPoint.y -= (nonstaticCapsule.GetLowerBoundsAtXValue(xPoint).y - nonstaticCapsule.transform.position.y);
-            }
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCapsule, staticRect, xPoint);
         }
         else
         {
@@ -826,23 +738,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 yPoint = staticRect.bounds.bottomLeft.y;
             }
 
-            if (capCenter.x < rCenter.x)
-            {
-                intersectionPoint = staticRect.GetLeftBoundAtYValue(yPoint);
-                intersectionPoint.x -= (nonstaticCapsule.GetRightBoundAtYValue(yPoint).x - nonstaticCapsule.transform.position.x);
-            }
-            else
-            {
-                intersectionPoint = staticRect.GetRightBoundAtYValue(yPoint);
-                intersectionPoint.x -= (nonstaticCapsule.GetLeftBoundAtYValue(yPoint).x - nonstaticCapsule.transform.position.x);
-            }
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCapsule, staticRect, yPoint);
         }
-        return intersectionPoint;
     }
 
     public static Vector2 IntersectionPointStaticCapsuleNonStaticRect(CustomCapsuleCollider2D staticCapsule, CustomBoxCollider2D nonstaticRect, bool collidedVertically = true)
     {
-        Vector2 intersectionPoint = Vector2.zero;
         Vector2 rCenter = nonstaticRect.GetCenter();
         Vector2 capCenter = staticCapsule.GetCenter();
         if (collidedVertically)
@@ -856,16 +757,8 @@ public abstract class CustomCollider2D : MonoBehaviour {
             {
                 xPoint = nonstaticRect.bounds.topLeft.x;
             }
-            if (rCenter.y < capCenter.y)
-            {
-                intersectionPoint = staticCapsule.GetLowerBoundsAtXValue(xPoint);
-                intersectionPoint.y -= (nonstaticRect.GetUpperBoundsAtXValue(xPoint).y - nonstaticRect.transform.position.y);
-            }
-            else
-            {
-                intersectionPoint = staticCapsule.GetUpperBoundsAtXValue(xPoint);
-                intersectionPoint.y -= (nonstaticRect.GetLowerBoundsAtXValue(xPoint).y - nonstaticRect.transform.position.y);
-            }
+
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticRect, staticCapsule, xPoint);
         }
         else
         {
@@ -879,23 +772,92 @@ public abstract class CustomCollider2D : MonoBehaviour {
                 yPoint = nonstaticRect.bounds.bottomLeft.y;
             }
 
-            if (rCenter.x < capCenter.x)
-            {
-                intersectionPoint = staticCapsule.GetLeftBoundAtYValue(yPoint);
-                intersectionPoint.x -= (nonstaticRect.GetRightBoundAtYValue(yPoint).x - nonstaticRect.transform.position.x);
-            }
-            else
-            {
-                intersectionPoint = staticCapsule.GetRightBoundAtYValue(yPoint);
-                intersectionPoint.x -= (nonstaticRect.GetLeftBoundAtYValue(yPoint).x - nonstaticRect.transform.position.x);
-            }
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticRect, staticCapsule, yPoint);
         }
-        return intersectionPoint;
     }
 
     public static Vector2 IntersectionPointCapsuleOnCapsule(CustomCapsuleCollider2D nonstaticCapsule, CustomCapsuleCollider2D staticCapsule, bool collidedVertically = true)
     {
-        return Vector2.zero;
+        Vector2 capCenter1 = nonstaticCapsule.GetCenter();
+        Vector2 capCenter2 = staticCapsule.GetCenter();
+
+        Vector2 collisionPoint;
+        if (collidedVertically)
+        {
+            if (capCenter1.y < capCenter2.y)
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.topCircleBounds, staticCapsule.bounds.bottomCircleBounds);
+            }
+            else
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.bottomCircleBounds, staticCapsule.bounds.topCircleBounds);
+            }
+            return IntersectionPointColliderVerticalAtXPoint(nonstaticCapsule, staticCapsule, collisionPoint.x);
+        }
+        else
+        {
+            if (nonstaticCapsule.bounds.bottomCircleBounds.center.y > staticCapsule.bounds.topCircleBounds.center.y)
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.bottomCircleBounds, staticCapsule.bounds.topCircleBounds);
+            }
+            else if (nonstaticCapsule.bounds.topCircleBounds.center.y < staticCapsule.bounds.bottomCircleBounds.center.y)
+            {
+                collisionPoint = CollisionPointCircleOnCircleBounds(nonstaticCapsule.bounds.topCircleBounds, staticCapsule.bounds.bottomCircleBounds);
+            }
+            else
+            {
+                collisionPoint = capCenter1;
+            }
+            return IntersectionPointColliderHorizontalAtYPoint(nonstaticCapsule, staticCapsule, collisionPoint.y);
+        }
+    }
+
+
+    private static Vector2 IntersectionPointColliderVerticalAtXPoint(CustomCollider2D nonstaticCollider, CustomCollider2D staticCollider, float xPoint)
+    {
+        Vector2 intersectionPoint;
+        Vector2 nonstaticCenter = nonstaticCollider.GetCenter();
+        Vector2 staticCenter = staticCollider.GetCenter();
+        if (nonstaticCenter.y < staticCenter.y)
+        {
+            intersectionPoint = staticCollider.GetLowerBoundsAtXValue(xPoint);
+            intersectionPoint.y -= (nonstaticCollider.GetUpperBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
+        }
+        else
+        {
+            intersectionPoint = staticCollider.GetUpperBoundsAtXValue(xPoint);
+            intersectionPoint.y -= (nonstaticCollider.GetLowerBoundsAtXValue(xPoint).y - nonstaticCollider.transform.position.y);
+        }
+
+        return intersectionPoint;
+    }
+
+    
+
+    private static Vector2 IntersectionPointColliderHorizontalAtYPoint(CustomCollider2D nonstaticCollider, CustomCollider2D staticCollider, float yPoint)
+    {
+        Vector2 intersectionPoint = Vector2.zero;
+        Vector2 nonstaticCenter = nonstaticCollider.GetCenter();
+        Vector2 staticCenter = staticCollider.GetCenter();
+
+        if (nonstaticCenter.x < staticCenter.x)
+        {
+            intersectionPoint = staticCollider.GetLeftBoundAtYValue(yPoint);
+            intersectionPoint.x -= (nonstaticCollider.GetRightBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
+        }
+        else
+        {
+            intersectionPoint = staticCollider.GetRightBoundAtYValue(yPoint);
+            intersectionPoint.x -= (nonstaticCollider.GetLeftBoundAtYValue(yPoint).x - nonstaticCollider.transform.position.x);
+        }
+
+        return intersectionPoint;
+    }
+
+    private static Vector2 CollisionPointCircleOnCircleBounds(BoundsCircle c1, BoundsCircle c2)
+    {
+        float totalRadius = c1.radius + c2.radius;
+        return c1.center + (c2.center - c1.center) * c1.radius / totalRadius;
     }
     #endregion intersection point methods
 
