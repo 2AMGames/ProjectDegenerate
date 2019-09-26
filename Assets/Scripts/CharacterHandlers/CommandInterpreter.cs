@@ -591,7 +591,6 @@ public class CommandInterpreter : MonoBehaviour
             {
                 --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
             }
-            yield return null;
         }
 
         Anim.ResetTrigger(buttonEventName);
@@ -608,7 +607,6 @@ public class CommandInterpreter : MonoBehaviour
             {
                 ++framesThatHavePassed;
             }
-            yield return null;
         }
 
         directionalInputRecordList.RemoveAt(0);

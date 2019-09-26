@@ -155,14 +155,6 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        if (currentMovementState != CharacterStats.CharacterState.FreeMovement || !Overseer.Instance.IsGameReady)
-        {
-            if (Overseer.Instance.HasGameStarted)
-            {
-                //Debug.LogError("RigidVelocity: " + GetComponent<CommandInterpreter>().characterStats.MovementMechanics.Velocty + ", X pos: " + gameObject.transform.position.x + ", Y pos: " + gameObject.transform.position.y);
-            }
-            return;
-        }
         if (rigid.isInAir)
         {
             UpdateCurrentSpeedInAir();
@@ -579,7 +571,6 @@ public class MovementMechanics : MonoBehaviour {
             {
                 //Debug.LogError("Hitstun: Game is not ready");
             }
-            yield return null;
         }
     }
 

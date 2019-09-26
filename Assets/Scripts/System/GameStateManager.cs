@@ -134,6 +134,7 @@ public class GameStateManager : MonoBehaviour
         GameState targetGameState = null;
         while (FrameStack.Count > 0)
         {
+            yield return new WaitForEndOfFrame();
             Debug.LogWarning("Peek Game State Count: " + FrameStack.Peek().FrameCount);
             if (FrameStack.Peek().FrameCount == frameRequested)
             {
@@ -141,7 +142,6 @@ public class GameStateManager : MonoBehaviour
                 break;
             }
             FrameStack.Pop();
-            yield return null;
         }
 
         if (targetGameState != null)

@@ -161,7 +161,6 @@ public class InteractionHandler : MonoBehaviour
             {
                 --Hitstun;
             }
-            yield return null;
         }
 
         Animator.SetBool(HITSTUN_TRIGGER, false);

@@ -245,7 +245,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 Overseer.Instance.SetShouldRunGame(true);
                 ShouldRunGame = true;
             }
-            yield return null;
         }
 
     }
