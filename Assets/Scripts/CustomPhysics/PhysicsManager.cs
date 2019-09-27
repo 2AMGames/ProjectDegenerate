@@ -67,7 +67,12 @@ public class PhysicsManager : MonoBehaviour
             collider.UpdateBoundsOfCollider();
             collider.originalVelocity = collider.rigid.velocity;
         }
-        
+
+        float xi;
+        float xj;
+        CustomCollider2D slowerCollider;
+        CustomCollider2D fasterCollider ;
+        float combinedVelocity;
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
@@ -77,28 +82,48 @@ public class PhysicsManager : MonoBehaviour
                     continue;
                 }
                     
-                float xi = nonStaticColliderList[i].rigid.velocity.x;
-                float xj = nonStaticColliderList[j].rigid.velocity.x;
-                CustomCollider2D slowerColliderToCheckCollisions = null;
-                if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                xi = nonStaticColliderList[i].rigid.velocity.x;
+                xj = nonStaticColliderList[j].rigid.velocity.x;
+                if (!(nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir))
                 {
-                    if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
+                    if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                    {
+                        fasterCollider = nonStaticColliderList[j];
+                        slowerCollider = nonStaticColliderList[i];
+                    }
+                    else
+                    {
+                        fasterCollider = nonStaticColliderList[i];
+                        slowerCollider = nonStaticColliderList[j];
+                    }
+                    if (!fasterCollider.ColliderIntersectHorizontally(slowerCollider))
                     {
                         continue;
                     }
-                    slowerColliderToCheckCollisions = nonStaticColliderList[i];
+
                 }
                 else
                 {
-                    if (!nonStaticColliderList[i].ColliderIntersectHorizontally(nonStaticColliderList[j]))
+                    if (nonStaticColliderList[i].rigid.isInAir)
+                    {
+                        slowerCollider = nonStaticColliderList[j];
+                        fasterCollider = nonStaticColliderList[i];
+                    }
+                    else
+                    {
+                        slowerCollider = nonStaticColliderList[i];
+                        fasterCollider = nonStaticColliderList[j];
+                    }
+                    if (!slowerCollider.ColliderIntersectHorizontally(fasterCollider))
                     {
                         continue;
                     }
-                    slowerColliderToCheckCollisions = nonStaticColliderList[j];
                 }
-                float combinedVelocity = 0;
+
                 
                 
+
+
                 if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
                 {
                     combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
@@ -107,16 +132,22 @@ public class PhysicsManager : MonoBehaviour
                 {
                     combinedVelocity = xi + xj;
                 }
-                nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
-                nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
-                nonStaticColliderList[i].UpdateBoundsOfCollider();
-                nonStaticColliderList[j].UpdateBoundsOfCollider();
-                if (CheckForHorizontalCollisions(slowerColliderToCheckCollisions))
+                fasterCollider.rigid.velocity.x = combinedVelocity;
+                slowerCollider.rigid.velocity.x = combinedVelocity;
+                fasterCollider.UpdateBoundsOfCollider();
+                slowerCollider.UpdateBoundsOfCollider();
+                if (CheckForHorizontalCollisions(slowerCollider))
                 {
-                    nonStaticColliderList[i].rigid.velocity.x = 0;
-                    nonStaticColliderList[j].rigid.velocity.x = 0;
-                    nonStaticColliderList[i].UpdateBoundsOfCollider();
-                    nonStaticColliderList[j].UpdateBoundsOfCollider();
+
+                    slowerCollider.UpdateBoundsOfCollider();
+                    fasterCollider.rigid.velocity.x = 0;
+                    slowerCollider.rigid.velocity.x = 0;
+                    if (fasterCollider.ColliderIntersectHorizontally(slowerCollider))
+                    {
+                        fasterCollider.UpdateBoundsOfCollider();
+                        slowerCollider.UpdateBoundsOfCollider();
+                    }
+
                 }
 
                 //else

@@ -99,6 +99,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             verticalBounds.rectBounds.topRight.x = bounds.rectBounds.topRight.x - colliderBuffer / 2;
             verticalBounds.rectBounds.bottomLeft.x = verticalBounds.rectBounds.topLeft.x;
             verticalBounds.rectBounds.bottomRight.x = verticalBounds.rectBounds.topRight.x;
+            
 
 
             horizontalBounds = bounds;
