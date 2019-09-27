@@ -201,7 +201,18 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (Overseer.Instance.HasGameStarted)
         {
-            Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y +", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y);
+                AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
+                AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
+                string clipName = state.shortNameHash.ToString();
+                for (int index = 0; index < clips.Length; ++index)
+                {
+                    if (state.IsName(clips[index].name))
+                    {
+                        clipName = clips[index].name;
+                        break;
+                    }
+                }
+            Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
         }
     }
 
