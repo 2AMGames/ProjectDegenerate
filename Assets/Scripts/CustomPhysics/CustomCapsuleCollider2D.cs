@@ -8,7 +8,6 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     public float radius = 1;
 
     private bool drawHorizontal;
-    public Vector2 capsuleOffset;
 
     public float colliderBuffer = .01f;
     public BoundsCapsule bounds;
@@ -68,7 +67,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     public override void UpdateBoundsOfCollider()
     {
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
+        Vector2 origin = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
         float xSize = drawHorizontal ? size : radius * 2;
         float ySize = drawHorizontal ? radius * 2 : size;
 
