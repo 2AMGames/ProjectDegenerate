@@ -4,23 +4,20 @@ using UnityEngine;
 
 public class CustomCircleCollider2D : CustomCollider2D
 {
+
+    [Header("Kinematic Collision Buffers")]
+    public float radiusBuffer = .01f;
+
     public float radius = 1;
-    public BoundsCircle previousBounds;
+    public Vector2 centerOffset;
+
+
     public BoundsCircle bounds;
 
+    private BoundsCircle horizontalBoundsFromVelocity;
+    private BoundsCircle verticalBoundsFromVelocity;
+
     #region monobehaviour methods
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-        if (verticalRayCount % 2 == 0)
-        {
-            verticalRayCount += 1;
-        }
-        if (horizontalRayCount % 2 == 0)
-        {
-            horizontalRayCount += 1;
-        }
-    }
 
     private void OnDrawGizmos()
     {
@@ -30,6 +27,15 @@ public class CustomCircleCollider2D : CustomCollider2D
         }
 
 #if UNITY_EDITOR
+        
+
+        if (!isStatic)
+        {
+            //UnityEditor.Handles.color = Color.red;
+            //UnityEditor.Handles.DrawSolidDisc(horizontalBoundsFromVelocity.center, Vector3.forward, horizontalBoundsFromVelocity.radius);
+            //UnityEditor.Handles.color = Color.cyan;
+            //UnityEditor.Handles.DrawSolidDisc(verticalBoundsFromVelocity.center, Vector3.forward, verticalBoundsFromVelocity.radius);
+        }
         UnityEditor.Handles.color = GIZMO_COLOR;
         UnityEditor.Handles.DrawWireDisc(bounds.center, Vector3.forward, bounds.radius);
 
@@ -45,8 +51,9 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        return LineIntersectCircle(this.bounds, origin, origin + direction * length);
+        return LineIntersectCircle(this.bounds, origin, direction, length);
     }
+
 
     /// <summary>
     /// 
@@ -54,135 +61,9 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <param name="collider"></param>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        if (collider.isStatic)
-        {
-            return;
-        }
-        CustomPhysics2D rigidCol = collider.rigid;
-        Vector2 offsetFromCollider = this.bounds.center - collider.GetCenter();
+        
 
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
-    {
-
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionLeftFromVelocity()
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionRightFromVelocity()
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
-    {
-        float degreeOffset = 180f / (horizontalRayCount - 1);
-        Vector2 direction = Vector2.zero;
-        int centerIndex = horizontalRayCount / 2;
-        HashSet<CustomCollider2D> colliderList = new HashSet<CustomCollider2D>();
-        List<CustomCollider2D> tempList;
-        float highestYPosition = float.MinValue;
-        for (int i = 0; i < horizontalRayCount; i++)
-        {
-            float rads = Mathf.Deg2Rad * (i * degreeOffset + 180);
-            direction = new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
-            Vector2 originPoint = bounds.center + bounds.radius * direction;
-            Overseer.Instance.ColliderManager.CheckLineIntersectWithCollider(originPoint, Vector2.down, VerticalBuffer + rigid.velocity.y * Time.deltaTime, out tempList);
-            if (tempList.Contains(this))
-            {
-                tempList.Remove(this);
-            }
-
-            foreach (CustomCollider2D col in tempList)
-            {
-                Vector2 pointWhereWeCollide = Vector2.down * float.MinValue;
-                if (col is CustomBoxCollider2D)
-                {
-                    pointWhereWeCollide = GetCollisionPointRect((CustomBoxCollider2D)col);
-                }
-                else
-                {
-
-                }
-                colliderList.Add(col);
-                float pointThatWeHit = pointWhereWeCollide.y;
-                float offset = GetLowerBoundsAtXValue(pointWhereWeCollide.x).y;
-                pointThatWeHit -= offset;
-                if (pointThatWeHit > highestYPosition)
-                {
-                    highestYPosition = pointThatWeHit;
-                }
-                if (i == centerIndex)
-                {
-                    rigid.velocity.y = 0;
-                }
-            }
-        }
-        if (colliderList.Count <= 0)
-        {
-            return false;
-        }
-
-
-        this.transform.position = new Vector3(transform.position.x, highestYPosition + (transform.position.y), transform.position.z);
-        UpdateBoundsOfCollider();
-        return true;
-    }
-
-    #region circle collision methods
-    public Vector2 GetCollisionPointRect(CustomBoxCollider2D rect)
-    {
-        Vector2 c = bounds.center;
-        Vector2 collisionPoint;
-        if (c.x < rect.bounds.bottomLeft.x)
-        {
-            collisionPoint.x = rect.bounds.bottomLeft.x;
-        }
-        else if (c.x > rect.bounds.bottomRight.x)
-        {
-            collisionPoint.x = rect.bounds.bottomRight.x;
-        }
-        else
-        {
-            collisionPoint.x = c.x;
-        }
-
-        if (c.y < rect.bounds.bottomRight.y)
-        {
-            collisionPoint.y = rect.bounds.bottomRight.y;
-        }
-        else if (c.y > rect.bounds.topRight.y)
-        {
-            collisionPoint.y = rect.bounds.topRight.y;
-        }
-        else
-        {
-            collisionPoint.y = c.y;
-        }
-        return collisionPoint;
-    }
-    #endregion circle collision methods
 
 
     /// <summary>
@@ -190,12 +71,41 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        previousBounds = bounds;
 
         BoundsCircle cBounds = new BoundsCircle();
-        cBounds.center = this.transform.position;
+        cBounds.center = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
         cBounds.radius = radius;
         bounds = cBounds;
+
+        if (!isStatic)
+        {
+            //Adjust the vertical and horizontal bounds of our circle collider if it is a static collider
+
+            this.horizontalBoundsFromVelocity = bounds;
+            this.horizontalBoundsFromVelocity.radius = bounds.radius - radiusBuffer;
+
+            this.verticalBoundsFromVelocity = bounds;
+            this.verticalBoundsFromVelocity.radius = bounds.radius - radiusBuffer;
+
+
+
+            if (rigid.velocity.y < 0)
+            {
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Min(-radiusBuffer,  rigid.velocity.y * Overseer.DELTA_TIME);
+            }
+            else if (rigid.velocity.y > 0)
+            {
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Max(radiusBuffer, rigid.velocity.y * Overseer.DELTA_TIME);
+            }
+            if (rigid.velocity.x < 0)
+            {
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Min(-radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+            }
+            else if (rigid.velocity.x > 0)
+            {
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Max(radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+            }
+        }
     }
 
     /// <summary>
@@ -205,9 +115,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        float adjustedX = x - bounds.center.x;
-        float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, -Mathf.Sin(angle) * bounds.radius + bounds.center.y);
+        return GetLowerBoundsAtXValueCircle(this.bounds, x);
     }
 
     /// <summary>
@@ -217,21 +125,18 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        float adjustedX = x - bounds.center.x;
-        float angle = Mathf.Acos(adjustedX / bounds.radius);
-        return new Vector2(x, Mathf.Sin(angle) * bounds.radius + bounds.center.y);
+        return GetUpperBoundsAtXValueCircle(this.bounds, x);
     }
+
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="y"></param>
     /// <returns></returns>
-    public override Vector2 GetRighBoundAtYValue(float y)
+    public override Vector2 GetRightBoundAtYValue(float y)
     {
-        float adjustedY = y - bounds.center.y;
-        float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
+        return GetRighBoundAtYValueCircle(this.bounds, y);
     }
 
     /// <summary>
@@ -241,29 +146,31 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        float adjustedY = y - bounds.center.y;
-        float angle = Mathf.Asin(adjustedY / bounds.radius);
-        return new Vector2(-Mathf.Cos(angle) * bounds.radius + bounds.center.x, y);
+        return GetLeftBoundAtYValueCircle(this.bounds, y);
     }
 
-    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
+    {
+        return CircleColliderCollisionsAtBounds(this.bounds, colliderToCheck);
+    }
+
+    private bool CircleColliderCollisionsAtBounds(CustomCollider2D.BoundsCircle cBounds, CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return RectIntersectCircle(((CustomBoxCollider2D)colliderToCheck).bounds, cBounds);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return CircleIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return CircleIntersectCircle(cBounds, ((CustomCircleCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return CapsuleIntersectCircle(((CustomCapsuleCollider2D)colliderToCheck).bounds, cBounds);
         }
         else
         {
             Debug.LogError("Circle Collider does not support type: " + colliderToCheck.GetType());
-            intersectionPoint = Vector2.zero;
             return false;
         }
     }
@@ -271,5 +178,95 @@ public class CustomCircleCollider2D : CustomCollider2D
     public override Vector2 GetCenter()
     {
         return bounds.center;
+    }
+
+    /// <summary>
+    /// Checks to see if our circle would collide with the collider object that is passed in. 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <param name="offsetDirection"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
+    {
+        if (rigid.velocity.y == 0)
+        {
+            return false;
+        }
+
+        if (CircleColliderCollisionsAtBounds(verticalBoundsFromVelocity, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                Vector2 pointOfCollision = IntersectionPointNonstaticRectOnStaticCircle(((CustomBoxCollider2D)colliderToCheck), this, true);
+                
+                
+                this.transform.position = new Vector3(this.transform.position.x, pointOfCollision.y, this.transform.position.z);
+                rigid.velocity.y = 0;
+
+                return true;
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
+                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck, true);
+               
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                CustomCapsuleCollider2D capsuleToCheck = (CustomCapsuleCollider2D)colliderToCheck;
+
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonstaticCircle(capsuleToCheck, this, true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+                
+            }
+            return true;
+        }
+        
+        return false;
+        
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
+    {
+
+        if (rigid.velocity.x == 0)
+        {
+            return false;
+        }
+
+        if (CircleColliderCollisionsAtBounds(horizontalBoundsFromVelocity, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                Vector2 pointOfCollision = IntersectionPointNonstaticRectOnStaticCircle(((CustomBoxCollider2D)colliderToCheck), this, false);
+                
+                this.transform.position = new Vector3(pointOfCollision.x, this.transform.position.y, this.transform.position.z);
+
+                return true;
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                CustomCircleCollider2D customcircleToCheck = (CustomCircleCollider2D)colliderToCheck;
+                
+                Vector2 collisionPoint = IntersectionPointCircleOnCircle(this, customcircleToCheck, false);
+                this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                CustomCapsuleCollider2D capCollider = (CustomCapsuleCollider2D)colliderToCheck;
+
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonstaticCircle(capCollider, this, false);
+                this.transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            return true;
+        }
+        return false;
     }
 }
