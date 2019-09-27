@@ -1869,7 +1869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentRoomId: 
   DebugEnabled: 1
-  SendPercentage: 0.4
+  SendPercentage: 0.2
 --- !u!4 &865024345
 Transform:
   m_ObjectHideFlags: 0

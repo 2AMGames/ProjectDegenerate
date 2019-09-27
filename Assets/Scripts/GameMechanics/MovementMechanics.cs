@@ -561,10 +561,10 @@ public class MovementMechanics : MonoBehaviour {
         while(InteractionHandler.Hitstun > 0)
         {
             yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.IsGameReady && InteractionHandler.Hitstun > 0)
             {
                 Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
-                //Debug.LogError("New velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME);
+                //Debug.LogError("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
                 rigid.velocity = newVelocity;
             }
             else
