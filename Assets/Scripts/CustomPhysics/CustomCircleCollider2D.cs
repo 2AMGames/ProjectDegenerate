@@ -31,10 +31,10 @@ public class CustomCircleCollider2D : CustomCollider2D
 
         if (!isStatic)
         {
-            UnityEditor.Handles.color = Color.red;
-            UnityEditor.Handles.DrawSolidDisc(horizontalBoundsFromVelocity.center, Vector3.forward, horizontalBoundsFromVelocity.radius);
-            UnityEditor.Handles.color = Color.cyan;
-            UnityEditor.Handles.DrawSolidDisc(verticalBoundsFromVelocity.center, Vector3.forward, verticalBoundsFromVelocity.radius);
+            //UnityEditor.Handles.color = Color.red;
+            //UnityEditor.Handles.DrawSolidDisc(horizontalBoundsFromVelocity.center, Vector3.forward, horizontalBoundsFromVelocity.radius);
+            //UnityEditor.Handles.color = Color.cyan;
+            //UnityEditor.Handles.DrawSolidDisc(verticalBoundsFromVelocity.center, Vector3.forward, verticalBoundsFromVelocity.radius);
         }
         UnityEditor.Handles.color = GIZMO_COLOR;
         UnityEditor.Handles.DrawWireDisc(bounds.center, Vector3.forward, bounds.radius);

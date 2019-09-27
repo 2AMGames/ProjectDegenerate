@@ -249,10 +249,10 @@ public class CustomCapsuleCollider2D : CustomCollider2D
         if (colliderToCheck == this) return false;
 
 
-        if (rigid.velocity.y == 0)
-        {
-            return false;
-        }
+        //if (rigid.velocity.y == 0)
+        //{
+        //    return false;
+        //}
 
         if (ColliderIntersectBounds(verticalBounds, colliderToCheck))
         {
@@ -286,7 +286,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     {
         if (colliderToCheck == this) return false;
 
-        if (rigid.velocity.x == 0) return false;
+        //if (rigid.velocity.x == 0) return false;
 
         if (ColliderIntersectBounds(horizontalBounds, colliderToCheck))
         {
