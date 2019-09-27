@@ -177,8 +177,8 @@ public class PhysicsManager : MonoBehaviour
                 {
                     if (nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.velocity.x <= 0)
                     {
-                        nonStaticCollider.rigid.isInAir = false;
-                        nonStaticCollider.rigid.OnPhysicsObjectAirborne();
+                        nonStaticCollider.rigid.isInAir = true;
+                        nonStaticCollider.rigid.OnPhysicsObjectGrounded();
                     }
                     nonStaticCollider.rigid.velocity.y = 0;
                     nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
