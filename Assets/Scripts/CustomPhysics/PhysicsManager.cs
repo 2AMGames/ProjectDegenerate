@@ -47,6 +47,8 @@ public class PhysicsManager : MonoBehaviour
             return;
         }
 
+        Overseer.Instance.HitboxManager.UpdateHitboxManager();
+
         foreach (CustomCollider2D collider in nonStaticColliderList)
         {
             if (collider.enabled)

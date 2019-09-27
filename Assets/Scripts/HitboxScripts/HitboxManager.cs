@@ -61,12 +61,7 @@ public class HitboxManager : MonoBehaviour
         }
     }
 
-
-
-    /// <summary>
-    /// This will be one of the last things that we check. We want to wait for everything to move before checking whether or not we have collided with anything
-    /// </summary>
-    private void LateUpdate()
+    public void UpdateHitboxManager()
     {
         if (!Overseer.Instance.IsGameReady)
         {
@@ -88,7 +83,7 @@ public class HitboxManager : MonoBehaviour
 
                 // Do not consider pairs of hit boxes that are both hurtboxes. These will never trigger an event
                 // Do not consider hitboxes of the same player indices.
-                if (!IsValidHitBoxPair(h1,h2)) 
+                if (!IsValidHitBoxPair(h1, h2))
                 {
                     continue;
                 }
