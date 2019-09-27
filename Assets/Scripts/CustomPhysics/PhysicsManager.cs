@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-
 /// <summary>
-/// 
+/// The manager that handles how we control all of our physics objects in the game. This updates objects that contain a custom physics object and any collider object
 /// </summary>
 public class PhysicsManager : MonoBehaviour
 {
@@ -25,11 +25,16 @@ public class PhysicsManager : MonoBehaviour
     /// <summary>
     /// A list of all the custom colliders in the scene
     /// </summary>
-    private List<CustomCollider2D> colliderList = new List<CustomCollider2D>();
+    private List<CustomCollider2D> nonStaticColliderList = new List<CustomCollider2D>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private List<CustomCollider2D> staticColliderList = new List<CustomCollider2D>();
     /// <summary>
     /// A list of all the physics objects in the scene
     /// </summary>
-    private List<CustomPhysics2D> customPhysicsList = new List<CustomPhysics2D>();
+    private List<CustomPhysics2D> allCustomPhysicsObjectsList = new List<CustomPhysics2D>();
     #region monobehaviour methods
     private void Awake()
     {
@@ -39,8 +44,7 @@ public class PhysicsManager : MonoBehaviour
     private void LateUpdate()
     {
 
-        Vector2 vec;
-        foreach (CustomCollider2D collider in colliderList)
+        foreach (CustomCollider2D collider in nonStaticColliderList)
         {
             if (collider.enabled)
             {
@@ -48,55 +52,161 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-
-        for (int i = 0; i < colliderList.Count - 1; i++)
-        {
-            for (int j = i + 1; j < colliderList.Count; j++)
-            {
-                if (colliderList[i].ColliderIntersect(colliderList[j], out vec))
-                {
-                    //print("I made it here");
-                    if (colliderList[i].isStatic)
-                    {
-                        colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
-                    }
-                    if (colliderList[j].isStatic)
-                    {
-                        colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
-                    }
-                }
-            }
-        }
         
-        
-        foreach (CustomPhysics2D rigid in customPhysicsList)
+        //Updates the velocity based on gravity
+        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
                 rigid.UpdateVelocityFromGravity();
             }
         }
-        for (int i = 0; i < colliderList.Count; i++)
+
+        foreach (CustomCollider2D collider in nonStaticColliderList)
         {
-            if (!colliderList[i].isStatic)
-                colliderList[i].CheckForCollisions();
-            //if (colliderList[i].enabled)
-            //{
-            //    for (int j = i + 1; j < colliderList.Count - 1; j++)
-            //    {
-            //        colliderList[i].IntersectWithCollider(colliderList[j]);
-            //    }
+            collider.UpdateBoundsOfCollider();
+            collider.originalVelocity = collider.rigid.velocity;
+        }
+        
+        for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
+        {
+            for (int j = i + 1; j < nonStaticColliderList.Count; j++)
+            {
+                if (!nonStaticColliderList[i].isActiveAndEnabled || !nonStaticColliderList[j].isActiveAndEnabled)
+                {
+                    continue;
+                }
+                    
+                float xi = nonStaticColliderList[i].rigid.velocity.x;
+                float xj = nonStaticColliderList[j].rigid.velocity.x;
+                CustomCollider2D slowerColliderToCheckCollisions = null;
+                if (Mathf.Abs(xj) > Mathf.Abs(xi))
+                {
+                    if (!nonStaticColliderList[j].ColliderIntersectHorizontally(nonStaticColliderList[i]))
+                    {
+                        continue;
+                    }
+                    slowerColliderToCheckCollisions = nonStaticColliderList[i];
+                }
+                else
+                {
+                    if (!nonStaticColliderList[i].ColliderIntersectHorizontally(nonStaticColliderList[j]))
+                    {
+                        continue;
+                    }
+                    slowerColliderToCheckCollisions = nonStaticColliderList[j];
+                }
+                float combinedVelocity = 0;
                 
-            //}
+                
+                if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
+                {
+                    combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
+                }
+                else
+                {
+                    combinedVelocity = xi + xj;
+                }
+                nonStaticColliderList[i].rigid.velocity.x = combinedVelocity;
+                nonStaticColliderList[j].rigid.velocity.x = combinedVelocity;
+                nonStaticColliderList[i].UpdateBoundsOfCollider();
+                nonStaticColliderList[j].UpdateBoundsOfCollider();
+                if (CheckForHorizontalCollisions(slowerColliderToCheckCollisions))
+                {
+                    nonStaticColliderList[i].rigid.velocity.x = 0;
+                    nonStaticColliderList[j].rigid.velocity.x = 0;
+                    nonStaticColliderList[i].UpdateBoundsOfCollider();
+                    nonStaticColliderList[j].UpdateBoundsOfCollider();
+                }
+
+                //else
+                //{
+                //    print("I did not collide with anything");
+                //    Debug.Break();
+                //}
+            }
         }
 
-        foreach (CustomPhysics2D rigid in customPhysicsList)
+
+        foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
+        {
+            foreach (CustomCollider2D staticCollider in staticColliderList)
+            {
+                if (!staticCollider.isActiveAndEnabled || !nonStaticCollider.isActiveAndEnabled)
+                {
+                    continue;//Skip if either collider is inactive
+                }
+                bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
+                bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
+
+                if (collidedVertically)
+                {
+                    nonStaticCollider.rigid.velocity.y = 0;
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+                if (collidedHorizontally)
+                {
+                    nonStaticCollider.rigid.velocity.x = 0;
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+
+
+                
+                if (collidedVertically || collidedHorizontally)
+                {
+                    nonStaticCollider.UpdateBoundsOfCollider();
+                }
+
+                
+            }
+        }
+
+
+        //Updates our physics object based on its physics state
+        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
                 rigid.UpdatePhysics();
             }
         }
+
+
+        foreach (CustomCollider2D collider in nonStaticColliderList)
+        {
+            collider.rigid.velocity = collider.originalVelocity;
+        }
+
+        //for (int i = 0; i < colliderList.Count - 1; i++)
+        //{
+        //    for (int j = i + 1; j < colliderList.Count; j++)
+        //    {
+        //        if (colliderList[i].ColliderIntersect(colliderList[j]))
+        //        {
+        //            //print("I made it here");
+        //            if (colliderList[i].isStatic)
+        //            {
+        //                colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
+        //            }
+        //            if (colliderList[j].isStatic)
+        //            {
+        //                colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
+        //            }
+        //        }
+        //    }
+        //}
+    }
+
+    public bool CheckForHorizontalCollisions(CustomCollider2D colliderToCheck)
+    {
+        foreach (CustomCollider2D staticCollider in staticColliderList)
+        {
+            if (colliderToCheck.ColliderIntersectHorizontally(staticCollider))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     #endregion monobehaviour methods
 
@@ -109,11 +219,11 @@ public class PhysicsManager : MonoBehaviour
     /// <param name="rigid"></param>
     public void AddCustomPhysics(CustomPhysics2D rigid) 
     {
-        if (customPhysicsList.Contains(rigid))
+        if (allCustomPhysicsObjectsList.Contains(rigid))
         {
             return;
         }
-        customPhysicsList.Add(rigid);
+        allCustomPhysicsObjectsList.Add(rigid);
     }
 
     /// <summary>
@@ -122,37 +232,69 @@ public class PhysicsManager : MonoBehaviour
     /// <param name="rigid"></param>
     public void RemoveCustomPhysics(CustomPhysics2D rigid)
     {
-        if (customPhysicsList.Contains(rigid))
+        if (allCustomPhysicsObjectsList.Contains(rigid))
         {
-            customPhysicsList.Remove(rigid);
+            allCustomPhysicsObjectsList.Remove(rigid);
         }
     }
 
     /// <summary>
-    /// Add a collider to the manager
+    /// This will add a collider to the appropriate list. The list that it is assigned to will be determined by whether or not
+    /// it uses a rigid body to move. (i.e. whether or not it is static
     /// </summary>
     /// <param name="collider"></param>
     public void AddColliderToManager(CustomCollider2D collider)
     {
-        if (colliderList.Contains(collider))
+        if (collider.isStatic)
         {
-            return;
+            if (staticColliderList.Contains(collider))
+            {
+                Debug.LogWarning("We are trying to add a collider to our static collider list multiplie times");
+            }
+            else
+            {
+                staticColliderList.Add(collider);
+            }
         }
-        colliderList.Add(collider);
+        else
+        {
+            if (nonStaticColliderList.Contains(collider))
+            {
+                Debug.LogWarning("We are trying to add a collider to our non static collider list multiplie times");
+            }
+            else
+            {
+                nonStaticColliderList.Add(collider);
+            }
+        }
     }
 
+    /// <summary>
+    /// Removes a collider object from our physics manager. This should typically only be called upon the collider
+    /// object being destroyed
+    /// </summary>
+    /// <param name="collider"></param>
     public void RemoveColliderFromManager(CustomCollider2D collider)
     {
-        if (!colliderList.Contains(collider))
+        if (collider.isStatic)
         {
-            return;
+            if (staticColliderList.Contains(collider))
+            {
+                staticColliderList.Remove(collider);
+            }
         }
-        colliderList.Remove(collider);
+        else
+        {
+            if (nonStaticColliderList.Contains(collider))
+            {
+                nonStaticColliderList.Remove(collider);
+            }
+        }
     }
     #endregion collider interaction methods
 
     /// <summary>
-    /// 
+    /// This will compile a list of all the colliders that intersect with the line that is passed into our method
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="direction"></param>
@@ -165,7 +307,7 @@ public class PhysicsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Gets a list of all colliders that intersect the line that passes through
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="direction"></param>
@@ -175,7 +317,7 @@ public class PhysicsManager : MonoBehaviour
     public bool CheckLineIntersectWithCollider(Vector2 origin, Vector2 direction, float distance, out List<CustomCollider2D> collidersHit)
     {
         collidersHit = new List<CustomCollider2D>();
-        foreach (CustomCollider2D coll in colliderList)
+        foreach (CustomCollider2D coll in nonStaticColliderList)
         {
             if (coll.enabled)
             {

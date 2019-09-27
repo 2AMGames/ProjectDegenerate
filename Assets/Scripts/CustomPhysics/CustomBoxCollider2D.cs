@@ -8,17 +8,19 @@ using UnityEngine;
 public class CustomBoxCollider2D : CustomCollider2D
 {
     public Vector2 boxColliderSize = Vector2.one;
-    public Vector2 boxColliderPosition;
-
+    [Tooltip("We will thin out the box collider horizontally when checking for collisions with our box collider")]
+    public float HorizontalBuffer = .02f;
+    [Tooltip("We will thin our box collider vertically to check our horizontal collisions")]
+    public float VerticalBuffer = .02f;
     /// <summary>
     /// 
     /// </summary>
     public BoundsRect bounds { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    protected BoundsRect previousBounds { get; set; }
+    
+
+    protected BoundsRect horizontalCheckBounds;
+    protected BoundsRect verticalCheckBounds;
 
     protected virtual void OnDrawGizmos()
     {
@@ -27,13 +29,25 @@ public class CustomBoxCollider2D : CustomCollider2D
             UpdateBoundsOfCollider();
         }
 
+
+        
+
+#if UNITY_EDITOR
+        //if (!isStatic)
+        //{
+        //    UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.verticalCheckBounds.topLeft.x, this.verticalCheckBounds.topLeft.y, verticalCheckBounds.bottomRight.x - verticalCheckBounds.topLeft.x, verticalCheckBounds.bottomRight.y - verticalCheckBounds.topLeft.y),
+        //        Color.cyan, Color.blue);
+        //    UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.horizontalCheckBounds.topLeft.x, this.horizontalCheckBounds.topLeft.y, horizontalCheckBounds.bottomRight.x - horizontalCheckBounds.topLeft.x, horizontalCheckBounds.bottomRight.y - horizontalCheckBounds.topLeft.y),
+        //        Color.red, Color.yellow);
+        //}
+
+#endif
         Color colorToDraw = GIZMO_COLOR;
 
         DebugSettings.DrawLine(bounds.bottomLeft, bounds.bottomRight, colorToDraw);
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
         DebugSettings.DrawLine(bounds.topRight, bounds.topLeft, colorToDraw);
         DebugSettings.DrawLine(bounds.topLeft, bounds.bottomLeft, colorToDraw);
-        
     }
 
 
@@ -43,10 +57,9 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// </summary>
     public override void UpdateBoundsOfCollider()
     {
-        previousBounds = bounds;
         
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
+        Vector2 origin = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
 
         b.center = origin;
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
@@ -55,8 +68,41 @@ public class CustomBoxCollider2D : CustomCollider2D
         b.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
 
         this.bounds = b;
+
+        if (!isStatic)
+        {
+            verticalCheckBounds = this.bounds;
+            horizontalCheckBounds = this.bounds;
+
+            float verticalOffset = 0;
+            float horizontalOffset = 0;
+
+            verticalCheckBounds.topLeft.x += HorizontalBuffer / 2;
+            verticalCheckBounds.bottomLeft.x += HorizontalBuffer / 2;
+            verticalCheckBounds.topRight.x -= HorizontalBuffer / 2;
+            verticalCheckBounds.bottomRight.x -= HorizontalBuffer / 2;
+
+            horizontalCheckBounds.topLeft.y -= VerticalBuffer / 2;
+            horizontalCheckBounds.topRight.y -= VerticalBuffer / 2;
+            horizontalCheckBounds.bottomLeft.y += VerticalBuffer / 2;
+            horizontalCheckBounds.bottomRight.y += VerticalBuffer / 2;
+
+            if (Mathf.Abs(rigid.velocity.y) > 0)
+            {
+                verticalOffset = Mathf.Sign(rigid.velocity.y) * Mathf.Max(VerticalBuffer, Mathf.Abs(rigid.velocity.y * Overseer.DELTA_TIME));
+            }
+
+            if (Mathf.Abs(rigid.velocity.x) > 0)
+            {
+                horizontalOffset = Mathf.Sign(rigid.velocity.x) * Mathf.Max(HorizontalBuffer, Mathf.Abs(rigid.velocity.x * Overseer.DELTA_TIME));
+            }
+            verticalCheckBounds.SetOffset(Vector2.up * verticalOffset);
+            horizontalCheckBounds.SetOffset(Vector2.right * horizontalOffset);
+
+        }
     }
 
+    
     /// <summary>
     /// 
     /// </summary>
@@ -66,266 +112,59 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool LineIntersectWithCollider(Vector2 origin, Vector2 direction, float length)
     {
-        
-        Vector2 v0 = direction * length;
-        Vector2 endpoint = origin + v0;
-
-        Vector2 tr = bounds.topRight;
-        Vector2 bl = bounds.bottomLeft;
-
-        if (bl.x < origin.x && origin.x < tr.x && bl.y < origin.y && origin.y < tr.y)
-        {
-            return true;
-        }
-
-
-        if (LineCrossLine(origin, v0, bounds.bottomLeft, (bounds.bottomRight - bounds.bottomLeft)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.bottomRight, (bounds.topRight - bounds.bottomRight)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.topRight, (bounds.topLeft - bounds.topRight)))
-        {
-            return true;
-        }
-        if (LineCrossLine(origin, v0, bounds.topLeft, (bounds.bottomLeft - bounds.topLeft)))
-        {
-            return true;
-        }
-        return false;
+        return LineIntersectRect(this.bounds, origin, direction, length);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private bool LineCrossLine(Vector2 u0, Vector2 v0, Vector2 u1, Vector2 v1)
-    {
-        float d1 = GetDeterminant(v1, v0);
-        if (d1 == 0)
-        {
-            return false;
-        }
-        
-
-        float s = (1 / d1) * (((u0.x - u1.x) * v0.y) - ((u0.y - u1.y) * v0.x));
-        float t = (1 / d1) * -((-(u0.x - u1.x) * v1.y) + ((u0.y - u1.y) * v1.x));
-       
-        return s > 0 && s < 1 && t > 0 && t < 1;
-    }
-
-    private float GetDeterminant(Vector2 v1, Vector2 v2)
-    {
-        return -v2.x * v1.y + v1.x * v2.y;
-    }
+    
 
    
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionUpFromVelocity()
-    {
-        if (rigid.velocity.y <= 0)
-        {
-            return false;
-        }
-        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = bounds.topRight + Vector2.left * HorizontalBuffer - VerticalBuffer * Vector2.up;
-        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.up,
-            Mathf.Abs(rigid.velocity.y * Overseer.DELTA_TIME) + VerticalBuffer, verticalRayCount);
-        if (tileCollidersThatWeHit.Length == 0)
-        {
-            return false;
-        }
-        float lowestYValue = tileCollidersThatWeHit[0].GetLowerBoundsAtXValue(this.transform.position.x).y;
-        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
-        {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetLowerBoundsAtXValue(this.transform.position.x).y);
-            if (pointThatWeCollidedWith.y < lowestYValue)
-            {
-                lowestYValue = pointThatWeCollidedWith.y;
-            }
-        }
-        rigid.velocity.y = 0;
-        transform.position = new Vector3(transform.position.x, lowestYValue + (transform.position.y - bounds.topLeft.y), transform.position.z);
-        UpdateBoundsOfCollider();
-        return true;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionDownFromVelocity()
-    {
-        if (rigid.velocity.y > 0)
-        {
-            return false;
-        }
-
-        Vector2 adjustedPoint1 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = bounds.bottomRight + Vector2.left * HorizontalBuffer + VerticalBuffer * Vector2.up;
-        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(adjustedPoint1, adjustedPoint2, Vector2.down,
-            Mathf.Abs(rigid.velocity.y * Overseer.DELTA_TIME) + VerticalBuffer, verticalRayCount);
-        if (tileCollidersThatWeHit.Length == 0)
-        {
-            return false;
-        }
-        float highestYValue = tileCollidersThatWeHit[0].GetUpperBoundsAtXValue(this.transform.position.x).y;
-        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
-        {
-            Vector2 pointThatWeCollidedWith = new Vector2(this.transform.position.x, tile.GetUpperBoundsAtXValue(this.transform.position.x).y);
-            if (pointThatWeCollidedWith.y > highestYValue)
-            {
-                highestYValue = pointThatWeCollidedWith.y;
-            }
-        }
-        rigid.velocity.y = 0;
-        transform.position = new Vector3(transform.position.x, highestYValue + (transform.position.y - bounds.bottomLeft.y), transform.position.z);
-        UpdateBoundsOfCollider();//If we made it to the end, we wil need to update the collider bounds
-        return true;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionRightFromVelocity()
-    {
-        if (rigid.velocity.x <= 0)
-        {
-            return false;
-        }
-        Vector2 adjustedPoint1 = bounds.topRight - Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = bounds.bottomRight - Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
-        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            adjustedPoint1, adjustedPoint2, Vector2.right,
-            Mathf.Abs(rigid.velocity.x * Overseer.DELTA_TIME) + HorizontalBuffer, horizontalRayCount);
-        if (tileCollidersThatWeHit.Length == 0)
-        {
-            return false;
-        }
-        //print(tileCollidersThatWeHit[0].name);
-        float lowestXValue = tileCollidersThatWeHit[0].GetLeftBoundAtYValue(this.transform.position.y).x;
-        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
-        {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetLeftBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
-            if (pointThatWeCollidedWith.x < lowestXValue)
-            {
-                lowestXValue = pointThatWeCollidedWith.x;
-            }
-        }
-        rigid.velocity.x = 0;
-        transform.position = new Vector3(lowestXValue + (transform.position.x - bounds.topRight.x), transform.position.y, transform.position.z);
-        UpdateBoundsOfCollider();
-
-        return true;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    protected override bool CheckCollisionLeftFromVelocity()
-    {
-        if (rigid.velocity.x >= 0)
-        {
-            return false;
-        }
-        Vector2 adjustedPoint1 = bounds.topLeft + Vector2.right * HorizontalBuffer - VerticalBuffer * Vector2.up;
-        Vector2 adjustedPoint2 = bounds.bottomLeft + Vector2.right * HorizontalBuffer + VerticalBuffer * Vector2.up;
-        CustomCollider2D[] tileCollidersThatWeHit = GetAllTilesHitFromRayCasts(
-            adjustedPoint1, adjustedPoint2,
-            Vector2.left, Mathf.Abs(rigid.velocity.x * Overseer.DELTA_TIME) + HorizontalBuffer, horizontalRayCount);
-        if (tileCollidersThatWeHit.Length == 0)
-        {
-            return false;
-        }
-        //print(tileCollidersThatWeHit[0].name);
-        float highestXValue = tileCollidersThatWeHit[0].GetRighBoundAtYValue(this.transform.position.y).x;
-        foreach (CustomCollider2D tile in tileCollidersThatWeHit)
-        {
-            Vector2 pointThatWeCollidedWith = new Vector2(tile.GetRighBoundAtYValue(this.transform.position.y).x, this.transform.position.y);
-            if (pointThatWeCollidedWith.x > highestXValue)
-            {
-                highestXValue = pointThatWeCollidedWith.x;
-            }
-        }
-        rigid.velocity.x = 0;
-        transform.position = new Vector3(highestXValue + (transform.position.x - bounds.topLeft.x), transform.position.y, transform.position.z);
-        UpdateBoundsOfCollider();
-        return true;
-
-    }
-
+   
     /// <summary>
     /// Whenever we intersect with a collider this method should be called to move the collider outside
     /// </summary>
     public override void PushObjectOutsideOfCollider(CustomCollider2D collider)
     {
-        if (collider.isStatic)
-        {
-            return;
-        }
-        if (!(collider is CustomBoxCollider2D))
-        {
-            return;
-        }
-        CustomBoxCollider2D bCollider = (CustomBoxCollider2D)collider;
-        Vector2 tr1 = previousBounds.topRight;
-        Vector2 bl1 = previousBounds.bottomLeft;
-
-        Vector2 tr2 = bCollider.previousBounds.topRight;
-        Vector2 bl2 = bCollider.previousBounds.bottomLeft;
-
-        Vector2 upRightVec = tr1 - bl2;
-        Vector2 downLeftVec = tr2 - bl1;
         
-
-        if (downLeftVec.x <= 0)
-        {
-            bCollider.transform.position = new Vector3(bounds.bottomLeft.x + (bCollider.transform.position.x - tr2.x) - .01f, bCollider.transform.position.y, bCollider.transform.position.z);
-
-        }
-        if (downLeftVec.y <= 0)
-        {
-            bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.bottomLeft.y - (bCollider.transform.position.y - tr2.y), bCollider.transform.position.z);
-        }
-        if (upRightVec.x <= 0)
-        {
-            bCollider.transform.position = new Vector3(bounds.topRight.x - (-bCollider.transform.position.x + bl2.x) + .01f, bCollider.transform.position.y, bCollider.transform.position.z);
-
-        }
-        if (upRightVec.y <= 0)
-        {
-            bCollider.transform.position = new Vector3(bCollider.transform.position.x, bounds.topRight.y + (-bCollider.transform.position.y + bl2.y), bCollider.transform.position.z);
-        }
-
-        bCollider.UpdateBoundsOfCollider();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetLowerBoundsAtXValue(float x)
     {
-        return new Vector2(x, bounds.bottomLeft.y);
+        return GetLowerBoundsAtXValueRect(this.bounds, x);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public override Vector2 GetUpperBoundsAtXValue(float x)
     {
-        return new Vector2(x, bounds.topRight.y);
+        return GetUpperBoundsAtXValueRect(this.bounds, x);
     }
 
-    public override Vector2 GetRighBoundAtYValue(float y)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public override Vector2 GetRightBoundAtYValue(float y)
     {
-        return new Vector2(bounds.topRight.x, y);
+        return GetRighBoundAtYValueRect(this.bounds, y);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public override Vector2 GetLeftBoundAtYValue(float y)
     {
-        return new Vector2(bounds.bottomLeft.x, y);
+        return GetLeftBoundAtYValueRect(this.bounds, y);
     }
 
     public override Vector2 GetCenter()
@@ -333,24 +172,114 @@ public class CustomBoxCollider2D : CustomCollider2D
         return bounds.center;
     }
 
-    public override bool ColliderIntersect(CustomCollider2D colliderToCheck, out Vector2 intersectionPoint)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersect(CustomCollider2D colliderToCheck)
+    {
+        return ColliderIntersectBounds(this.bounds, colliderToCheck);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="boundsToCheck"></param>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    private bool ColliderIntersectBounds(BoundsRect boundsToCheck, CustomCollider2D colliderToCheck)
     {
         if (colliderToCheck is CustomBoxCollider2D)
         {
-            return RectIntersectRect(this.bounds, ((CustomBoxCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return RectIntersectRect(boundsToCheck, ((CustomBoxCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCircleCollider2D)
         {
-            return RectIntersectCircle(this.bounds, ((CustomCircleCollider2D)colliderToCheck).bounds, out intersectionPoint);
+            return RectIntersectCircle(boundsToCheck, ((CustomCircleCollider2D)colliderToCheck).bounds);
         }
         else if (colliderToCheck is CustomCapsuleCollider2D)
         {
-            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, this.bounds, out intersectionPoint);
+            return CapsuleIntersectRect(((CustomCapsuleCollider2D)colliderToCheck).bounds, boundsToCheck);
         }
         else
         {
-            intersectionPoint = Vector2.zero;
             return false;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <param name="offsetDirection"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
+    {
+        if (colliderToCheck == this) return false;
+
+
+        if (rigid.velocity.y == 0)
+        {
+            return false;
+        }
+
+        if (ColliderIntersectBounds(verticalCheckBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                float yPosition = IntersectionPointRectOnRect(this, (CustomBoxCollider2D)colliderToCheck, true).y;
+                this.transform.position = new Vector3(this.transform.position.x, yPosition, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), true);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this);
+                this.transform.position = new Vector3(this.transform.position.x, collisionPoint.y, this.transform.position.z);
+            }
+            return true;
+        }
+        return false;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
+    {
+        if (colliderToCheck == this) return false;
+
+        if (rigid.velocity.x == 0) return false;
+
+        if (ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
+        {
+            if (colliderToCheck is CustomBoxCollider2D)
+            {
+                float xPosition = IntersectionPointRectOnRect(this, (CustomBoxCollider2D)colliderToCheck, false).x;
+                this.transform.position = new Vector3(xPosition, this.transform.position.y, this.transform.position.z);
+
+            }
+            else if (colliderToCheck is CustomCircleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointNonstaticRectOnStaticCircle(this, ((CustomCircleCollider2D)colliderToCheck), false);
+                transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            else if (colliderToCheck is CustomCapsuleCollider2D)
+            {
+                Vector2 collisionPoint = IntersectionPointStaticCapsuleNonStaticRect((CustomCapsuleCollider2D)colliderToCheck, this, false);
+                transform.position = new Vector3(collisionPoint.x, this.transform.position.y, this.transform.position.z);
+            }
+            return true;
+        }
+        return false;
     }
 }

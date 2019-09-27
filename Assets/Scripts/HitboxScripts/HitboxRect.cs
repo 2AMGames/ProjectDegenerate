@@ -60,16 +60,15 @@ public class HitboxRect : Hitbox
 
     public override bool CheckHitboxIntersect(Hitbox hboxToCheck)
     {
-        Vector2 intersectionVec;
         if (hboxToCheck is HitboxRect)
         {
-            return CustomCollider2D.RectIntersectRect(this.bounds, ((HitboxRect)hboxToCheck).bounds, out intersectionVec);
+            return CustomCollider2D.RectIntersectRect(this.bounds, ((HitboxRect)hboxToCheck).bounds);
 
             
         }
         if (hboxToCheck is HitboxCircle)
         {
-            return CustomCollider2D.RectIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds, out intersectionVec);
+            return CustomCollider2D.RectIntersectCircle(this.bounds, ((HitboxCircle)hboxToCheck).bounds);
         }
         return false;
     }
