@@ -175,7 +175,7 @@ public class PhysicsManager : MonoBehaviour
 
                 if (collidedVertically)
                 {
-                    if (nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.velocity.y <= 0)
+                    if (!nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.velocity.y <= 0)
                     {
                         nonStaticCollider.rigid.isInAir = true;
                         nonStaticCollider.rigid.OnPhysicsObjectGrounded();
