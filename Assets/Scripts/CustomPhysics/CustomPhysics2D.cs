@@ -95,10 +95,10 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     public void UpdateVelocityFromGravity()
     {
-        if (isInAir && Mathf.Abs(velocity.y) > 0)
+        if (!isInAir && Mathf.Abs(velocity.y) > 0)
         {
             OnPhysicsObjectAirborne();
-            this.isInAir = false;
+            this.isInAir = true;
         }
 
         if (!useGravity)
