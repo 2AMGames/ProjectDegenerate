@@ -40,9 +40,12 @@ public class PhysicsManager : MonoBehaviour
     {
         instance = this;
     }
-
     private void LateUpdate()
     {
+        if (!Overseer.Instance.IsGameReady)
+        {
+            return;
+        }
 
         foreach (CustomCollider2D collider in nonStaticColliderList)
         {
