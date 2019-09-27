@@ -8,7 +8,6 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     public float radius = 1;
 
     private bool drawHorizontal;
-    public Vector2 capsuleOffset;
 
     public float colliderBuffer = .01f;
     public BoundsCapsule bounds;
@@ -68,7 +67,7 @@ public class CustomCapsuleCollider2D : CustomCollider2D
     public override void UpdateBoundsOfCollider()
     {
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(capsuleOffset.x, capsuleOffset.y);
+        Vector2 origin = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
         float xSize = drawHorizontal ? size : radius * 2;
         float ySize = drawHorizontal ? radius * 2 : size;
 
@@ -103,8 +102,11 @@ public class CustomCapsuleCollider2D : CustomCollider2D
 
 
             horizontalBounds = bounds;
-            horizontalBounds.topCircleBounds.center += Vector2.down * colliderBuffer;
-            horizontalBounds.bottomCircleBounds.center += Vector2.up * colliderBuffer;
+            horizontalBounds.topCircleBounds.radius -= colliderBuffer;
+            horizontalBounds.bottomCircleBounds.radius -= colliderBuffer;
+
+            //horizontalBounds.topCircleBounds.center += Vector2.down * colliderBuffer;
+            //horizontalBounds.bottomCircleBounds.center += Vector2.up * colliderBuffer;
 
             Vector2 horizontalOffset = Vector2.zero;
             Vector2 verticalOffset = Vector2.zero;
@@ -125,6 +127,13 @@ public class CustomCapsuleCollider2D : CustomCollider2D
             else if (rigid.velocity.x < 0)
             {
                 horizontalOffset = Vector2.right * Mathf.Min(-colliderBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+            }
+            else
+            {
+                horizontalBounds.rectBounds.topLeft.x = bounds.rectBounds.topLeft.x + colliderBuffer / 2;
+                horizontalBounds.rectBounds.topRight.x = bounds.rectBounds.topRight.x - colliderBuffer / 2;
+                horizontalBounds.rectBounds.bottomLeft.x = verticalBounds.rectBounds.topLeft.x;
+                horizontalBounds.rectBounds.bottomRight.x = verticalBounds.rectBounds.topRight.x;
             }
 
             verticalBounds.SetOffset(verticalOffset);
