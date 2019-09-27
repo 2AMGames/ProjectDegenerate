@@ -95,6 +95,12 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     public void UpdateVelocityFromGravity()
     {
+        if (!isInAir && Mathf.Abs(velocity.y) > 0)
+        {
+            OnPhysicsObjectGrounded();
+            this.isInAir = true;
+        }
+
         if (!useGravity)
         {
             return;
