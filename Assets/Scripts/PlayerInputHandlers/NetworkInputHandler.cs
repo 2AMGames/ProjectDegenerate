@@ -241,7 +241,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             }
             else if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
             {
-                Debug.LogError("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                Debug.LogWarning("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
                 Overseer.Instance.SetShouldRunGame(true);
                 ShouldRunGame = true;
             }

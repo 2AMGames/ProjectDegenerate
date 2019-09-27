@@ -118,7 +118,7 @@ public class CustomPhysics2D : MonoBehaviour {
         velocity += gravityValueToApply * gravityVector;
         if (Overseer.Instance.HasGameStarted)
         {
-            Debug.LogError("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
+            Debug.LogWarning("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
         }
     }
 

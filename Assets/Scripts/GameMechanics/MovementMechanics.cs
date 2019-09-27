@@ -564,12 +564,12 @@ public class MovementMechanics : MonoBehaviour {
             if (Overseer.Instance.IsGameReady && InteractionHandler.Hitstun > 0)
             {
                 Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
-                //Debug.LogError("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
+                Debug.LogWarning("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
                 rigid.velocity = newVelocity;
             }
             else
             {
-                //Debug.LogError("Hitstun: Game is not ready");
+                Debug.LogWarning("Hitstun: Game is not ready");
             }
         }
     }
