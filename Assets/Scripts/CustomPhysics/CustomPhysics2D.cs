@@ -61,6 +61,10 @@ public class CustomPhysics2D : MonoBehaviour {
             Overseer.Instance.ColliderManager.RemoveCustomPhysics(this);
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public void UpdatePhysics()
     {
         UpdatePositionFromVelocity();
