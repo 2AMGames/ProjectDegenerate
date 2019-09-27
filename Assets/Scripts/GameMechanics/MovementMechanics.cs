@@ -121,6 +121,14 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
+    public Vector2 Velocty
+    {
+        get
+        {
+            return rigid.velocity;
+        }
+    }
+
     private IEnumerator ForcedMovementCoroutine;
 
     #endregion main variables
@@ -142,15 +150,11 @@ public class MovementMechanics : MonoBehaviour {
         {
             commandInterpreter.OnDirectionSetEvent += JoystickDirectionSet;
         }
+        InitializeMovementParameters();
     }
 
     private void Update()
     {
-        if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
-        {
-            return;
-        }
-
         if (rigid.isInAir)
         {
             UpdateCurrentSpeedInAir();
@@ -187,21 +191,7 @@ public class MovementMechanics : MonoBehaviour {
             rigid = GetComponent<CustomPhysics2D>();
         }
         SetSpriteFlipped(isFacingRight);
-
-        float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
-        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
-        rigid.gravityScale = jumpingAcceleration;
-
-        if (maxAvailableJumps < 0)
-        {
-            maxAvailableJumps = 0;
-        }
-
-        if (maximumAirSpeed < 0)
-        {
-            maximumAirSpeed = 0;
-        }
+        InitializeMovementParameters();
     }
    
     private void OnDestroy()
@@ -319,7 +309,7 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void UpdateCurrentSpeedInAir()
     {
-        if (this.horizontalInput < PlayerController.INPUT_THRESHOLD_RUNNING)
+        if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
         {
             return;
         }
@@ -328,6 +318,7 @@ public class MovementMechanics : MonoBehaviour {
         float updatedXVelocity = rigid.velocity.x;
         updatedXVelocity = Mathf.MoveTowards(updatedXVelocity, goalSpeed, 
             Overseer.DELTA_TIME * airAcceleration);
+
         Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.velocity.y);
         rigid.velocity = updatedVectorVelocity;
     }
@@ -386,6 +377,17 @@ public class MovementMechanics : MonoBehaviour {
         ignoreJoystickInputs = !enabled;
     }
 
+    private void InitializeMovementParameters()
+    {
+        float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
+        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
+        rigid.gravityScale = jumpingAcceleration;
+
+        maxAvailableJumps = Mathf.Max(maxAvailableJumps, 0);
+        maximumAirSpeed = Mathf.Max(maximumAirSpeed, 0);
+    }
+
     #endregion
 
     #region jumping methods
@@ -395,15 +397,18 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        if (ignoreJumpButton) return false;
+        if (ignoreJumpButton)
+        {
+            Debug.LogError("Ignore jump button");
+            return false;
+        }
         if (!rigid.isInAir)
         {
-            
         }
         else if (currentJumpsAvailable > 0)
         {
             currentJumpsAvailable--;
-            
+
         }
         else
         {
@@ -411,9 +416,9 @@ public class MovementMechanics : MonoBehaviour {
         }
 
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
-
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
+        Debug.LogError("New Velocity: " + rigid.velocity);
         SetCharacterFastFalling(false);
         return true;
     }
@@ -552,12 +557,20 @@ public class MovementMechanics : MonoBehaviour {
 
     private IEnumerator TranslateForcedMovement(Vector2 destinationVector)
     {
-
         ignoreJoystickInputs = true;
         while(InteractionHandler.Hitstun > 0)
         {
-            rigid.velocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
             yield return new WaitForEndOfFrame();
+            if (Overseer.Instance.IsGameReady)
+            {
+                Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
+                //Debug.LogError("New velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME);
+                rigid.velocity = newVelocity;
+            }
+            else
+            {
+                //Debug.LogError("Hitstun: Game is not ready");
+            }
         }
     }
 

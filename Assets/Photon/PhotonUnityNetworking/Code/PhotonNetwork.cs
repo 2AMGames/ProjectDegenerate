@@ -189,6 +189,11 @@ namespace Photon.Pun
             }
         }
 
+        public static void SendAsap(bool asap)
+        {
+            PhotonHandler.SendAsap = asap;
+        }
+
         /// <summary>
         /// Directly provides the network-level client state, unless in OfflineMode.
         /// </summary>

@@ -19,17 +19,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private const float TIME_STEP = 1f / 60f;
 
-
-    public static float DELTA_TIME
-    {
-        get
-        {
-            return TIME_STEP * Time.timeScale;
-        }
-    }
     #endregion
 
-    #region static reference
+    #region static variables
 
     private static Overseer instance;
     public static Overseer Instance
@@ -50,11 +42,21 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
+    public static float DELTA_TIME
+    {
+        get
+        {
+            return TIME_STEP * Time.timeScale;
+        }
+    }
+
     #endregion
 
     #region member variables
 
     private Coroutine WaitForGameReadyCoroutine;
+
+    private Coroutine DelayGameCoroutine;
 
     public GameObject[] PlayerObjects;
 
@@ -76,18 +78,18 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public bool IsGameReady
     {
+        get; private set;
+    }
+
+    public bool IsDelayingGame
+    {
         get
         {
-            bool isReady = true;
-            if (IsNetworkedMode)
-            {
-                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2;
-            }
-            isReady &= Players.Count >= 2;
-            return isReady;
+            return DelayGameCoroutine != null;
         }
     }
 
+    public bool HasGameStarted { get; private set; }
     #endregion
 
     #region Events
@@ -102,16 +104,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         instance = this;
         PhotonNetwork.AddCallbackTarget(this);
+        SetGameSettings();
+        SetGameReady(false);
     }
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
         CreateGameType();
-    }
-
-    private void Update()
-    {
     }
 
     #endregion
@@ -152,14 +151,22 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #region private interface
 
+    private void SetGameReady(bool isGameReady)
+    {
+        IsGameReady = isGameReady;
+        Time.timeScale = isGameReady ? 1 : 0;
+    }
+
     private void CreateGameType()
     {
         if (SelectedGameType == GameType.Local)
         {
-            for (int index = 0; index < 2; ++index)
+            for (int index = 0; index < NumberOfPlayers; ++index)
             {
                 CreateLocalPlayer(index);
             }
+            HasGameStarted = true;
+            SetGameReady(true);
             OnGameReady?.Invoke(true);
         }
         else if (SelectedGameType == GameType.PlayerVsAI)
@@ -207,6 +214,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         playerController.CommandInterpreter = associatedPlayer.GetComponent<CommandInterpreter>();
         playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
+        playerController.CharacterStats.PlayerIndex = playerIndex;
 
         if (IsNetworkedMode && playerType == PlayerController.PlayerType.Local)
         {
@@ -224,6 +232,25 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             Players.Add(playerController);
         }
+    }
+
+    private bool CheckIfGameReady()
+    {
+            bool isReady = true;
+            if (IsNetworkedMode)
+            {
+                isReady &= PhotonNetwork.IsConnected && !string.IsNullOrEmpty(NetworkManager.Instance.CurrentRoomId) && PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.PlayerCount >= 2;
+            }
+            isReady &= Players.Count >= 2;
+            return isReady;
+    }
+
+    private void SetGameSettings()
+    {
+        Application.targetFrameRate = 60;
+        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SerializationRate = 60;
+        Screen.SetResolution(800, 600, false, 60);
     }
 
     #endregion
@@ -270,9 +297,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             }
         }
 
-        if (Players.Count < NumberOfPlayers)
+        if (Players.Count < NumberOfPlayers && Overseer.Instance.HasGameStarted)
         {
+            SetGameReady(false);
             OnGameReady(false);
+            NetworkManager.Instance.DisconnectFromNetwork();
+            HasGameStarted = false;
         }
     }
 
@@ -317,9 +347,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
+    public void HandleLeftRoom()
+    {
+        OnGameReady(false);
+    }
+
     private IEnumerator WaitUntilNetworkedGameReady()
     {
-        while (!IsGameReady)
+        while (!CheckIfGameReady())
         {
             yield return null;
         }
@@ -334,53 +369,47 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
 
         Debug.LogWarning("Starting game");
-        yield return new WaitForEndOfFrame();
+        SetGameReady(true);
+        HasGameStarted = true;
         OnGameReady(true);
 
     }
 
-    public void DelayGame(long FramesToWait)
+    public void DelayGame(int FramesToWait)
     {
-
+        if (DelayGameCoroutine != null || FramesToWait <= 0)
+        {
+            return;
+        }
+        DelayGameCoroutine = StartCoroutine(SynchronizeGameState((uint)FramesToWait));
     }
 
-    public void HandleSynchronizationRequest(uint FrameToSync)
+    public void SetShouldRunGame(bool received)
     {
+        bool isDelayingGame = DelayGameCoroutine != null;
+        SetGameReady(received && CheckIfGameReady() && !isDelayingGame);
+    }
+
+    public void HandleRollbackRequest(uint FrameToSync)
+    {
+        SetGameReady(false);
         OnGameReady(false);
-        StartCoroutine(SynchronizeGameState(FrameToSync));
+        //StartCoroutine(SynchronizeGameState(FrameToSync));
     }
 
-    private IEnumerator SynchronizeGameState(uint FrameToSync)
+    private IEnumerator SynchronizeGameState(uint frameToSync)
     {
-        if (GameStateManager.Instance.FrameCount < FrameToSync)
+        Debug.LogError("Overseer: Delaying game for: " + frameToSync + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
+        yield return new WaitForEndOfFrame();
+        SetGameReady(false);
+        while (frameToSync > 0)
         {
-            // Run the game until we catch up to the desired frame.
-            OnGameReady(true);
-            while (GameStateManager.Instance.FrameCount <= FrameToSync)
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            OnGameReady(false);
+            yield return null;
+            --frameToSync;
         }
-        else
-        {
-            // Roll back the game state frames to match the intended frame.
-            GameStateManager.Instance.RequestRollback(FrameToSync);
-            while(GameStateManager.Instance.FrameCount > FrameToSync)
-            {
-                Debug.LogWarning("Rollback frames: " + GameStateManager.Instance.FrameCount);
-                yield return new WaitForEndOfFrame();
-            }
-        }
-
-        NetworkManager.Instance.SetPlayerReady(true);
-
-        while (NetworkManager.Instance.IsSynchronizing)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        Debug.LogWarning("Starting game again");
-        OnGameReady(true);
+        yield return new WaitForEndOfFrame();
+        SetGameReady(true);
+        DelayGameCoroutine = null;
     }
 
     #endregion

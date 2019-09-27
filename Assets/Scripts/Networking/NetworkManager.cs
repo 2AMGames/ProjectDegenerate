@@ -30,6 +30,8 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public const byte HeartbeatPacket = 0x12;
 
+    public const byte HeartbeatPacketAck = 0x13;
+
     public const byte PlayerInputUpdate = 0x20;
 
     public const byte PlayerInputAck = 0x21;
@@ -50,14 +52,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #endregion
 
-    #region Photon Event Codes
-
-    // DO NOT CHANGE THESE.
-
-    public const float OnJoinedRoomEventCode = 254;
-
-    #endregion
-
     #region Unity Events
 
     #endregion
@@ -66,11 +60,13 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private const string ActivePlayerKey = "ActivePlayers";
 
-    private const int MillisecondsPerFrame = 16;
+    private const uint MillisecondsPerFrame = 16;
 
-    private const long MillisecondsPerSecond = 1000;
+    private const uint MillisecondsPerSecond = 1000;
 
     private const short PingTimeoutInMilliseconds = 60;
+
+    private const int PingSamples = 3;
 
     #endregion
 
@@ -79,12 +75,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     [HideInInspector]
     public string CurrentRoomId;
 
-    public long TotalDelayFrames
+    public int TotalDelayFrames
     {
         get;  private set;
     }
 
-    public long NetworkDelayFrames
+    public int NetworkDelayFrames
     {
         get
         {
@@ -94,14 +90,28 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public long CurrentDelayInMilliSeconds { get; private set; }
 
-    // Hash set of players we need to ping, sorted by actor number.
-    private HashSet<int> PlayersToPing = new HashSet<int>();
-
-    public bool IsSynchronizing;
+    /// <summary>
+    /// Set to true if currently synchronizing game state (rolling back).
+    /// </summary>
+    [HideInInspector]
+    public bool IsSynchronizing { get; private set; }
 
     private bool IsNetworkedGameReady;
 
     private bool CurrentlyPingingPlayers;
+
+    // Hash set of players we need to ping, sorted by actor number.
+    private HashSet<int> PlayersToPing = new HashSet<int>();
+
+    #endregion
+
+    #region Debug Variables
+
+    public bool DebugEnabled;
+    /// <summary>
+    /// Chance that packet will send. Use this to simulate packet loss (we though we sent something, but it got lost in transmission).
+    /// </summary>
+    public float SendPercentage;
 
     #endregion
 
@@ -146,6 +156,11 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
+    void OnValidate()
+    {
+        SendPercentage = DebugEnabled ? Mathf.Min(1.0f, Mathf.Max(0.0f, SendPercentage)) : 1.0f;
+    }
+
     #endregion
 
     #region Public Interface
@@ -160,7 +175,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public void DisconnectToNetwork()
+    public void DisconnectFromNetwork()
     {
         if (PhotonNetwork.IsConnected)
         {
@@ -168,11 +183,28 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         }
     }
 
-    public void SendEventData(byte eventCode, object eventData, ReceiverGroup receivers = 0)
+    public void DisconnectFromLobby()
+    {
+        if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentLobby != null)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+    }
+
+    public void DisconnectFromRoom()
+    {
+        if (PhotonNetwork.IsConnected && PhotonNetwork.CurrentRoom != null)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+    }
+
+    public void SendEventData(byte eventCode, object eventData, ReceiverGroup receivers = 0, bool sendImmediate = false)
     {
         RaiseEventOptions receiveOptions = new RaiseEventOptions();
         receiveOptions.Receivers = receivers;
-        PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, default);
+        PhotonNetwork.SendAsap(sendImmediate);
+        PhotonNetwork.RaiseEvent(eventCode, eventData, receiveOptions, SendOptions.SendUnreliable);
     }
 
     public void SetPlayerReady(bool isReady)
@@ -282,6 +314,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Sucessfully Left Photon Room");
         CurrentRoomId = null;
+        Overseer.Instance.HandleLeftRoom();
     }
 
     #endregion
@@ -327,10 +360,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         if (photonEvent.Code == PingRequest)
         {
-            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber);
+            SendEventData(PingAck, PhotonNetwork.LocalPlayer.ActorNumber, default, true);
         }
-
-        if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
+        else if (photonEvent.Code == PingAck && CurrentlyPingingPlayers)
         {
             int actorNumber = (int)photonEvent.CustomData;
             if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -338,24 +370,20 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
                 OnPingAckReceived(actorNumber);
             }
         }
-
-        if (photonEvent.Code == StartGame)
+        else if (photonEvent.Code == StartGame)
         {
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
-
-        if (photonEvent.Code == StartGameAck)
+        else if (photonEvent.Code == StartGameAck)
         {
             IsNetworkedGameReady = (bool)photonEvent.CustomData;
         }
-
-        if (photonEvent.Code == SynchronizationNeeded)
+        else if (photonEvent.Code == SynchronizationNeeded)
         {
             int frameCount = (int)photonEvent.CustomData;
             HandleSynchronizationRequest((uint)frameCount);
         }
-
-        if (photonEvent.Code == SynchronizeClientGameState && !IsSynchronizing)
+        else if (photonEvent.Code == SynchronizeClientGameState && !IsSynchronizing)
         {
             int frameCount = (int)photonEvent.CustomData;
             StartCoroutine(StartGameStateSynchronization((uint)frameCount));
@@ -465,36 +493,28 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         while(!CheckIfPlayersReady())
         {
-            yield return new WaitForSeconds(1f);
+            yield return null;
         }
 
         SetMasterClientReady(true);
-        yield return new WaitForSeconds(1f);
-
+        yield return new WaitForEndOfFrame();
         PingActivePlayers();
         // Current delay frames should only be set to > 0 if the number of players with set ping values is >= number of players needed to start the game.
         while (TotalDelayFrames <= 0)
         {
-            yield return new WaitForSeconds(1f);
+            yield return null;
             UpdatePing();
         }
-        yield return new WaitForSeconds(2f);
+        yield return null;
 
-        Stopwatch rtt = new Stopwatch();
+        IsNetworkedGameReady = true;
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
-        rtt.Start();
-        while(!IsNetworkedGameReady)
+        long frameDelay = NetworkDelayFrames;
+        while (frameDelay > 0)
         {
             yield return null;
-        }
-        rtt.Stop();
-
-        long frameDelay = (rtt.ElapsedMilliseconds - (long)(Time.deltaTime * MillisecondsPerSecond)) / MillisecondsPerFrame;
-        while(TotalDelayFrames - frameDelay >= 0)
-        {
-            yield return new WaitForEndOfFrame();
-            ++frameDelay;
+            --frameDelay;
         }
 
         IsSynchronizing = false;
@@ -542,14 +562,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         {
             yield return null;
         }
-
-        SendEventData(StartGameAck, true, ReceiverGroup.Others);
-        long framesToWait = TotalDelayFrames;
-        while(framesToWait > 0)
-        {
-            yield return new WaitForEndOfFrame();
-            --framesToWait;
-        }
         IsSynchronizing = false;
     }
 
@@ -565,11 +577,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #endregion
 
     #region Ping Methods
-
-    public void SendHeartbeatMessage()
-    {
-        
-    }
 
     public void PingActivePlayers()
     {
@@ -588,28 +595,24 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             yield return null;
         }
 
-        Hashtable activePlayers = GetActivePlayers();
-        foreach (int actorNumber in activePlayers.Keys)
+        long averagePing = 0;
+
+        for (int i = 0; i < PingSamples; ++i)
         {
-            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            PingActivePlayersInternal();
+            Stopwatch rtt = new Stopwatch();
+            rtt.Start();
+
+            while (PlayersToPing.Count > 0)
             {
-                PlayersToPing.Add(actorNumber);
+                yield return null;
             }
+
+            rtt.Stop();
+            averagePing += rtt.ElapsedMilliseconds;
         }
-
-        PingActivePlayersInternal();
-        Stopwatch rtt = new Stopwatch();
-        rtt.Start();
-        long tick = Time.frameCount;
-
-        while (PlayersToPing.Count > 0)
-        {
-            yield return null;
-        }
-
-        rtt.Stop();
-        long ping = rtt.ElapsedMilliseconds - (long)(Time.deltaTime * 1000);
-        SetLocalPlayerPing(ping);
+        averagePing /= PingSamples;
+        SetLocalPlayerPing(averagePing);
         UpdatePing();
         CurrentlyPingingPlayers = false;
         
@@ -617,7 +620,16 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     private void PingActivePlayersInternal()
     {
-        SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber);
+        Hashtable activePlayers = GetActivePlayers();
+        PlayersToPing.Clear();
+        foreach (int actorNumber in activePlayers.Keys)
+        {
+            if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                PlayersToPing.Add(actorNumber);
+            }
+        }
+        SendEventData(PingRequest, PhotonNetwork.LocalPlayer.ActorNumber, default, true);
     }
 
     private void OnPingAckReceived(int actorNumber)
@@ -662,9 +674,9 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             CurrentDelayInMilliSeconds = highestPing;
 
             float localDelayInMilliseconds = GameStateManager.Instance.LocalFrameDelay * MillisecondsPerFrame;
-            float frameTimeInMilliseconds = Time.deltaTime * MillisecondsPerSecond;
-            float calculatedDelay = Mathf.Ceil((highestPing + localDelayInMilliseconds) / (2.0f * frameTimeInMilliseconds));
-            TotalDelayFrames = (long)calculatedDelay;
+            float frameTimeInMilliseconds = 16.66f;
+            float calculatedDelay = Mathf.Ceil((highestPing + (localDelayInMilliseconds * 2)) / (2.0f * frameTimeInMilliseconds));
+            TotalDelayFrames = (int)calculatedDelay;
         }
     }
 
@@ -705,7 +717,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         IsSynchronizing = true;
 
         SetPlayerReady(false);
-        Overseer.Instance.HandleSynchronizationRequest(FrameToSync);
+        Overseer.Instance.HandleRollbackRequest(FrameToSync);
 
         while(!(bool)PhotonNetwork.LocalPlayer.CustomProperties[PlayerReadyKey])
         {

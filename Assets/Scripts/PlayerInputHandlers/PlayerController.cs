@@ -12,6 +12,8 @@ public abstract class PlayerController : MonoBehaviour
 
     #region const variables
 
+    public const ushort DefaultInputPattern = 0xF000;
+
     public const string MOVEMENT_HORIZONTAL = "Horizontal_P";
     public const string MOVEMENT_VERTICAL = "Vertical_P";
     public const string MOVEMENT_JUMP = "Jump_";

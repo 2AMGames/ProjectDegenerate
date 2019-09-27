@@ -64,13 +64,16 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
             try
             {
                 PlayerInputPacket data = eventData.CustomData as PlayerInputPacket;
-                if (data != null && data.PlayerIndex == PlayerIndex && Overseer.Instance.IsGameReady)
+                if (data != null && data.PlayerIndex == PlayerIndex)
                 {
                     foreach (PlayerInputData inputFrame in data.InputData)
                     {
-                        CommandInterpreter.QueuePlayerInput(inputFrame, true);
+                        //Debug.LogError("Input frame number: " + inputFrame.FrameNumber);
+                        if (CommandInterpreter.QueuePlayerInput(inputFrame));
+                        {
+                            SendInputAck(inputFrame.PacketId);
+                        }
                     }
-                    SendInputAck(data.PacketId);
                 }
             }
             catch (Exception e)
@@ -86,7 +89,7 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
 
     private void SendInputAck(uint packetId)
     {
-        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputAck, (int)packetId);
+        NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputAck, (int)packetId, default, true);
     }
 
     #endregion

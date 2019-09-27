@@ -10,7 +10,9 @@ using UnityEngine;
 
 public class PlayerInputPacket
 {
-    private static int DataSize = 12;
+    private static int DataSize = 16;
+
+    public uint FrameSent;
 
     public uint PacketId;
 
@@ -63,6 +65,7 @@ public class PlayerInputPacket
         int byteArrayIndex = 0;
         byte[] obj = new byte[DataSize + stringSize];
 
+        Protocol.Serialize((int)inputData.FrameSent, obj, ref byteArrayIndex);
         Protocol.Serialize((int)inputData.PacketId, obj, ref byteArrayIndex);
         Protocol.Serialize(inputData.PlayerIndex, obj, ref byteArrayIndex);
         Protocol.Serialize(stringSize, obj, ref byteArrayIndex);
@@ -83,8 +86,12 @@ public class PlayerInputPacket
 
         int index = 0;
 
+        int frameSent;
         int packetId;
         int stringSize;
+
+        Protocol.Deserialize(out frameSent, output, ref index);
+        inputPacket.FrameSent = (uint)frameSent;
 
         Protocol.Deserialize(out packetId, output, ref index);
         inputPacket.PacketId = (uint)packetId;
@@ -95,7 +102,7 @@ public class PlayerInputPacket
         byte[] customString = new byte[stringSize];
         inStream.Read(customString, 0, stringSize);
 
-        string jsonString = System.Text.Encoding.UTF8.GetString(customString);
+        string jsonString = Encoding.UTF8.GetString(customString);
         List<PlayerInputData> inputList = JsonConvert.DeserializeObject<List<PlayerInputData>>(jsonString);
         inputPacket.InputData = inputList;
         return inputPacket;

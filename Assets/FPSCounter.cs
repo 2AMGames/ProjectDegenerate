@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
@@ -25,10 +23,9 @@ public class FPSCounter : MonoBehaviour
     private void Update()
     {
         framesThatHavePassed += 1;
-        totalTimeThatHasPassed += Time.deltaTime;
+        totalTimeThatHasPassed += Time.unscaledDeltaTime;
         if (framesThatHavePassed >= framesBetweenDisplayText)
         {
-
             fpsText.text = (1f / (totalTimeThatHasPassed / framesBetweenDisplayText)).ToString("0.0") + "fps" + "\n" + "Frame # " + GameStateManager.Instance.FrameCount;
             framesThatHavePassed = 0;
             totalTimeThatHasPassed = 0;

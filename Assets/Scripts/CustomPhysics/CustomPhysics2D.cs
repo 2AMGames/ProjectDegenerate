@@ -101,6 +101,10 @@ public class CustomPhysics2D : MonoBehaviour {
         }
         if (useTerminalVelocity)
         {
+            if (Overseer.Instance.HasGameStarted)
+            {
+                Debug.LogError("Old velocity x: " + velocity.x + ", Old Velocity y: " + velocity.y);
+            }
             float dotGravity = Vector2.Dot(gravityVector, velocity);
             Vector2 downComponent = dotGravity * gravityVector;
             Vector2 rightComponent = Vector2.Dot(gravityRight, velocity) * gravityRight;
@@ -112,6 +116,10 @@ public class CustomPhysics2D : MonoBehaviour {
         }
         float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Overseer.DELTA_TIME;
         velocity += gravityValueToApply * gravityVector;
+        if (Overseer.Instance.HasGameStarted)
+        {
+            Debug.LogError("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
+        }
     }
 
     /// <summary>

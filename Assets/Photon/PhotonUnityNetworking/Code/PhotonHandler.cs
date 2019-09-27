@@ -23,7 +23,7 @@ namespace Photon.Pun
     /// <summary>
     /// Internal MonoBehaviour that allows Photon to run an Update loop.
     /// </summary>
-    internal class PhotonHandler : ConnectionHandler, IInRoomCallbacks, IMatchmakingCallbacks
+    public class PhotonHandler : ConnectionHandler, IInRoomCallbacks, IMatchmakingCallbacks
     {
         internal static PhotonHandler Instance;
 
@@ -94,7 +94,7 @@ namespace Photon.Pun
         }
 
 
-        protected void FixedUpdate()
+        protected void Update()
         {
             if (PhotonNetwork.NetworkingClient == null)
             {

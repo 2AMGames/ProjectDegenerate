@@ -133,16 +133,22 @@ public class CommandInterpreter : MonoBehaviour
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
-    private ushort lastButtonPattern;
-    private ushort currentButtonPattern;
+    private ushort lastInputPattern;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
 
-    private Dictionary<uint, PlayerInputPacket.PlayerInputData> FramesReceived = new Dictionary<uint, PlayerInputPacket.PlayerInputData>();
+    /// <summary>
+    /// Input queue. Delays input front of line input data until frame to execute is >= Current frame number.
+    /// </summary>
     private Queue<PlayerInputData> InputBuffer = new Queue<PlayerInputData>();
 
-    private long FrameDelay
+    /// <summary>
+    /// HighestReceivedFrame Added to prevent queuing a frame number less than the current one. This should also prevent spoofing inputs.
+    /// </summary>
+    private uint HighestReceivedFrameNumber;
+
+    private int FrameDelay
     {
         get
         {
@@ -150,7 +156,7 @@ public class CommandInterpreter : MonoBehaviour
             {
                 return 0;
             }
-            return Overseer.Instance.IsNetworkedMode ? NetworkManager.Instance.TotalDelayFrames : GameStateManager.Instance.LocalFrameDelay;
+            return Overseer.Instance.IsNetworkedMode ? (int)NetworkManager.Instance.TotalDelayFrames : (int)GameStateManager.Instance.LocalFrameDelay;
         }
     }
 
@@ -177,20 +183,25 @@ public class CommandInterpreter : MonoBehaviour
 
     private void Update()
     {
-        if (InputBuffer.Count > 0)
+
+        if (InputBuffer.Count > 0 && Overseer.Instance.IsGameReady)
         {
             PlayerInputData dataToExecute = InputBuffer.Peek();
-            long currentFrame = GameStateManager.Instance.FrameCount;
-            long frameToExecute = dataToExecute.FrameNumber + FrameDelay;
+            uint currentFrame = GameStateManager.Instance.FrameCount;
+            int frameToExecute = (int)dataToExecute.FrameNumber + FrameDelay;
             if (frameToExecute - currentFrame <= 0)
-            {
-                if (FramesReceived.ContainsKey(dataToExecute.FrameNumber))
-                {
-                    FramesReceived.Remove(dataToExecute.FrameNumber);
-                }
+            { 
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (Overseer.Instance.HasGameStarted)
+        {
+            Debug.LogError("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y +", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y);
         }
     }
 
@@ -198,24 +209,35 @@ public class CommandInterpreter : MonoBehaviour
 
     #region public interface
 
-    public void QueuePlayerInput(PlayerInputData dataToQueue, bool isRemotePlayer)
+    public bool QueuePlayerInput(PlayerInputData dataToQueue)
     {
-        if (!FramesReceived.ContainsKey(dataToQueue.FrameNumber))
+        if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
-            FramesReceived.Add(dataToQueue.FrameNumber, dataToQueue);
-            // We missed this frame by a wide margin and need to resync.
-            if (isRemotePlayer)
+            if (Overseer.Instance.Players[characterStats.PlayerIndex] is RemotePlayerController)
             {
-                if (Overseer.Instance.IsNetworkedMode && Math.Abs(GameStateManager.Instance.FrameCount - dataToQueue.FrameNumber) - 3 > NetworkManager.Instance.TotalDelayFrames)
-                {
-                    //NetworkManager.Instance.RequestGameStateSynchronization(dataToQueue.FrameNumber);
-                }
+                //Debug.LogError("Queueing frame: " + dataToQueue.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
             }
+            HighestReceivedFrameNumber = dataToQueue.FrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
+                if (GameStateManager.Instance.FrameCount >= dataToQueue.FrameNumber + FrameDelay)
+                {
+                    Debug.LogError("Off");
+                    Debug.LogError("Off frame count: " + GameStateManager.Instance.FrameCount);
+                    Debug.LogError("Sent frame: " + dataToQueue.FrameNumber);
+                    if (Overseer.Instance.IsGameReady && GameStateManager.Instance.FrameCount == dataToQueue.FrameNumber + FrameDelay)
+                    {
+                        ExecuteInput(dataToQueue);
+                        return true;
+                    }
+                }
                 InputBuffer.Enqueue(dataToQueue);
-                InputBuffer.OrderBy(x => x.FrameNumber);
             }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -260,71 +282,89 @@ public class CommandInterpreter : MonoBehaviour
 
     #region private interface
 
-    private void ExecuteInput(PlayerInputPacket.PlayerInputData inputData)
+    private void ExecuteInput(PlayerInputData inputData)
     {
-        if ((inputData.InputPattern & 1) == 1)
+        if (lastInputPattern != inputData.InputPattern)
         {
-            OnButtonEventTriggered(LP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(LP_ANIM_TRIGGER);
-        }
+            AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
+            AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
+            string clipName = state.shortNameHash.ToString();
+            for (int index = 0; index < clips.Length; ++index)
+            {
+                if (state.IsName(clips[index].name))
+                {
+                    clipName = clips[index].name;
+                    break;
+                }
+            }
+            /*
+                We probably need a method to check if the button was held.
+            */
 
-        if (((inputData.InputPattern >> 1) & 1) == 1)
-        {
-            OnButtonEventTriggered(MP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(MP_ANIM_TRIGGER);
-        }
+            Debug.LogError("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
+            if ((inputData.InputPattern & 1) == 1)
+            {
+                OnButtonEventTriggered(LP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(LP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(LP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 2) & 1) == 1)
-        {
-            OnButtonEventTriggered(HP_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(HP_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 1) & 1) == 1)
+            {
+                OnButtonEventTriggered(MP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(MP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(MP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 3) & 1) == 1)
-        {
-            OnButtonEventTriggered(LK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(LK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 2) & 1) == 1)
+            {
+                OnButtonEventTriggered(HP_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(HP_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(HP_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 4) & 1) == 1)
-        {
-            OnButtonEventTriggered(MK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(MK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 3) & 1) == 1)
+            {
+                OnButtonEventTriggered(LK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(LK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(LK_ANIM_TRIGGER);
+            }
 
-        if (((inputData.InputPattern >> 5) & 1) == 1)
-        {
-            OnButtonEventTriggered(HK_ANIM_TRIGGER);
-            OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
-        }
-        else
-        {
-            OnButtonReleased(HK_ANIM_TRIGGER);
-        }
+            if (((inputData.InputPattern >> 4) & 1) == 1)
+            {
+                OnButtonEventTriggered(MK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(MK_ANIM_TRIGGER);
+            }
 
-        UpdateJoystickInput(GetJoystickInputFromData(inputData));
+            if (((inputData.InputPattern >> 5) & 1) == 1)
+            {
+                OnButtonEventTriggered(HK_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(HK_ANIM_TRIGGER);
+            }
+            else
+            {
+                OnButtonReleased(HK_ANIM_TRIGGER);
+            }
 
-        currentButtonPattern = inputData.InputPattern;
+            UpdateJoystickInput(GetJoystickInputFromData(inputData));
+            lastInputPattern = inputData.InputPattern;
+        }   
     }
 
     public void OnButtonEventTriggered(string buttonEventName)
@@ -336,15 +376,14 @@ public class CommandInterpreter : MonoBehaviour
 
             if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
             {
+                FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
                 StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
             }
             if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
             {
+                FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
                 StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
             }
-
-            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
 
             ButtonsPressed[buttonEventName] = true;
 
@@ -355,19 +394,17 @@ public class CommandInterpreter : MonoBehaviour
 
     private void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        if (lastJoystickInput != currentJoystickVec)
-        {
-            currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
-            OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
-            DirectionalinputStruct dInput = new DirectionalinputStruct();
-            dInput.direction = CurrentDirection;
-            dInput.directionInput = currentJoystickVec;
-            directionalInputRecordList.Add(dInput);
-            StartCoroutine(RemoveDirectionalInputAfterTime());
+        //Debug.LogError("Frames held: " + FramesHeld);
+        currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
+        OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
+        DirectionalinputStruct dInput = new DirectionalinputStruct();
+        dInput.direction = CurrentDirection;
+        dInput.directionInput = currentJoystickVec;
+        directionalInputRecordList.Add(dInput);
+        StartCoroutine(RemoveDirectionalInputAfterTime());
 
-            CheckForJumpInput(lastJoystickInput, currentJoystickVec);
-            currentDirectionalInputStruct.directionInput = currentJoystickVec;
-        }
+        CheckForJumpInput(lastJoystickInput, currentJoystickVec);
+        currentDirectionalInputStruct.directionInput = currentJoystickVec;
     }
 
     private int IsButtonPressed(string buttonTrigger)
@@ -391,7 +428,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void CheckForJumpInput(Vector2 prevInput, Vector2 currentInput)
     {
-        if (prevInput.y < 1 && currentInput.y >= 1)
+        if (prevInput.y < 1 && currentInput.y >= 1) 
         {
             characterStats.MovementMechanics.Jump();
         }
@@ -543,15 +580,17 @@ public class CommandInterpreter : MonoBehaviour
     private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
     {
         yield return null;
-
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
             //if (buttonEventName == BUTTON_ACTION_TRIGGER)
             //{
             //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
             //}
-            --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
+            if (Overseer.Instance.IsGameReady)
+            {
+                --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
+            }
         }
 
         Anim.ResetTrigger(buttonEventName);
@@ -560,10 +599,14 @@ public class CommandInterpreter : MonoBehaviour
     private IEnumerator RemoveDirectionalInputAfterTime()
     {
         int framesThatHavePassed = 0;
+        yield return null;
         while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
         {
-            yield return new WaitForFixedUpdate();
-            ++framesThatHavePassed;
+            yield return new WaitForEndOfFrame();
+            if (Overseer.Instance.IsGameReady)
+            {
+                ++framesThatHavePassed;
+            }
         }
 
         directionalInputRecordList.RemoveAt(0);

@@ -6,6 +6,11 @@ using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
 public class LocalPlayerController : PlayerController
 {
+
+    #region const variables
+
+    #endregion
+
     #region main variables
 
     private ushort LastSavedInputPattern;
@@ -18,25 +23,31 @@ public class LocalPlayerController : PlayerController
 
     public void Update()
     {
-        PlayerInputData currentFrameInputData = new PlayerInputData();
-        currentFrameInputData.FrameNumber =(uint)GameStateManager.Instance.FrameCount;
-        currentFrameInputData.PlayerIndex = PlayerIndex;
-        currentFrameInputData.InputPattern = 0xF000;
-
-        // Properties cannot be passed by reference, so create a local variable
-        ushort inputPattern = currentFrameInputData.InputPattern;
-
-        UpdateButtonInput(ref inputPattern);
-        UpdateJoystickInput(ref inputPattern);
-        if (inputPattern != LastSavedInputPattern && (!Overseer.Instance.IsNetworkedMode || !NetworkManager.Instance.IsSynchronizing))
+        if (Overseer.Instance.IsGameReady)
         {
+            PlayerInputData currentFrameInputData = new PlayerInputData();
+            currentFrameInputData.FrameNumber = GameStateManager.Instance.FrameCount;
+            currentFrameInputData.PlayerIndex = PlayerIndex;
+            currentFrameInputData.InputPattern = DefaultInputPattern;
+
+            // Properties cannot be passed by reference, so create a local variable
+            ushort inputPattern = currentFrameInputData.InputPattern;
+
+            UpdateButtonInput(ref inputPattern);
+            UpdateJoystickInput(ref inputPattern);
             currentFrameInputData.InputPattern = inputPattern;
-            CommandInterpreter.QueuePlayerInput(currentFrameInputData, false);
+
+            bool addDataToInputHandlerList = currentFrameInputData.InputPattern != LastSavedInputPattern;
+            CommandInterpreter.QueuePlayerInput(currentFrameInputData);
             LastSavedInputPattern = currentFrameInputData.InputPattern;
             if (InputHandler != null)
             {
-                InputHandler.SendInput(currentFrameInputData);
+                InputHandler.SendInput(currentFrameInputData, addDataToInputHandlerList);
             }
+        }
+        else if (Overseer.Instance.HasGameStarted && InputHandler != null)
+        {
+                InputHandler.SendHeartbeat();
         }
     }
 

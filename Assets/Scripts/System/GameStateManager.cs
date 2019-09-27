@@ -19,8 +19,6 @@ public class GameStateManager : MonoBehaviour
 
     private const short MaxPacketFrameDelay = 30;
 
-    private const long MaxPacketMillisecondDelay = MillisecondsPerFrame * MaxPacketFrameDelay;
-
     #endregion
 
     #region static reference
@@ -49,7 +47,7 @@ public class GameStateManager : MonoBehaviour
 
     public short LocalFrameDelay = 3;
 
-    public long FrameCount;
+    public uint FrameCount;
 
     public float RoundTime { get; private set; }
 
@@ -123,7 +121,7 @@ public class GameStateManager : MonoBehaviour
             state.PlayerIndex = player.PlayerIndex;
 
             PlayerInputData inputData = new PlayerInputData();
-            inputData.FrameNumber = (ushort)FrameCount;
+            inputData.FrameNumber = FrameCount;
             inputData.InputPattern = interpreter.GetPlayerInputByte();
         }
 
@@ -134,8 +132,9 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.LogWarning("Evaluating rollback: " + frameRequested);
         GameState targetGameState = null;
-        while(FrameStack.Count > 0)
+        while (FrameStack.Count > 0)
         {
+            yield return new WaitForEndOfFrame();
             Debug.LogWarning("Peek Game State Count: " + FrameStack.Peek().FrameCount);
             if (FrameStack.Peek().FrameCount == frameRequested)
             {
@@ -143,7 +142,6 @@ public class GameStateManager : MonoBehaviour
                 break;
             }
             FrameStack.Pop();
-            yield return null;
         }
 
         if (targetGameState != null)
@@ -179,19 +177,23 @@ public class GameStateManager : MonoBehaviour
     private IEnumerator SaveGameState()
     {
         SaveGameCoroutineRunning = true;
-        while (Overseer.Instance.IsGameReady)
+        yield return null;
+        while (true)
         {
-            if (FrameStack.Count > MaxStackSize)
+            yield return new WaitForEndOfFrame();
+            if (Overseer.Instance.IsGameReady)
             {
-                FrameStack = new Stack<GameState>();
+                if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
+                {
+                    if (FrameStack.Count > MaxStackSize)
+                    {
+                        FrameStack = new Stack<GameState>();
+                    }
+                    //GameState gameStateToPush = CreateNewGameState();
+                    //FrameStack.Push(gameStateToPush);
+                }
+                ++FrameCount;
             }
-
-            if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
-            {
-                GameState gameStateToPush = CreateNewGameState();
-                FrameStack.Push(gameStateToPush);
-            }
-            ++FrameCount;
 
             yield return null;
         }
