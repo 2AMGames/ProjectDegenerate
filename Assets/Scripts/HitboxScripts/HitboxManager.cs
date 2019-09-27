@@ -68,6 +68,11 @@ public class HitboxManager : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        if (!Overseer.Instance.IsGameReady)
+        {
+            return;
+        }
+
         Hitbox h1 = null;
         Hitbox h2 = null;
         foreach (Hitbox hBox in allActiveHitboxes)
@@ -204,7 +209,7 @@ public class HitboxManager : MonoBehaviour
         // Assuming we want to keep move properties in a 
         if (hurtHandler && !hitHandler.CharactersHit.Contains(hurtHandler))
         {
-            
+            Debug.LogError("Player hit on frame: " + GameStateManager.Instance.FrameCount);
             bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
             hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove, didMoveHit);
             hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
