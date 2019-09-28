@@ -122,7 +122,7 @@ public class CustomPhysics2D : MonoBehaviour {
         }
         float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Overseer.DELTA_TIME;
         velocity += gravityValueToApply * gravityVector;
-        if (Overseer.Instance.HasGameStarted)
+        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsNetworkedMode)
         {
             Debug.LogWarning("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
         }

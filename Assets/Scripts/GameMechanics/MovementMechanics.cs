@@ -121,7 +121,7 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
-    public Vector2 Velocty
+    public Vector2 Velocity
     {
         get
         {
@@ -529,18 +529,17 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     public void HandlePlayerHit(Hitbox enemyHitbox, InteractionHandler.MoveData move)
     {
-        if (ForcedMovementCoroutine != null)
-        {
-            StopCoroutine(ForcedMovementCoroutine);
-        }
+    }
 
-        // Hitbox came from left or right?
-        int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-        Vector2 destination = move.OnHitKnockback;
-        destination.x *= direction;
-
-        ForcedMovementCoroutine = TranslateForcedMovement(destination);
-        StartCoroutine(ForcedMovementCoroutine);
+    /// <summary>
+    /// Method for moving characters due to forced movement (guard knockback, hit knockback, etc).
+    /// </summary>
+    /// <param name="destinationVector"></param>
+    public void TranslateForcedMovement(Vector2 destinationVector)
+    {
+        Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
+        Debug.LogWarning("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
+        rigid.velocity = newVelocity;
     }
 
     #endregion
@@ -552,25 +551,6 @@ public class MovementMechanics : MonoBehaviour {
         if (rigid.velocity.y < 0)
         {
             yield break;
-        }
-    }
-
-    private IEnumerator TranslateForcedMovement(Vector2 destinationVector)
-    {
-        ignoreJoystickInputs = true;
-        while(InteractionHandler.Hitstun > 0)
-        {
-            yield return null;
-            if (Overseer.Instance.IsGameReady && InteractionHandler.Hitstun > 0)
-            {
-                Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
-                Debug.LogWarning("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
-                rigid.velocity = newVelocity;
-            }
-            else
-            {
-                Debug.LogWarning("Hitstun: Game is not ready");
-            }
         }
     }
 

@@ -124,13 +124,18 @@ public class InteractionHandler : MonoBehaviour
             Hitstun = frames;
 
             CharacterStats.OnPlayerHitByEnemy(moveHitBy, didMoveLand);
-            MovementMechanics.HandlePlayerHit(enemyHitbox, moveHitBy);
 
             if (HitstunCoroutine != null)
             {
+                Debug.LogWarning("Hitstun coroutine stop");
                 StopCoroutine(HitstunCoroutine);
             }
-            HitstunCoroutine = HandleHitstun();
+
+            int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
+            Vector2 destination = moveHitBy.OnHitKnockback;
+            destination.x *= direction;
+
+            HitstunCoroutine = HandleHitstun(destination);
             StartCoroutine(HitstunCoroutine);
         }
     }
@@ -152,18 +157,24 @@ public class InteractionHandler : MonoBehaviour
 
     #region private methods
 
-    private IEnumerator HandleHitstun()
+    private IEnumerator HandleHitstun(Vector2 destination)
     {
         while (Hitstun > 0)
         {
+            MovementMechanics.ignoreJoystickInputs = true;
+            MovementMechanics.ignoreJumpButton = true;
             yield return null;
             if (Overseer.Instance.IsGameReady)
             {
+                MovementMechanics.TranslateForcedMovement(destination);
                 --Hitstun;
             }
         }
+        MovementMechanics.ignoreJoystickInputs = false;
+        MovementMechanics.ignoreJumpButton = false;
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
+        HitstunCoroutine = null;
     }
     
     #endregion

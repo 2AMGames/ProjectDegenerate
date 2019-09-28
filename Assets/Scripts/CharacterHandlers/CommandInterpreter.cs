@@ -199,7 +199,7 @@ public class CommandInterpreter : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Overseer.Instance.HasGameStarted)
+        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsNetworkedMode)
         {
                 AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
                 AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
@@ -212,7 +212,7 @@ public class CommandInterpreter : MonoBehaviour
                         break;
                     }
                 }
-            Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocty.x + ", Velocity y: " + characterStats.MovementMechanics.Velocty.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
+            Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocity.x + ", Velocity y: " + characterStats.MovementMechanics.Velocity.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
         }
     }
 
@@ -312,7 +312,7 @@ public class CommandInterpreter : MonoBehaviour
                 We probably need a method to check if the button was held.
             */
 
-            Debug.LogError("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocty + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
+            Debug.LogError("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocity + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
             if ((inputData.InputPattern & 1) == 1)
             {
                 OnButtonEventTriggered(LP_ANIM_TRIGGER);
