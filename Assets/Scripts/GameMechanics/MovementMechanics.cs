@@ -560,7 +560,7 @@ public class MovementMechanics : MonoBehaviour {
         ignoreJoystickInputs = true;
         while(InteractionHandler.Hitstun > 0)
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
             if (Overseer.Instance.IsGameReady && InteractionHandler.Hitstun > 0)
             {
                 Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
