@@ -159,6 +159,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void CreateGameType()
     {
+        for(int index = 0; index < NumberOfPlayers; ++index)
+        {
+            PlayerObjects[index].SetActive(true);
+        }
+
         if (SelectedGameType == GameType.Local)
         {
             for (int index = 0; index < NumberOfPlayers; ++index)

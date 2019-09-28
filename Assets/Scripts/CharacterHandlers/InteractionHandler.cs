@@ -164,6 +164,7 @@ public class InteractionHandler : MonoBehaviour
             MovementMechanics.ignoreJoystickInputs = true;
             MovementMechanics.ignoreJumpButton = true;
             yield return null;
+            Debug.LogError("Hitstun frame: " + GameStateManager.Instance.FrameCount);
             if (Overseer.Instance.IsGameReady)
             {
                 MovementMechanics.TranslateForcedMovement(destination);
