@@ -45,8 +45,8 @@ GameObject:
   - component: {fileID: 489040385781029626}
   - component: {fileID: 7808090552154802651}
   - component: {fileID: 7518321783212868651}
-  - component: {fileID: 1965207635}
   - component: {fileID: 489040384883500143}
+  - component: {fileID: 1414844928588133536}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Untagged
@@ -316,24 +316,6 @@ MonoBehaviour:
     AllowMultiHit: 0
   MoveHitPlayer: 0
   Hitstun: 0
---- !u!114 &1965207635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colliderOffset: {x: 0, y: 0.61}
-  isTrigger: 0
-  originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.7, y: 1.425}
-  HorizontalBuffer: 0.1
-  VerticalBuffer: 0.1
 --- !u!114 &489040384883500143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +328,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a557c5d2ed9cbd48835cf63457f344a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1414844928588133536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489040385781029602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9c8e5824e871e743878407ff3400629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderOffset: {x: 0, y: 0.75}
+  isTrigger: 0
+  originalVelocity: {x: 0, y: 0}
+  size: 1.03
+  radius: 0.43
+  colliderBuffer: 0.01
 --- !u!1 &489040385881696257
 GameObject:
   m_ObjectHideFlags: 0
