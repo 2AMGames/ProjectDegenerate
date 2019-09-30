@@ -9,7 +9,7 @@ using UnityEngine;
 
 using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
-public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmakingCallbacks
+public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
 {
 
     #region const variables
@@ -30,11 +30,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     private PlayerController PlayerController;
 
-    private CommandInterpreter CommandInterpreter;
-
     private List<PlayerInputData> DataSent = new List<PlayerInputData>();
-
-    private Dictionary<uint, uint> HeartbeatPacketsSent = new Dictionary<uint, uint>();
 
     /// <summary>
     /// If we do not receive an input ack, or an input from the other player within this time
@@ -42,66 +38,14 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     /// </summary>
     private uint FramesTillWait;
 
-    private uint FrameReceivedFromPlayerOnUpdate;
-
-    private bool PlayerPacketReceived;
-
     /// <summary>
     /// Set to false when delaying game due to our frame count being ahead or we haven't received a heartbeat packet.
     /// </summary>
     private bool ShouldRunGame = true;
 
-    private uint AveragePing;
-
     private Coroutine UpdatePingCoroutine;
 
-    private bool UpdatingPing;
-
-    private bool PacketReceivedThisFrame;
-
-    private int FramesSinceLastPacketSent;
-
-    private bool PacketReceivedInTime;
-
     private uint HighestFrameCountReceived;
-
-    #endregion
-
-    #region Callbacks
-    public void OnCreatedRoom()
-    {
-        //
-    }
-
-    public void OnCreateRoomFailed(short returnCode, string message)
-    {
-        //
-    }
-
-    public void OnFriendListUpdate(List<FriendInfo> friendList)
-    {
-        //
-    }
-
-    public void OnJoinedRoom()
-    {
-
-    }
-
-    public void OnJoinRandomFailed(short returnCode, string message)
-    {
-        //
-    }
-
-    public void OnJoinRoomFailed(short returnCode, string message)
-    {
-        //
-    }
-
-    public void OnLeftRoom()
-    {
-        //
-    }
 
     #endregion
 
@@ -110,7 +54,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
     void Awake()
     {
         PlayerController = GetComponent<PlayerController>();
-        CommandInterpreter = PlayerController.CommandInterpreter;
         Overseer.Instance.OnGameReady += OnGameReady;
         PhotonNetwork.AddCallbackTarget(this);
 
@@ -123,7 +66,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
 
     public void OnEvent(EventData photonEvent)
     {
-        uint frameReceived = GameStateManager.Instance.FrameCount;
 
         if (photonEvent.Code == NetworkManager.PlayerInputAck)
         {
@@ -132,11 +74,6 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         }
         else if (photonEvent.Code == NetworkManager.PlayerInputUpdate)
         {
-            PacketReceivedInTime = true;
-            if (Overseer.Instance.HasGameStarted)
-            {
-                PacketReceivedThisFrame = true;
-            }
 
             PlayerInputPacket packet = photonEvent.CustomData as PlayerInputPacket;
             if (packet != null)
@@ -144,9 +81,8 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
                 if (packet.FrameSent > HighestFrameCountReceived)
                 {
                     HighestFrameCountReceived = packet.FrameSent;
-                    FrameReceivedFromPlayerOnUpdate = packet.FrameSent;
-                    uint highestFrame = FrameReceivedFromPlayerOnUpdate + (uint)NetworkManager.Instance.TotalDelayFrames;
-                    ResetFrameWaitTime(highestFrame);
+                    uint newFrameLimit = packet.FrameSent + (uint)NetworkManager.Instance.TotalDelayFrames;
+                    ResetFrameWaitTime(newFrameLimit);
                 }
             }
         }
@@ -214,34 +150,27 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
             UpdatePingCoroutine = StartCoroutine(UpdateHeartbeat());
             enabled = true;
         }
-        else
+        else if (UpdatePingCoroutine != null)
         {
-            if (UpdatingPing)
-            {
-                StopCoroutine(UpdatePingCoroutine);
-                UpdatingPing = false;
-            }
+            StopCoroutine(UpdatePingCoroutine);
+            UpdatePingCoroutine = null;
         }
     }
 
     private IEnumerator UpdateHeartbeat()
     {
-        UpdatingPing = true;
         ResetFrameWaitTime((uint)NetworkManager.Instance.TotalDelayFrames);
-        ResetFramesTillSendHeartbeat();
         yield return null;
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            //Debug.LogWarning("Frame limit: " + FramesTillWait + ", Frame count: " + GameStateManager.Instance.FrameCount + ", Frame received " + FrameReceivedFromPlayerOnUpdate);
             if (FramesTillWait <= GameStateManager.Instance.FrameCount)
             {
                 OnFrameLimitReached();
-                PacketReceivedInTime = false;
             }
             else if (!ShouldRunGame && FramesTillWait > GameStateManager.Instance.FrameCount)
             {
-                Debug.LogWarning("Restart Frame Received: " + FrameReceivedFromPlayerOnUpdate);
+                Debug.LogWarning("Restart Frame Received: " + FramesTillWait);
                 Overseer.Instance.SetShouldRunGame(true);
                 ShouldRunGame = true;
             }
@@ -254,16 +183,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback, IMatchmaking
         FramesTillWait = frameLimit;
     }
 
-    private void ResetFramesTillSendHeartbeat()
-    {
-    }
-
     private void OnFrameLimitReached()
     {
         // Stop the game if it is not already stopped.
         if (Overseer.Instance.IsGameReady && ShouldRunGame)
         {
-            Debug.LogError("Frame limit reached at: " + GameStateManager.Instance.FrameCount + ", Last received frame: " + FrameReceivedFromPlayerOnUpdate);
+            Debug.LogError("Frame limit reached at: " + GameStateManager.Instance.FrameCount + ", Last received frame: " + FramesTillWait);
             Overseer.Instance.SetShouldRunGame(false);
             ShouldRunGame = false;
         }

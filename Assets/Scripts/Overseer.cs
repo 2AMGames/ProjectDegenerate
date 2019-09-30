@@ -21,6 +21,18 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #endregion
 
+    #region Enum
+
+    public enum GameType
+    {
+        Local,
+        PlayerVsRemote,
+        PlayerVsAI,
+        Observer
+    }
+
+    #endregion
+
     #region static variables
 
     private static Overseer instance;
@@ -54,10 +66,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #region member variables
 
-    private Coroutine WaitForGameReadyCoroutine;
-
-    private Coroutine DelayGameCoroutine;
-
     public GameObject[] PlayerObjects;
 
     public List<PlayerController> Players;
@@ -67,6 +75,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public PhysicsManager ColliderManager;
 
     public GameType SelectedGameType;
+
+    private Coroutine WaitForGameReadyCoroutine;
 
     public bool IsNetworkedMode
     {
@@ -79,14 +89,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public bool IsGameReady
     {
         get; private set;
-    }
-
-    public bool IsDelayingGame
-    {
-        get
-        {
-            return DelayGameCoroutine != null;
-        }
     }
 
     public bool HasGameStarted { get; private set; }
@@ -260,24 +262,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #endregion
 
-    #region Enum
-
-    public enum GameType
-    {
-        Local,
-        PlayerVsRemote,
-        PlayerVsAI,
-        Observer
-    }
-
-    #endregion
-
     #region EventCallbacks
 
     // On photon event received callback
     public void OnEvent(EventData photonEvent)
     {
-
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
@@ -302,12 +291,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             }
         }
 
-        if (Players.Count < NumberOfPlayers && Overseer.Instance.HasGameStarted)
+        if (Players.Count < NumberOfPlayers && HasGameStarted)
         {
+            Debug.LogWarning("Ending game");
             SetGameReady(false);
             OnGameReady(false);
-            NetworkManager.Instance.DisconnectFromNetwork();
             HasGameStarted = false;
+            NetworkManager.Instance.DisconnectFromNetwork();
         }
     }
 
@@ -380,41 +370,15 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     }
 
-    public void DelayGame(int FramesToWait)
-    {
-        if (DelayGameCoroutine != null || FramesToWait <= 0)
-        {
-            return;
-        }
-        DelayGameCoroutine = StartCoroutine(SynchronizeGameState((uint)FramesToWait));
-    }
-
     public void SetShouldRunGame(bool received)
     {
-        bool isDelayingGame = DelayGameCoroutine != null;
-        SetGameReady(received && CheckIfGameReady() && !isDelayingGame);
+        SetGameReady(received && CheckIfGameReady());
     }
 
     public void HandleRollbackRequest(uint FrameToSync)
     {
         SetGameReady(false);
         OnGameReady(false);
-        //StartCoroutine(SynchronizeGameState(FrameToSync));
-    }
-
-    private IEnumerator SynchronizeGameState(uint frameToSync)
-    {
-        Debug.LogError("Overseer: Delaying game for: " + frameToSync + ".Starting at frame: " + GameStateManager.Instance.FrameCount);
-        yield return new WaitForEndOfFrame();
-        SetGameReady(false);
-        while (frameToSync > 0)
-        {
-            yield return null;
-            --frameToSync;
-        }
-        yield return new WaitForEndOfFrame();
-        SetGameReady(true);
-        DelayGameCoroutine = null;
     }
 
     #endregion

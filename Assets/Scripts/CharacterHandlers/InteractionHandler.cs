@@ -69,17 +69,6 @@ public class InteractionHandler : MonoBehaviour
         CharactersHit.Clear();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     private void Awake()
     {
         Animator = GetComponent<Animator>();
@@ -127,7 +116,6 @@ public class InteractionHandler : MonoBehaviour
 
             if (HitstunCoroutine != null)
             {
-                Debug.LogWarning("Hitstun coroutine stop");
                 StopCoroutine(HitstunCoroutine);
             }
 
@@ -164,7 +152,6 @@ public class InteractionHandler : MonoBehaviour
             MovementMechanics.ignoreJoystickInputs = true;
             MovementMechanics.ignoreJumpButton = true;
             yield return null;
-            Debug.LogError("Hitstun frame: " + GameStateManager.Instance.FrameCount);
             if (Overseer.Instance.IsGameReady)
             {
                 MovementMechanics.TranslateForcedMovement(destination);
@@ -187,7 +174,6 @@ public class InteractionHandler : MonoBehaviour
     {
 
         public string MoveName;
-
         public enum HitHeight
         {
             Low,

@@ -188,7 +188,7 @@ public class CommandInterpreter : MonoBehaviour
         {
             PlayerInputData dataToExecute = InputBuffer.Peek();
             uint currentFrame = GameStateManager.Instance.FrameCount;
-            int frameToExecute = (int)dataToExecute.FrameNumber + FrameDelay;
+            uint frameToExecute = dataToExecute.FrameNumber + (uint)FrameDelay;
             if (frameToExecute - currentFrame <= 0)
             { 
                 InputBuffer.Dequeue();
@@ -212,7 +212,7 @@ public class CommandInterpreter : MonoBehaviour
                         break;
                     }
                 }
-            Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocity.x + ", Velocity y: " + characterStats.MovementMechanics.Velocity.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
+            //Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocity.x + ", Velocity y: " + characterStats.MovementMechanics.Velocity.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
         }
     }
 
@@ -224,18 +224,13 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (dataToQueue.FrameNumber > HighestReceivedFrameNumber)
         {
-            if (Overseer.Instance.Players[characterStats.PlayerIndex] is RemotePlayerController)
-            {
-                //Debug.LogError("Queueing frame: " + dataToQueue.FrameNumber + ", On Frame: " + GameStateManager.Instance.FrameCount);
-            }
             HighestReceivedFrameNumber = dataToQueue.FrameNumber;
             if (dataToQueue.InputPattern > 0)
             {
                 if (GameStateManager.Instance.FrameCount >= dataToQueue.FrameNumber + FrameDelay)
                 {
-                    Debug.LogError("Off");
-                    Debug.LogError("Off frame count: " + GameStateManager.Instance.FrameCount);
-                    Debug.LogError("Sent frame: " + dataToQueue.FrameNumber);
+                    // Execute immediately if queue the frame to execute on the frame it was supposed to be executed.
+                    // Ex. Frame 57 was sent with 7 frames of delay, but we receive it on frame 64.
                     if (Overseer.Instance.IsGameReady && GameStateManager.Instance.FrameCount == dataToQueue.FrameNumber + FrameDelay)
                     {
                         ExecuteInput(dataToQueue);
@@ -312,7 +307,7 @@ public class CommandInterpreter : MonoBehaviour
                 We probably need a method to check if the button was held.
             */
 
-            Debug.LogError("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocity + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
+            Debug.LogWarning("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocity + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
             if ((inputData.InputPattern & 1) == 1)
             {
                 OnButtonEventTriggered(LP_ANIM_TRIGGER);
@@ -594,10 +589,6 @@ public class CommandInterpreter : MonoBehaviour
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
             yield return new WaitForEndOfFrame();
-            //if (buttonEventName == BUTTON_ACTION_TRIGGER)
-            //{
-            //    print(framesRemainingUntilRemoveFromBuffer[buttonEventName]);
-            //}
             if (Overseer.Instance.IsGameReady)
             {
                 --FramesRemainingUntilRemoveFromBuffer[buttonEventName];

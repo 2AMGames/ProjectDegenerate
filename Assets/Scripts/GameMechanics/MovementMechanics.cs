@@ -9,9 +9,6 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(CustomPhysics2D))]
 public class MovementMechanics : MonoBehaviour {
-    #region enums
-    
-    #endregion enums
 
     #region const variables
 
@@ -399,7 +396,6 @@ public class MovementMechanics : MonoBehaviour {
     {
         if (ignoreJumpButton)
         {
-            Debug.LogError("Ignore jump button");
             return false;
         }
         if (!rigid.isInAir)
@@ -418,7 +414,6 @@ public class MovementMechanics : MonoBehaviour {
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
-        Debug.LogError("New Velocity: " + rigid.velocity);
         SetCharacterFastFalling(false);
         return true;
     }
