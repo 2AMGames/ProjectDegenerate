@@ -178,7 +178,13 @@ public class MovementMechanics : MonoBehaviour {
         {
             IsCrouching = false;
             anim.SetBool(IS_CROUCHING_PARAMETER, IsCrouching);
-        }      
+        }
+
+        PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
+        if (opponent != null)
+        {
+            FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform);
+        }
     }
 
     private void OnValidate()
@@ -533,7 +539,6 @@ public class MovementMechanics : MonoBehaviour {
     public void TranslateForcedMovement(Vector2 destinationVector)
     {
         Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
-        Debug.LogWarning("Hitstun velocity: " + newVelocity + ", DeltaTime: " + Overseer.DELTA_TIME + ", Hitstun: " + InteractionHandler.Hitstun);
         rigid.velocity = newVelocity;
     }
 

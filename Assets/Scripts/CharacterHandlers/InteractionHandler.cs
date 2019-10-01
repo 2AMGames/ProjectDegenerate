@@ -200,6 +200,14 @@ public class InteractionHandler : MonoBehaviour
         public int OnHitFrames;
         public Vector2 OnHitKnockback;
 
+        // Damage to apply if hit or blocked.
+        public float HitDamage;
+        public float ChipDamage;
+
+        // Meter gained on hit or blocked.
+        public float HitMeter;
+        public float ChipMeter;
+
         public bool GuardBreak;
 
         // Allows the hitbox to register multiple hits on the opposing player in the same move.

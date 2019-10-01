@@ -17,9 +17,7 @@ public class CharacterStats : MonoBehaviour
         NEUTRAL,
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    // Shouldn't this be in movement mechanics or the animator?
     public enum CharacterState
     {
         FreeMovement, //Player has full control of their movement
@@ -30,22 +28,23 @@ public class CharacterStats : MonoBehaviour
 
     #region main variables
     /// <summary>
-    /// 
+    /// Movement Mechanics Reference
     /// </summary>
     public MovementMechanics MovementMechanics { get; private set; }
 
     /// <summary>
-    /// 
+    /// Character State
     /// </summary>
     public CharacterState currentCharacterState { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public Animator Anim;
 
     [HideInInspector]
     public int PlayerIndex;
+
+    public float Health { get; private set; }
+
+    public float SpecialMeter { get; private set; }
 
     #endregion
 
@@ -55,20 +54,33 @@ public class CharacterStats : MonoBehaviour
     {
         MovementMechanics = GetComponent<MovementMechanics>();
         Anim = GetComponent<Animator>();
+
+        Health = 100f;
+        SpecialMeter = 0f;
     }
 
     #endregion
 
     #region public interface
 
+    // DidMoveHit == False: Move was blocked
     public void OnPlayerHitByEnemy(InteractionHandler.MoveData move, bool didMoveHit)
     {
-        UpdateCharacterStats(true, move);
+
+        if (Overseer.Instance.IsGameReady)
+        {
+            float healthToDeduct = didMoveHit ? move.HitDamage : move.ChipDamage;
+            Health -= healthToDeduct;
+        }
     }
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.MoveData move, bool didMoveHit)
     {
-        UpdateCharacterStats(false, move);
+        if (Overseer.Instance.IsGameReady)
+        {
+            float meterToAdd = didMoveHit ? move.HitMeter : move.ChipMeter;
+            SpecialMeter += meterToAdd;
+        }
     }
 
     public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
@@ -79,11 +91,6 @@ public class CharacterStats : MonoBehaviour
     #endregion
 
     #region private interface
-
-    private void UpdateCharacterStats(bool wasHit, InteractionHandler.MoveData move)
-    {
-
-    }
 
     #endregion
 

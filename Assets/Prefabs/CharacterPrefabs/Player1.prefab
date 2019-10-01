@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -191,6 +191,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 5
     OnHitKnockback: {x: 2, y: 0}
+    HitDamage: 2.5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Medium_Punch
@@ -202,6 +206,10 @@ MonoBehaviour:
     OnHitDamage: 6
     OnHitFrames: 6
     OnHitKnockback: {x: 4, y: 0}
+    HitDamage: 4
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Hard_Punch
@@ -213,6 +221,10 @@ MonoBehaviour:
     OnHitDamage: 10
     OnHitFrames: 10
     OnHitKnockback: {x: 20, y: 0}
+    HitDamage: 15
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Light_Punch
@@ -224,6 +236,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 4
     OnHitKnockback: {x: 1.5, y: 0}
+    HitDamage: 2.5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Light_Kick
@@ -235,6 +251,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 5
     OnHitKnockback: {x: 1, y: 20}
+    HitDamage: 2.5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Light_Kick
@@ -246,6 +266,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 8
     OnHitKnockback: {x: 5, y: 0}
+    HitDamage: 2.5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Medium_Kick
@@ -257,6 +281,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 8
     OnHitKnockback: {x: 5, y: 0}
+    HitDamage: 2.5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Hard_Kick
@@ -268,6 +296,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 8
     OnHitKnockback: {x: 5, y: 0}
+    HitDamage: 5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Medium_Punch
@@ -279,6 +311,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 8
     OnHitKnockback: {x: 3, y: 0}
+    HitDamage: 4
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Hard_Punch
@@ -290,6 +326,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 25
     OnHitKnockback: {x: 1, y: 12.5}
+    HitDamage: 5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Medium_Kick
@@ -301,6 +341,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 25
     OnHitKnockback: {x: 1, y: 2}
+    HitDamage: 5
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   - MoveName: Cr_Hard_Kick
@@ -312,6 +356,10 @@ MonoBehaviour:
     OnHitDamage: 2
     OnHitFrames: 25
     OnHitKnockback: {x: 1, y: 20}
+    HitDamage: 7
+    ChipDamage: 0
+    HitMeter: 0
+    ChipMeter: 0
     GuardBreak: 0
     AllowMultiHit: 0
   MoveHitPlayer: 0
