@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
 
     private const short MillisecondsPerFrame = 16;
 
-    private const short MaxPacketFrameDelay = 30;
+    private const short MaxPacketFrameDelay = 15;
 
     #endregion
 
@@ -45,17 +45,26 @@ public class GameStateManager : MonoBehaviour
 
     #region main variables
 
-    public short LocalFrameDelay = 3;
+    public short LocalFrameDelay = 2;
+
+    /// <summary>
+    /// How long each round should last. 
+    /// Probably should be set by the defined game type when creating the scene.
+    /// Null value means unlimited time.
+    /// </summary>
+    public float? RoundLimit = 300f;
 
     public uint FrameCount;
 
     public float RoundTime { get; private set; }
 
+    public bool RollbackEnabled;
+
     private Stack<GameState> FrameStack;
 
-    private bool SaveGameCoroutineRunning;
+    private bool RunGameCoroutineRunning;
 
-    private Coroutine SaveGameCoroutine;
+    private Coroutine RunGameCoroutine;
 
     #endregion
 
@@ -83,7 +92,7 @@ public class GameStateManager : MonoBehaviour
     #region public interface
     public void RequestRollback(uint frameToRollbackTo)
     {
-        StopSaveGameCoroutine();
+        StopRunGameCoroutine();
         StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
     }
 
@@ -96,11 +105,11 @@ public class GameStateManager : MonoBehaviour
         enabled = isGameReady;
         if (isGameReady)
         {
-            StartSaveGameCoroutine();
+            StartRunGameCoroutine();
         }
         else
         {
-            StopSaveGameCoroutine();
+            StopRunGameCoroutine();
         }
     }
 
@@ -130,7 +139,6 @@ public class GameStateManager : MonoBehaviour
 
     private IEnumerator EvaluateRollbackRequest(uint frameRequested)
     {
-        Debug.LogWarning("Evaluating rollback: " + frameRequested);
         GameState targetGameState = null;
         while (FrameStack.Count > 0)
         {
@@ -170,49 +178,99 @@ public class GameStateManager : MonoBehaviour
         RoundTime = gameState.RoundTime;
     }
 
+    // Check game state for round over, game over, etc
+    private void EvaluateGameState()
+    {
+        List<PlayerController> playersThatWon = new List<PlayerController>(Overseer.Instance.Players);
+        foreach(PlayerController player in Overseer.Instance.Players)
+        {
+            if (player.CharacterStats.Health <= 0)
+            {
+                playersThatWon.Remove(player);
+            }
+        }
+        
+        // If we haven't determined a winner when the round timer ends, choose the player with the greatest amount of health.
+        if (playersThatWon.Count == Overseer.NumberOfPlayers && RoundLimit != null && RoundTime >= RoundLimit)
+        {
+            EvaluateTimeOver(playersThatWon);
+        }
+        if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundLimit != null && RoundTime >= RoundLimit)
+        {
+            // Evaluate round ended.
+            string winningPlayers = "";
+            foreach(PlayerController player in playersThatWon)
+            {
+                winningPlayers += player.PlayerIndex + ",";
+            }
+
+            Debug.Log("Round ended. Winning players: " + winningPlayers);
+        }
+    }
+
+    private void EvaluateTimeOver(List<PlayerController> playersThatWon)
+    {
+        if (playersThatWon[0].CharacterStats.Health.Equals(playersThatWon[1].CharacterStats.Health))
+        {
+            return;
+        }
+        if (playersThatWon[0].CharacterStats.Health > playersThatWon[1].CharacterStats.Health)
+        {
+            playersThatWon.RemoveAt(1);
+        }
+        else if (playersThatWon[0].CharacterStats.Health < playersThatWon[1].CharacterStats.Health)
+        {
+            playersThatWon.RemoveAt(0);
+        }
+    }
+
     #endregion
 
-    #region Save Game State Methods
+    #region Run Game Methods
 
-    private IEnumerator SaveGameState()
+    private IEnumerator RunGame()
     {
-        SaveGameCoroutineRunning = true;
+        RunGameCoroutineRunning = true;
         yield return null;
         while (true)
         {
             yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
-                if (Application.isPlaying && Overseer.Instance.IsNetworkedMode)
+                if (Application.isPlaying && Overseer.Instance.IsNetworkedMode && RollbackEnabled)
                 {
                     if (FrameStack.Count > MaxStackSize)
                     {
                         FrameStack = new Stack<GameState>();
                     }
-                    //GameState gameStateToPush = CreateNewGameState();
-                    //FrameStack.Push(gameStateToPush);
+                    GameState gameStateToPush = CreateNewGameState();
+                    FrameStack.Push(gameStateToPush);
                 }
+
                 ++FrameCount;
+                RoundTime += Overseer.DELTA_TIME;
+
+                EvaluateGameState();
             }
 
             yield return null;
         }
     }
 
-    private void StartSaveGameCoroutine()
+    private void StartRunGameCoroutine()
     {
-        if (!SaveGameCoroutineRunning)
+        if (!RunGameCoroutineRunning)
         {
-            SaveGameCoroutine = StartCoroutine(SaveGameState());
-            SaveGameCoroutineRunning = true;
+            RunGameCoroutine = StartCoroutine(RunGame());
+            RunGameCoroutineRunning = true;
         }
     }
-    private void StopSaveGameCoroutine()
+    private void StopRunGameCoroutine()
     {
-        if (SaveGameCoroutineRunning)
+        if (RunGameCoroutineRunning)
         {
-            StopCoroutine(SaveGameCoroutine);
-            SaveGameCoroutineRunning = false;
+            StopCoroutine(RunGameCoroutine);
+            RunGameCoroutineRunning = false;
         }
     }
 

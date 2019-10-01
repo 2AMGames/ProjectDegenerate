@@ -151,7 +151,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #endregion
 
-    #region private interface
+    #region Game Creation Methods
 
     private void SetGameReady(bool isGameReady)
     {
@@ -259,6 +259,10 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         PhotonNetwork.SerializationRate = 60;
         Screen.SetResolution(800, 600, false, 60);
     }
+
+    #endregion
+
+    #region Gameplay methods
 
     #endregion
 
@@ -370,9 +374,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     }
 
-    public void SetShouldRunGame(bool received)
+    public void SetShouldRunGame(bool shouldRunGame)
     {
-        SetGameReady(received && CheckIfGameReady());
+        SetGameReady(shouldRunGame && CheckIfGameReady());
     }
 
     public void HandleRollbackRequest(uint FrameToSync)
