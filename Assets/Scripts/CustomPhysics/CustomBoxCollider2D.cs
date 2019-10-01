@@ -258,7 +258,6 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         if (colliderToCheck == this) return false;
 
-        if (rigid.velocity.x == 0) return false;
 
         if (ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
         {

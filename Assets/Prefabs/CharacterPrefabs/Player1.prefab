@@ -46,14 +46,14 @@ GameObject:
   - component: {fileID: 7808090552154802651}
   - component: {fileID: 7518321783212868651}
   - component: {fileID: 489040384883500143}
-  - component: {fileID: 1414844928588133536}
+  - component: {fileID: 1662675726438627876}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a557c5d2ed9cbd48835cf63457f344a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1414844928588133536
+--- !u!114 &1662675726438627876
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -385,15 +385,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 489040385781029602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9c8e5824e871e743878407ff3400629, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderOffset: {x: 0, y: 0.75}
+  colliderOffset: {x: 0, y: 0.67}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  size: 1.03
-  radius: 0.43
-  colliderBuffer: 0.01
+  boxColliderSize: {x: 0.72, y: 1.5}
+  HorizontalBuffer: 0.02
+  VerticalBuffer: 0.02
 --- !u!1 &489040385881696257
 GameObject:
   m_ObjectHideFlags: 0

@@ -157,10 +157,13 @@ public class PhysicsManager : MonoBehaviour
                         slowerCollider = nonStaticColliderList[i];
                         fasterCollider = nonStaticColliderList[j];
                     }
-                    if (!slowerCollider.ColliderIntersectHorizontally(fasterCollider))
+                    if (!fasterCollider.ColliderIntersectHorizontally(slowerCollider))
                     {
                         continue;
                     }
+                    //CustomCollider2D temp = fasterCollider;
+                    //fasterCollider = slowerCollider;
+                    //slowerCollider = temp;
                 }
 
 
@@ -174,14 +177,13 @@ public class PhysicsManager : MonoBehaviour
                 }
                 fasterCollider.rigid.velocity.x = combinedVelocity;
                 slowerCollider.rigid.velocity.x = combinedVelocity;
-                fasterCollider.UpdateBoundsOfCollider();
                 slowerCollider.UpdateBoundsOfCollider();
                 CustomCollider2D staticColliderThtWasHit;
                 if (CheckForHorizontalCollisions(slowerCollider, out staticColliderThtWasHit))
                 {
                     if (staticColliderThtWasHit != null)
                     {
-                        fasterCollider.transform.position = new Vector3(slowerCollider.GetCenter().x + fasterCollider.colliderOffset.x, fasterCollider.transform.position.y, fasterCollider.transform.position.z);
+                        fasterCollider.transform.position = new Vector3(slowerCollider.GetCenter().x - fasterCollider.colliderOffset.x, fasterCollider.transform.position.y, fasterCollider.transform.position.z);
                         Vector3 pos = fasterCollider.transform.position;
                         if (fasterCollider.GetCenter().x > staticColliderThtWasHit.GetCenter().x)
                         {
@@ -192,6 +194,8 @@ public class PhysicsManager : MonoBehaviour
                         {
                             fasterCollider.transform.position = new Vector3(pos.x - .01f, pos.y, pos.z);
                         }
+                        print("Faster " + fasterCollider.name);
+                        print("Slower " + slowerCollider.name);
                     }
                     slowerCollider.UpdateBoundsOfCollider();
                     fasterCollider.UpdateBoundsOfCollider();
