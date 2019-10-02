@@ -158,8 +158,8 @@ public class InteractionHandler : MonoBehaviour
                 --Hitstun;
             }
         }
-        MovementMechanics.ignoreJoystickInputs = false;
-        MovementMechanics.ignoreJumpButton = false;
+
+        CharacterStats.OnHitstunFinished();
 
         Animator.SetBool(HITSTUN_TRIGGER, false);
         HitstunCoroutine = null;

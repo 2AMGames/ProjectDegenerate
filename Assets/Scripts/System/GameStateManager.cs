@@ -184,7 +184,7 @@ public class GameStateManager : MonoBehaviour
         List<PlayerController> playersThatWon = new List<PlayerController>(Overseer.Instance.Players);
         foreach(PlayerController player in Overseer.Instance.Players)
         {
-            if (player.CharacterStats.Health <= 0)
+            if (player.CharacterStats.TotalHealth <= 0)
             {
                 playersThatWon.Remove(player);
             }
@@ -210,15 +210,15 @@ public class GameStateManager : MonoBehaviour
 
     private void EvaluateTimeOver(List<PlayerController> playersThatWon)
     {
-        if (playersThatWon[0].CharacterStats.Health.Equals(playersThatWon[1].CharacterStats.Health))
+        if (playersThatWon[0].CharacterStats.TotalHealth.Equals(playersThatWon[1].CharacterStats.TotalHealth))
         {
             return;
         }
-        if (playersThatWon[0].CharacterStats.Health > playersThatWon[1].CharacterStats.Health)
+        if (playersThatWon[0].CharacterStats.TotalHealth > playersThatWon[1].CharacterStats.TotalHealth)
         {
             playersThatWon.RemoveAt(1);
         }
-        else if (playersThatWon[0].CharacterStats.Health < playersThatWon[1].CharacterStats.Health)
+        else if (playersThatWon[0].CharacterStats.TotalHealth < playersThatWon[1].CharacterStats.TotalHealth)
         {
             playersThatWon.RemoveAt(0);
         }

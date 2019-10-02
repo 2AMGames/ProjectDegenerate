@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
-
     #region enum
 
     /// <summary>
@@ -26,7 +25,17 @@ public class CharacterStats : MonoBehaviour
     }
     #endregion
 
-    #region main variables
+    #region const variables
+
+    private const float ChipDamageRecoveryDelay = 3.5f;
+
+    // Health to recover per second
+    private const float ChipDamageRecoveryRate = 1.5f;
+
+    #endregion
+
+    #region fields
+
     /// <summary>
     /// Movement Mechanics Reference
     /// </summary>
@@ -42,7 +51,25 @@ public class CharacterStats : MonoBehaviour
     [HideInInspector]
     public int PlayerIndex;
 
-    public float Health { get; private set; }
+    #endregion
+
+    #region main variables
+
+    private IEnumerator ChipDamageCoroutine;
+
+    #endregion
+
+    #region Health Variables
+
+    public float TotalHealth { get; private set; }
+
+    public float CurrentChipDamage { get; private set; }
+
+    public float ComboDamage { get; private set; }
+
+    #endregion
+
+    #region Special Meter Variables
 
     public float SpecialMeter { get; private set; }
 
@@ -55,7 +82,7 @@ public class CharacterStats : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
         Anim = GetComponent<Animator>();
 
-        Health = 100f;
+        TotalHealth = 100f;
         SpecialMeter = 0f;
     }
 
@@ -66,11 +93,27 @@ public class CharacterStats : MonoBehaviour
     // DidMoveHit == False: Move was blocked
     public void OnPlayerHitByEnemy(InteractionHandler.MoveData move, bool didMoveHit)
     {
-
         if (Overseer.Instance.IsGameReady)
         {
-            float healthToDeduct = didMoveHit ? move.HitDamage : move.ChipDamage;
-            Health -= healthToDeduct;
+            if (ChipDamageCoroutine != null)
+            {
+                StopCoroutine(ChipDamageCoroutine);
+            }
+
+            if (didMoveHit)
+            {
+                // "Cash In" built up chip damage that has not been recovered yet.
+                TotalHealth -= CurrentChipDamage;
+
+                ComboDamage += move.HitDamage;
+                TotalHealth -= move.HitDamage;
+
+                CurrentChipDamage = 0;
+            }
+            else
+            {
+                CurrentChipDamage += move.ChipDamage;
+            }
         }
     }
 
@@ -88,9 +131,43 @@ public class CharacterStats : MonoBehaviour
         print("Clash");
     }
 
+    public void OnHitstunFinished()
+    {
+        ComboDamage = 0;
+
+        if (ChipDamageCoroutine != null)
+        {
+            StopCoroutine(ChipDamageCoroutine);
+        }
+
+        if (CurrentChipDamage > 0)
+        {
+            ChipDamageCoroutine = RecoverChipDamage();
+            StartCoroutine(ChipDamageCoroutine);
+        }
+    }
+
     #endregion
 
     #region private interface
+
+    private IEnumerator RecoverChipDamage()
+    {
+        float secondsToWait = ChipDamageRecoveryDelay;
+        
+        while (secondsToWait > 0.0f)
+        {
+            yield return new WaitForEndOfFrame();
+            secondsToWait -= Overseer.DELTA_TIME;
+        }
+
+        while (CurrentChipDamage > 0.0f)
+        {
+            float newChipDamage = CurrentChipDamage - (Overseer.DELTA_TIME * ChipDamageRecoveryRate);
+            CurrentChipDamage = Mathf.Max(newChipDamage, 0.0f);
+            yield return new WaitForEndOfFrame();
+        }
+    }
 
     #endregion
 
