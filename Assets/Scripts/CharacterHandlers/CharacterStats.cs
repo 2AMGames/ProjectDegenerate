@@ -27,7 +27,7 @@ public class CharacterStats : MonoBehaviour
 
     #region const variables
 
-    private const float ChipDamageRecoveryDelay = 3.5f;
+    private const float ChipDamageRecoveryDelay = 2f;
 
     // Health to recover per second
     private const float ChipDamageRecoveryRate = 1.5f;
@@ -90,6 +90,11 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
+    public void OnMoveExecuted(InteractionHandler.MoveData move)
+    {
+        SpecialMeter -= move.SpecialMeterRequired;
+    }
+
     // DidMoveHit == False: Move was blocked
     public void OnPlayerHitByEnemy(InteractionHandler.MoveData move, bool didMoveHit)
     {
@@ -121,7 +126,7 @@ public class CharacterStats : MonoBehaviour
     {
         if (Overseer.Instance.IsGameReady)
         {
-            float meterToAdd = didMoveHit ? move.HitMeter : move.ChipMeter;
+            float meterToAdd = didMoveHit ? move.HitMeterGain : move.ChipMeterGain;
             SpecialMeter += meterToAdd;
         }
     }
@@ -153,6 +158,7 @@ public class CharacterStats : MonoBehaviour
 
     private IEnumerator RecoverChipDamage()
     {
+
         float secondsToWait = ChipDamageRecoveryDelay;
         
         while (secondsToWait > 0.0f)

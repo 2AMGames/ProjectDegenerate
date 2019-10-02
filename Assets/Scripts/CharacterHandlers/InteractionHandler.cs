@@ -192,6 +192,8 @@ public class InteractionHandler : MonoBehaviour
 
         public HitMagnitude Magnitude;
 
+        public float SpecialMeterRequired;
+
         public float OnGuardDamage;
         public int OnGuardFrames;
         public Vector2 OnGuardKnockback;
@@ -205,8 +207,8 @@ public class InteractionHandler : MonoBehaviour
         public float ChipDamage;
 
         // Meter gained on hit or blocked.
-        public float HitMeter;
-        public float ChipMeter;
+        public float HitMeterGain;
+        public float ChipMeterGain;
 
         public bool GuardBreak;
 

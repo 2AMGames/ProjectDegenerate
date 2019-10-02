@@ -292,6 +292,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (lastInputPattern != inputData.InputPattern)
         {
+            /*
             AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
             AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
             string clipName = state.shortNameHash.ToString();
@@ -303,6 +304,7 @@ public class CommandInterpreter : MonoBehaviour
                     break;
                 }
             }
+            */
             /*
                 We probably need a method to check if the button was held.
             */
@@ -368,7 +370,10 @@ public class CommandInterpreter : MonoBehaviour
                 OnButtonReleased(HK_ANIM_TRIGGER);
             }
 
+            // TO DO: Add check to see if move can be executed (Animation state is correct, character has enough special meter, etc.)
+
             UpdateJoystickInput(GetJoystickInputFromData(inputData));
+            
             lastInputPattern = inputData.InputPattern;
         }   
     }
