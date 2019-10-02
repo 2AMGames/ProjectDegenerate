@@ -73,6 +73,44 @@ public class PhysicsManager : MonoBehaviour
             collider.originalVelocity = collider.rigid.velocity;
         }
 
+        foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
+        {
+            foreach (CustomCollider2D staticCollider in staticColliderList)
+            {
+                if (!staticCollider.isActiveAndEnabled || !nonStaticCollider.isActiveAndEnabled)
+                {
+                    continue;//Skip if either collider is inactive
+                }
+                bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
+                bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
+
+                if (collidedVertically)
+                {
+                    if (nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.velocity.y <= 0)
+                    {
+                        nonStaticCollider.rigid.isInAir = false;
+                        nonStaticCollider.rigid.OnPhysicsObjectGrounded();
+                    }
+                    nonStaticCollider.rigid.velocity.y = 0;
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+                if (collidedHorizontally)
+                {
+                    nonStaticCollider.rigid.velocity.x = 0;
+                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
+                }
+
+
+
+                if (collidedVertically || collidedHorizontally)
+                {
+                    nonStaticCollider.UpdateBoundsOfCollider();
+                }
+
+
+            }
+        }
+
         float xi;
         float xj;
         CustomCollider2D slowerCollider;
@@ -86,7 +124,7 @@ public class PhysicsManager : MonoBehaviour
                 {
                     continue;
                 }
-                    
+
                 xi = nonStaticColliderList[i].rigid.velocity.x;
                 xj = nonStaticColliderList[j].rigid.velocity.x;
                 if (!(nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir))
@@ -119,14 +157,14 @@ public class PhysicsManager : MonoBehaviour
                         slowerCollider = nonStaticColliderList[i];
                         fasterCollider = nonStaticColliderList[j];
                     }
-                    if (!slowerCollider.ColliderIntersectHorizontally(fasterCollider))
+                    if (!fasterCollider.ColliderIntersectHorizontally(slowerCollider))
                     {
                         continue;
                     }
+                    //CustomCollider2D temp = fasterCollider;
+                    //fasterCollider = slowerCollider;
+                    //slowerCollider = temp;
                 }
-
-                
-                
 
 
                 if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
@@ -139,12 +177,28 @@ public class PhysicsManager : MonoBehaviour
                 }
                 fasterCollider.rigid.velocity.x = combinedVelocity;
                 slowerCollider.rigid.velocity.x = combinedVelocity;
-                fasterCollider.UpdateBoundsOfCollider();
                 slowerCollider.UpdateBoundsOfCollider();
-                if (CheckForHorizontalCollisions(slowerCollider))
+                CustomCollider2D staticColliderThtWasHit;
+                if (CheckForHorizontalCollisions(slowerCollider, out staticColliderThtWasHit))
                 {
+                    if (staticColliderThtWasHit != null)
+                    {
+                        fasterCollider.transform.position = new Vector3(slowerCollider.GetCenter().x - fasterCollider.colliderOffset.x, fasterCollider.transform.position.y, fasterCollider.transform.position.z);
+                        Vector3 pos = fasterCollider.transform.position;
+                        if (fasterCollider.GetCenter().x > staticColliderThtWasHit.GetCenter().x)
+                        {
 
+                            fasterCollider.transform.position = new Vector3(pos.x + .01f, pos.y, pos.z);
+                        }
+                        else
+                        {
+                            fasterCollider.transform.position = new Vector3(pos.x - .01f, pos.y, pos.z);
+                        }
+                        print("Faster " + fasterCollider.name);
+                        print("Slower " + slowerCollider.name);
+                    }
                     slowerCollider.UpdateBoundsOfCollider();
+                    fasterCollider.UpdateBoundsOfCollider();
                     fasterCollider.rigid.velocity.x = 0;
                     slowerCollider.rigid.velocity.x = 0;
                     if (fasterCollider.ColliderIntersectHorizontally(slowerCollider))
@@ -154,53 +208,11 @@ public class PhysicsManager : MonoBehaviour
                     }
 
                 }
-
-                //else
-                //{
-                //    print("I did not collide with anything");
-                //    Debug.Break();
-                //}
             }
         }
 
 
-        foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
-        {
-            foreach (CustomCollider2D staticCollider in staticColliderList)
-            {
-                if (!staticCollider.isActiveAndEnabled || !nonStaticCollider.isActiveAndEnabled)
-                {
-                    continue;//Skip if either collider is inactive
-                }
-                bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
-                bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
-
-                if (collidedVertically)
-                {
-                    if (nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.velocity.y <= 0)
-                    {
-                        nonStaticCollider.rigid.isInAir = false;
-                        nonStaticCollider.rigid.OnPhysicsObjectGrounded();
-                    }
-                    nonStaticCollider.rigid.velocity.y = 0;
-                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
-                }
-                if (collidedHorizontally)
-                {
-                    nonStaticCollider.rigid.velocity.x = 0;
-                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.velocity;
-                }
-
-
-                
-                if (collidedVertically || collidedHorizontally)
-                {
-                    nonStaticCollider.UpdateBoundsOfCollider();
-                }
-
-                
-            }
-        }
+        
 
 
         //Updates our physics object based on its physics state
@@ -217,33 +229,66 @@ public class PhysicsManager : MonoBehaviour
         {
             collider.rigid.velocity = collider.originalVelocity;
         }
-
-        //for (int i = 0; i < colliderList.Count - 1; i++)
-        //{
-        //    for (int j = i + 1; j < colliderList.Count; j++)
-        //    {
-        //        if (colliderList[i].ColliderIntersect(colliderList[j]))
-        //        {
-        //            //print("I made it here");
-        //            if (colliderList[i].isStatic)
-        //            {
-        //                colliderList[i].PushObjectOutsideOfCollider(colliderList[j]);
-        //            }
-        //            if (colliderList[j].isStatic)
-        //            {
-        //                colliderList[j].PushObjectOutsideOfCollider(colliderList[i]);
-        //            }
-        //        }
-        //    }
-        //}
     }
 
-    public bool CheckForHorizontalCollisions(CustomCollider2D colliderToCheck)
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    public bool CheckForHorizontalCollisionWithNonstaticColliders(CustomCollider2D col1, CustomCollider2D col2)
     {
+
+        CustomCollider2D fasterCollider;
+        CustomCollider2D slowerCollider;
+        if (col1.rigid.isInAir ^ col2.rigid.isInAir)
+        {
+            if (col1.rigid.isInAir)
+            {
+                fasterCollider = col1;
+                slowerCollider = col2;
+            }
+            else
+            {
+                fasterCollider = col2;
+                slowerCollider = col1;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(col2.rigid.velocity.x) > Mathf.Abs(col1.rigid.velocity.x))
+            {
+                fasterCollider = col2;
+                slowerCollider = col1;
+            }
+            else
+            {
+                fasterCollider = col1;
+                slowerCollider = col2;
+            }
+        }
+
+        if (fasterCollider.ColliderIntersectHorizontally(slowerCollider))
+        {
+
+
+            return true;
+        }
+        
+
+        return false;
+    }
+
+    public bool CheckForHorizontalCollisions(CustomCollider2D colliderToCheck, out CustomCollider2D staticColliderThatWasHit)
+    {
+        staticColliderThatWasHit = null;
         foreach (CustomCollider2D staticCollider in staticColliderList)
         {
             if (colliderToCheck.ColliderIntersectHorizontally(staticCollider))
             {
+                staticColliderThatWasHit = staticCollider;
                 return true;
             }
         }
