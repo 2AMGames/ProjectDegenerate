@@ -12,7 +12,7 @@ public class HealthBarUI : MonoBehaviour
 
 
     #region main variables
-    public int chracterID = 0;
+    public int characterID = 0;
 
     public Slider healthSlider;
     public Slider comboDamageSlider;
@@ -30,7 +30,7 @@ public class HealthBarUI : MonoBehaviour
 
     private void Start()
     {
-        associatedCharacterStats = Overseer.Instance.PlayerObjects[chracterID].GetComponent<CharacterStats>();
+        associatedCharacterStats = Overseer.Instance.PlayerObjects[characterID].GetComponent<CharacterStats>();
         associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnCharacterHealthUpdated);
         OnCharacterHealthUpdated();
     }
@@ -43,7 +43,6 @@ public class HealthBarUI : MonoBehaviour
         }
     }
     #endregion monobehaviour methods
-
 
     #region visually update methods
     private void OnCharacterHealthUpdated()

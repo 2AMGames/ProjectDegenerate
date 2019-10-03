@@ -155,8 +155,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnCharacterHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMoveExecuted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMoveHit:
+    m_PersistentCalls:
+      m_Calls: []
   Anim: {fileID: 0}
   PlayerIndex: 0
+  MaxHealth: 100
+  MaxSpecialMeter: 100
 --- !u!114 &7808090552154802651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,183 +196,171 @@ MonoBehaviour:
   - MoveName: Light_Punch
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 3
-    OnGuardKnockback: {x: 0.75, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 5
-    OnHitKnockback: {x: 2, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 2.5
+    OnHitFrames: 5
+    HitMeterGain: 25
+    OnHitKnockback: {x: 2, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 3
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 0.75, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Medium_Punch
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 3
-    OnGuardFrames: 3
-    OnGuardKnockback: {x: 1, y: 0}
-    OnHitDamage: 6
-    OnHitFrames: 6
-    OnHitKnockback: {x: 4, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 4
+    OnHitFrames: 6
+    HitMeterGain: 0
+    OnHitKnockback: {x: 4, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 3
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 1, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Hard_Punch
     Height: 2
     Magnitude: 2
-    OnGuardDamage: 4
-    OnGuardFrames: 4
-    OnGuardKnockback: {x: 5, y: 0}
-    OnHitDamage: 10
-    OnHitFrames: 10
-    OnHitKnockback: {x: 20, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 15
+    OnHitFrames: 10
+    HitMeterGain: 0
+    OnHitKnockback: {x: 20, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 4
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Light_Punch
     Height: 1
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 2
-    OnGuardKnockback: {x: 1.25, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 4
-    OnHitKnockback: {x: 1.5, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 2.5
+    OnHitFrames: 4
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1.5, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 2
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 1.25, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Light_Kick
     Height: 0
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 2, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 5
-    OnHitKnockback: {x: 1, y: 20}
+    SpecialMeterRequired: 0
     HitDamage: 2.5
+    OnHitFrames: 5
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 20}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Light_Kick
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 2, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 8
-    OnHitKnockback: {x: 5, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 2.5
+    OnHitFrames: 8
+    HitMeterGain: 0
+    OnHitKnockback: {x: 5, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Medium_Kick
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 2, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 8
-    OnHitKnockback: {x: 5, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 2.5
+    OnHitFrames: 8
+    HitMeterGain: 0
+    OnHitKnockback: {x: 5, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Hard_Kick
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 2, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 8
-    OnHitKnockback: {x: 5, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 5
+    OnHitFrames: 8
+    HitMeterGain: 0
+    OnHitKnockback: {x: 5, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Medium_Punch
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 2, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 8
-    OnHitKnockback: {x: 3, y: 0}
+    SpecialMeterRequired: 0
     HitDamage: 4
+    OnHitFrames: 8
+    HitMeterGain: 0
+    OnHitKnockback: {x: 3, y: 0}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Hard_Punch
     Height: 2
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 5, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 25
-    OnHitKnockback: {x: 1, y: 12.5}
+    SpecialMeterRequired: 0
     HitDamage: 5
+    OnHitFrames: 25
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 12.5}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Medium_Kick
     Height: 0
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 1, y: 2}
-    OnHitDamage: 2
-    OnHitFrames: 25
-    OnHitKnockback: {x: 1, y: 2}
+    SpecialMeterRequired: 0
     HitDamage: 5
+    OnHitFrames: 25
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 2}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 1, y: 2}
     AllowMultiHit: 0
+    GuardBreak: 0
   - MoveName: Cr_Hard_Kick
     Height: 0
     Magnitude: 0
-    OnGuardDamage: 1
-    OnGuardFrames: 5
-    OnGuardKnockback: {x: 5, y: 0}
-    OnHitDamage: 2
-    OnHitFrames: 25
-    OnHitKnockback: {x: 1, y: 20}
+    SpecialMeterRequired: 0
     HitDamage: 7
+    OnHitFrames: 25
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 20}
     ChipDamage: 0
-    HitMeter: 0
-    ChipMeter: 0
-    GuardBreak: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
     AllowMultiHit: 0
+    GuardBreak: 0
   MoveHitPlayer: 0
   Hitstun: 0
 --- !u!114 &489040384883500143

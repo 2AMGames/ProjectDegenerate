@@ -172,8 +172,8 @@ public class InteractionHandler : MonoBehaviour
     [System.Serializable]
     public struct MoveData
     {
-
         public string MoveName;
+
         public enum HitHeight
         {
             Low,
@@ -194,28 +194,22 @@ public class InteractionHandler : MonoBehaviour
 
         public float SpecialMeterRequired;
 
-        public float OnGuardDamage;
-        public int OnGuardFrames;
-        public Vector2 OnGuardKnockback;
-
-        public float OnHitDamage;
-        public int OnHitFrames;
-        public Vector2 OnHitKnockback;
-
         // Damage to apply if hit or blocked.
         public float HitDamage;
-        public float ChipDamage;
-
-        // Meter gained on hit or blocked.
+        public int OnHitFrames;
         public float HitMeterGain;
-        public float ChipMeterGain;
+        public Vector2 OnHitKnockback;
 
-        public bool GuardBreak;
+        public float ChipDamage;
+        public int OnGuardFrames;
+        public float ChipMeterGain;
+        public Vector2 OnGuardKnockback;
 
         // Allows the hitbox to register multiple hits on the opposing player in the same move.
         // Ex. A projectile may register as two hits when it connects with an opponent,
         // but a standing medium punch usually should not do the same.
         public bool AllowMultiHit;
+        public bool GuardBreak;
 
     }
     

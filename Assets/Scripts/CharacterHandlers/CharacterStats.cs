@@ -31,7 +31,13 @@ public class CharacterStats : MonoBehaviour
     #endregion
 
     #region event functions
+
     public UnityEvent OnCharacterHealthChanged;
+
+    public UnityEvent OnMoveExecuted;
+
+    public UnityEvent OnMoveHit;
+
     #endregion event functions
 
     #region const variables
@@ -89,6 +95,8 @@ public class CharacterStats : MonoBehaviour
 
     #region Special Meter Variables
 
+    public float MaxSpecialMeter = 100f;
+
     public float SpecialMeter { get; private set; }
 
     #endregion
@@ -109,9 +117,10 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
-    public void OnMoveExecuted(InteractionHandler.MoveData move)
+    public void ExecuteMove(InteractionHandler.MoveData move)
     {
         SpecialMeter -= move.SpecialMeterRequired;
+        OnMoveExecuted.Invoke();
     }
 
     // DidMoveHit == False: Move was blocked
@@ -138,9 +147,9 @@ public class CharacterStats : MonoBehaviour
             {
                 CurrentChipDamage += move.ChipDamage;
             }
-        }
 
-        OnCharacterHealthChanged.Invoke();
+            OnCharacterHealthChanged.Invoke();
+        }
     }
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.MoveData move, bool didMoveHit)
@@ -149,6 +158,8 @@ public class CharacterStats : MonoBehaviour
         {
             float meterToAdd = didMoveHit ? move.HitMeterGain : move.ChipMeterGain;
             SpecialMeter += meterToAdd;
+
+            OnMoveHit.Invoke();
         }
     }
 
