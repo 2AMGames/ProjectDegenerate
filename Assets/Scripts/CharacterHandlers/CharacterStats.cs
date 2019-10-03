@@ -61,7 +61,13 @@ public class CharacterStats : MonoBehaviour
 
     #region Health Variables
 
-    public float TotalHealth { get; private set; }
+    public float TotalHealth { get
+        {
+            return CurrentHealth - CurrentChipDamage - ComboDamage;
+        }
+    }
+
+    public float CurrentHealth { get; private set; }
 
     public float CurrentChipDamage { get; private set; }
 
@@ -82,7 +88,7 @@ public class CharacterStats : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
         Anim = GetComponent<Animator>();
 
-        TotalHealth = 100f;
+        CurrentHealth = 100f;
         SpecialMeter = 0f;
     }
 
@@ -108,10 +114,10 @@ public class CharacterStats : MonoBehaviour
             if (didMoveHit)
             {
                 // "Cash In" built up chip damage that has not been recovered yet.
-                TotalHealth -= CurrentChipDamage;
+                CurrentHealth -= CurrentChipDamage;
 
                 ComboDamage += move.HitDamage;
-                TotalHealth -= move.HitDamage;
+                CurrentHealth -= move.HitDamage;
 
                 CurrentChipDamage = 0;
             }
