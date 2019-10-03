@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A reference to all important variables in our character. Such as the 
+/// </summary>
 public class CharacterStats : MonoBehaviour
 {
     #region enum
@@ -60,6 +63,8 @@ public class CharacterStats : MonoBehaviour
     #endregion
 
     #region Health Variables
+
+    public float MaxHealth = 100;
 
     public float TotalHealth { get; private set; }
 
