@@ -483,8 +483,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9957a8747d843842b1d3e5233f18acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chracterID: 0
   healthSlider: {fileID: 5807450930116775948}
-  comboSlider: {fileID: 1182539060217014271}
+  comboDamageSlider: {fileID: 1182539060217014271}
   chipDamageSlider: {fileID: 2666794678330396049}
 --- !u!1 &5807450931409423982
 GameObject:

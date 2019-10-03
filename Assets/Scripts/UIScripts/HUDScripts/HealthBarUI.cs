@@ -12,22 +12,26 @@ public class HealthBarUI : MonoBehaviour
 
 
     #region main variables
+    public int chracterID = 0;
+
     public Slider healthSlider;
     public Slider comboDamageSlider;
     public Slider chipDamageSlider;
 
-    public CharacterStats associatedCharacterStats;
+    private CharacterStats associatedCharacterStats;
     #endregion main variables
 
     #region monobehavouir methods
 
     private void Awake()
     {
-        associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnCharacterHealthUpdated);
+        
     }
 
     private void Start()
     {
+        associatedCharacterStats = Overseer.Instance.PlayerObjects[chracterID].GetComponent<CharacterStats>();
+        associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnCharacterHealthUpdated);
         OnCharacterHealthUpdated();
     }
 

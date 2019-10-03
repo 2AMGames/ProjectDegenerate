@@ -1095,6 +1095,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].HitDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[1].HitDamage
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1414844928588133536, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
@@ -1438,6 +1448,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: Player 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3949053243360488357, guid: 3fe4752e875bf504596e0e2cee3b6404,
+        type: 3}
+      propertyPath: chracterID
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fe4752e875bf504596e0e2cee3b6404, type: 3}

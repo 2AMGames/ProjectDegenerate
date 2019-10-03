@@ -102,6 +102,7 @@ public class CharacterStats : MonoBehaviour
 
         CurrentHealth = 100f;
         SpecialMeter = 0f;
+        OnCharacterHealthChanged.Invoke();
     }
 
     #endregion
@@ -122,7 +123,7 @@ public class CharacterStats : MonoBehaviour
             {
                 StopCoroutine(ChipDamageCoroutine);
             }
-
+            
             if (didMoveHit)
             {
                 // "Cash In" built up chip damage that has not been recovered yet.
