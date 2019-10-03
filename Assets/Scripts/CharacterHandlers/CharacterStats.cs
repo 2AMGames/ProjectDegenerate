@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 
 /// <summary>
 /// A reference to all important variables in our character. Such as the 
@@ -27,6 +29,10 @@ public class CharacterStats : MonoBehaviour
         Dashing,//Player is dashing
     }
     #endregion
+
+    #region event functions
+    public UnityEvent OnCharacterHealthChanged;
+    #endregion event functions
 
     #region const variables
 
@@ -64,7 +70,8 @@ public class CharacterStats : MonoBehaviour
 
     #region Health Variables
 
-    public float TotalHealth { get
+    public float TotalHealth {
+        get
         {
             return CurrentHealth - CurrentChipDamage - ComboDamage;
         }

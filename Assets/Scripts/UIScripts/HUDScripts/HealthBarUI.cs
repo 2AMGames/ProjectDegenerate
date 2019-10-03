@@ -13,9 +13,10 @@ public class HealthBarUI : MonoBehaviour
 
     #region main variables
     public Slider healthSlider;
-    public Slider comboHealthBar;
-    public Slider regenHealthBar;
+    public Slider comboDamageSlider;
+    public Slider chipDamageSlider;
 
+    public CharacterStats associatedCharacterStats;
     #endregion main variables
 
     #region monobehavouir methods
@@ -28,7 +29,7 @@ public class HealthBarUI : MonoBehaviour
 
 
     #region visually update methods
-    private void OnPlayerHealthChanged()
+    private void OnPlayerHealthUpdated()
     {
 
     }
