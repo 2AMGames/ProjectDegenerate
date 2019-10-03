@@ -23,7 +23,15 @@ public class HealthBarUI : MonoBehaviour
 
     private void Awake()
     {
-        
+        associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnPlayerHealthUpdated);
+    }
+
+    private void OnDestroy()
+    {
+        if (associatedCharacterStats)
+        {
+            associatedCharacterStats.OnCharacterHealthChanged.RemoveListener(OnPlayerHealthUpdated);
+        }
     }
     #endregion monobehaviour methods
 
