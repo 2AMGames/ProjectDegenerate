@@ -23,23 +23,30 @@ public class HealthBarUI : MonoBehaviour
 
     private void Awake()
     {
-        associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnPlayerHealthUpdated);
+        associatedCharacterStats.OnCharacterHealthChanged.AddListener(OnCharacterHealthUpdated);
+    }
+
+    private void Start()
+    {
+        OnCharacterHealthUpdated();
     }
 
     private void OnDestroy()
     {
         if (associatedCharacterStats)
         {
-            associatedCharacterStats.OnCharacterHealthChanged.RemoveListener(OnPlayerHealthUpdated);
+            associatedCharacterStats.OnCharacterHealthChanged.RemoveListener(OnCharacterHealthUpdated);
         }
     }
     #endregion monobehaviour methods
 
 
     #region visually update methods
-    private void OnPlayerHealthUpdated()
+    private void OnCharacterHealthUpdated()
     {
-
+        healthSlider.value = associatedCharacterStats.CurrentHealth / associatedCharacterStats.MaxHealth;
+        chipDamageSlider.value = (associatedCharacterStats.CurrentHealth + associatedCharacterStats.CurrentChipDamage) / associatedCharacterStats.MaxHealth;
+        comboDamageSlider.value = (associatedCharacterStats.CurrentHealth + associatedCharacterStats.ComboDamage) / associatedCharacterStats.MaxHealth;
     }
 
     /// <summary>

@@ -138,6 +138,8 @@ public class CharacterStats : MonoBehaviour
                 CurrentChipDamage += move.ChipDamage;
             }
         }
+
+        OnCharacterHealthChanged.Invoke();
     }
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.MoveData move, bool didMoveHit)
@@ -168,6 +170,7 @@ public class CharacterStats : MonoBehaviour
             ChipDamageCoroutine = RecoverChipDamage();
             StartCoroutine(ChipDamageCoroutine);
         }
+        OnCharacterHealthChanged.Invoke();
     }
 
     #endregion
@@ -189,6 +192,7 @@ public class CharacterStats : MonoBehaviour
         {
             float newChipDamage = CurrentChipDamage - (Overseer.DELTA_TIME * ChipDamageRecoveryRate);
             CurrentChipDamage = Mathf.Max(newChipDamage, 0.0f);
+            OnCharacterHealthChanged.Invoke();
             yield return new WaitForEndOfFrame();
         }
     }
