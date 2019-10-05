@@ -42,9 +42,21 @@ public class CharacterStats : MonoBehaviour
 
     #region const variables
 
+    private const string SpecialMeterParameter = "SpecialMeter";
+
+    /// <summary>
+    /// Special meter needed per "stock"
+    /// </summary>
+    public const float SpecialMeterStockCount = 100f;
+
+    /// <summary>
+    /// Delay before starting chip damage recovery.
+    /// </summary>
     private const float ChipDamageRecoveryDelay = 2f;
 
-    // Health to recover per second
+    /// <summary>
+    /// Chip damage to recover per second.
+    /// </summary>
     private const float ChipDamageRecoveryRate = 1.5f;
 
     #endregion
@@ -95,7 +107,7 @@ public class CharacterStats : MonoBehaviour
 
     #region Special Meter Variables
 
-    public float MaxSpecialMeter = 100f;
+    public float MaxSpecialMeter = 300f;
 
     public float SpecialMeter { get; private set; }
 
@@ -120,7 +132,10 @@ public class CharacterStats : MonoBehaviour
     public void ExecuteMove(InteractionHandler.MoveData move)
     {
         SpecialMeter -= move.SpecialMeterRequired;
+
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / MaxSpecialMeter));
         OnMoveExecuted.Invoke();
+
     }
 
     // DidMoveHit == False: Move was blocked
@@ -149,6 +164,8 @@ public class CharacterStats : MonoBehaviour
             }
 
             OnCharacterHealthChanged.Invoke();
+
+            Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
         }
     }
 
@@ -160,12 +177,16 @@ public class CharacterStats : MonoBehaviour
             SpecialMeter += meterToAdd;
 
             OnMoveHit.Invoke();
+
+            Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
         }
     }
 
     public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
     {
         print("Clash");
+
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
     }
 
     public void OnHitstunFinished()

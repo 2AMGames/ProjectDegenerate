@@ -292,23 +292,6 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (lastInputPattern != inputData.InputPattern)
         {
-            /*
-            AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
-            AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
-            string clipName = state.shortNameHash.ToString();
-            for (int index = 0; index < clips.Length; ++index)
-            {
-                if (state.IsName(clips[index].name))
-                {
-                    clipName = clips[index].name;
-                    break;
-                }
-            }
-            */
-            /*
-                We probably need a method to check if the button was held.
-            */
-
             //Debug.LogWarning("Executing frame: " + inputData.FrameNumber + ", Executing on frame: " + GameStateManager.Instance.FrameCount + ", Anim State: " + clipName + ", Time = " + state.normalizedTime + ", RigidVelocity: " + characterStats.MovementMechanics.Velocity + ", X pos: " + gameObject.transform.position.x +  ", Y pos: " + gameObject.transform.position.y + ", ButtonTrigger: " + Anim.GetBool("ButtonAction"));
             if ((inputData.InputPattern & 1) == 1)
             {

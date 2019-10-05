@@ -11,7 +11,7 @@ public class SpecialMeterUI : MonoBehaviour
 
     private CharacterStats AssociatedCharacterStats;
 
-    private int CharacterId = 0;
+    public int CharacterId = 0;
 
     #endregion
 
