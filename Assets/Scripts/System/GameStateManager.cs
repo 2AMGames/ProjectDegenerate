@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 using PlayerInputData = PlayerInputPacket.PlayerInputData;
 
@@ -52,7 +52,7 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = 300f;
+    public float? RoundLimit = 99f;
 
     public uint FrameCount;
 
