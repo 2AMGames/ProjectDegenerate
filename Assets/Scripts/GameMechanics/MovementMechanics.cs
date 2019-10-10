@@ -82,6 +82,12 @@ public class MovementMechanics : MonoBehaviour {
     /// Ignores inputs related to the jump function
     /// </summary>
     public bool ignoreJumpButton;
+
+    /// <summary>
+    /// Can this actor change direction. Usually set to true when animating an attack move.
+    /// </summary>
+    public bool CanChangeDirection = true;
+    
     /// <summary>
     /// The number of jumps remaining that a character can pull off before landing. Once they land, their jumps will typically
     /// be reset back to the max number of jumps they have
@@ -122,7 +128,7 @@ public class MovementMechanics : MonoBehaviour {
     {
         get
         {
-            return rigid.velocity;
+            return rigid.Velocity;
         }
     }
 
@@ -152,18 +158,22 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        if (rigid.isInAir)
+        // If the animator is overriding the velocity, we should not update the velocity due to input.
+        if (!rigid.UseAnimatorVelocity)
         {
-            UpdateCurrentSpeedInAir();
-        }
-        else
-        {
-            UpdateCurrentSpeedOnGround();
+            if (rigid.isInAir)
+            {
+                UpdateCurrentSpeedInAir();
+            }
+            else
+            {
+                UpdateCurrentSpeedOnGround();
+            }
         }
 
         if (anim && anim.runtimeAnimatorController)
         {
-            anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.velocity.y);
+            anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
         }
 
         if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD)
@@ -181,7 +191,7 @@ public class MovementMechanics : MonoBehaviour {
         }
 
         PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
-        if (opponent != null)
+        if (CanChangeDirection && opponent != null)
         {
             FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform);
         }
@@ -302,9 +312,9 @@ public class MovementMechanics : MonoBehaviour {
             goalSpeed = runningSpeed * Mathf.Sign(horizontalInput);
         }
         
-        Vector2 newVelocityVector = new Vector2(rigid.velocity.x, rigid.velocity.y);
-        newVelocityVector.x = Mathf.MoveTowards(rigid.velocity.x, goalSpeed, Overseer.DELTA_TIME * groundAcceleration);
-        rigid.velocity = newVelocityVector;
+        Vector2 newVelocityVector = new Vector2(rigid.Velocity.x, rigid.Velocity.y);
+        newVelocityVector.x = Mathf.MoveTowards(rigid.Velocity.x, goalSpeed, Overseer.DELTA_TIME * groundAcceleration);
+        rigid.Velocity = newVelocityVector;
     }
 
     /// <summary>
@@ -318,12 +328,12 @@ public class MovementMechanics : MonoBehaviour {
         }
         float goalSpeed = Mathf.Sign(horizontalInput) * maximumAirSpeed;
 
-        float updatedXVelocity = rigid.velocity.x;
+        float updatedXVelocity = rigid.Velocity.x;
         updatedXVelocity = Mathf.MoveTowards(updatedXVelocity, goalSpeed, 
             Overseer.DELTA_TIME * airAcceleration);
 
-        Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.velocity.y);
-        rigid.velocity = updatedVectorVelocity;
+        Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.Velocity.y);
+        rigid.Velocity = updatedVectorVelocity;
     }
 
 
@@ -419,7 +429,7 @@ public class MovementMechanics : MonoBehaviour {
 
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
         anim.SetTrigger(JUMP_TRIGGER);
-        rigid.velocity = new Vector2(rigid.velocity.x, jumpVelocity);
+        rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
         SetCharacterFastFalling(false);
         return true;
     }
@@ -500,7 +510,7 @@ public class MovementMechanics : MonoBehaviour {
         float timeThatHasPassed = 0;
         while (timeThatHasPassed < delayBeforeDashing)
         {
-            rigid.velocity = Vector2.zero;
+            rigid.Velocity = Vector2.zero;
             timeThatHasPassed += Overseer.DELTA_TIME;
             yield return null;
         }
@@ -512,13 +522,13 @@ public class MovementMechanics : MonoBehaviour {
         }
         while (timeThatHasPassed < timeToCompleteDash)
         {
-            rigid.velocity = directionOfInput * dashVelocityAnimationCurve.Evaluate(timeThatHasPassed / timeToCompleteDash) * maxDashSpeed;
+            rigid.Velocity = directionOfInput * dashVelocityAnimationCurve.Evaluate(timeThatHasPassed / timeToCompleteDash) * maxDashSpeed;
             timeThatHasPassed += Overseer.DELTA_TIME;
             yield return null;
         }
 
         currentMovementState = CharacterStats.CharacterState.FreeMovement;
-        rigid.velocity.x = Mathf.Sign(rigid.velocity.x) * Mathf.Min(Mathf.Abs(rigid.velocity.x), maximumAirSpeed);
+        rigid.Velocity.x = Mathf.Sign(rigid.Velocity.x) * Mathf.Min(Mathf.Abs(rigid.Velocity.x), maximumAirSpeed);
         rigid.useGravity = true;
     }
     #endregion dashing methods
@@ -538,8 +548,8 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="destinationVector"></param>
     public void TranslateForcedMovement(Vector2 destinationVector)
     {
-        Vector2 newVelocity = Vector2.Lerp(rigid.velocity, destinationVector, .2f);
-        rigid.velocity = newVelocity;
+        Vector2 newVelocity = Vector2.Lerp(rigid.Velocity, destinationVector, .2f);
+        rigid.Velocity = newVelocity;
     }
 
     #endregion
@@ -548,7 +558,7 @@ public class MovementMechanics : MonoBehaviour {
 
     private IEnumerator LoseUpwardMomentumFromJump()
     {
-        if (rigid.velocity.y < 0)
+        if (rigid.Velocity.y < 0)
         {
             yield break;
         }

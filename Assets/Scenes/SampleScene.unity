@@ -1038,7 +1038,7 @@ PrefabInstance:
     - target: {fileID: 489040385781029602, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
@@ -1104,6 +1104,16 @@ PrefabInstance:
         type: 3}
       propertyPath: CharacterMoves.Array.data[1].HitDamage
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029625, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: AnimatorVelocity.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029625, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: UseAnimatorVelocity
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1414844928588133536, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
