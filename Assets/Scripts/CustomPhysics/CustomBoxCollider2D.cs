@@ -87,14 +87,14 @@ public class CustomBoxCollider2D : CustomCollider2D
             horizontalCheckBounds.bottomLeft.y += VerticalBuffer / 2;
             horizontalCheckBounds.bottomRight.y += VerticalBuffer / 2;
 
-            if (Mathf.Abs(rigid.velocity.y) > 0)
+            if (Mathf.Abs(rigid.Velocity.y) > 0)
             {
-                verticalOffset = Mathf.Sign(rigid.velocity.y) * Mathf.Max(VerticalBuffer, Mathf.Abs(rigid.velocity.y * Overseer.DELTA_TIME));
+                verticalOffset = Mathf.Sign(rigid.Velocity.y) * Mathf.Max(VerticalBuffer, Mathf.Abs(rigid.Velocity.y * Overseer.DELTA_TIME));
             }
 
-            if (Mathf.Abs(rigid.velocity.x) > 0)
+            if (Mathf.Abs(rigid.Velocity.x) > 0)
             {
-                horizontalOffset = Mathf.Sign(rigid.velocity.x) * Mathf.Max(HorizontalBuffer, Mathf.Abs(rigid.velocity.x * Overseer.DELTA_TIME));
+                horizontalOffset = Mathf.Sign(rigid.Velocity.x) * Mathf.Max(HorizontalBuffer, Mathf.Abs(rigid.Velocity.x * Overseer.DELTA_TIME));
             }
             verticalCheckBounds.SetOffset(Vector2.up * verticalOffset);
             horizontalCheckBounds.SetOffset(Vector2.right * horizontalOffset);
@@ -220,7 +220,7 @@ public class CustomBoxCollider2D : CustomCollider2D
         if (colliderToCheck == this) return false;
 
 
-        if (rigid.velocity.y == 0)
+        if (rigid.Velocity.y == 0)
         {
             return false;
         }

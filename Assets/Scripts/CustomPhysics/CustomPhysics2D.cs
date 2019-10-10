@@ -13,12 +13,18 @@ public class CustomPhysics2D : MonoBehaviour {
 
     #region main variables
     [System.NonSerialized]
-    public Vector2 velocity = Vector2.zero;
+    public Vector2 Velocity = Vector2.zero;
     [Header("Gravity Values")]
     [Tooltip("When this is marked true, gravity will effect the object based on the gravity scale and gravity vector")]
     public bool useGravity = true;
     [Tooltip("If this is marked true, then the object will stop accelerating once it has reached the maximum velocity that it can travel")]
     public bool useTerminalVelocity = true;
+
+    [Tooltip("This will be marked true when the animator is overriding the velocity of this actor to force movement.")]
+    public bool UseAnimatorVelocity;
+    [Tooltip("Velocity currently being set by the animator. Use this velocity when the animator is forcing movement. Else, use the regular velocity field")]
+    public Vector2 AnimatorVelocity;
+
     [SerializeField]
     [Tooltip("The direction that gravity will be acting on the object")]
     private Vector2 gravityVector = Vector2.down;
@@ -95,7 +101,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     public void UpdateVelocityFromGravity()
     {
-        if (!isInAir && Mathf.Abs(velocity.y) > 0)
+        if (!isInAir && Mathf.Abs(Velocity.y) > 0)
         {
             OnPhysicsObjectAirborne();
             this.isInAir = true;
@@ -107,17 +113,17 @@ public class CustomPhysics2D : MonoBehaviour {
         }
         if (useTerminalVelocity)
         {
-            float dotGravity = Vector2.Dot(gravityVector, velocity);
+            float dotGravity = Vector2.Dot(gravityVector, Velocity);
             Vector2 downComponent = dotGravity * gravityVector;
-            Vector2 rightComponent = Vector2.Dot(gravityRight, velocity) * gravityRight;
+            Vector2 rightComponent = Vector2.Dot(gravityRight, Velocity) * gravityRight;
 
             if (downComponent.magnitude > terminalVelocity && dotGravity > 0)
             {
-                velocity = rightComponent + gravityDown * terminalVelocity;
+                Velocity = rightComponent + gravityDown * terminalVelocity;
             }
         }
         float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Overseer.DELTA_TIME;
-        velocity += gravityValueToApply * gravityVector;
+        Velocity += gravityValueToApply * gravityVector;
         if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsNetworkedMode)
         {
             //Debug.LogWarning("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
@@ -129,7 +135,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     private void UpdatePositionFromVelocity()
     {
-        Vector3 velocityVector3 = new Vector3(velocity.x, velocity.y, 0);
+        Vector3 velocityVector3 = new Vector3(Velocity.x, Velocity.y, 0);
         
         this.transform.position += velocityVector3 * Overseer.DELTA_TIME;
     }

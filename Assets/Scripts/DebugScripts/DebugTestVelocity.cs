@@ -47,7 +47,7 @@ public class DebugTestVelocity : MonoBehaviour
                 }
                 else
                 {
-                    goalVelocity = new Vector2(Input.GetAxisRaw("Horizontal_P1") * maxVelocity, rigid.velocity.y);
+                    goalVelocity = new Vector2(Input.GetAxisRaw("Horizontal_P1") * maxVelocity, rigid.Velocity.y);
                     if (Input.GetKeyDown(KeyCode.W))
                     {
                         JumpPlayer();
@@ -62,7 +62,7 @@ public class DebugTestVelocity : MonoBehaviour
                 }
                 else
                 {
-                    goalVelocity = new Vector2(Input.GetAxisRaw("Horizontal_P2") * maxVelocity, rigid.velocity.y);
+                    goalVelocity = new Vector2(Input.GetAxisRaw("Horizontal_P2") * maxVelocity, rigid.Velocity.y);
                     if (Input.GetKeyDown(KeyCode.UpArrow))
                     {
                         JumpPlayer();
@@ -71,11 +71,11 @@ public class DebugTestVelocity : MonoBehaviour
 
                 break;
         }
-        rigid.velocity = Vector2.MoveTowards(rigid.velocity, goalVelocity, Overseer.DELTA_TIME * acceleration);
+        rigid.Velocity = Vector2.MoveTowards(rigid.Velocity, goalVelocity, Overseer.DELTA_TIME * acceleration);
     }
 
     private void JumpPlayer()
     {
-        rigid.velocity.y = jumpVelocity;
+        rigid.Velocity.y = jumpVelocity;
     }
 }

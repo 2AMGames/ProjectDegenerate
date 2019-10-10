@@ -89,21 +89,21 @@ public class CustomCircleCollider2D : CustomCollider2D
 
 
 
-            if (rigid.velocity.y < 0)
+            if (rigid.Velocity.y < 0)
             {
-                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Min(-radiusBuffer,  rigid.velocity.y * Overseer.DELTA_TIME);
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Min(-radiusBuffer,  rigid.Velocity.y * Overseer.DELTA_TIME);
             }
-            else if (rigid.velocity.y > 0)
+            else if (rigid.Velocity.y > 0)
             {
-                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Max(radiusBuffer, rigid.velocity.y * Overseer.DELTA_TIME);
+                verticalBoundsFromVelocity.center = bounds.center + Vector2.up * Mathf.Max(radiusBuffer, rigid.Velocity.y * Overseer.DELTA_TIME);
             }
-            if (rigid.velocity.x < 0)
+            if (rigid.Velocity.x < 0)
             {
-                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Min(-radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Min(-radiusBuffer, rigid.Velocity.x * Overseer.DELTA_TIME);
             }
-            else if (rigid.velocity.x > 0)
+            else if (rigid.Velocity.x > 0)
             {
-                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Max(radiusBuffer, rigid.velocity.x * Overseer.DELTA_TIME);
+                horizontalBoundsFromVelocity.center = bounds.center + Vector2.right * Mathf.Max(radiusBuffer, rigid.Velocity.x * Overseer.DELTA_TIME);
             }
         }
     }
@@ -188,7 +188,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
-        if (rigid.velocity.y == 0)
+        if (rigid.Velocity.y == 0)
         {
             return false;
         }
@@ -201,7 +201,7 @@ public class CustomCircleCollider2D : CustomCollider2D
                 
                 
                 this.transform.position = new Vector3(this.transform.position.x, pointOfCollision.y, this.transform.position.z);
-                rigid.velocity.y = 0;
+                rigid.Velocity.y = 0;
 
                 return true;
             }
@@ -236,7 +236,7 @@ public class CustomCircleCollider2D : CustomCollider2D
     public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
 
-        if (rigid.velocity.x == 0)
+        if (rigid.Velocity.x == 0)
         {
             return false;
         }
