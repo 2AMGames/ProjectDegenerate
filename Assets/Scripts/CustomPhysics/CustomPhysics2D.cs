@@ -29,6 +29,13 @@ public class CustomPhysics2D : MonoBehaviour {
     [Tooltip("The direction that gravity will be acting on the object")]
     private Vector2 gravityVector = Vector2.down;
 
+    /// <summary>
+    /// This will be a count of the number of objects that we are touching in any given direction. If the value is negative, this impleis that we are hitting something in the negative direction
+    /// 
+    /// For example isTouchingSide = 1, -1 means we are on the ground and touching a wall to our right
+    /// </summary>
+    public Vector2Int isTouchingSide = Vector2Int.zero;
+
     public List<CustomCollider2D> allCustomColliders { get; private set; }
     public CharacterStats associatedCharacterStats { get; set; }
     
