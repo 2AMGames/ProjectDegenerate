@@ -222,7 +222,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     public void SetHorizontalInput(float horizontalInput)
     {
-        if (this.ignoreJoystickInputs || (canMoveWhileCrouching && IsCrouching))
+        if (canMoveWhileCrouching && IsCrouching)
         {
             horizontalInput = 0;
         }
@@ -243,10 +243,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="verticalInput"></param>
     public void SetVerticalInput(float verticalInput)
     {
-        if(this.ignoreJoystickInputs)
-        {
-            verticalInput = 0;
-        }
+        verticalInput = verticalInput;
         this.verticalInput = (int)Mathf.Sign(verticalInput) * (Mathf.Abs(verticalInput) > PlayerController.INPUT_THRESHOLD_RUNNING ? 1 : 0);
         anim.SetInteger(VERTICAL_INPUT, this.verticalInput);
     }
@@ -382,12 +379,6 @@ public class MovementMechanics : MonoBehaviour {
             spriteRenderer.transform.parent.localScale = currentScale;
         }
         OnDirectionChanged?.Invoke(spriteFacingright);
-    }
-
-    private void CanPlayerInput(bool enabled)
-    {
-        ignoreJumpButton = !enabled;
-        ignoreJoystickInputs = !enabled;
     }
 
     private void InitializeMovementParameters()

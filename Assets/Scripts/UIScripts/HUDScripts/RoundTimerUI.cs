@@ -12,7 +12,7 @@ public class RoundTimerUI : MonoBehaviour
 
     private const string Infinity = "\u221E";
 
-    private const float TimeWarningPercentage = .75f;
+    private const float TimeWarningPercentage = .25f;
 
     private readonly Color TimeWarningColor = Color.red;
 
