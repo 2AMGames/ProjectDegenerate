@@ -243,7 +243,6 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="verticalInput"></param>
     public void SetVerticalInput(float verticalInput)
     {
-        verticalInput = verticalInput;
         this.verticalInput = (int)Mathf.Sign(verticalInput) * (Mathf.Abs(verticalInput) > PlayerController.INPUT_THRESHOLD_RUNNING ? 1 : 0);
         anim.SetInteger(VERTICAL_INPUT, this.verticalInput);
     }

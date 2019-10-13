@@ -68,7 +68,6 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 {
                     foreach (PlayerInputData inputFrame in data.InputData)
                     {
-                        //Debug.LogError("Input frame number: " + inputFrame.FrameNumber);
                         if (CommandInterpreter.QueuePlayerInput(inputFrame));
                         {
                             SendInputAck(inputFrame.PacketId);
