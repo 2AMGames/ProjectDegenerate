@@ -52,7 +52,7 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = 99f;
+    public float? RoundLimit = null;
 
     public uint FrameCount;
 

@@ -321,6 +321,11 @@ PrefabInstance:
       propertyPath: m_UpdateMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029626, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: MaxHealth
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 489040385781029629, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
@@ -768,7 +773,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentRoomId: 
-  DebugEnabled: 1
   SendPercentage: 1
 --- !u!4 &865024345
 Transform:
@@ -1038,7 +1042,7 @@ PrefabInstance:
     - target: {fileID: 489040385781029602, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
@@ -1105,6 +1109,16 @@ PrefabInstance:
       propertyPath: CharacterMoves.Array.data[1].HitDamage
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[2].HitDamage
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: CharacterMoves.Array.data[0].OnHitFrames
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 489040385781029625, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: AnimatorVelocity.x
@@ -1114,6 +1128,11 @@ PrefabInstance:
         type: 3}
       propertyPath: UseAnimatorVelocity
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 489040385781029626, guid: 5e7026d810020bf47a508cb6258c6372,
+        type: 3}
+      propertyPath: MaxHealth
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1414844928588133536, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}

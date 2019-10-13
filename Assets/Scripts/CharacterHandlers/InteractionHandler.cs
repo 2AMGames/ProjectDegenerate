@@ -120,7 +120,7 @@ public class InteractionHandler : MonoBehaviour
             }
 
             int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-            Vector2 destination = moveHitBy.OnHitKnockback;
+            Vector2 destination = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
             destination.x *= direction;
 
             HitstunCoroutine = HandleHitstun(destination);
@@ -130,10 +130,29 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
-        //TODO Get current active move from animation and command interpreter. Pass null for now.
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
+
+        // Handle case where player hit an enemy that is against a wall / static collider.
+        // We should push this player away in this case.
+        CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
+
+        if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0)
+        {
+            // Distance should move = (Hit frames * DT * Knockback Vector)
+            // Add two frames to the frames that the other player will move back to account for recovery frames.
+            Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, transform.position.y);
+            int frames = (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) + 2;
+            float acceleration = MovementMechanics.IsInAir ? MovementMechanics.airAcceleration : MovementMechanics.groundAcceleration;
+
+            float totalDistanceToMove = destinationVector.x * (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) * Overseer.DELTA_TIME;
+            float xVelocity = totalDistanceToMove - (acceleration * Overseer.DELTA_TIME * frames);
+
+            destinationVector.x = xVelocity;
+            MovementMechanics.TranslateForcedMovement(destinationVector, 1);
+        }
+        
     }
 
     public void OnClash(Hitbox enemyHitbox)
@@ -147,6 +166,9 @@ public class InteractionHandler : MonoBehaviour
 
     private IEnumerator HandleHitstun(Vector2 destination)
     {
+        int totalHitStun = Hitstun;
+        MovementMechanics.TranslateForcedMovement(destination, 1);
+        float savedX = transform.position.x;
         while (Hitstun > 0)
         {
             MovementMechanics.ignoreJoystickInputs = true;
@@ -154,11 +176,9 @@ public class InteractionHandler : MonoBehaviour
             yield return null;
             if (Overseer.Instance.IsGameReady)
             {
-                MovementMechanics.TranslateForcedMovement(destination);
                 --Hitstun;
             }
         }
-
         CharacterStats.OnHitstunFinished();
 
         Animator.SetBool(HITSTUN_TRIGGER, false);

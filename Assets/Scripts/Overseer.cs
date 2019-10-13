@@ -66,6 +66,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     #region member variables
 
+    public bool DebugEnabled;
+
     public GameObject[] PlayerObjects;
 
     public List<PlayerController> Players;

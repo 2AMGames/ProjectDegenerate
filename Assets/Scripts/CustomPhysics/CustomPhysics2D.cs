@@ -12,7 +12,7 @@ public class CustomPhysics2D : MonoBehaviour {
     #endregion const variables
 
     #region main variables
-    [System.NonSerialized]
+
     public Vector2 Velocity = Vector2.zero;
     [Header("Gravity Values")]
     [Tooltip("When this is marked true, gravity will effect the object based on the gravity scale and gravity vector")]
@@ -30,7 +30,7 @@ public class CustomPhysics2D : MonoBehaviour {
     private Vector2 gravityVector = Vector2.down;
 
     /// <summary>
-    /// This will be a count of the number of objects that we are touching in any given direction. If the value is negative, this impleis that we are hitting something in the negative direction
+    /// This will be a count of the number of objects that we are touching in any given direction. If the value is negative, this implies that we are hitting something in the negative direction
     /// 
     /// For example isTouchingSide = 1, -1 means we are on the ground and touching a wall to our right
     /// </summary>
@@ -131,10 +131,6 @@ public class CustomPhysics2D : MonoBehaviour {
         }
         float gravityValueToApply = gravityScale * GRAVITY_CONSTANT * Overseer.DELTA_TIME;
         Velocity += gravityValueToApply * gravityVector;
-        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsNetworkedMode)
-        {
-            //Debug.LogWarning("New velocity x: " + velocity.x + ", New Velocity y: " + velocity.y + ", Frame count: " + GameStateManager.Instance.FrameCount);
-        }
     }
 
     /// <summary>

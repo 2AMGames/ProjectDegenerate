@@ -120,7 +120,7 @@ public class CharacterStats : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
         Anim = GetComponent<Animator>();
 
-        CurrentHealth = 100f;
+        CurrentHealth = MaxHealth;
         SpecialMeter = 0f;
         OnCharacterHealthChanged.Invoke();
     }

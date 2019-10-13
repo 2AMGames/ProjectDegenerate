@@ -76,7 +76,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     #region Main Variables
 
-    [HideInInspector]
     public string CurrentRoomId;
 
     public int TotalDelayFrames
@@ -110,8 +109,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #endregion
 
     #region Debug Variables
-
-    public bool DebugEnabled;
     /// <summary>
     /// Chance that packet will send. Use this to simulate packet loss (we though we sent something, but it got lost in transmission).
     /// </summary>
@@ -162,7 +159,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     void OnValidate()
     {
-        SendPercentage = DebugEnabled ? Mathf.Min(1.0f, Mathf.Max(0.0f, SendPercentage)) : 1.0f;
+        SendPercentage = Overseer.Instance.DebugEnabled ? Mathf.Min(1.0f, Mathf.Max(0.0f, SendPercentage)) : 1.0f;
     }
 
     #endregion

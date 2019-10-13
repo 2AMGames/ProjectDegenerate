@@ -20,7 +20,9 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_INPUT = "VerticalInput";
     private const string JUMP_TRIGGER = "Jump";
 
-    private const float CROUCHING_THRESHOLD = .6F;
+    private const float CROUCHING_THRESHOLD = .6f;
+
+    private const float ForcedMovementLerpValue = .35f;
 
     #endregion
 
@@ -526,19 +528,12 @@ public class MovementMechanics : MonoBehaviour {
     #region player interaction methods
 
     /// <summary>
-    /// Method that handles player state when their hurtbox is inflitrated by an active hitbox.
-    /// </summary>
-    public void HandlePlayerHit(Hitbox enemyHitbox, InteractionHandler.MoveData move)
-    {
-    }
-
-    /// <summary>
     /// Method for moving characters due to forced movement (guard knockback, hit knockback, etc).
     /// </summary>
     /// <param name="destinationVector"></param>
-    public void TranslateForcedMovement(Vector2 destinationVector)
+    public void TranslateForcedMovement(Vector2 destinationVector, float lerpValue)
     {
-        Vector2 newVelocity = Vector2.Lerp(rigid.Velocity, destinationVector, .2f);
+        Vector2 newVelocity = Vector2.Lerp(rigid.Velocity, destinationVector, lerpValue);
         rigid.Velocity = newVelocity;
     }
 

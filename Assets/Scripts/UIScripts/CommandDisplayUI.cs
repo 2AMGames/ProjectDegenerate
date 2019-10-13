@@ -36,7 +36,7 @@ public class CommandDisplayUI : MonoBehaviour
 
     private void Awake()
     {
-        this.gameObject.SetActive(NetworkManager.Instance.DebugEnabled);
+        this.gameObject.SetActive(Overseer.Instance.DebugEnabled);
         Overseer.Instance.OnGameReady += OnGameReady;
     }
     private void Start()
