@@ -171,7 +171,6 @@ public class InteractionHandler : MonoBehaviour
         float savedX = transform.position.x;
         while (Hitstun > 0)
         {
-            MovementMechanics.ignoreJoystickInputs = true;
             MovementMechanics.ignoreJumpButton = true;
             yield return null;
             if (Overseer.Instance.IsGameReady)

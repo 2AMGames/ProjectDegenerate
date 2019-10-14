@@ -323,6 +323,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
     m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: VerticalInput
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2010898128247029125}
   m_Solo: 0
@@ -1114,6 +1117,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
     m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: VerticalInput
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2010898128247029125}
   m_Solo: 0
@@ -1721,6 +1727,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalInput
+    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: VerticalInput
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1130921132928716381}
@@ -2439,6 +2448,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: HorizontalInput
     m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: VerticalInput
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1130921132928716381}
   m_Solo: 0
@@ -2860,9 +2872,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 4
     m_ConditionEvent: VerticalInput
     m_EventTreshold: 0
-  - m_ConditionMode: 6
-    m_ConditionEvent: HorizontalInput
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3193976588316299706}
   m_Solo: 0
@@ -2904,9 +2913,6 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 4
     m_ConditionEvent: VerticalInput
-    m_EventTreshold: 0
-  - m_ConditionMode: 6
-    m_ConditionEvent: HorizontalInput
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3193976588316299706}
@@ -3901,6 +3907,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
+    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: VerticalInput
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2010898128247029125}

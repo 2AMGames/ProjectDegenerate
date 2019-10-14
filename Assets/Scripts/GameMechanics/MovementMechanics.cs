@@ -69,12 +69,6 @@ public class MovementMechanics : MonoBehaviour {
     [Tooltip("The time in seconds to complete a dashing animation")]
     public float timeToCompleteDash = .6f;
     public float delayBeforeDashing = .15f;
-    [HideInInspector]
-    /// <summary>
-    /// If this value is set to true, we will act as if all inputs are set to 0. If there is an action that should occur where the character
-    /// should not move, mark this value as true
-    /// </summary>
-    public bool ignoreJoystickInputs;
     /// <summary>
     /// Some characters may have the ability to move while they are crouching. Mark this value to true if they cay
     /// </summary>
@@ -107,14 +101,14 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private CustomPhysics2D rigid;
 
-    private InteractionHandler InteractionHandler;
-
     /// <summary>
     /// The last horizontal input that was passed in
     /// </summary>
     private int horizontalInput;
     private int verticalInput;
     private Animator anim;
+
+    public Vector2 GoalVelocity;
 
     public bool IsCrouching { get; private set; }
 
@@ -126,16 +120,6 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
-    public Vector2 Velocity
-    {
-        get
-        {
-            return rigid.Velocity;
-        }
-    }
-
-    private IEnumerator ForcedMovementCoroutine;
-
     #endregion main variables
 
     #region monobehaivour methods
@@ -143,7 +127,6 @@ public class MovementMechanics : MonoBehaviour {
     {
         rigid = GetComponent<CustomPhysics2D>();
         anim = GetComponent<Animator>();
-        InteractionHandler = GetComponent<InteractionHandler>();
 
         currentJumpsAvailable = maxAvailableJumps;
 
@@ -163,13 +146,9 @@ public class MovementMechanics : MonoBehaviour {
         // If the animator is overriding the velocity, we should not update the velocity due to input.
         if (!rigid.UseAnimatorVelocity)
         {
-            if (rigid.isInAir)
+            if(!rigid.isInAir)
             {
-                UpdateCurrentSpeedInAir();
-            }
-            else
-            {
-                UpdateCurrentSpeedOnGround();
+                UpdateVelocity();
             }
         }
 
@@ -250,24 +229,6 @@ public class MovementMechanics : MonoBehaviour {
     }
 
     /// <summary>
-    /// Gets the currently set vertical input that will be used for movement
-    /// </summary>
-    /// <returns></returns>
-    public float GetVerticalInput()
-    {
-        return this.verticalInput;
-    }
-
-    /// <summary>
-    /// Gets the currently set horizontal input that will be used for movement
-    /// </summary>
-    /// <returns></returns>
-    public float GetHorizontalInput()
-    {
-        return this.horizontalInput;
-    }
-
-    /// <summary>
     /// Flips sprite depending on direction of opponent.
     /// If opponent is in the air, should not rotate sprite until grounded
     /// </summary>
@@ -279,10 +240,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             return;
         }
-
-        //Vector2 facingDirection = transform.right.normalized;
         Vector2 opponentDirection = (opponentPosition.position - transform.position).normalized;
-        //float dotProduct = Vector2.Dot(facingDirection, opponentDirection);
         if (opponentDirection.x < 0 && isFacingRight)
         {
             SetSpriteFlipped(false);
@@ -291,7 +249,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             SetSpriteFlipped(true);
         }
-        //SetSpriteFlipped(opponentDirection.x >= 0.0f);
 
     }
 
@@ -300,60 +257,16 @@ public class MovementMechanics : MonoBehaviour {
     #region private methods
 
     /// <summary>
-    /// Updates the speed of our character while they are grounded
+    /// Updates the rigid body to the goal velocity.
     /// </summary>
-    private void UpdateCurrentSpeedOnGround()
+    private void UpdateVelocity()
     {
-        float goalSpeed = 0;
-        if (Mathf.Abs(horizontalInput) > PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            goalSpeed = runningSpeed * Mathf.Sign(horizontalInput);
-        }
-        
-        Vector2 newVelocityVector = new Vector2(rigid.Velocity.x, rigid.Velocity.y);
-        newVelocityVector.x = Mathf.MoveTowards(rigid.Velocity.x, goalSpeed, Overseer.DELTA_TIME * groundAcceleration);
-        rigid.Velocity = newVelocityVector;
-    }
+        float goalVelocity = GoalVelocity.x;
+        goalVelocity *= (rigid.isInAir ? maximumAirSpeed : runningSpeed) * (isFacingRight ? 1 : -1);
+        float newXVelocity = Mathf.MoveTowards(rigid.Velocity.x, goalVelocity, Overseer.DELTA_TIME * (rigid.isInAir ? airAcceleration : groundAcceleration));
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private void UpdateCurrentSpeedInAir()
-    {
-        if (Mathf.Abs(this.horizontalInput) < PlayerController.INPUT_THRESHOLD_RUNNING)
-        {
-            return;
-        }
-        float goalSpeed = Mathf.Sign(horizontalInput) * maximumAirSpeed;
-
-        float updatedXVelocity = rigid.Velocity.x;
-        updatedXVelocity = Mathf.MoveTowards(updatedXVelocity, goalSpeed, 
-            Overseer.DELTA_TIME * airAcceleration);
-
-        Vector2 updatedVectorVelocity = new Vector2(updatedXVelocity, rigid.Velocity.y);
-        rigid.Velocity = updatedVectorVelocity;
-    }
-
-
-    /// <summary>
-    /// Flips the character's sprite appropriately based on the input passed through
-    /// </summary>
-    /// <param name="horizontalInput"></param>
-    private void FlipSpriteBasedOnInput(float horizontalInput, bool ignoreInAirCondition = false)
-    {
-       
-
-        /*
-
-        if (horizontalInput < 0 && isFacingRight)
-        {
-            SetSpriteFlipped(false);
-        }
-        else if (horizontalInput > 0 && !isFacingRight)
-        {
-            SetSpriteFlipped(true);
-        }
-        */
+        Vector2 newVelocity = new Vector2(newXVelocity, rigid.Velocity.y);
+        rigid.Velocity = newVelocity;
     }
 
     /// <summary>
@@ -366,7 +279,7 @@ public class MovementMechanics : MonoBehaviour {
         {
             return;
         }
-        this.isFacingRight = spriteFacingright;
+        isFacingRight = spriteFacingright;
         if (spriteFacingright)
         {
             Vector3 currentScale = spriteRenderer.transform.parent.localScale;
@@ -378,6 +291,10 @@ public class MovementMechanics : MonoBehaviour {
             Vector3 currentScale = spriteRenderer.transform.parent.localScale;
             currentScale.x = Mathf.Abs(currentScale.x); ;
             spriteRenderer.transform.parent.localScale = currentScale;
+        }
+        if (anim)
+        {
+            anim.SetInteger(HORIZONTAL_INPUT, (isFacingRight ? 1 : -1) * this.horizontalInput);
         }
         OnDirectionChanged?.Invoke(spriteFacingright);
     }
