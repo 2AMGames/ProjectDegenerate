@@ -28,14 +28,9 @@ public class CommandInterpreter : MonoBehaviour
     #endregion enum
 
     #region const variabes
-    private const int FRAMES_TO_BUFFER = 50;
-    private const int DIRECTIONAL_INPUT_LENIENCY = 50;
 
-    /// <summary>
-    /// Player Key. Append this to the end of an input key to get the specific player that pressed the button.
-    /// Ex. LP_P1 = Player one light punch
-    /// </summary>
-    private const string PlayerKey = "_P";
+    private const int FRAMES_TO_BUFFER = 20;
+    private const int DIRECTIONAL_INPUT_LENIENCY = 8;
 
     /// <summary>
     /// Light Punch trigger
@@ -81,6 +76,23 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private const string DP_ANIM_TRIGGER = "DP";
 
+    /// <summary>
+    /// Super jump input
+    /// </summary>
+    private const string S_JUMP_ANIM_TRIGGER = "S_Jump";
+
+    /// <summary>
+    /// Forward dash input
+    /// </summary>
+    private const string F_DASH_ANIM_TRIGGER = "F_Dash";
+
+    /// <summary>
+    /// Back dash input
+    /// </summary>
+    private const string B_DASH_ANIM_TRIGGER = "B_Dash";
+
+    // Attack inputs that require a button trigger complement for them to be valid.
+
     private readonly DIRECTION[] QCF_INPUT = new DIRECTION[]
     {
         DIRECTION.DOWN,
@@ -102,9 +114,39 @@ public class CommandInterpreter : MonoBehaviour
         DIRECTION.FORWARD_DOWN,
     };
 
-    private List<DirectionalinputStruct> directionalInputRecordList = new List<DirectionalinputStruct>();
+    // Movement inputs that do not require a button trigger to be activated.
+
+    private readonly DIRECTION[] F_DASH_INPUT = new DIRECTION[]
+    {
+        DIRECTION.NEUTRAL,
+        DIRECTION.FORWARD,
+        DIRECTION.NEUTRAL,
+        DIRECTION.FORWARD
+    };
+
+    private readonly DIRECTION[] B_DASH_INPUT = new DIRECTION[]
+    {
+        DIRECTION.NEUTRAL,
+        DIRECTION.BACK,
+        DIRECTION.NEUTRAL,
+        DIRECTION.BACK
+    };
+
+    private readonly DIRECTION[] S_JUMP_INPUT = new DIRECTION[]
+    {
+        DIRECTION.DOWN,
+        DIRECTION.NEUTRAL,
+        DIRECTION.UP
+    };
 
     private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
+
+    private readonly DirectionalinputStruct StartingDirection = new DirectionalinputStruct
+    {
+        direction = DIRECTION.UP,
+        directionInput = new Vector2Int(1, 1)
+    };
+
     #endregion const variables
 
     #region action methods
@@ -133,7 +175,7 @@ public class CommandInterpreter : MonoBehaviour
     private DirectionalinputStruct currentDirectionalInputStruct;
     private Vector2Int lastJoystickInput { get { return currentDirectionalInputStruct.directionInput; } }
 
-    private ushort lastInputPattern;
+    private ushort lastInputPattern = ushort.MaxValue;
 
     private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
     public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
@@ -148,6 +190,8 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private uint HighestReceivedFrameNumber;
 
+    private int FramesSinceLastDirectionalInput;
+
     private int FrameDelay
     {
         get
@@ -160,6 +204,8 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    public List<DirectionalinputStruct> directionalInputRecordList = new List<DirectionalinputStruct>();
+
     #endregion
 
     #region monobehaviour methods
@@ -169,8 +215,7 @@ public class CommandInterpreter : MonoBehaviour
 
         ResetInputData();
 
-        currentDirectionalInputStruct.direction = DIRECTION.NEUTRAL;
-        currentDirectionalInputStruct.directionInput = Vector2Int.zero;
+        StartCoroutine(CheckFramesSinceLastDirectionalInput());
     }
 
     private void Start()
@@ -194,25 +239,6 @@ public class CommandInterpreter : MonoBehaviour
                 InputBuffer.Dequeue();
                 ExecuteInput(dataToExecute);
             }
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsNetworkedMode)
-        {
-                AnimationClip[] clips = Anim.runtimeAnimatorController.animationClips;
-                AnimatorStateInfo state = Anim.GetCurrentAnimatorStateInfo(0);
-                string clipName = state.shortNameHash.ToString();
-                for (int index = 0; index < clips.Length; ++index)
-                {
-                    if (state.IsName(clips[index].name))
-                    {
-                        clipName = clips[index].name;
-                        break;
-                    }
-                }
-            //Debug.LogWarning("Game Ready: " + Overseer.Instance.IsGameReady + ", Frame count: " + GameStateManager.Instance.FrameCount + ", New Position x: " + this.transform.position.x + ", New Position y: " + this.transform.position.y + ", Velocity x: " + characterStats.MovementMechanics.Velocity.x + ", Velocity y: " + characterStats.MovementMechanics.Velocity.y + ", Anim State: " + clipName + ", Time = " + state.normalizedTime);
         }
     }
 
@@ -353,11 +379,11 @@ public class CommandInterpreter : MonoBehaviour
                 OnButtonReleased(HK_ANIM_TRIGGER);
             }
 
-            // TO DO: Add check to see if move can be executed (Animation state is correct, character has enough special meter, etc.)
-
             UpdateJoystickInput(GetJoystickInputFromData(inputData));
             
             lastInputPattern = inputData.InputPattern;
+
+            CheckForMovementInputCommands();
         }   
     }
 
@@ -382,23 +408,28 @@ public class CommandInterpreter : MonoBehaviour
             ButtonsPressed[buttonEventName] = true;
 
             CheckDirectionalInputCommands();
-
         }
     }
 
     private void UpdateJoystickInput(Vector2Int currentJoystickVec)
     {
-        //Debug.LogError("Frames held: " + FramesHeld);
+        if (currentJoystickVec == currentDirectionalInputStruct.directionInput)
+            return;
+
+        if (FramesSinceLastDirectionalInput >= DIRECTIONAL_INPUT_LENIENCY && directionalInputRecordList.Count > 1)
+        {
+            directionalInputRecordList.RemoveRange(0, directionalInputRecordList.Count - 1);
+        }
         currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
         OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
         DirectionalinputStruct dInput = new DirectionalinputStruct();
         dInput.direction = CurrentDirection;
         dInput.directionInput = currentJoystickVec;
         directionalInputRecordList.Add(dInput);
-        StartCoroutine(RemoveDirectionalInputAfterTime());
 
         CheckForJumpInput(lastJoystickInput, currentJoystickVec);
         currentDirectionalInputStruct.directionInput = currentJoystickVec;
+        FramesSinceLastDirectionalInput = -1;
     }
 
     private int IsButtonPressed(string buttonTrigger)
@@ -466,9 +497,12 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Check the input for attacks using special motions. Should be checked after trigger a button animation parameter (LP,MP,HP, etc.)
+    /// </summary>
     private void CheckDirectionalInputCommands()
     {
-        if (CheckIfDirectionalArrayMatches(QCB_INPUT) > 0)
+        if (CheckIfDirectionalArrayMatches(QCB_INPUT) >= 0)
         {
             Anim.SetTrigger(QCB_ANIM_TRIGGER);
             if (FramesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
@@ -478,7 +512,7 @@ public class CommandInterpreter : MonoBehaviour
             }
 
         }
-        if (CheckIfDirectionalArrayMatches(QCF_INPUT) > 0)
+        if (CheckIfDirectionalArrayMatches(QCF_INPUT) >= 0)
         {
             Anim.SetTrigger(QCF_ANIM_TRIGGER);
             if (FramesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
@@ -487,7 +521,52 @@ public class CommandInterpreter : MonoBehaviour
                 StartCoroutine(DisableButtonTriggerAfterTime(QCF_ANIM_TRIGGER));
             }
         }
+        if (CheckIfDirectionalArrayMatches(DP_INPUT) >= 0)
+        {
+            Anim.SetTrigger(DP_ANIM_TRIGGER);
+            if (FramesRemainingUntilRemoveFromBuffer[DP_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("DP successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(DP_ANIM_TRIGGER));
+            }
+        }
     }
+
+    /// <summary>
+    /// Check for movement related motions (Forward Dash, Back Dash, etc.) These can be checked independent from pressing an attack button.
+    /// </summary>
+    private void CheckForMovementInputCommands()
+    {
+        if (CheckIfDirectionalArrayMatches(F_DASH_INPUT) >= 0)
+        {
+            Anim.SetTrigger(F_DASH_ANIM_TRIGGER);
+            if (FramesRemainingUntilRemoveFromBuffer[F_DASH_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("Forward Dash Successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(F_DASH_ANIM_TRIGGER));
+            }
+
+        }
+        else if (CheckIfDirectionalArrayMatches(B_DASH_INPUT) >= 0)
+        {
+            Anim.SetTrigger(B_DASH_ANIM_TRIGGER);
+            if (FramesRemainingUntilRemoveFromBuffer[B_DASH_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("Back Dash Successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(B_DASH_ANIM_TRIGGER));
+            }
+        }
+        else if (CheckIfDirectionalArrayMatches(S_JUMP_INPUT) >= 0)
+        {
+            Anim.SetTrigger(S_JUMP_ANIM_TRIGGER);
+            if (FramesRemainingUntilRemoveFromBuffer[S_JUMP_ANIM_TRIGGER] <= 0)
+            {
+                Debug.LogWarning("Super Jump Successful");
+                StartCoroutine(DisableButtonTriggerAfterTime(S_JUMP_ANIM_TRIGGER));
+            }
+        }
+    }
+
 
     /// <summary>
     /// Checks to see if the array that is passed in matches anywhere in our 
@@ -565,6 +644,12 @@ public class CommandInterpreter : MonoBehaviour
 
         FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(F_DASH_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(B_DASH_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(S_JUMP_ANIM_TRIGGER, 0);
+
+        lastInputPattern = ushort.MaxValue;
+        currentDirectionalInputStruct = StartingDirection;
     }
 
     #endregion
@@ -586,26 +671,22 @@ public class CommandInterpreter : MonoBehaviour
         Anim.ResetTrigger(buttonEventName);
     }
 
-    private IEnumerator RemoveDirectionalInputAfterTime()
+    private IEnumerator CheckFramesSinceLastDirectionalInput()
     {
-        int framesThatHavePassed = 0;
-        yield return null;
-        while (framesThatHavePassed < DIRECTIONAL_INPUT_LENIENCY)
+        while (true)
         {
             yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
-                ++framesThatHavePassed;
+                ++FramesSinceLastDirectionalInput;
             }
         }
-
-        directionalInputRecordList.RemoveAt(0);
     }
 
     #endregion
 
     #region structs
-
+    [Serializable]
     public struct DirectionalinputStruct
     {
         public Vector2Int directionInput;
