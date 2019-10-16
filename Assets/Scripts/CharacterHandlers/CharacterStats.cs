@@ -32,11 +32,14 @@ public class CharacterStats : MonoBehaviour
 
     #region event functions
 
-    public UnityEvent OnCharacterHealthChanged;
+    [System.NonSerialized]
+    public UnityEvent OnCharacterHealthChanged = new UnityEvent();
 
-    public UnityEvent OnMoveExecuted;
+    [System.NonSerialized]
+    public UnityEvent OnMoveExecuted = new UnityEvent();
 
-    public UnityEvent OnMoveHit;
+    [System.NonSerialized]
+    public UnityEvent OnMoveHit = new UnityEvent();
 
     #endregion event functions
 
