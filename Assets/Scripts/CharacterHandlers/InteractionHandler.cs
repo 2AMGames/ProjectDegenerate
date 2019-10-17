@@ -53,6 +53,11 @@ public class InteractionHandler : MonoBehaviour
 
     #region Interaction Data
 
+    /// <summary>
+    /// True if the player can block any incoming attacks. Should be set by the animator.
+    /// </summary>
+    public bool CanPlayerBlock;
+
     // Has the last move we activated already hit a player
     public bool MoveHitPlayer;
 
