@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -117,9 +117,9 @@ MonoBehaviour:
   fastFallScale: 1.7
   maxAvailableJumps: 1
   IsDashing: 0
-  GroundDashSpeed: 8
+  GroundDashSpeed: 12
   AirDashSpeed: 12
-  canMoveWhileCrouching: 1
+  canMoveWhileCrouching: 0
   ignoreJumpButton: 0
   CanChangeDirection: 1
   GoalVelocity: {x: 0, y: 0}
@@ -154,15 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCharacterHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMoveExecuted:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMoveHit:
-    m_PersistentCalls:
-      m_Calls: []
   Anim: {fileID: 0}
   PlayerIndex: 0
   MaxHealth: 100
