@@ -75,7 +75,33 @@ public class PhysicsManager : MonoBehaviour
             collider.UpdateBoundsOfCollider();
             collider.originalVelocity = collider.rigid.Velocity;
         }
+        HandleNonstaticOnNonstaticCollisions();
 
+
+        HandleNonstaticOnStaticCollisions();
+
+
+        
+
+
+        //Updates our physics object based on its physics state
+        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
+        {
+            if (rigid.enabled)
+            {
+                rigid.UpdatePhysics();
+            }
+        }
+
+
+        foreach (CustomCollider2D collider in nonStaticColliderList)
+        {
+            collider.rigid.Velocity = collider.originalVelocity;
+        }
+    }
+
+    private void HandleNonstaticOnStaticCollisions()
+    {
         bool collidedVerticallyWithAnyStatic = false;
         bool collidedHorizontallyWithAnyStatic = false;
         foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
@@ -141,132 +167,92 @@ public class PhysicsManager : MonoBehaviour
                 nonStaticCollider.rigid.isTouchingSide.x = 0;
             }
         }
+    }
 
-        float xi;
-        float xj;
-        CustomCollider2D slowerCollider;
-        CustomCollider2D fasterCollider ;
-        float combinedVelocity;
+    /// <summary>
+    /// 
+    /// </summary>
+    private void HandleNonstaticOnNonstaticCollisions()
+    {
+        CustomCollider2D primary;
+        CustomCollider2D secondary;
+
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
-            for (int j = i + 1; j < nonStaticColliderList.Count; j++)
+            for (int j = 0; j < nonStaticColliderList.Count; j++)
             {
-                if (!nonStaticColliderList[i].isActiveAndEnabled || !nonStaticColliderList[j].isActiveAndEnabled)
+                if (Mathf.Abs(nonStaticColliderList[i].rigid.Velocity.x) >= Mathf.Abs(nonStaticColliderList[j].rigid.Velocity.x))
                 {
-                    continue;
+                    primary = nonStaticColliderList[i];
+                    secondary = nonStaticColliderList[j];
                 }
-
-                xi = nonStaticColliderList[i].rigid.Velocity.x;
-                xj = nonStaticColliderList[j].rigid.Velocity.x;
-                if (!(nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir))
-                {
-                    if (Mathf.Abs(xj) > Mathf.Abs(xi))
-                    {
-                        fasterCollider = nonStaticColliderList[j];
-                        slowerCollider = nonStaticColliderList[i];
-                    }
-                    else
-                    {
-                        fasterCollider = nonStaticColliderList[i];
-                        slowerCollider = nonStaticColliderList[j];
-                    }
-                    if (!fasterCollider.ColliderIntersectHorizontally(slowerCollider))
-                    {
-                        continue;
-                    }
-
-                }
-                else
+                if (nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir)
                 {
                     if (nonStaticColliderList[i].rigid.isInAir)
                     {
-                        slowerCollider = nonStaticColliderList[j];
-                        fasterCollider = nonStaticColliderList[i];
+                        primary = nonStaticColliderList[i];
+                        secondary = nonStaticColliderList[j];
                     }
                     else
                     {
-                        slowerCollider = nonStaticColliderList[i];
-                        fasterCollider = nonStaticColliderList[j];
+                        primary = nonStaticColliderList[j];
+                        secondary = nonStaticColliderList[i];
                     }
-                    if (!fasterCollider.ColliderIntersectHorizontally(slowerCollider))
-                    {
-                        continue;
-                    }
-                    //CustomCollider2D temp = fasterCollider;
-                    //fasterCollider = slowerCollider;
-                    //slowerCollider = temp;
-                }
-
-
-                if ((xi > 0 && xj > 0) || (xi < 0 && xj < 0))
-                {
-                    combinedVelocity = Mathf.Sign(xi) * Mathf.Max(xi, xj);
                 }
                 else
                 {
-                    combinedVelocity = xi + xj;
-                }
-                fasterCollider.rigid.Velocity.x = combinedVelocity;
-                slowerCollider.rigid.Velocity.x = combinedVelocity;
-                slowerCollider.UpdateBoundsOfCollider();
-                CustomCollider2D staticColliderThtWasHit;
-                if (CheckForHorizontalCollisions(slowerCollider, out staticColliderThtWasHit))
-                {
-                    if (staticColliderThtWasHit != null)
+                    if (Mathf.Abs(nonStaticColliderList[j].rigid.Velocity.x) > Mathf.Abs(nonStaticColliderList[i].rigid.Velocity.x))
                     {
-                        fasterCollider.transform.position = new Vector3(slowerCollider.GetCenter().x - fasterCollider.colliderOffset.x, fasterCollider.transform.position.y, fasterCollider.transform.position.z);
-                        Vector3 pos = fasterCollider.transform.position;
-                        if (fasterCollider.GetCenter().x > staticColliderThtWasHit.GetCenter().x)
+                        primary = nonStaticColliderList[j];
+                        secondary = nonStaticColliderList[i];
+                    }
+                    else
+                    {
+                        primary = nonStaticColliderList[i];
+                        secondary = nonStaticColliderList[j];
+                    }
+                }
+               if (primary.ColliderIntersect(secondary))
+                {
+                    if (primary.ColliderIntersectHorizontally(secondary))
+                    {
+                        primary.UpdateBoundsOfCollider();
+                        secondary.UpdateBoundsOfCollider();
+                        if (Mathf.Sign(primary.originalVelocity.x) == Mathf.Sign(secondary.originalVelocity.x))
                         {
-
-                            fasterCollider.transform.position = new Vector3(pos.x + .01f, pos.y, pos.z);
+                            secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
                         }
                         else
                         {
-                            fasterCollider.transform.position = new Vector3(pos.x - .01f, pos.y, pos.z);
+                            primary.rigid.Velocity.x += secondary.rigid.Velocity.x;
+                            secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
                         }
-                        //print("Faster " + fasterCollider.name);
-                        //print("Slower " + slowerCollider.name);
                     }
-                    if (slowerCollider.rigid.Velocity.x > 0)
+                    CustomCollider2D colliderThatWasHit = null;
+                    if (CheckForHorizontalCollisions(primary, out colliderThatWasHit))
                     {
-                        slowerCollider.rigid.isTouchingSide.x = 1;
-                    }
-                    else if (slowerCollider.rigid.Velocity.x < 0)
-                    {
-                        slowerCollider.rigid.isTouchingSide.x = -1;
-                    }
-                    slowerCollider.UpdateBoundsOfCollider();
-                    fasterCollider.UpdateBoundsOfCollider();
-                    fasterCollider.rigid.Velocity.x = 0;
-                    slowerCollider.rigid.Velocity.x = 0;
-                    if (fasterCollider.ColliderIntersectHorizontally(slowerCollider))
-                    {
-                        fasterCollider.UpdateBoundsOfCollider();
-                        slowerCollider.UpdateBoundsOfCollider();
-                    }
+                        primary.rigid.Velocity.x = 0;
+                        secondary.rigid.Velocity.x = 0;
+                        primary.originalVelocity.x = 0;
+                        secondary.originalVelocity.x = 0;
 
+                        if (colliderThatWasHit.GetCenter().x > primary.GetCenter().x)
+                        {
+                            secondary.transform.position = new Vector3(primary.GetCenter().x + secondary.colliderOffset.x, secondary.transform.position.y, secondary.transform.position.z) - Vector3.right * -0.01f;
+                        }
+                        else
+                        {
+                            secondary.transform.position = new Vector3(primary.GetCenter().x + secondary.colliderOffset.x, secondary.transform.position.y, secondary.transform.position.z) - Vector3.right * 0.01f;
+                        }
+                        if (secondary.ColliderIntersectHorizontally(primary))
+                        {
+                            
+                            primary.UpdateBoundsOfCollider();
+                            secondary.UpdateBoundsOfCollider();
+                        }
+                    }
                 }
             }
-        }
-
-
-        
-
-
-        //Updates our physics object based on its physics state
-        foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
-        {
-            if (rigid.enabled)
-            {
-                rigid.UpdatePhysics();
-            }
-        }
-
-
-        foreach (CustomCollider2D collider in nonStaticColliderList)
-        {
-            collider.rigid.Velocity = collider.originalVelocity;
         }
     }
 
