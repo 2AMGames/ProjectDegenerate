@@ -118,6 +118,7 @@ public class CustomPhysics2D : MonoBehaviour {
         {
             return;
         }
+
         if (useTerminalVelocity)
         {
             float dotGravity = Vector2.Dot(gravityVector, Velocity);

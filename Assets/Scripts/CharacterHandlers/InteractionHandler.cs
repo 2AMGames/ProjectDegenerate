@@ -144,7 +144,7 @@ public class InteractionHandler : MonoBehaviour
             // Add two frames to the frames that the other player will move back to account for recovery frames.
             Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
             int frames = (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) + 2;
-            float acceleration = MovementMechanics.IsInAir ? MovementMechanics.airAcceleration : MovementMechanics.groundAcceleration;
+            float acceleration = MovementMechanics.IsInAir ? MovementMechanics.AirAcceleration : MovementMechanics.GroundAcceleration;
 
             float totalDistanceToMove = destinationVector.x * (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) * Overseer.DELTA_TIME;
             float xVelocity = totalDistanceToMove - (acceleration * Overseer.DELTA_TIME * frames);

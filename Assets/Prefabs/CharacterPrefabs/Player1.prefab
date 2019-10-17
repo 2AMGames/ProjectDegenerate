@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -106,29 +106,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 489040386471808067}
-  walkingSpeed: 2
-  runningSpeed: 7
-  groundAcceleration: 100
-  maximumAirSpeed: 8
-  airAcceleration: 20
+  WalkingSpeed: 2
+  RunningSpeed: 6
+  GroundAcceleration: 30
+  MaximumAirSpeed: 8
+  AirAcceleration: 20
   isFacingRight: 1
   timeToReachJumpApex: 0.35
   heightOfJump: 3
   fastFallScale: 1.7
   maxAvailableJumps: 1
-  dashVelocityAnimationCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxDashSpeed: 3
-  timeToCompleteDash: 0.6
-  delayBeforeDashing: 0.15
-  ignoreJoystickInputs: 0
+  IsDashing: 0
+  GroundDashSpeed: 8
+  AirDashSpeed: 12
   canMoveWhileCrouching: 1
   ignoreJumpButton: 0
   CanChangeDirection: 1
+  GoalVelocity: {x: 0, y: 0}
 --- !u!95 &489040385781029624
 Animator:
   serializedVersion: 3
@@ -185,6 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  directionalInputRecordList: []
 --- !u!114 &7518321783212868651
 MonoBehaviour:
   m_ObjectHideFlags: 0
