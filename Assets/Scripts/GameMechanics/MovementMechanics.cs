@@ -31,9 +31,6 @@ public class MovementMechanics : MonoBehaviour {
     #endregion action events
 
     #region main variables
-    [Header("Mono References")]
-    [Tooltip("A reference to the sprite renderer object")]
-    public SpriteRenderer spriteRenderer;
     [Header("Ground Movement")]
     [Tooltip("The maximum walking speed")]
     public float WalkingSpeed = 2f;
@@ -284,22 +281,18 @@ public class MovementMechanics : MonoBehaviour {
     private void SetSpriteFlipped(bool spriteFacingright)
     {
 
-        if (!spriteRenderer)
-        {
-            return;
-        }
         isFacingRight = spriteFacingright;
         if (spriteFacingright)
         {
-            Vector3 currentScale = spriteRenderer.transform.parent.localScale;
+            Vector3 currentScale = transform.localScale;
             currentScale.x = -Mathf.Abs(currentScale.x);
-            spriteRenderer.transform.parent.localScale = currentScale;
+            transform.localScale = currentScale;
         }
         else
         {
-            Vector3 currentScale = spriteRenderer.transform.parent.localScale;
+            Vector3 currentScale = transform.localScale;
             currentScale.x = Mathf.Abs(currentScale.x); ;
-            spriteRenderer.transform.parent.localScale = currentScale;
+            transform.localScale = currentScale;
         }
         if (anim)
         {
