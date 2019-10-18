@@ -114,7 +114,7 @@ public class CustomPhysics2D : MonoBehaviour {
             this.isInAir = true;
         }
 
-        if (!useGravity)
+        if (!useGravity || UseAnimatorVelocity)
         {
             return;
         }

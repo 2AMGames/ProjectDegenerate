@@ -111,7 +111,7 @@ public class CommandInterpreter : MonoBehaviour
     {
         DIRECTION.FORWARD,
         DIRECTION.DOWN,
-        DIRECTION.FORWARD_DOWN,
+        DIRECTION.FORWARD
     };
 
     // Movement inputs that do not require a button trigger to be activated.
@@ -204,7 +204,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public List<DirectionalinputStruct> directionalInputRecordList = new List<DirectionalinputStruct>();
+    public List<DirectionalinputStruct> DirectionalInputRecordList = new List<DirectionalinputStruct>();
 
     #endregion
 
@@ -416,16 +416,16 @@ public class CommandInterpreter : MonoBehaviour
         if (currentJoystickVec == currentDirectionalInputStruct.directionInput)
             return;
 
-        if (FramesSinceLastDirectionalInput >= DIRECTIONAL_INPUT_LENIENCY && directionalInputRecordList.Count > 1)
+        if (FramesSinceLastDirectionalInput >= DIRECTIONAL_INPUT_LENIENCY && DirectionalInputRecordList.Count > 1)
         {
-            directionalInputRecordList.RemoveRange(0, directionalInputRecordList.Count - 1);
+            DirectionalInputRecordList.RemoveRange(0, DirectionalInputRecordList.Count - 1);
         }
         currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentJoystickVec);
         OnDirectionSetEvent?.Invoke(CurrentDirection, currentJoystickVec);
         DirectionalinputStruct dInput = new DirectionalinputStruct();
         dInput.direction = CurrentDirection;
         dInput.directionInput = currentJoystickVec;
-        directionalInputRecordList.Add(dInput);
+        DirectionalInputRecordList.Add(dInput);
 
         CheckForJumpInput(lastJoystickInput, currentJoystickVec);
         currentDirectionalInputStruct.directionInput = currentJoystickVec;
@@ -502,33 +502,29 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private void CheckDirectionalInputCommands()
     {
-        if (CheckIfDirectionalArrayMatches(QCB_INPUT) >= 0)
-        {
-            Anim.SetTrigger(QCB_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("QCB Successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(QCB_ANIM_TRIGGER));
-            }
 
-        }
-        if (CheckIfDirectionalArrayMatches(QCF_INPUT) >= 0)
+        int dpIndex = CheckIfDirectionalArrayMatches(DP_INPUT);
+        if (dpIndex >= 0)
         {
-            Anim.SetTrigger(QCF_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("QCF successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(QCF_ANIM_TRIGGER));
-            }
+            OnDirectionalInputExecuted(dpIndex, DP_INPUT, DP_ANIM_TRIGGER);
+            Debug.LogWarning("DP successful");
+            return;
         }
-        if (CheckIfDirectionalArrayMatches(DP_INPUT) >= 0)
+
+        int qcbIndex = CheckIfDirectionalArrayMatches(QCB_INPUT);
+        if (qcbIndex >= 0)
         {
-            Anim.SetTrigger(DP_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[DP_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("DP successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(DP_ANIM_TRIGGER));
-            }
+            OnDirectionalInputExecuted(qcbIndex, QCB_INPUT, QCB_ANIM_TRIGGER);
+            Debug.LogWarning("QCB Successful");
+            return;
+        }
+
+        int qcfIndex = CheckIfDirectionalArrayMatches(QCF_INPUT);
+        if (qcfIndex >= 0)
+        {
+            OnDirectionalInputExecuted(qcfIndex, QCF_INPUT, QCF_ANIM_TRIGGER);
+            Debug.LogWarning("QCF successful");
+            return;
         }
     }
 
@@ -537,33 +533,38 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private void CheckForMovementInputCommands()
     {
-        if (CheckIfDirectionalArrayMatches(F_DASH_INPUT) >= 0)
+        int fDashIndex = CheckIfDirectionalArrayMatches(F_DASH_INPUT);
+        if (fDashIndex >= 0)
         {
-            Anim.SetTrigger(F_DASH_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[F_DASH_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("Forward Dash Successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(F_DASH_ANIM_TRIGGER));
-            }
+            OnDirectionalInputExecuted(fDashIndex, F_DASH_INPUT, F_DASH_ANIM_TRIGGER);
+            Debug.LogWarning("Forward Dash Successful");
+            return;
+        }
 
-        }
-        else if (CheckIfDirectionalArrayMatches(B_DASH_INPUT) >= 0)
+        int bDashIndex = CheckIfDirectionalArrayMatches(B_DASH_INPUT);
+        if (bDashIndex >= 0)
         {
-            Anim.SetTrigger(B_DASH_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[B_DASH_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("Back Dash Successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(B_DASH_ANIM_TRIGGER));
-            }
+            OnDirectionalInputExecuted(bDashIndex, B_DASH_INPUT, B_DASH_ANIM_TRIGGER);
+            Debug.LogWarning("Back Dash Successful");
+            return;
         }
-        else if (CheckIfDirectionalArrayMatches(S_JUMP_INPUT) >= 0)
+
+        int sJumpIndex = CheckIfDirectionalArrayMatches(S_JUMP_INPUT);
+        if (sJumpIndex >= 0)
         {
-            Anim.SetTrigger(S_JUMP_ANIM_TRIGGER);
-            if (FramesRemainingUntilRemoveFromBuffer[S_JUMP_ANIM_TRIGGER] <= 0)
-            {
-                Debug.LogWarning("Super Jump Successful");
-                StartCoroutine(DisableButtonTriggerAfterTime(S_JUMP_ANIM_TRIGGER));
-            }
+            OnDirectionalInputExecuted(sJumpIndex, S_JUMP_INPUT, S_JUMP_ANIM_TRIGGER);
+            Debug.LogWarning("Super Jump Successful");
+            return;
+        }
+    }
+
+    private void OnDirectionalInputExecuted(int startingIndex, DIRECTION[] moveExecuted, string animTrigger)
+    {
+        Anim.SetTrigger(animTrigger);
+        DirectionalInputRecordList.RemoveRange(startingIndex, moveExecuted.Length);
+        if (FramesRemainingUntilRemoveFromBuffer[animTrigger] <= 0)
+        {
+            StartCoroutine(DisableButtonTriggerAfterTime(animTrigger));
         }
     }
 
@@ -573,18 +574,18 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private int CheckIfDirectionalArrayMatches(DIRECTION[] inputArray)
     {
-        if (inputArray.Length > directionalInputRecordList.Count)
+        if (inputArray.Length > DirectionalInputRecordList.Count)
         {
             return -1;
         }
 
         bool passedInput;
-        for (int i = directionalInputRecordList.Count - inputArray.Length; i >= 0; i--)
+        for (int i = DirectionalInputRecordList.Count - inputArray.Length; i >= 0; i--)
         {
             passedInput = true;
             for (int j = 0; j < inputArray.Length; j++)
             {
-                if (directionalInputRecordList[i + j].direction != inputArray[j])
+                if (DirectionalInputRecordList[i + j].direction != inputArray[j])
                 {
                     passedInput = false;
                     break;
@@ -607,11 +608,11 @@ public class CommandInterpreter : MonoBehaviour
     {
         currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentDirectionalInputStruct.directionInput);
         DirectionalinputStruct dInput;
-        for (int i = 0; i < directionalInputRecordList.Count; i++)
+        for (int i = 0; i < DirectionalInputRecordList.Count; i++)
         {
-            dInput = directionalInputRecordList[i];
+            dInput = DirectionalInputRecordList[i];
             dInput.direction = InterpretJoystickAsDirection(dInput.directionInput);
-            directionalInputRecordList[i] = dInput;
+            DirectionalInputRecordList[i] = dInput;
         }
     }
 
@@ -644,6 +645,7 @@ public class CommandInterpreter : MonoBehaviour
 
         FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(QCF_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(DP_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(F_DASH_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(B_DASH_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(S_JUMP_ANIM_TRIGGER, 0);

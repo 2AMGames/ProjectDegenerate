@@ -57,16 +57,13 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-        
+
         //Updates the velocity based on gravity
         foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
-                if (!rigid.UseAnimatorVelocity)
-                {
-                    rigid.UpdateVelocityFromGravity();
-                }
+                rigid.UpdateVelocityFromGravity();
             }
         }
 
