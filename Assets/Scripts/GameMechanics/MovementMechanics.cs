@@ -250,12 +250,13 @@ public class MovementMechanics : MonoBehaviour {
     {
         float goalVelocityX = rigid.Velocity.x;
         float goalVelocityY = rigid.Velocity.y;
+
         if (!rigid.UseAnimatorVelocity)
         {
             if (!rigid.isInAir)
             {
                 float newXVelocity = GoalVelocity.x * RunningSpeed * (isFacingRight ? 1 : -1);
-                goalVelocityX = Mathf.MoveTowards(rigid.Velocity.x, newXVelocity, Overseer.DELTA_TIME * GroundAcceleration);
+                goalVelocityX = newXVelocity;
             }
         }
         else
