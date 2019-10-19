@@ -84,6 +84,11 @@ public class CharacterStats : MonoBehaviour
 
     #region main variables
 
+    /// <summary>
+    /// If we are pausing the game due to the character being hit, this should be false.
+    /// </summary>
+    public bool ShouldCharacterMove = true;
+
     private IEnumerator ChipDamageCoroutine;
 
     #endregion

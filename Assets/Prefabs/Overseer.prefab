@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e373b2c9750c2e41a7e98da9526b37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugEnabled: 0
   PlayerObjects:
   - {fileID: 0}
   - {fileID: 0}
@@ -89,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24a2ba9a9f63cd46865c47f1c225778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitConfirmFrameDelay: 5
   LocalFrameDelay: 2
-  RoundLimit: 0
   FrameCount: 0
   RollbackEnabled: 0
