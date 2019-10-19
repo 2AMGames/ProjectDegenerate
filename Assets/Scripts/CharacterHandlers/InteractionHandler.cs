@@ -108,12 +108,9 @@ public class InteractionHandler : MonoBehaviour
         int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
         if (frames > 0)
         {
-            if (Hitstun <= 0)
-            {
-                string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
-                Animator.SetTrigger(triggerToSet);
-                Animator.SetBool(HITSTUN_TRIGGER, true);
-            }
+            string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
+            Animator.SetTrigger(triggerToSet);
+            Animator.SetBool(HITSTUN_TRIGGER, true);
 
             Hitstun = frames;
 
@@ -228,11 +225,6 @@ public class InteractionHandler : MonoBehaviour
         public int OnGuardFrames;
         public float ChipMeterGain;
         public Vector2 OnGuardKnockback;
-
-        // Allows the hitbox to register multiple hits on the opposing player in the same move.
-        // Ex. A projectile may register as two hits when it connects with an opponent,
-        // but a standing medium punch usually should not do the same.
-        public bool AllowMultiHit;
         public bool GuardBreak;
 
     }
