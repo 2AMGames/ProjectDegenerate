@@ -1264,7 +1264,7 @@ PrefabInstance:
       objectReference: {fileID: 38577535}
     - target: {fileID: 1749728940, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}
       propertyPath: HitConfirmFrameDelay
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36249abe33f974c4cbeae2e0d75bc28b, type: 3}

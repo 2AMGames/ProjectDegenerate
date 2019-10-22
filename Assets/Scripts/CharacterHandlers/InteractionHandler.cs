@@ -15,6 +15,11 @@ public class InteractionHandler : MonoBehaviour
 
     private const string GUARD_TRIGGER = "Guard";
 
+    /// <summary>
+    /// Frames 
+    /// </summary>
+    private const int PushbackFrames = 2;
+
     #endregion
 
     #region main variables
@@ -134,9 +139,8 @@ public class InteractionHandler : MonoBehaviour
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
                 Vector2 destination = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
                 destination.x *= direction;
-                MovementMechanics.TranslateForcedMovement(destination, 1);
 
-                HitstunCoroutine = HandleHitstun();
+                HitstunCoroutine = HandleHitstun(destination);
                 StartCoroutine(HitstunCoroutine);
             };
 
@@ -213,7 +217,7 @@ public class InteractionHandler : MonoBehaviour
         onPauseComplete?.Invoke();
     }
 
-    private IEnumerator HandleHitstun()
+    private IEnumerator HandleHitstun(Vector2 knockback)
     {
         while (Hitstun > 0)
         {
@@ -224,6 +228,7 @@ public class InteractionHandler : MonoBehaviour
                 --Hitstun;
             }
         }
+        MovementMechanics.TranslateForcedMovement(knockback, 1);
         CharacterStats.OnHitstunFinished();
         Animator.SetBool(HITSTUN_TRIGGER, false);
         HitstunCoroutine = null;

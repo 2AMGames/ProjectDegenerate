@@ -37,7 +37,7 @@ public class CustomPhysics2D : MonoBehaviour {
     public Vector2Int isTouchingSide = Vector2Int.zero;
 
     public List<CustomCollider2D> allCustomColliders { get; private set; }
-    public CharacterStats associatedCharacterStats { get; set; }
+    public CharacterStats AssociatedCharacterStats { get; set; }
     
 
     /// <summary>
@@ -64,6 +64,7 @@ public class CustomPhysics2D : MonoBehaviour {
     private void Awake()
     {
         allCustomColliders = new List<CustomCollider2D>();
+        AssociatedCharacterStats = GetComponent<CharacterStats>();
         Overseer.Instance.ColliderManager.AddCustomPhysics(this);
     }
 
@@ -114,7 +115,7 @@ public class CustomPhysics2D : MonoBehaviour {
             this.isInAir = true;
         }
 
-        if (!useGravity || UseAnimatorVelocity)
+        if (!useGravity || UseAnimatorVelocity || (AssociatedCharacterStats != null && !AssociatedCharacterStats.ShouldCharacterMove))
         {
             return;
         }
@@ -139,6 +140,11 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     private void UpdatePositionFromVelocity()
     {
+        if (AssociatedCharacterStats != null && !AssociatedCharacterStats.ShouldCharacterMove)
+        {
+            return; 
+        }
+
         Vector3 velocityVector3 = new Vector3(Velocity.x, Velocity.y, 0);
         
         this.transform.position += velocityVector3 * Overseer.DELTA_TIME;
