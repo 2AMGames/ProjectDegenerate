@@ -22,8 +22,6 @@ public class CustomPhysics2D : MonoBehaviour {
 
     [Tooltip("This will be marked true when the animator is overriding the velocity of this actor to force movement.")]
     public bool UseAnimatorVelocity;
-    [Tooltip("Velocity currently being set by the animator. Use this velocity when the animator is forcing movement. Else, use the regular velocity field")]
-    public Vector2 AnimatorVelocity;
 
     [SerializeField]
     [Tooltip("The direction that gravity will be acting on the object")]

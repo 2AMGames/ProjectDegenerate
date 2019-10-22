@@ -37,6 +37,8 @@ public class MovementMechanics : MonoBehaviour {
     public float RunningSpeed = 5;
     [Tooltip("The units per second that our speed will increase")]
     public float GroundAcceleration = 25f;
+    [Tooltip("Factor of acceleration. Set to 0 if velocity should not use acceleration.")]
+    public float GroundAccelerationScale;
     public float MaximumAirSpeed = 8f;
     public float AirAcceleration = 20f;
 
@@ -56,7 +58,7 @@ public class MovementMechanics : MonoBehaviour {
     [Tooltip("Indicates whether our character is fast falling or not")]
     private bool isFastFalling = false;
     [Tooltip("The calculated acceleration that will be applied to the character when they are in the air")]
-    private float jumpingAcceleration = 1f;
+    public float JumpingAcceleration = 1f;
 
     [Header("Dashing Variables")]
     public bool IsDashing;
@@ -254,7 +256,14 @@ public class MovementMechanics : MonoBehaviour {
         {
             if (!rigid.isInAir)
             {
-                float newXVelocity = GoalVelocity.x * RunningSpeed * (isFacingRight ? 1 : -1);
+                float directionScale = isFacingRight ? 1 : -1;
+                float accelerationFactor = GroundAccelerationScale * GroundAcceleration * directionScale;
+                float targetXVelocity = GoalVelocity.x * RunningSpeed * directionScale;
+                float newXVelocity = targetXVelocity;
+                if (accelerationFactor > 0)
+                {
+                    newXVelocity = Mathf.MoveTowards(rigid.Velocity.x, targetXVelocity, accelerationFactor * Overseer.DELTA_TIME);
+                }
                 goalVelocityX = newXVelocity;
             }
         }
@@ -305,8 +314,8 @@ public class MovementMechanics : MonoBehaviour {
     {
         float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
-        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
-        rigid.gravityScale = jumpingAcceleration;
+        JumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
+        rigid.gravityScale = JumpingAcceleration;
 
         maxAvailableJumps = Mathf.Max(maxAvailableJumps, 0);
         MaximumAirSpeed = Mathf.Max(MaximumAirSpeed, 0);
@@ -341,7 +350,6 @@ public class MovementMechanics : MonoBehaviour {
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
-        SetCharacterFastFalling(false);
         return true;
     }
 
@@ -354,11 +362,11 @@ public class MovementMechanics : MonoBehaviour {
         this.isFastFalling = isFastFalling;
         if (!isFastFalling)
         {
-            rigid.gravityScale = jumpingAcceleration;
+            rigid.gravityScale = JumpingAcceleration;
         }
         else
         {
-            rigid.gravityScale = jumpingAcceleration * fastFallScale;
+            rigid.gravityScale = JumpingAcceleration * fastFallScale;
         }
     }
     
@@ -384,7 +392,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             anim.SetBool(IN_AIR_ANIMATION_PARAMETER, true);
         }
-        SetCharacterFastFalling(false);
         this.currentJumpsAvailable--;
     }
 
