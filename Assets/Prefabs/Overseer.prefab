@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24a2ba9a9f63cd46865c47f1c225778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitConfirmFrameDelay: 5
+  HitConfirmFrameDelay: 3
   LocalFrameDelay: 2
   FrameCount: 0
   RollbackEnabled: 0

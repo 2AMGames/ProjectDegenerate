@@ -75,7 +75,7 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public CharacterState currentCharacterState { get; set; }
 
-    public Animator Anim;
+    private Animator Anim;
 
     [HideInInspector]
     public int PlayerIndex;

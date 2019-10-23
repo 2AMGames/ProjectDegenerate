@@ -158,13 +158,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region main variables
 
-    private Animator Anim
-    {
-        get
-        {
-            return characterStats.Anim;
-        }
-    }
+    private Animator Anim;
     public CharacterStats characterStats { get; private set; }
 
     #endregion
@@ -212,6 +206,8 @@ public class CommandInterpreter : MonoBehaviour
     private void Awake()
     {
         characterStats = GetComponent<CharacterStats>();
+
+        Anim = GetComponent<Animator>();
 
         ResetInputData();
 
