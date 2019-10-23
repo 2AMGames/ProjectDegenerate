@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// This is the base class that handles any interaction with the enemy player or environment (hitboxes, projectiles, environmental traps, etc)
@@ -13,6 +14,11 @@ public class InteractionHandler : MonoBehaviour
     private const string HITSTUN_TRIGGER = "Hitstun";
 
     private const string GUARD_TRIGGER = "Guard";
+
+    /// <summary>
+    /// Frames 
+    /// </summary>
+    private const int PushbackFrames = 2;
 
     #endregion
 
@@ -49,9 +55,16 @@ public class InteractionHandler : MonoBehaviour
         }
     }
 
-    public IEnumerator HitstunCoroutine;
+    private IEnumerator HitConfirmCoroutine;
+
+    private IEnumerator HitstunCoroutine;
 
     #region Interaction Data
+
+    /// <summary>
+    /// True if the player can block any incoming attacks. Should be set by the animator.
+    /// </summary>
+    public bool CanPlayerBlock;
 
     // Has the last move we activated already hit a player
     public bool MoveHitPlayer;
@@ -103,12 +116,9 @@ public class InteractionHandler : MonoBehaviour
         int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
         if (frames > 0)
         {
-            if (Hitstun <= 0)
-            {
-                string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
-                Animator.SetTrigger(triggerToSet);
-                Animator.SetBool(HITSTUN_TRIGGER, true);
-            }
+            string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
+            Animator.SetTrigger(triggerToSet);
+            Animator.SetBool(HITSTUN_TRIGGER, true);
 
             Hitstun = frames;
 
@@ -118,13 +128,31 @@ public class InteractionHandler : MonoBehaviour
             {
                 StopCoroutine(HitstunCoroutine);
             }
+            if (HitConfirmCoroutine != null)
+            {
+                StopCoroutine(HitConfirmCoroutine);
+            }
 
-            int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-            Vector2 destination = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
-            destination.x *= direction;
+            UnityAction onPauseComplete = () =>
+            {
 
-            HitstunCoroutine = HandleHitstun(destination);
-            StartCoroutine(HitstunCoroutine);
+                int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
+                Vector2 destination = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
+                destination.x *= direction;
+
+                HitstunCoroutine = HandleHitstun(destination);
+                StartCoroutine(HitstunCoroutine);
+            };
+
+            if (didMoveLand)
+            {
+                HitConfirmCoroutine = PauseCharacterOnHit(onPauseComplete);
+                StartCoroutine(HitConfirmCoroutine);
+            }
+            else
+            {
+                onPauseComplete();
+            }
         }
     }
 
@@ -134,23 +162,34 @@ public class InteractionHandler : MonoBehaviour
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
 
-        // Handle case where player hit an enemy that is against a wall / static collider.
-        // We should push this player away in this case.
-        CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
-
-        if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0)
+        if (HitConfirmCoroutine != null)
         {
-            // Distance should move = (Hit frames * DT * Knockback Vector)
-            // Add two frames to the frames that the other player will move back to account for recovery frames.
-            Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
-            int frames = (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) + 2;
-            float acceleration = MovementMechanics.IsInAir ? MovementMechanics.airAcceleration : MovementMechanics.groundAcceleration;
+            StopCoroutine(HitConfirmCoroutine);
+        }
 
-            float totalDistanceToMove = destinationVector.x * (didMoveLand ? CurrentMove.OnHitFrames : CurrentMove.OnGuardFrames) * Overseer.DELTA_TIME;
-            float xVelocity = totalDistanceToMove - (acceleration * Overseer.DELTA_TIME * frames);
+        UnityAction onPauseComplete = () =>
+        {
+            // Handle case where player hit an enemy that is against a wall / static collider.
+            // We should push this player away in this case.
+            CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
 
-            destinationVector.x = xVelocity;
-            MovementMechanics.TranslateForcedMovement(destinationVector, 1);
+            if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0 && !MovementMechanics.IsInAir)
+            {
+                Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
+                destinationVector.x *= MovementMechanics.isFacingRight ? -1 : 1;
+
+                MovementMechanics.TranslateForcedMovement(destinationVector, 1);
+            }
+        };
+
+        if (didMoveLand)
+        {
+            HitConfirmCoroutine = PauseCharacterOnHit(onPauseComplete);
+            StartCoroutine(HitConfirmCoroutine);
+        }
+        else
+        {
+            onPauseComplete();
         }
         
     }
@@ -164,11 +203,22 @@ public class InteractionHandler : MonoBehaviour
 
     #region private methods
 
-    private IEnumerator HandleHitstun(Vector2 destination)
+    private IEnumerator PauseCharacterOnHit(UnityAction onPauseComplete)
     {
-        int totalHitStun = Hitstun;
-        MovementMechanics.TranslateForcedMovement(destination, 1);
-        float savedX = transform.position.x;
+        yield return new WaitForEndOfFrame();
+        int framesToPause = GameStateManager.Instance.HitConfirmFrameDelay;
+        while(framesToPause > 0)
+        {
+            yield return new WaitForEndOfFrame();
+            CharacterStats.ShouldCharacterMove = false;
+            framesToPause -= Overseer.Instance.IsGameReady ? 1 : 0;
+        }
+        CharacterStats.ShouldCharacterMove = true;
+        onPauseComplete?.Invoke();
+    }
+
+    private IEnumerator HandleHitstun(Vector2 knockback)
+    {
         while (Hitstun > 0)
         {
             MovementMechanics.ignoreJumpButton = true;
@@ -178,8 +228,8 @@ public class InteractionHandler : MonoBehaviour
                 --Hitstun;
             }
         }
+        MovementMechanics.TranslateForcedMovement(knockback, 1);
         CharacterStats.OnHitstunFinished();
-
         Animator.SetBool(HITSTUN_TRIGGER, false);
         HitstunCoroutine = null;
     }
@@ -223,11 +273,6 @@ public class InteractionHandler : MonoBehaviour
         public int OnGuardFrames;
         public float ChipMeterGain;
         public Vector2 OnGuardKnockback;
-
-        // Allows the hitbox to register multiple hits on the opposing player in the same move.
-        // Ex. A projectile may register as two hits when it connects with an opponent,
-        // but a standing medium punch usually should not do the same.
-        public bool AllowMultiHit;
         public bool GuardBreak;
 
     }

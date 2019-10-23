@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -88,7 +88,6 @@ MonoBehaviour:
   useGravity: 1
   useTerminalVelocity: 0
   UseAnimatorVelocity: 0
-  AnimatorVelocity: {x: 0, y: 0}
   gravityVector: {x: 0, y: -1}
   isTouchingSide: {x: 0, y: 0}
   gravityScale: 4.9979177
@@ -105,30 +104,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5bbbbbf3f771f4c98ace90f8c47834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 489040386471808067}
-  walkingSpeed: 2
-  runningSpeed: 7
-  groundAcceleration: 100
-  maximumAirSpeed: 8
-  airAcceleration: 20
+  WalkingSpeed: 2
+  RunningSpeed: 6
+  GroundAcceleration: 60
+  GroundAccelerationScale: 0
+  MaximumAirSpeed: 8
+  AirAcceleration: 20
   isFacingRight: 1
   timeToReachJumpApex: 0.35
   heightOfJump: 3
   fastFallScale: 1.7
   maxAvailableJumps: 1
-  dashVelocityAnimationCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxDashSpeed: 3
-  timeToCompleteDash: 0.6
-  delayBeforeDashing: 0.15
-  ignoreJoystickInputs: 0
-  canMoveWhileCrouching: 1
+  JumpingAcceleration: 4.9979177
+  IsDashing: 0
+  GroundDashSpeed: 12
+  AirDashSpeed: 12
+  canMoveWhileCrouching: 0
   ignoreJumpButton: 0
   CanChangeDirection: 1
+  GoalVelocity: {x: 0, y: 0}
 --- !u!95 &489040385781029624
 Animator:
   serializedVersion: 3
@@ -137,7 +131,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 2a78c40cb7075474eaa49eef82a9657d, type: 2}
   m_CullingMode: 0
@@ -160,17 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCharacterHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMoveExecuted:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMoveHit:
-    m_PersistentCalls:
-      m_Calls: []
-  Anim: {fileID: 0}
   PlayerIndex: 0
+  ShouldCharacterMove: 1
   MaxHealth: 100
   MaxSpecialMeter: 100
 --- !u!114 &7808090552154802651
@@ -185,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DirectionalInputRecordList: []
 --- !u!114 &7518321783212868651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,27 +190,25 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     HitDamage: 5
     OnHitFrames: 3
-    HitMeterGain: 25
-    OnHitKnockback: {x: 2, y: 0}
+    HitMeterGain: 2
+    OnHitKnockback: {x: 10, y: 0}
     ChipDamage: 0
-    OnGuardFrames: 3
+    OnGuardFrames: 2
     ChipMeterGain: 0
-    OnGuardKnockback: {x: 0.75, y: 0}
-    AllowMultiHit: 0
+    OnGuardKnockback: {x: 5, y: 0}
     GuardBreak: 0
   - MoveName: Medium_Punch
     Height: 2
-    Magnitude: 0
+    Magnitude: 1
     SpecialMeterRequired: 0
     HitDamage: 6
     OnHitFrames: 6
     HitMeterGain: 0
-    OnHitKnockback: {x: 4, y: 0}
+    OnHitKnockback: {x: 15, y: 0}
     ChipDamage: 0
     OnGuardFrames: 3
     ChipMeterGain: 0
     OnGuardKnockback: {x: 1, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Hard_Punch
     Height: 2
@@ -233,12 +217,11 @@ MonoBehaviour:
     HitDamage: 4
     OnHitFrames: 10
     HitMeterGain: 0
-    OnHitKnockback: {x: 20, y: 0}
+    OnHitKnockback: {x: 15, y: 0}
     ChipDamage: 0
     OnGuardFrames: 4
     ChipMeterGain: 0
     OnGuardKnockback: {x: 5, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Light_Punch
     Height: 1
@@ -247,44 +230,41 @@ MonoBehaviour:
     HitDamage: 2.5
     OnHitFrames: 4
     HitMeterGain: 0
-    OnHitKnockback: {x: 1.5, y: 0}
+    OnHitKnockback: {x: 2.5, y: 0}
     ChipDamage: 0
     OnGuardFrames: 2
     ChipMeterGain: 0
     OnGuardKnockback: {x: 1.25, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Light_Kick
     Height: 0
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 2.5
-    OnHitFrames: 5
+    OnHitFrames: 6
     HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 20}
+    OnHitKnockback: {x: 2.5, y: 0}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Light_Kick
     Height: 2
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 2.5
-    OnHitFrames: 8
+    OnHitFrames: 6
     HitMeterGain: 0
     OnHitKnockback: {x: 5, y: 0}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Medium_Kick
     Height: 2
-    Magnitude: 0
+    Magnitude: 1
     SpecialMeterRequired: 0
     HitDamage: 2.5
     OnHitFrames: 8
@@ -294,7 +274,6 @@ MonoBehaviour:
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Hard_Kick
     Height: 2
@@ -308,7 +287,6 @@ MonoBehaviour:
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Medium_Punch
     Height: 2
@@ -322,21 +300,19 @@ MonoBehaviour:
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Hard_Punch
     Height: 2
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 5
-    OnHitFrames: 25
+    OnHitFrames: 5
     HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 12.5}
+    OnHitKnockback: {x: 1, y: 5}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 5, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Medium_Kick
     Height: 0
@@ -350,22 +326,21 @@ MonoBehaviour:
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 1, y: 2}
-    AllowMultiHit: 0
     GuardBreak: 0
   - MoveName: Cr_Hard_Kick
     Height: 0
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 7
-    OnHitFrames: 25
+    OnHitFrames: 10
     HitMeterGain: 0
     OnHitKnockback: {x: 1, y: 20}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
     OnGuardKnockback: {x: 5, y: 0}
-    AllowMultiHit: 0
     GuardBreak: 0
+  CanPlayerBlock: 1
   MoveHitPlayer: 0
   Hitstun: 0
 --- !u!114 &489040384883500143

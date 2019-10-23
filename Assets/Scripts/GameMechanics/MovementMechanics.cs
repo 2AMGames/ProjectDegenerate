@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -31,18 +30,17 @@ public class MovementMechanics : MonoBehaviour {
     #endregion action events
 
     #region main variables
-    [Header("Mono References")]
-    [Tooltip("A reference to the sprite renderer object")]
-    public SpriteRenderer spriteRenderer;
     [Header("Ground Movement")]
     [Tooltip("The maximum walking speed")]
-    public float walkingSpeed = 2f;
+    public float WalkingSpeed = 2f;
     [Tooltip("The maximum running speed")]
-    public float runningSpeed = 5f;
+    public float RunningSpeed = 5;
     [Tooltip("The units per second that our speed will increase")]
-    public float groundAcceleration = 25f;
-    public float maximumAirSpeed = 8f;
-    public float airAcceleration = 20f;
+    public float GroundAcceleration = 25f;
+    [Tooltip("Factor of acceleration. Set to 0 if velocity should not use acceleration.")]
+    public float GroundAccelerationScale;
+    public float MaximumAirSpeed = 8f;
+    public float AirAcceleration = 20f;
 
     [Header("Sprite Renderer Referneces")]
     [Tooltip("This indicates what direction our sprite will be facing. This will change based on input")]
@@ -60,15 +58,12 @@ public class MovementMechanics : MonoBehaviour {
     [Tooltip("Indicates whether our character is fast falling or not")]
     private bool isFastFalling = false;
     [Tooltip("The calculated acceleration that will be applied to the character when they are in the air")]
-    private float jumpingAcceleration = 1f;
+    public float JumpingAcceleration = 1f;
 
     [Header("Dashing Variables")]
-    [Tooltip("The animation curve that will determine the velocity at which our character will move at points within our dash animation")]
-    public AnimationCurve dashVelocityAnimationCurve;
-    public float maxDashSpeed = 3f;
-    [Tooltip("The time in seconds to complete a dashing animation")]
-    public float timeToCompleteDash = .6f;
-    public float delayBeforeDashing = .15f;
+    public bool IsDashing;
+    public float GroundDashSpeed = 6.5f;
+    public float AirDashSpeed = 6.5f;
     /// <summary>
     /// Some characters may have the ability to move while they are crouching. Mark this value to true if they cay
     /// </summary>
@@ -143,14 +138,7 @@ public class MovementMechanics : MonoBehaviour {
 
     private void Update()
     {
-        // If the animator is overriding the velocity, we should not update the velocity due to input.
-        if (!rigid.UseAnimatorVelocity)
-        {
-            if(!rigid.isInAir)
-            {
-                UpdateVelocity();
-            }
-        }
+        UpdateVelocity();
 
         if (anim && anim.runtimeAnimatorController)
         {
@@ -261,12 +249,39 @@ public class MovementMechanics : MonoBehaviour {
     /// </summary>
     private void UpdateVelocity()
     {
-        float goalVelocity = GoalVelocity.x;
-        goalVelocity *= (rigid.isInAir ? maximumAirSpeed : runningSpeed) * (isFacingRight ? 1 : -1);
-        float newXVelocity = Mathf.MoveTowards(rigid.Velocity.x, goalVelocity, Overseer.DELTA_TIME * (rigid.isInAir ? airAcceleration : groundAcceleration));
+        float goalVelocityX = rigid.Velocity.x;
+        float goalVelocityY = rigid.Velocity.y;
 
-        Vector2 newVelocity = new Vector2(newXVelocity, rigid.Velocity.y);
-        rigid.Velocity = newVelocity;
+        if (!rigid.UseAnimatorVelocity)
+        {
+            if (!rigid.isInAir)
+            {
+                float directionScale = isFacingRight ? 1 : -1;
+                float accelerationFactor = GroundAccelerationScale * GroundAcceleration * directionScale;
+                float targetXVelocity = GoalVelocity.x * RunningSpeed * directionScale;
+                float newXVelocity = targetXVelocity;
+                if (accelerationFactor > 0)
+                {
+                    newXVelocity = Mathf.MoveTowards(rigid.Velocity.x, targetXVelocity, accelerationFactor * Overseer.DELTA_TIME);
+                }
+                goalVelocityX = newXVelocity;
+            }
+        }
+        else
+        {
+            goalVelocityX = GoalVelocity.x * (isFacingRight ? 1 : -1);
+            goalVelocityY = GoalVelocity.y;
+        }
+
+        if (IsDashing)
+        {
+            float dashFactor = rigid.isInAir ? AirDashSpeed : GroundDashSpeed;
+            goalVelocityX *= dashFactor;
+            goalVelocityY *= dashFactor;
+        }
+      
+        Vector2 updatedVelocity = new Vector2(goalVelocityX, goalVelocityY);
+        rigid.Velocity = updatedVelocity;
     }
 
     /// <summary>
@@ -275,22 +290,18 @@ public class MovementMechanics : MonoBehaviour {
     private void SetSpriteFlipped(bool spriteFacingright)
     {
 
-        if (!spriteRenderer)
-        {
-            return;
-        }
         isFacingRight = spriteFacingright;
         if (spriteFacingright)
         {
-            Vector3 currentScale = spriteRenderer.transform.parent.localScale;
+            Vector3 currentScale = transform.localScale;
             currentScale.x = -Mathf.Abs(currentScale.x);
-            spriteRenderer.transform.parent.localScale = currentScale;
+            transform.localScale = currentScale;
         }
         else
         {
-            Vector3 currentScale = spriteRenderer.transform.parent.localScale;
+            Vector3 currentScale = transform.localScale;
             currentScale.x = Mathf.Abs(currentScale.x); ;
-            spriteRenderer.transform.parent.localScale = currentScale;
+            transform.localScale = currentScale;
         }
         if (anim)
         {
@@ -303,11 +314,11 @@ public class MovementMechanics : MonoBehaviour {
     {
         float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
-        jumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
-        rigid.gravityScale = jumpingAcceleration;
+        JumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
+        rigid.gravityScale = JumpingAcceleration;
 
         maxAvailableJumps = Mathf.Max(maxAvailableJumps, 0);
-        maximumAirSpeed = Mathf.Max(maximumAirSpeed, 0);
+        MaximumAirSpeed = Mathf.Max(MaximumAirSpeed, 0);
     }
 
     #endregion
@@ -339,7 +350,6 @@ public class MovementMechanics : MonoBehaviour {
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
         anim.SetTrigger(JUMP_TRIGGER);
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
-        SetCharacterFastFalling(false);
         return true;
     }
 
@@ -352,11 +362,11 @@ public class MovementMechanics : MonoBehaviour {
         this.isFastFalling = isFastFalling;
         if (!isFastFalling)
         {
-            rigid.gravityScale = jumpingAcceleration;
+            rigid.gravityScale = JumpingAcceleration;
         }
         else
         {
-            rigid.gravityScale = jumpingAcceleration * fastFallScale;
+            rigid.gravityScale = JumpingAcceleration * fastFallScale;
         }
     }
     
@@ -382,7 +392,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             anim.SetBool(IN_AIR_ANIMATION_PARAMETER, true);
         }
-        SetCharacterFastFalling(false);
         this.currentJumpsAvailable--;
     }
 
@@ -393,54 +402,6 @@ public class MovementMechanics : MonoBehaviour {
         SetVerticalInput(joystickDirectionVec.y);
     }
     #endregion jumping methods
-
-    #region dashing methods
-    /// <summary>
-    /// Begins the coroutine to have our character dashing
-    /// </summary>
-    public void Dash()
-    {
-        if (currentMovementState != CharacterStats.CharacterState.FreeMovement)
-        {
-            return;
-        }
-        StartCoroutine(DashCoroutine());
-    }
-
-    /// <summary>
-    /// When our character is performaing a dashing action, this coroutine will handle all the movement
-    /// based on the animation curve that is set up
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator DashCoroutine()
-    {
-        currentMovementState = CharacterStats.CharacterState.Dashing;
-        rigid.useGravity = false;
-        float timeThatHasPassed = 0;
-        while (timeThatHasPassed < delayBeforeDashing)
-        {
-            rigid.Velocity = Vector2.zero;
-            timeThatHasPassed += Overseer.DELTA_TIME;
-            yield return null;
-        }
-        timeThatHasPassed = 0;
-        Vector2 directionOfInput = new Vector2(horizontalInput, verticalInput).normalized;
-        if (directionOfInput == Vector2.zero)
-        {
-            directionOfInput = new Vector2(this.spriteRenderer.transform.localScale.x, 0).normalized;
-        }
-        while (timeThatHasPassed < timeToCompleteDash)
-        {
-            rigid.Velocity = directionOfInput * dashVelocityAnimationCurve.Evaluate(timeThatHasPassed / timeToCompleteDash) * maxDashSpeed;
-            timeThatHasPassed += Overseer.DELTA_TIME;
-            yield return null;
-        }
-
-        currentMovementState = CharacterStats.CharacterState.FreeMovement;
-        rigid.Velocity.x = Mathf.Sign(rigid.Velocity.x) * Mathf.Min(Mathf.Abs(rigid.Velocity.x), maximumAirSpeed);
-        rigid.useGravity = true;
-    }
-    #endregion dashing methods
 
     #region player interaction methods
 

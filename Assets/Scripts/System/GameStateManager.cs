@@ -45,6 +45,11 @@ public class GameStateManager : MonoBehaviour
 
     #region main variables
 
+    /// <summary>
+    /// Frames to pause each character after a hit is registered.
+    /// </summary>
+    public int HitConfirmFrameDelay = 3;
+
     public short LocalFrameDelay = 2;
 
     /// <summary>

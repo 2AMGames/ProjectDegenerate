@@ -57,23 +57,13 @@ public class PhysicsManager : MonoBehaviour
             }
         }
 
-        
+
         //Updates the velocity based on gravity
         foreach (CustomPhysics2D rigid in allCustomPhysicsObjectsList)
         {
             if (rigid.enabled)
             {
-                if (rigid.UseAnimatorVelocity)
-                {
-                    // Multiply the x component of the velocity by the negative x scale of the transform (positive x scale value is left, negative x scale is facing right).
-                    // Do this to keep the animator x component going in the right direction. The animator sets the absolute velocity, but we should be responsible for the direction.
-                    rigid.Velocity.x = rigid.AnimatorVelocity.x * -Mathf.Sign(rigid.gameObject.transform.lossyScale.x);
-                    rigid.Velocity.y = rigid.AnimatorVelocity.y;
-                }
-                else
-                {
-                    rigid.UpdateVelocityFromGravity();
-                }
+                rigid.UpdateVelocityFromGravity();
             }
         }
 

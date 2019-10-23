@@ -8,6 +8,8 @@ public class AnimationSpeedController : MonoBehaviour
 
     private Animator Anim;
 
+    private CharacterStats CharacterStats;
+
     #endregion
 
     #region monobehaviour methods
@@ -15,6 +17,7 @@ public class AnimationSpeedController : MonoBehaviour
     void Start()
     {
         Anim = GetComponent<Animator>();
+        CharacterStats = GetComponent<CharacterStats>();
         Anim.enabled = false;
     }
 
@@ -29,7 +32,7 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.IsGameReady && CharacterStats.ShouldCharacterMove)
         {
             Anim.Update(Overseer.DELTA_TIME);
         }

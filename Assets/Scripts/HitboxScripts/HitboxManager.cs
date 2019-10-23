@@ -293,7 +293,7 @@ public class HitboxManager : MonoBehaviour
     private bool WasMoveBlocked(InteractionHandler.MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
     {
         CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CommandInterpreter.CurrentDirection;
-        bool wasGuarded = true;
+        bool wasGuarded = hurtBox.InteractionHandler.CanPlayerBlock;
         wasGuarded &= hurtBox.InteractionHandler.Hitstun <= 0;
         if (!wasGuarded)
         {
@@ -308,9 +308,6 @@ public class HitboxManager : MonoBehaviour
                 wasGuarded &= isCharacterCrouching;
                 break;
             case InteractionHandler.MoveData.HitHeight.Mid:
-                wasGuarded &= !isCharacterCrouching;
-                break;
-            case InteractionHandler.MoveData.HitHeight.High:
                 wasGuarded &= !isCharacterCrouching;
                 break;
             case InteractionHandler.MoveData.HitHeight.Air:

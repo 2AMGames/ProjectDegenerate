@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -76,7 +75,7 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public CharacterState currentCharacterState { get; set; }
 
-    public Animator Anim;
+    private Animator Anim;
 
     [HideInInspector]
     public int PlayerIndex;
@@ -84,6 +83,11 @@ public class CharacterStats : MonoBehaviour
     #endregion
 
     #region main variables
+
+    /// <summary>
+    /// If we are pausing the game due to the character being hit, this should be false.
+    /// </summary>
+    public bool ShouldCharacterMove = true;
 
     private IEnumerator ChipDamageCoroutine;
 
