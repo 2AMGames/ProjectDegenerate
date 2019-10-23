@@ -18,7 +18,7 @@ public class InteractionHandler : MonoBehaviour
     /// <summary>
     /// Frames 
     /// </summary>
-    private const int PushbackFrames = 2;
+    private const int PushbackFrames = 6;
 
     #endregion
 
@@ -59,6 +59,8 @@ public class InteractionHandler : MonoBehaviour
 
     private IEnumerator HitstunCoroutine;
 
+    private IEnumerator PushbackCoroutine;
+
     #region Interaction Data
 
     /// <summary>
@@ -79,6 +81,10 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnMoveBegin()
     {
+        if (PushbackCoroutine != null)
+        {
+            StopCoroutine(PushbackCoroutine);
+        }
         CharactersHit.Clear();
     }
 
@@ -91,7 +97,7 @@ public class InteractionHandler : MonoBehaviour
 
         CharactersHit = new HashSet<InteractionHandler>();
         CharacterMoveDict = new Dictionary<string, MoveData>();
-        foreach(MoveData move in CharacterMoves)
+        foreach (MoveData move in CharacterMoves)
         {
             CharacterMoveDict.Add(move.MoveName, move);
         }
@@ -137,10 +143,17 @@ public class InteractionHandler : MonoBehaviour
             {
 
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-                Vector2 destination = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
-                destination.x *= direction;
+                Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
+                destinationVelocity.x *= direction;
+                
+                if (PushbackCoroutine != null)
+                {
+                    StopCoroutine(PushbackCoroutine);
+                }
+                PushbackCoroutine = HandlePushback(destinationVelocity);
+                StartCoroutine(PushbackCoroutine);
 
-                HitstunCoroutine = HandleHitstun(destination);
+                HitstunCoroutine = HandleHitstun();
                 StartCoroutine(HitstunCoroutine);
             };
 
@@ -177,8 +190,8 @@ public class InteractionHandler : MonoBehaviour
             {
                 Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
                 destinationVector.x *= MovementMechanics.isFacingRight ? -1 : 1;
-
-                MovementMechanics.TranslateForcedMovement(destinationVector, 1);
+                PushbackCoroutine = HandlePushback(destinationVector);
+                StartCoroutine(PushbackCoroutine);
             }
         };
 
@@ -191,7 +204,7 @@ public class InteractionHandler : MonoBehaviour
         {
             onPauseComplete();
         }
-        
+
     }
 
     public void OnClash(Hitbox enemyHitbox)
@@ -207,7 +220,7 @@ public class InteractionHandler : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         int framesToPause = GameStateManager.Instance.HitConfirmFrameDelay;
-        while(framesToPause > 0)
+        while (framesToPause > 0)
         {
             yield return new WaitForEndOfFrame();
             CharacterStats.ShouldCharacterMove = false;
@@ -217,8 +230,9 @@ public class InteractionHandler : MonoBehaviour
         onPauseComplete?.Invoke();
     }
 
-    private IEnumerator HandleHitstun(Vector2 knockback)
+    private IEnumerator HandleHitstun()
     {
+        Animator.SetBool(HITSTUN_TRIGGER, true);
         while (Hitstun > 0)
         {
             MovementMechanics.ignoreJumpButton = true;
@@ -228,10 +242,25 @@ public class InteractionHandler : MonoBehaviour
                 --Hitstun;
             }
         }
-        MovementMechanics.TranslateForcedMovement(knockback, 1);
         CharacterStats.OnHitstunFinished();
         Animator.SetBool(HITSTUN_TRIGGER, false);
         HitstunCoroutine = null;
+    }
+
+    private IEnumerator HandlePushback(Vector2 knockback)
+    {
+        int framesToPushback = PushbackFrames;
+        MovementMechanics.TranslateForcedMovement(Vector3.zero, knockback, 1);
+        yield return new WaitForEndOfFrame();
+        while (framesToPushback > 0 && !MovementMechanics.IsInAir)
+        {
+            if (Overseer.Instance.IsGameReady)
+            {
+                MovementMechanics.TranslateForcedMovement(knockback, Vector3.zero, (float) (PushbackFrames - framesToPushback) / PushbackFrames);
+                --framesToPushback;
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
     
     #endregion

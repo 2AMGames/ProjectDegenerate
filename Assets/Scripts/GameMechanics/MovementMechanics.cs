@@ -409,9 +409,9 @@ public class MovementMechanics : MonoBehaviour {
     /// Method for moving characters due to forced movement (guard knockback, hit knockback, etc).
     /// </summary>
     /// <param name="destinationVector"></param>
-    public void TranslateForcedMovement(Vector2 destinationVector, float lerpValue)
+    public void TranslateForcedMovement(Vector2 startingVector, Vector2 destinationVector, float lerpValue)
     {
-        Vector2 newVelocity = Vector2.Lerp(rigid.Velocity, destinationVector, lerpValue);
+        Vector2 newVelocity = Vector2.Lerp(startingVector, destinationVector, lerpValue);
         rigid.Velocity = newVelocity;
     }
 
