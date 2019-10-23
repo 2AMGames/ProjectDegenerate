@@ -82,8 +82,8 @@ public class PhysicsManager : MonoBehaviour
             collider.UpdateBoundsOfCollider();
             collider.originalVelocity = collider.rigid.Velocity;
         }
-        HandleNonstaticOnNonstaticCollisions();
 
+        HandleNonstaticOnNonstaticCollisions();
 
         HandleNonstaticOnStaticCollisions();
 
@@ -107,6 +107,7 @@ public class PhysicsManager : MonoBehaviour
         }
     }
 
+
     private void HandleNonstaticOnStaticCollisions()
     {
         bool collidedVerticallyWithAnyStatic = false;
@@ -119,10 +120,25 @@ public class PhysicsManager : MonoBehaviour
                 {
                     continue;//Skip if either collider is inactive
                 }
-                bool collidedVertically = nonStaticCollider.ColliderIntersectVertically(staticCollider);
-                bool collidedHorizontally = nonStaticCollider.ColliderIntersectHorizontally(staticCollider);
 
-                if (collidedVertically)
+                if (nonStaticCollider.ColliderIntersectHorizontally(staticCollider))
+                {
+                    collidedHorizontallyWithAnyStatic = true;
+                    if (nonStaticCollider.rigid.Velocity.x > 0)
+                    {
+                        nonStaticCollider.rigid.isTouchingSide.x = 1;
+                    }
+                    else if (nonStaticCollider.rigid.Velocity.x < 0)
+                    {
+                        nonStaticCollider.rigid.isTouchingSide.x = -1;
+                    }
+                    nonStaticCollider.rigid.Velocity.x = 0;
+                    nonStaticCollider.originalVelocity.x = 0;
+                    nonStaticCollider.UpdateBoundsOfCollider();
+                    
+                }
+
+                if (nonStaticCollider.ColliderIntersectVertically(staticCollider))
                 {
                     collidedVerticallyWithAnyStatic = true;
                     if (nonStaticCollider.rigid.isInAir && nonStaticCollider.rigid.Velocity.y <= 0)
@@ -139,32 +155,11 @@ public class PhysicsManager : MonoBehaviour
                         nonStaticCollider.rigid.isTouchingSide.y = -1;
                     }
                     nonStaticCollider.rigid.Velocity.y = 0;
-                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.Velocity;
-                }
-                if (collidedHorizontally)
-                {
-                    collidedHorizontallyWithAnyStatic = true;
-                    if (nonStaticCollider.rigid.Velocity.x > 0)
-                    {
-                        nonStaticCollider.rigid.isTouchingSide.x = 1;
-                    }
-                    else if (nonStaticCollider.rigid.Velocity.x < 0)
-                    {
-                        nonStaticCollider.rigid.isTouchingSide.x = -1;
-                    }
-                    nonStaticCollider.rigid.Velocity.x = 0;
-                    nonStaticCollider.originalVelocity = nonStaticCollider.rigid.Velocity;
-                }
-
-
-
-                if (collidedVertically || collidedHorizontally)
-                {
+                    nonStaticCollider.originalVelocity.y = 0;
                     nonStaticCollider.UpdateBoundsOfCollider();
                 }
-
-
             }
+
             if (!collidedVerticallyWithAnyStatic && Mathf.Abs(nonStaticCollider.rigid.Velocity.y) > 0)
             {
                 nonStaticCollider.rigid.isTouchingSide.y = 0;
@@ -183,17 +178,24 @@ public class PhysicsManager : MonoBehaviour
     {
         CustomCollider2D primary;
         CustomCollider2D secondary;
-
         for (int i = 0; i < nonStaticColliderList.Count - 1; i++)
         {
-            for (int j = 0; j < nonStaticColliderList.Count; j++)
+            for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-                if (Mathf.Abs(nonStaticColliderList[i].rigid.Velocity.x) >= Mathf.Abs(nonStaticColliderList[j].rigid.Velocity.x))
+                if (nonStaticColliderList[i].rigid.isTouchingSide.x != 0 ^ nonStaticColliderList[j].rigid.isTouchingSide.x != 0)
                 {
-                    primary = nonStaticColliderList[i];
-                    secondary = nonStaticColliderList[j];
+                    if (nonStaticColliderList[j].rigid.isTouchingSide.x != 0)
+                    {
+                        primary = nonStaticColliderList[i];
+                        secondary = nonStaticColliderList[j];
+                    }
+                    else
+                    {
+                        primary = nonStaticColliderList[j];
+                        secondary = nonStaticColliderList[i];
+                    }
                 }
-                if (nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir)
+                else if (nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir)
                 {
                     if (nonStaticColliderList[i].rigid.isInAir)
                     {
@@ -206,126 +208,54 @@ public class PhysicsManager : MonoBehaviour
                         secondary = nonStaticColliderList[i];
                     }
                 }
+                else if (Mathf.Abs(nonStaticColliderList[i].rigid.Velocity.x) >= Mathf.Abs(nonStaticColliderList[j].rigid.Velocity.x))
+                {
+                    primary = nonStaticColliderList[i];
+                    secondary = nonStaticColliderList[j];
+                }
                 else
                 {
-                    if (Mathf.Abs(nonStaticColliderList[j].rigid.Velocity.x) > Mathf.Abs(nonStaticColliderList[i].rigid.Velocity.x))
-                    {
-                        primary = nonStaticColliderList[j];
-                        secondary = nonStaticColliderList[i];
-                    }
-                    else
-                    {
-                        primary = nonStaticColliderList[i];
-                        secondary = nonStaticColliderList[j];
-                    }
+                    primary = nonStaticColliderList[j];
+                    secondary = nonStaticColliderList[i];
                 }
-               if (primary.ColliderIntersect(secondary))
+                DebugUI.Instance.DisplayDebugTextForFrames(nonStaticColliderList[i].name + ": " + nonStaticColliderList[i].rigid.Velocity);
+                DebugUI.Instance.DisplayDebugTextForFrames(nonStaticColliderList[j].name + ": " + nonStaticColliderList[j].rigid.Velocity);
+                bool movingTheSameDirection = Mathf.Sign(primary.rigid.Velocity.x) == Mathf.Sign(secondary.rigid.Velocity.x);
+
+
+
+                if (primary.ColliderIntersectHorizontally(secondary))
                 {
-                    if (primary.ColliderIntersectHorizontally(secondary))
+                    if (movingTheSameDirection)
                     {
-                        primary.UpdateBoundsOfCollider();
-                        secondary.UpdateBoundsOfCollider();
-                        if (Mathf.Sign(primary.originalVelocity.x) == Mathf.Sign(secondary.originalVelocity.x))
-                        {
-                            secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
-                        }
-                        else
-                        {
-                            primary.rigid.Velocity.x += secondary.rigid.Velocity.x;
-                            secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
-                        }
-                    }
-                    CustomCollider2D colliderThatWasHit = null;
-                    if (CheckForHorizontalCollisions(primary, out colliderThatWasHit))
-                    {
-                        primary.rigid.Velocity.x = 0;
-                        secondary.rigid.Velocity.x = 0;
-                        primary.originalVelocity.x = 0;
-                        secondary.originalVelocity.x = 0;
-
-                        if (colliderThatWasHit.GetCenter().x > primary.GetCenter().x)
-                        {
-                            secondary.transform.position = new Vector3(primary.GetCenter().x + secondary.colliderOffset.x, secondary.transform.position.y, secondary.transform.position.z) - Vector3.right * -0.01f;
-                        }
-                        else
-                        {
-                            secondary.transform.position = new Vector3(primary.GetCenter().x + secondary.colliderOffset.x, secondary.transform.position.y, secondary.transform.position.z) - Vector3.right * 0.01f;
-                        }
-                        if (secondary.ColliderIntersectHorizontally(primary))
-                        {
-                            
-                            primary.UpdateBoundsOfCollider();
-                            secondary.UpdateBoundsOfCollider();
-                        }
+                        secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
                     }
                 }
+                //else if (secondary.ColliderIntersectHorizontally(primary))
+                //{
+                //    if (movingTheSameDirection)
+                //    {
+                //        primary.rigid.Velocity.x = secondary.rigid.Velocity.x;
+                //    }
+                //}
+                else
+                {
+                    continue;//The two colliders did not intersect with each other
+                }
+
+                if (!movingTheSameDirection)
+                {
+                    float newVel = primary.rigid.Velocity.x + secondary.rigid.Velocity.x;
+                    primary.rigid.Velocity.x = newVel;
+                    secondary.rigid.Velocity.x = newVel;
+                }
+                primary.UpdateBoundsOfCollider();
+                secondary.UpdateBoundsOfCollider();
+
             }
         }
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="colliderToCheck"></param>
-    /// <param name=""></param>
-    /// <returns></returns>
-    public bool CheckForHorizontalCollisionWithNonstaticColliders(CustomCollider2D col1, CustomCollider2D col2)
-    {
-
-        CustomCollider2D fasterCollider;
-        CustomCollider2D slowerCollider;
-        if (col1.rigid.isInAir ^ col2.rigid.isInAir)
-        {
-            if (col1.rigid.isInAir)
-            {
-                fasterCollider = col1;
-                slowerCollider = col2;
-            }
-            else
-            {
-                fasterCollider = col2;
-                slowerCollider = col1;
-            }
-        }
-        else
-        {
-            if (Mathf.Abs(col2.rigid.Velocity.x) > Mathf.Abs(col1.rigid.Velocity.x))
-            {
-                fasterCollider = col2;
-                slowerCollider = col1;
-            }
-            else
-            {
-                fasterCollider = col1;
-                slowerCollider = col2;
-            }
-        }
-
-        if (fasterCollider.ColliderIntersectHorizontally(slowerCollider))
-        {
-
-
-            return true;
-        }
-        
-
-        return false;
-    }
-
-    public bool CheckForHorizontalCollisions(CustomCollider2D colliderToCheck, out CustomCollider2D staticColliderThatWasHit)
-    {
-        staticColliderThatWasHit = null;
-        foreach (CustomCollider2D staticCollider in staticColliderList)
-        {
-            if (colliderToCheck.ColliderIntersectHorizontally(staticCollider))
-            {
-                staticColliderThatWasHit = staticCollider;
-                return true;
-            }
-        }
-        return false;
-    }
     #endregion monobehaviour methods
 
     #region collider interaction methods
