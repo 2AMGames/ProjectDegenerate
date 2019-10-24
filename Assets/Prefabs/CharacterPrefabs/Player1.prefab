@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &489040385781029628
 Transform:
   m_ObjectHideFlags: 0
@@ -189,38 +189,38 @@ MonoBehaviour:
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 5
-    OnHitFrames: 3
+    OnHitFrames: 11
     HitMeterGain: 2
     OnHitKnockback: {x: 2.75, y: 0}
     ChipDamage: 0
-    OnGuardFrames: 2
+    OnGuardFrames: 9
     ChipMeterGain: 0
-    OnGuardKnockback: {x: 1, y: 0}
+    OnGuardKnockback: {x: 1.9, y: 0}
     GuardBreak: 0
   - MoveName: Medium_Punch
     Height: 2
     Magnitude: 1
     SpecialMeterRequired: 0
     HitDamage: 6
-    OnHitFrames: 6
+    OnHitFrames: 9
     HitMeterGain: 0
     OnHitKnockback: {x: 7, y: 0}
     ChipDamage: 0
-    OnGuardFrames: 3
+    OnGuardFrames: 15
     ChipMeterGain: 0
-    OnGuardKnockback: {x: 1, y: 0}
+    OnGuardKnockback: {x: 6, y: 0}
     GuardBreak: 0
   - MoveName: Hard_Punch
     Height: 2
-    Magnitude: 2
+    Magnitude: 1
     SpecialMeterRequired: 0
-    HitDamage: 4
-    OnHitFrames: 10
+    HitDamage: 10
+    OnHitFrames: 11
     HitMeterGain: 0
-    OnHitKnockback: {x: 15, y: 0}
+    OnHitKnockback: {x: 10, y: 0}
     ChipDamage: 0
     OnGuardFrames: 4
-    ChipMeterGain: 0
+    ChipMeterGain: 8
     OnGuardKnockback: {x: 5, y: 0}
     GuardBreak: 0
   - MoveName: Cr_Light_Punch
@@ -241,11 +241,11 @@ MonoBehaviour:
     Magnitude: 0
     SpecialMeterRequired: 0
     HitDamage: 2.5
-    OnHitFrames: 6
+    OnHitFrames: 12
     HitMeterGain: 0
     OnHitKnockback: {x: 2.5, y: 0}
     ChipDamage: 0
-    OnGuardFrames: 5
+    OnGuardFrames: 9
     ChipMeterGain: 0
     OnGuardKnockback: {x: 2, y: 0}
     GuardBreak: 0
