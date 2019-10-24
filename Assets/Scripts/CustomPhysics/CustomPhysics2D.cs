@@ -142,10 +142,10 @@ public class CustomPhysics2D : MonoBehaviour {
         {
             return; 
         }
-
         Vector3 velocityVector3 = new Vector3(Velocity.x, Velocity.y, 0);
         
         this.transform.position += velocityVector3 * Overseer.DELTA_TIME;
+
     }
 
     /// <summary>

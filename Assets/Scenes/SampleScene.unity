@@ -211,11 +211,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player2
       objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029602, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -271,68 +266,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029628, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029630, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: isFacingRight
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029630, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: RunningSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: MoveHitFrames
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7808090552154802651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040386075378927, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6051990893419567022, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6051990893488429617, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6051990893797157715, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029625, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: useGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029624, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: m_UpdateMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 489040385781029626, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: MaxHealth
-      value: 1000
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 489040385781029629, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
 --- !u!1 &38577535 stripped
 GameObject:
@@ -1026,11 +960,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7518321783212868651, guid: 5e7026d810020bf47a508cb6258c6372,
-        type: 3}
-      propertyPath: CharacterMoves.Array.data[1].OnHitKnockback.x
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e7026d810020bf47a508cb6258c6372, type: 3}
