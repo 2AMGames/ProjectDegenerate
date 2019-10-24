@@ -191,7 +191,7 @@ MonoBehaviour:
     HitDamage: 5
     OnHitFrames: 7
     HitMeterGain: 2
-    OnHitKnockback: {x: 4, y: 0}
+    OnHitKnockback: {x: 2, y: 0}
     ChipDamage: 0
     OnGuardFrames: 2
     ChipMeterGain: 0
