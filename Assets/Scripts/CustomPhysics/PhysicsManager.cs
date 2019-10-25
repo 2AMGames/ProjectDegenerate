@@ -97,13 +97,17 @@ public class PhysicsManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     private void HandleNonstaticOnStaticCollisions()
     {
-        bool collidedVerticallyWithAnyStatic = false;
-        bool collidedHorizontallyWithAnyStatic = false;
+        bool collidedVerticallyWithAnyStatic;
+        bool collidedHorizontallyWithAnyStatic;
         foreach (CustomCollider2D nonStaticCollider in nonStaticColliderList)
         {
+            collidedVerticallyWithAnyStatic = false;
+            collidedHorizontallyWithAnyStatic = false;
             foreach (CustomCollider2D staticCollider in staticColliderList)
             {
                 if (!staticCollider.isActiveAndEnabled || !nonStaticCollider.isActiveAndEnabled)
@@ -113,14 +117,15 @@ public class PhysicsManager : MonoBehaviour
 
                 if (nonStaticCollider.ColliderIntersectHorizontally(staticCollider))
                 {
+                    DebugUI.Instance.DisplayDebugTextForFrames(nonStaticCollider.name + "::" + staticCollider.name);
                     collidedHorizontallyWithAnyStatic = true;
-                    if (nonStaticCollider.rigid.Velocity.x > 0)
+                    if (nonStaticCollider.rigid.Velocity.x > 0 && nonStaticCollider.rigid.isTouchingSide.x == 0)
                     {
-                        nonStaticCollider.rigid.isTouchingSide.x = 1;
+                        nonStaticCollider.rigid.isTouchingSide.x = (int)GameStateManager.Instance.FrameCount;
                     }
-                    else if (nonStaticCollider.rigid.Velocity.x < 0)
+                    else if (nonStaticCollider.rigid.Velocity.x < 0 && nonStaticCollider.rigid.isTouchingSide.x == 0)
                     {
-                        nonStaticCollider.rigid.isTouchingSide.x = -1;
+                        nonStaticCollider.rigid.isTouchingSide.x = -(int)GameStateManager.Instance.FrameCount;
                     }
                     nonStaticCollider.rigid.Velocity.x = 0;
                     nonStaticCollider.originalVelocity.x = 0;
@@ -136,13 +141,13 @@ public class PhysicsManager : MonoBehaviour
                         nonStaticCollider.rigid.isInAir = false;
                         nonStaticCollider.rigid.OnPhysicsObjectGrounded();
                     }
-                    if (nonStaticCollider.rigid.Velocity.y > 0)
+                    if (nonStaticCollider.rigid.Velocity.y > 0 && nonStaticCollider.rigid.isTouchingSide.y == 0)
                     {
-                        nonStaticCollider.rigid.isTouchingSide.y = 1;
+                        nonStaticCollider.rigid.isTouchingSide.y = (int)GameStateManager.Instance.FrameCount;
                     }
-                    else if (nonStaticCollider.rigid.Velocity.y < 0)
+                    else if (nonStaticCollider.rigid.Velocity.y < 0 && nonStaticCollider.rigid.isTouchingSide.y == 0)
                     {
-                        nonStaticCollider.rigid.isTouchingSide.y = -1;
+                        nonStaticCollider.rigid.isTouchingSide.y = -(int)GameStateManager.Instance.FrameCount;
                     }
                     nonStaticCollider.rigid.Velocity.y = 0;
                     nonStaticCollider.originalVelocity.y = 0;
@@ -172,17 +177,35 @@ public class PhysicsManager : MonoBehaviour
         {
             for (int j = i + 1; j < nonStaticColliderList.Count; j++)
             {
-                if (nonStaticColliderList[i].rigid.isTouchingSide.x != 0 ^ nonStaticColliderList[j].rigid.isTouchingSide.x != 0)
+                if (nonStaticColliderList[i].rigid.isTouchingSide.x != nonStaticColliderList[j].rigid.isTouchingSide.x)
                 {
-                    if (nonStaticColliderList[j].rigid.isTouchingSide.x != 0)
+                    if (Mathf.Abs(nonStaticColliderList[i].rigid.isTouchingSide.x) < Mathf.Abs(nonStaticColliderList[j].rigid.isTouchingSide.x))
                     {
-                        primary = nonStaticColliderList[i];
-                        secondary = nonStaticColliderList[j];
+                        if (nonStaticColliderList[i].rigid.isTouchingSide.x != 0)
+                        {
+                            primary = nonStaticColliderList[j];
+                            secondary = nonStaticColliderList[i];
+                        }
+                        else
+                        {
+                            primary = nonStaticColliderList[i];
+                            secondary = nonStaticColliderList[j];
+                        }
+                        
                     }
                     else
                     {
-                        primary = nonStaticColliderList[j];
-                        secondary = nonStaticColliderList[i];
+                        if (nonStaticColliderList[j].rigid.isTouchingSide.x != 0)
+                        {
+                            primary = nonStaticColliderList[i];
+                            secondary = nonStaticColliderList[j];
+                        }
+                        else
+                        {
+                            primary = nonStaticColliderList[j];
+                            secondary = nonStaticColliderList[i];
+                        }
+                        
                     }
                 }
                 else if (nonStaticColliderList[i].rigid.isInAir ^ nonStaticColliderList[j].rigid.isInAir)
@@ -208,14 +231,21 @@ public class PhysicsManager : MonoBehaviour
                     primary = nonStaticColliderList[j];
                     secondary = nonStaticColliderList[i];
                 }
-                DebugUI.Instance.DisplayDebugTextForFrames(nonStaticColliderList[i].name + ": " + nonStaticColliderList[i].rigid.Velocity);
-                DebugUI.Instance.DisplayDebugTextForFrames(nonStaticColliderList[j].name + ": " + nonStaticColliderList[j].rigid.Velocity);
+                
                 bool movingTheSameDirection = Mathf.Sign(primary.rigid.Velocity.x) == Mathf.Sign(secondary.rigid.Velocity.x);
 
 
 
                 if (primary.ColliderIntersectHorizontally(secondary))
                 {
+                    primary.UpdateBoundsOfCollider();
+                    if (CheckTeleportedInsideStaticCollider(primary))
+                    {
+                        primary.transform.position = new Vector3(secondary.transform.position.x, primary.transform.position.y, primary.transform.position.z) - Vector3.right * Mathf.Sign(primary.GetCenter().x - secondary.GetCenter().x) * .01f;
+                        primary.UpdateBoundsOfCollider();
+                        primary.ColliderIntersectHorizontally(secondary);
+                    }
+
                     if (movingTheSameDirection)
                     {
                         secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
@@ -246,6 +276,17 @@ public class PhysicsManager : MonoBehaviour
         }
     }
 
+    private bool CheckTeleportedInsideStaticCollider(CustomCollider2D nonstaticCollider)
+    {
+        foreach (CustomCollider2D staticCollider in staticColliderList)
+        {
+            if (nonstaticCollider.ColliderIntersectHorizontally(staticCollider))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     #endregion monobehaviour methods
 
     #region collider interaction methods
