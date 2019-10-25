@@ -145,13 +145,20 @@ public class InteractionHandler : MonoBehaviour
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
                 Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
                 destinationVelocity.x *= direction;
-                
-                if (PushbackCoroutine != null)
+
+                if (!MovementMechanics.IsInAir)
                 {
-                    StopCoroutine(PushbackCoroutine);
+                    if (PushbackCoroutine != null)
+                    {
+                        StopCoroutine(PushbackCoroutine);
+                    }
+                    PushbackCoroutine = HandlePushback(destinationVelocity);
+                    StartCoroutine(PushbackCoroutine);
                 }
-                PushbackCoroutine = HandlePushback(destinationVelocity);
-                StartCoroutine(PushbackCoroutine);
+                else
+                {
+                    GetComponent<CustomPhysics2D>().Velocity = destinationVelocity;
+                }
 
                 HitstunCoroutine = HandleHitstun();
                 StartCoroutine(HitstunCoroutine);

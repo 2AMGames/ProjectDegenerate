@@ -340,6 +340,45 @@ MonoBehaviour:
     ChipMeterGain: 0
     OnGuardKnockback: {x: 5, y: 0}
     GuardBreak: 0
+  - MoveName: Air_Light_Punch
+    Height: 3
+    Magnitude: 0
+    SpecialMeterRequired: 0
+    HitDamage: 3
+    OnHitFrames: 10
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 0}
+    ChipDamage: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
+    GuardBreak: 0
+  - MoveName: Air_Medium_Punch
+    Height: 3
+    Magnitude: 0
+    SpecialMeterRequired: 0
+    HitDamage: 3
+    OnHitFrames: 10
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: 0}
+    ChipDamage: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
+    GuardBreak: 0
+  - MoveName: Air_Heavy_Punch
+    Height: 3
+    Magnitude: 0
+    SpecialMeterRequired: 0
+    HitDamage: 3
+    OnHitFrames: 10
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1, y: -15}
+    ChipDamage: 0
+    OnGuardFrames: 5
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 5, y: 0}
+    GuardBreak: 0
   CanPlayerBlock: 1
   MoveHitPlayer: 0
   Hitstun: 0
@@ -517,9 +556,9 @@ Transform:
   m_Children:
   - {fileID: 6051990894939698012}
   - {fileID: 6051990893029859202}
+  - {fileID: 612153370648533101}
   - {fileID: 6051990893704009473}
   - {fileID: 6051990894308212706}
-  - {fileID: 612153370648533101}
   - {fileID: 3342179514359954694}
   - {fileID: 6051990894997030968}
   - {fileID: 6051990894502924202}
@@ -537,11 +576,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -598,31 +632,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: boxColliderSize.x
-      value: 0.42
-      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
@@ -647,11 +656,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -708,26 +712,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
@@ -757,11 +741,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -818,26 +797,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
@@ -867,6 +826,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -925,6 +889,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: hitboxType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.x
       value: 0.56
       objectReference: {fileID: 0}
@@ -952,11 +921,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -996,7 +960,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1012,31 +976,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: boxColliderSize.x
-      value: 0.42
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1062,6 +1001,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1120,6 +1064,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: hitboxType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.x
       value: 0.71
       objectReference: {fileID: 0}
@@ -1147,11 +1096,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1191,7 +1135,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1206,26 +1150,6 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
@@ -1257,6 +1181,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1315,6 +1244,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: hitboxType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.y
       value: 0.25
       objectReference: {fileID: 0}
@@ -1337,6 +1276,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1395,6 +1339,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: hitboxType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.x
       value: 0.62
       objectReference: {fileID: 0}
@@ -1423,15 +1372,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hitbox2
       objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.489
+      value: -0.454
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1483,15 +1427,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
-      propertyPath: hitboxType
-      value: 0
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.35
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1517,6 +1461,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1575,6 +1524,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
+      propertyPath: hitboxType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
       propertyPath: boxColliderSize.x
       value: 1.19
       objectReference: {fileID: 0}
@@ -1602,11 +1556,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1646,7 +1595,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1662,36 +1611,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: boxColliderSize.x
-      value: 0.42
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: boxColliderSize.y
-      value: 0.22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
@@ -1712,11 +1631,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1772,31 +1686,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: hitboxType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: boxColliderSize.x
-      value: 0.42
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
