@@ -25,7 +25,7 @@ public abstract class Hitbox : MonoBehaviour
     /// <summary>
     /// All hitboxes should have a reference to an interaction handler. Required for sending events properly to the associated character
     /// </summary>
-    public InteractionHandler InteractionHandler;
+    public InteractionHandler InteractionHandler { get; set; }
 
 
     /// <summary>
