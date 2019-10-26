@@ -10,7 +10,6 @@ using UnityEngine;
 public class HitboxRect : Hitbox
 {
     public Vector2 boxColliderSize = Vector2.one;
-    public Vector2 boxColliderPosition;
 
     public CustomCollider2D.BoundsRect bounds;
 
@@ -49,7 +48,7 @@ public class HitboxRect : Hitbox
     public override void UpdateColliderBounds()
     {
         bounds = new CustomCollider2D.BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(boxColliderPosition.x, boxColliderPosition.y);
+        Vector2 origin = this.transform.position; //new Vector3(boxColliderOffset.x, boxColliderOffset.y);
 
         bounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
         bounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
