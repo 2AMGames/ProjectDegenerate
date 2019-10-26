@@ -11,14 +11,19 @@ public abstract class Hitbox : MonoBehaviour
     protected static Color GIZMO_COLOR = new Color(204f / 255f, 0, 0);
     protected static Color GIZMO_HURTBOX_COLOR = new Color(51f / 255f, 1, 1);
     #endregion const variables
+
+    #region enum
     public enum HitboxType
     {
         Hitbox,
         Hurtbox,
     }
+    #endregion
+
+    #region main variables
 
     /// <summary>
-    /// 
+    /// Assigned hitbox type
     /// </summary>
     public HitboxType hitboxType = HitboxType.Hurtbox;
 
@@ -32,6 +37,8 @@ public abstract class Hitbox : MonoBehaviour
     /// Hitboxes that we are currently intersecting
     /// </summary>
     public List<Hitbox> currentIntersectingHitboxes = new List<Hitbox>();
+
+    #endregion
 
     #region monobehaivour methods
     private void Awake()
@@ -72,6 +79,7 @@ public abstract class Hitbox : MonoBehaviour
         currentIntersectingHitboxes.Clear();
     }
     #endregion
+
     #region debug helper methods
     /// <summary>
     /// DEBGUG: Gets the color that is associated with the type of hitbox that we are using.
@@ -93,6 +101,8 @@ public abstract class Hitbox : MonoBehaviour
         return colorToDraw;
     }
     #endregion debug helper methods
+
+    #region public interface
 
     /// <summary>
     /// Returns true if we successfully added the hitbox to the list
@@ -140,4 +150,6 @@ public abstract class Hitbox : MonoBehaviour
     /// <param name="hboxToCheck"></param>
     /// <returns></returns>
     public abstract bool CheckHitboxIntersect(Hitbox hboxToCheck);
+
+    #endregion
 }

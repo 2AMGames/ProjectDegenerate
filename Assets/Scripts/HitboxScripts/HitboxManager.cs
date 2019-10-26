@@ -202,7 +202,7 @@ public class HitboxManager : MonoBehaviour
         // If not, only register a hit if the move has not already hit the player.
         // TODO Replace HitBox.AllowMultiHit with (CharacterMove).MultiHit
         // Assuming we want to keep move properties in a 
-        if (hurtHandler && !hitHandler.CharactersHit.Contains(hurtHandler))
+        if (hurtHandler && !hitHandler.MoveHitPlayer)
         {
             bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
             hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove, didMoveHit);

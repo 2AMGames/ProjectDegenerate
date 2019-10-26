@@ -179,6 +179,8 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
+        Debug.LogWarning("Hit");
+
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
@@ -311,6 +313,7 @@ public class InteractionHandler : MonoBehaviour
         public float ChipMeterGain;
         public Vector2 OnGuardKnockback;
         public bool GuardBreak;
+        public bool MultiHit;
 
     }
     
