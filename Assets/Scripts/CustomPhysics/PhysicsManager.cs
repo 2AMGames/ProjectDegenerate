@@ -47,7 +47,6 @@ public class PhysicsManager : MonoBehaviour
             return;
         }
 
-        Overseer.Instance.HitboxManager.UpdateHitboxManager();
 
         foreach (CustomCollider2D collider in nonStaticColliderList)
         {
@@ -95,6 +94,8 @@ public class PhysicsManager : MonoBehaviour
         {
             collider.rigid.Velocity = collider.originalVelocity;
         }
+        Overseer.Instance.HitboxManager.UpdateHitboxManager();
+
     }
 
     /// <summary>
