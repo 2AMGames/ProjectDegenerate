@@ -86,7 +86,16 @@ public class InteractionHandler : MonoBehaviour
             StopCoroutine(PushbackCoroutine);
         }
         CharactersHit.Clear();
+        MoveHitPlayer = false;
         CharacterStats.ExecuteMove(CurrentMove);
+    }
+
+    /// <summary>
+    /// Reset the move hit player bool, which should allow the currrent move to hit more than once.
+    /// </summary>
+    public void ResetMoveHit()
+    {
+        MoveHitPlayer = false;
     }
 
     private void Awake()
@@ -116,11 +125,6 @@ public class InteractionHandler : MonoBehaviour
     #endregion
 
     #region public methods
-
-    public void ResetMoveHit()
-    {
-        MoveHitPlayer = false;
-    }
 
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData moveHitBy, bool didMoveLand)
     {
@@ -283,6 +287,7 @@ public class InteractionHandler : MonoBehaviour
     [System.Serializable]
     public struct MoveData
     {
+        [Header("Move Info")]
         public string MoveName;
 
         public enum HitHeight
@@ -305,18 +310,23 @@ public class InteractionHandler : MonoBehaviour
 
         public float SpecialMeterRequired;
 
+        public bool Knockdown;
+
+        [Header("On Hit Parameters")]
+
         // Damage to apply if hit or blocked.
         public float HitDamage;
         public int OnHitFrames;
         public float HitMeterGain;
         public Vector2 OnHitKnockback;
 
+        [Header("On Guard Parameters")]
+
         public float ChipDamage;
         public int OnGuardFrames;
         public float ChipMeterGain;
         public Vector2 OnGuardKnockback;
         public bool GuardBreak;
-        public bool MultiHit;
 
     }
     

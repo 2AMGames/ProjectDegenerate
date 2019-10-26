@@ -201,7 +201,6 @@ public class HitboxManager : MonoBehaviour
         // If the hitbox for this move allows multi hit, then we can register another hit on this frame.
         // If not, only register a hit if the move has not already hit the player.
         // TODO Replace HitBox.AllowMultiHit with (CharacterMove).MultiHit
-        //Debug.LogWarning("Move hit: " + hitHandler.MoveHitPlayer);
         if (hurtHandler && !hitHandler.MoveHitPlayer)
         {
             bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
