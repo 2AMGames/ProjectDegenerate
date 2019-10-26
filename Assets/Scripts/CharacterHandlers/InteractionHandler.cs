@@ -117,6 +117,11 @@ public class InteractionHandler : MonoBehaviour
 
     #region public methods
 
+    public void ResetMoveHit()
+    {
+        MoveHitPlayer = false;
+    }
+
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData moveHitBy, bool didMoveLand)
     {
 
@@ -179,8 +184,6 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
-        Debug.LogWarning("Hit");
-
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
