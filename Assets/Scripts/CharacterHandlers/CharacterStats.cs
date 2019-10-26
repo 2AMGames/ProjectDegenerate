@@ -135,6 +135,16 @@ public class CharacterStats : MonoBehaviour
         OnCharacterHealthChanged.Invoke();
     }
 
+    private void OnValidate()
+    {
+        SpecialMeter = Mathf.Max(0f, SpecialMeter);
+        if (Anim)
+        {
+            Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
+        }
+        OnCharacterHealthChanged.Invoke();
+    }
+
     #endregion
 
     #region public interface
