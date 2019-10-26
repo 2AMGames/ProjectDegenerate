@@ -4,6 +4,13 @@ using UnityEngine;
 using System;
 
 
+/// <summary>
+/// This is the base class that is used for selection ui. Selection UI implies that you can
+/// select specific options.
+/// 
+/// For example this can be used for our Pause menu to select different elements or it can be used in our main menu to select different screens to go to. 
+/// This can also be derived to be used in a character select screen
+/// </summary>
 public abstract class BaseSelectionUI : MonoBehaviour
 {
     #region const variables
@@ -20,9 +27,17 @@ public abstract class BaseSelectionUI : MonoBehaviour
     public const string CANCEL_BUTTON = "Cancel";
     #endregion UI input names
     #endregion const variables
-
+    [Tooltip("Thix is the option that we will select fist upon running the screen for the first time")]
     public BaseSelectionNode initialNode;
+    /// <summary>
+    /// This is the element that is currently selected in our menu
+    /// </summary>
+    [NonSerialized]
     public BaseSelectionNode currentBaseSelectionNode;
+
+    /// <summary>
+    /// Bool used to mark if we are currently auto scrolling through options. This is helpful to block changing certain elements while we are scrolling through our list
+    /// </summary>
     private bool isAutoScrolling;
 
     #region monobehaviour methods
