@@ -116,7 +116,7 @@ public class CharacterStats : MonoBehaviour
 
     public float MaxSpecialMeter = 300f;
 
-    public float SpecialMeter { get; private set; }
+    public float SpecialMeter;
 
     #endregion
 
@@ -128,7 +128,10 @@ public class CharacterStats : MonoBehaviour
         Anim = GetComponent<Animator>();
 
         CurrentHealth = MaxHealth;
-        SpecialMeter = 0f;
+
+        SpecialMeter = MaxSpecialMeter / 2f;
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
+
         OnCharacterHealthChanged.Invoke();
     }
 
@@ -138,9 +141,12 @@ public class CharacterStats : MonoBehaviour
 
     public void ExecuteMove(InteractionHandler.MoveData move)
     {
-        SpecialMeter -= move.SpecialMeterRequired;
+        if (string.IsNullOrEmpty(move.MoveName))
+            return;
 
-        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / MaxSpecialMeter));
+        SpecialMeter = Mathf.Max(0f, SpecialMeter - move.SpecialMeterRequired);
+
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
         OnMoveExecuted.Invoke();
 
     }
@@ -181,7 +187,7 @@ public class CharacterStats : MonoBehaviour
         if (Overseer.Instance.IsGameReady)
         {
             float meterToAdd = didMoveHit ? move.HitMeterGain : move.ChipMeterGain;
-            SpecialMeter += meterToAdd;
+            SpecialMeter = Mathf.Min(MaxSpecialMeter, SpecialMeter + meterToAdd);
 
             OnMoveHit.Invoke();
 

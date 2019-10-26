@@ -86,6 +86,7 @@ public class InteractionHandler : MonoBehaviour
             StopCoroutine(PushbackCoroutine);
         }
         CharactersHit.Clear();
+        CharacterStats.ExecuteMove(CurrentMove);
     }
 
     private void Awake()
@@ -196,7 +197,7 @@ public class InteractionHandler : MonoBehaviour
             if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0 && !MovementMechanics.IsInAir)
             {
                 Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
-                destinationVector.x *= enemyPhysics.isTouchingSide.x * -1;
+                destinationVector.x *= Mathf.Sign(enemyPhysics.isTouchingSide.x) * -1;
                 PushbackCoroutine = HandlePushback(destinationVector);
                 StartCoroutine(PushbackCoroutine);
             }
