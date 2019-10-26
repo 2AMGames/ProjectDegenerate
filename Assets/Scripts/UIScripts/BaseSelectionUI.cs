@@ -27,7 +27,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
     public const string CANCEL_BUTTON = "Cancel";
     #endregion UI input names
     #endregion const variables
-    [Tooltip("Thix is the option that we will select fist upon running the screen for the first time")]
+    [Tooltip("This is the option that we will select fist upon running the screen for the first time")]
     public BaseSelectionNode initialNode;
     /// <summary>
     /// This is the element that is currently selected in our menu
