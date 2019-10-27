@@ -26,6 +26,7 @@ public class MainMenuUI : BaseSelectionUI
     /// </summary>
     public void OnPlayGameLocalPressed()
     {
+        GameSettingPreferences.GameType = Overseer.GameType.Local;
         LoadSceneManager.Instance.LoadNewScene(mainSceneToLoad.SceneName);
     }
 
@@ -35,6 +36,7 @@ public class MainMenuUI : BaseSelectionUI
     /// </summary>
     public void OnPlayGameOnlinePressed()
     {
+        GameSettingPreferences.GameType = Overseer.GameType.PlayerVsRemote;
         LoadSceneManager.Instance.LoadNewScene(mainSceneToLoad.SceneName);
     }
 
