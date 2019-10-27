@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 
 
@@ -29,6 +31,8 @@ public abstract class BaseSelectionUI : MonoBehaviour
     #endregion const variables
     [Tooltip("This is the option that we will select fist upon running the screen for the first time")]
     public BaseSelectionNode initialNode;
+
+    public SelectionIconPointer selectionPointer;
     /// <summary>
     /// This is the element that is currently selected in our menu
     /// </summary>
@@ -42,12 +46,19 @@ public abstract class BaseSelectionUI : MonoBehaviour
 
     #region monobehaviour methods
 
-    private void Update()
+    private void Awake()
     {
+        currentBaseSelectionNode = initialNode;
+    }
+
+    protected virtual void Update()
+    {
+        
         if (!isAutoScrolling)
         {
             float x = GetHorizontalAxis();
             float y = GetVerticalAxis();
+
 
             if (Mathf.Abs(x) > JOYSTICK_THRESHOLD)
             {
@@ -64,6 +75,12 @@ public abstract class BaseSelectionUI : MonoBehaviour
     private void OnEnable()
     {
         isAutoScrolling = false;
+        if (selectionPointer)
+            selectionPointer.transform.position = currentBaseSelectionNode.transform.position;
+        else
+        {
+            Debug.LogWarning("There is no selection pointer set for this selection screen...");
+        }
     }
 
     
@@ -114,6 +131,10 @@ public abstract class BaseSelectionUI : MonoBehaviour
         {
             currentBaseSelectionNode.enabled = false;
         }
+        if (selectionPointer != null)
+        {
+            selectionPointer.SetGoalPositionToMoveTowards(nodeToSet.transform.position);
+        }
         nodeToSet.enabled = true;
         currentBaseSelectionNode = nodeToSet;
     }
@@ -157,6 +178,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
                 SetNextSelectionNode(axisInput);
             }
             timeThatHasPassed += Time.unscaledDeltaTime;
+            yield return null;
         }
         isAutoScrolling = false;
     }
@@ -182,8 +204,27 @@ public abstract class BaseSelectionUI : MonoBehaviour
         return currentInputDirection == inputDirection;
     }
 
+    
 
     #region input methods
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool GetCancelButtonDown()
+    {
+        return Input.GetButtonDown(CANCEL_BUTTON);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool GetSubmitButtonDown()
+    {
+        return Input.GetButtonDown(ACCEPT_BUTTON);
+    }
+
     /// <summary>
     /// 
     /// </summary>
