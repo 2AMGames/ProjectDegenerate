@@ -118,6 +118,11 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         CreateGameType();
     }
 
+    private void OnApplicationPause(bool pause)
+    {
+        Overseer.Instance.IsGameReady = !pause;
+    }
+
     #endregion
 
     #region public interface
