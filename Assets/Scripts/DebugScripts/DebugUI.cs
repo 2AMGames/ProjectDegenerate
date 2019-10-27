@@ -29,6 +29,10 @@ public class DebugUI : MonoBehaviour
         {
             this.gameObject.SetActive(false);
         }
+        else
+        {
+            this.gameObject.SetActive(!Overseer.Instance.DebugEnabled);
+        }
         debugTextElement.text = "";
     }
 

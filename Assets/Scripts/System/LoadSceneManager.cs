@@ -79,5 +79,6 @@ public class LoadSceneManager : MonoBehaviour
         }
 
         loadLevelAsync.allowSceneActivation = true;
+        
     }
 }

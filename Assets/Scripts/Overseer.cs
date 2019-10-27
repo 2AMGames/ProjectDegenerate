@@ -76,6 +76,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public PhysicsManager ColliderManager;
 
+    
     public GameType SelectedGameType;
 
     private Coroutine WaitForGameReadyCoroutine;
@@ -163,6 +164,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void CreateGameType()
     {
+        if (!DebugEnabled)
+            SelectedGameType = GameSettingPreferences.GameType;
+        else
+        {
+            Debug.LogWarning("Debug Enable Using: " + SelectedGameType);
+        }
+
         for(int index = 0; index < NumberOfPlayers; ++index)
         {
             PlayerObjects[index].SetActive(true);
