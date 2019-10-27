@@ -100,7 +100,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 2a78c40cb7075474eaa49eef82a9657d, type: 2}
   m_CullingMode: 0
@@ -126,8 +126,8 @@ MonoBehaviour:
   PlayerIndex: 0
   ShouldCharacterMove: 1
   MaxHealth: 1000
-  MaxSpecialMeter: 300
-  SpecialMeter: 200
+  MaxSpecialMeter: 10000
+  SpecialMeter: 1000
 --- !u!114 &7808090552154802651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,7 +372,7 @@ MonoBehaviour:
     HitDamage: 10
     OnHitFrames: 4
     HitMeterGain: 0
-    OnHitKnockback: {x: 5, y: 0}
+    OnHitKnockback: {x: 15, y: 0}
     ChipDamage: 0
     OnGuardFrames: 8
     ChipMeterGain: 0
@@ -388,7 +388,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a557c5d2ed9cbd48835cf63457f344a, type: 3}
   m_Name: 

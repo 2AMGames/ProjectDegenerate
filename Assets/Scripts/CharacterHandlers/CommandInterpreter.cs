@@ -390,16 +390,12 @@ public class CommandInterpreter : MonoBehaviour
             Anim.SetTrigger(buttonEventName);
             Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
 
-            if (FramesRemainingUntilRemoveFromBuffer[buttonEventName] <= 0)
-            {
-                FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-                StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
-            }
-            if (FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] <= 0)
-            {
-                FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
-                StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
-            }
+            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
+            StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
+
+            FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
+            StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
+
 
             ButtonsPressed[buttonEventName] = true;
 
@@ -451,7 +447,12 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (prevInput.y < 1 && currentInput.y >= 1) 
         {
-            characterStats.MovementMechanics.Jump();
+            bool jumpSuccessful = characterStats.MovementMechanics.Jump();
+            if (jumpSuccessful)
+            {
+                FramesRemainingUntilRemoveFromBuffer[MovementMechanics.JUMP_TRIGGER] = FRAMES_TO_BUFFER;
+                StartCoroutine(DisableButtonTriggerAfterTime(MovementMechanics.JUMP_TRIGGER));
+            }
         }
     }
 
@@ -558,10 +559,9 @@ public class CommandInterpreter : MonoBehaviour
     {
         Anim.SetTrigger(animTrigger);
         DirectionalInputRecordList.RemoveRange(startingIndex, moveExecuted.Length);
-        if (FramesRemainingUntilRemoveFromBuffer[animTrigger] <= 0)
-        {
-            StartCoroutine(DisableButtonTriggerAfterTime(animTrigger));
-        }
+        FramesRemainingUntilRemoveFromBuffer[animTrigger] = FRAMES_TO_BUFFER;
+        StartCoroutine(DisableButtonTriggerAfterTime(animTrigger));
+
     }
 
 
@@ -662,6 +662,10 @@ public class CommandInterpreter : MonoBehaviour
             yield return new WaitForEndOfFrame();
             if (Overseer.Instance.IsGameReady)
             {
+                if (!Anim.GetBool(buttonEventName))
+                {
+                    yield break;
+                }
                 --FramesRemainingUntilRemoveFromBuffer[buttonEventName];
             }
         }

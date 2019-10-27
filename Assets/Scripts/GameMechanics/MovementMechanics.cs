@@ -17,7 +17,7 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
-    private const string JUMP_TRIGGER = "Jump";
+    public const string JUMP_TRIGGER = "Jump";
 
     private const float CROUCHING_THRESHOLD = .6f;
 
@@ -349,8 +349,12 @@ public class MovementMechanics : MonoBehaviour {
 
         //FlipSpriteBasedOnInput(this.horizontalInput, true);
         anim.SetTrigger(JUMP_TRIGGER);
-        rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
         return true;
+    }
+
+    public void AnimatorJump()
+    {
+        rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
     }
 
     /// <summary>
