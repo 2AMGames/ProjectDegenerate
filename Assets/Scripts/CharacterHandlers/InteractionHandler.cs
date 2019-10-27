@@ -170,7 +170,7 @@ public class InteractionHandler : MonoBehaviour
                 Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                if (moveHitBy.Knockdown)
+                if (didMoveLand && moveHitBy.Knockdown)
                 {
                     IsKnockedDown = true;
                     Animator.SetBool("KnockedDown", true);

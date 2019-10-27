@@ -284,7 +284,7 @@ MonoBehaviour:
     Height: 2
     Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 1
+    Knockdown: 0
     HitDamage: 5
     OnHitFrames: 5
     HitMeterGain: 0
@@ -302,17 +302,17 @@ MonoBehaviour:
     HitDamage: 5
     OnHitFrames: 2
     HitMeterGain: 0
-    OnHitKnockback: {x: 3, y: 1}
+    OnHitKnockback: {x: 3, y: 0}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
-    OnGuardKnockback: {x: 1, y: 2}
+    OnGuardKnockback: {x: 1, y: 0}
     GuardBreak: 0
   - MoveName: Cr_Hard_Kick
     Height: 0
     Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
+    Knockdown: 1
     HitDamage: 7
     OnHitFrames: 10
     HitMeterGain: 0
@@ -344,7 +344,7 @@ MonoBehaviour:
     HitDamage: 3
     OnHitFrames: 10
     HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 0}
+    OnHitKnockback: {x: 3, y: 0}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
@@ -354,7 +354,7 @@ MonoBehaviour:
     Height: 3
     Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
+    Knockdown: 1
     HitDamage: 3
     OnHitFrames: 10
     HitMeterGain: 0
