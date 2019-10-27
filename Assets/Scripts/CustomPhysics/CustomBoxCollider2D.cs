@@ -22,6 +22,11 @@ public class CustomBoxCollider2D : CustomCollider2D
     protected BoundsRect horizontalCheckBounds;
     protected BoundsRect verticalCheckBounds;
 
+    private void OnValidate()
+    {
+        rigid = GetComponent<CustomPhysics2D>();
+    }
+
     protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
@@ -59,7 +64,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + Vector3.up * boxColliderSize.y / 2 + new Vector3(colliderOffset.x, colliderOffset.y);
+        Vector2 origin = this.transform.position + (isStatic ? Vector3.zero : Vector3.up * boxColliderSize.y / 2) + new Vector3(colliderOffset.x, colliderOffset.y);
 
         b.center = origin;
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
