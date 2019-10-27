@@ -68,10 +68,14 @@ public class InteractionHandler : MonoBehaviour
     /// </summary>
     public bool CanPlayerBlock;
 
-    // Has the last move we activated already hit a player
+    /// <summary>
+    /// Has the last move we activate already hit a player.
+    /// </summary>
     public bool MoveHitPlayer;
 
     public int Hitstun;
+
+    public bool IsKnockedDown;
 
     #endregion
 
@@ -155,6 +159,12 @@ public class InteractionHandler : MonoBehaviour
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
                 Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
                 destinationVelocity.x *= direction;
+
+                if (moveHitBy.Knockdown)
+                {
+                    IsKnockedDown = true;
+                    Animator.SetBool("KnockedDown", true);
+                }
 
                 if (!MovementMechanics.IsInAir)
                 {

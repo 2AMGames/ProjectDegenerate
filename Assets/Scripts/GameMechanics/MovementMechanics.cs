@@ -11,17 +11,13 @@ public class MovementMechanics : MonoBehaviour {
 
     #region const variables
 
-    private const string SPEED_ANIMATION_PARAMETER = "Speed";
     private const string IN_AIR_ANIMATION_PARAMETER = "InAir";
     private const string IS_CROUCHING_PARAMETER = "IsCrouching";
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
     public const string JUMP_TRIGGER = "Jump";
-
     private const float CROUCHING_THRESHOLD = .6f;
-
-    private const float ForcedMovementLerpValue = .35f;
 
     #endregion
 
@@ -145,7 +141,7 @@ public class MovementMechanics : MonoBehaviour {
             anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
         }
 
-        if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD)
+        if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD && !rigid.isInAir && !anim.GetBool("Hitstun") && !anim.GetBool("KnockedDown"))  
         {
             IsCrouching = true;
             if (anim && anim.runtimeAnimatorController)
