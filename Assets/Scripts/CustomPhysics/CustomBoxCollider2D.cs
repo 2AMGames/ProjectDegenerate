@@ -59,7 +59,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + new Vector3(colliderOffset.x, colliderOffset.y);
+        Vector2 origin = this.transform.position + Vector3.up * boxColliderSize.y / 2 + new Vector3(colliderOffset.x, colliderOffset.y);
 
         b.center = origin;
         b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
