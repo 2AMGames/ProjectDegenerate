@@ -187,7 +187,7 @@ public class InteractionHandler : MonoBehaviour
                 }
                 else
                 {
-                    GetComponent<CustomPhysics2D>().Velocity = destinationVelocity;
+                    MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
                 }
 
                 HitstunCoroutine = HandleHitstun();

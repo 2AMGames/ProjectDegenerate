@@ -406,7 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderOffset: {x: 0, y: 0.67}
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.72, y: 1.5}
