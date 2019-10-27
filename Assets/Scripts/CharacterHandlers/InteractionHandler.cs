@@ -63,9 +63,13 @@ public class InteractionHandler : MonoBehaviour
 
     private IEnumerator PushbackCoroutine;
 
+    private IEnumerator ComboTrackingCoroutine;
+
     private IEnumerator WakeupCoroutine;
 
     #region Interaction Data
+
+    public int CurrentComboCount;
 
     /// <summary>
     /// True if the player can block any incoming attacks. Should be set by the animator.
@@ -192,6 +196,12 @@ public class InteractionHandler : MonoBehaviour
 
                 HitstunCoroutine = HandleHitstun();
                 StartCoroutine(HitstunCoroutine);
+
+                if (ComboTrackingCoroutine == null)
+                {
+                    ComboTrackingCoroutine = HandleCurrentCombo(enemyHitbox.InteractionHandler);
+                    StartCoroutine(ComboTrackingCoroutine);
+                }
             };
 
             if (didMoveLand)
@@ -211,6 +221,7 @@ public class InteractionHandler : MonoBehaviour
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
+        ++CurrentComboCount;
 
         if (HitConfirmCoroutine != null)
         {
@@ -219,6 +230,7 @@ public class InteractionHandler : MonoBehaviour
 
         UnityAction onPauseComplete = () =>
         {
+
             // Handle case where player hit an enemy that is against a wall / static collider.
             // We should push this player away in this case.
             CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
@@ -257,6 +269,12 @@ public class InteractionHandler : MonoBehaviour
         StartCoroutine(WakeupCoroutine);
     }
 
+    public void OnComboEnded()
+    {
+        Debug.LogWarning("Combo ended. Hits: " + CurrentComboCount);
+        CurrentComboCount = 0;
+    }
+
     #endregion
 
     #region private methods
@@ -287,7 +305,6 @@ public class InteractionHandler : MonoBehaviour
                 --Hitstun;
             }
         }
-        CharacterStats.OnHitstunFinished();
         Animator.SetBool(HITSTUN_TRIGGER, false);
         HitstunCoroutine = null;
     }
@@ -301,7 +318,7 @@ public class InteractionHandler : MonoBehaviour
         {
             if (Overseer.Instance.IsGameReady)
             {
-                MovementMechanics.TranslateForcedMovement(knockback, Vector3.zero, (float) (PushbackFrames - framesToPushback) / PushbackFrames);
+                MovementMechanics.TranslateForcedMovement(knockback, Vector3.zero, (float)(PushbackFrames - framesToPushback) / PushbackFrames);
                 --framesToPushback;
             }
             yield return new WaitForEndOfFrame();
@@ -321,8 +338,23 @@ public class InteractionHandler : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         Animator.SetBool("KnockedDown", false);
+        WakeupCoroutine = null;
     }
-    
+
+    private IEnumerator HandleCurrentCombo(InteractionHandler handlerThatHitMe)
+    {
+        yield return new WaitForEndOfFrame();
+        while (!CanPlayerBlock)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        CharacterStats.OnComboFinished();
+
+        handlerThatHitMe.OnComboEnded();
+
+        ComboTrackingCoroutine = null;
+    }
+
     #endregion
 
     #region structs
@@ -372,6 +404,5 @@ public class InteractionHandler : MonoBehaviour
         public bool GuardBreak;
 
     }
-    
     #endregion
 }

@@ -212,7 +212,7 @@ public class CharacterStats : MonoBehaviour
         Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
     }
 
-    public void OnHitstunFinished()
+    public void OnComboFinished()
     {
         ComboDamage = 0;
 
