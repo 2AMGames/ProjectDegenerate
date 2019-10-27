@@ -218,10 +218,10 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
-        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
         ++CurrentComboCount;
+        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
 
         if (HitConfirmCoroutine != null)
         {
@@ -271,7 +271,6 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnComboEnded()
     {
-        Debug.LogWarning("Combo ended. Hits: " + CurrentComboCount);
         CurrentComboCount = 0;
     }
 
