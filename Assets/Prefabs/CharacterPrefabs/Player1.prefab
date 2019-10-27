@@ -284,11 +284,11 @@ MonoBehaviour:
     Height: 2
     Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
+    Knockdown: 1
     HitDamage: 5
     OnHitFrames: 5
     HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 15}
+    OnHitKnockback: {x: 0.5, y: 15}
     ChipDamage: 0
     OnGuardFrames: 5
     ChipMeterGain: 0
@@ -381,6 +381,7 @@ MonoBehaviour:
   CanPlayerBlock: 1
   MoveHitPlayer: 0
   Hitstun: 0
+  IsKnockedDown: 0
 --- !u!114 &489040384883500143
 MonoBehaviour:
   m_ObjectHideFlags: 0

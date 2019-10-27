@@ -20,6 +20,8 @@ public class InteractionHandler : MonoBehaviour
     /// </summary>
     private const int PushbackFrames = 6;
 
+    private const int WakeupDelayFrames = 20;
+
     #endregion
 
     #region main variables
@@ -60,6 +62,8 @@ public class InteractionHandler : MonoBehaviour
     private IEnumerator HitstunCoroutine;
 
     private IEnumerator PushbackCoroutine;
+
+    private IEnumerator WakeupCoroutine;
 
     #region Interaction Data
 
@@ -115,6 +119,8 @@ public class InteractionHandler : MonoBehaviour
         {
             CharacterMoveDict.Add(move.MoveName, move);
         }
+
+        CustomPhysics2D rigid = GetComponent<CustomPhysics2D>();
     }
 
     private void OnValidate()
@@ -151,6 +157,10 @@ public class InteractionHandler : MonoBehaviour
             if (HitConfirmCoroutine != null)
             {
                 StopCoroutine(HitConfirmCoroutine);
+            }
+            if (WakeupCoroutine != null)
+            {
+                StopCoroutine(WakeupCoroutine);
             }
 
             UnityAction onPauseComplete = () =>
@@ -239,6 +249,14 @@ public class InteractionHandler : MonoBehaviour
 
     }
 
+    public void OnKnockedDown()
+    {
+        Hitstun = 0;
+        Animator.SetBool("Hitstun", false);
+        WakeupCoroutine = HandleWakeup();
+        StartCoroutine(WakeupCoroutine);
+    }
+
     #endregion
 
     #region private methods
@@ -288,6 +306,21 @@ public class InteractionHandler : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private IEnumerator HandleWakeup()
+    {
+        int framesToWait = WakeupDelayFrames;
+        yield return new WaitForEndOfFrame();
+        while (framesToWait > 0)
+        {
+            if (Overseer.Instance.IsGameReady)
+            {
+                --framesToWait;
+            }
+            yield return new WaitForEndOfFrame();
+        }
+        Animator.SetBool("KnockedDown", false);
     }
     
     #endregion
