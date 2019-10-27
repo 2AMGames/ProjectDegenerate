@@ -311,8 +311,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeToBlackImage: {fileID: 33513306}
   mainMenuSceneToLoad:
-    sceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
-    sceneName: Scenes/SampleScene
+    sceneAsset: {fileID: 102900000, guid: 25d0b30511d067544b278faa51fefdbf, type: 3}
+    sceneName: Scenes/MainGameMenu
 --- !u!1 &145356141
 GameObject:
   m_ObjectHideFlags: 0
