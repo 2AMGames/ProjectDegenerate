@@ -80,8 +80,6 @@ public class MovementMechanics : MonoBehaviour {
     /// be reset back to the max number of jumps they have
     /// </summary>
     private int currentJumpsAvailable;
-
-    private CharacterStats.CharacterState currentMovementState = CharacterStats.CharacterState.FreeMovement;
     /// <summary>
     /// Jump velocity is calculated based on the jump height and time to reach apex
     /// </summary>

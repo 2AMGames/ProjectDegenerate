@@ -170,6 +170,8 @@ public class InteractionHandler : MonoBehaviour
             UnityAction onPauseComplete = () =>
             {
 
+                CustomPhysics2D enemyPhysics = enemyPhysics = enemyHitbox.InteractionHandler.GetComponent<CustomPhysics2D>();
+
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
                 Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
                 destinationVelocity.x *= direction;
@@ -191,6 +193,10 @@ public class InteractionHandler : MonoBehaviour
                 }
                 else
                 {
+                    if (moveHitBy.Height == MoveData.HitHeight.Air && destinationVelocity.y.Equals(0.0f) && enemyPhysics != null)
+                    {
+                        destinationVelocity.y = enemyPhysics.Velocity.y;
+                    }
                     MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
                 }
 
@@ -222,7 +228,6 @@ public class InteractionHandler : MonoBehaviour
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
         ++CurrentComboCount;
         CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
-
         if (HitConfirmCoroutine != null)
         {
             StopCoroutine(HitConfirmCoroutine);

@@ -174,7 +174,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Knockdown: 0
     HitDamage: 6
-    OnHitFrames: 9
+    OnHitFrames: 10
     HitMeterGain: 0
     OnHitKnockback: {x: 7, y: 0}
     ChipDamage: 0
@@ -378,6 +378,49 @@ MonoBehaviour:
     ChipMeterGain: 0
     OnGuardKnockback: {x: 4, y: 0}
     GuardBreak: 0
+  - MoveName: Air_Light_Kick
+    Height: 3
+    Magnitude: 0
+    SpecialMeterRequired: 0
+    Knockdown: 0
+    HitDamage: 10
+    OnHitFrames: 4
+    HitMeterGain: 7
+    OnHitKnockback: {x: 4, y: 0}
+    ChipDamage: 4
+    OnGuardFrames: 2
+    ChipMeterGain: 5
+    OnGuardKnockback: {x: 2, y: 0}
+    GuardBreak: 0
+  - MoveName: Air_Medium_Kick
+    Height: 3
+    Magnitude: 1
+    SpecialMeterRequired: 0
+    Knockdown: 0
+    HitDamage: 15
+    OnHitFrames: 5
+    HitMeterGain: 0
+    OnHitKnockback: {x: 1.5, y: 0}
+    ChipDamage: 5
+    OnGuardFrames: 3
+    ChipMeterGain: 0
+    OnGuardKnockback: {x: 2, y: 0}
+    GuardBreak: 0
+  - MoveName: Air_Heavy_Kick
+    Height: 3
+    Magnitude: 1
+    SpecialMeterRequired: 0
+    Knockdown: 1
+    HitDamage: 20
+    OnHitFrames: 5
+    HitMeterGain: 25
+    OnHitKnockback: {x: 20, y: 5}
+    ChipDamage: 5
+    OnGuardFrames: 7
+    ChipMeterGain: 7
+    OnGuardKnockback: {x: 10, y: 0}
+    GuardBreak: 0
+  CurrentComboCount: 0
   CanPlayerBlock: 1
   MoveHitPlayer: 0
   Hitstun: 0
