@@ -215,7 +215,6 @@ public class MovementMechanics : MonoBehaviour {
     /// If opponent is in the air, should not rotate sprite until grounded
     /// </summary>
     ///   /// <param name="opponentPosition"></param>
-
     public void FlipSpriteBasedOnOpponentDirection(Transform opponentPosition)
     {
         if (rigid.isInAir)
@@ -231,7 +230,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             SetSpriteFlipped(true);
         }
-
     }
 
     #endregion

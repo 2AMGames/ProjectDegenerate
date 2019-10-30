@@ -602,6 +602,10 @@ public class CommandInterpreter : MonoBehaviour
     /// <param name="isFacingRight"></param>
     private void OnDirectionChanged(bool isFacingRight)
     {
+        // In the case that character has buffered a movement direction input in the air, upon landing their direction will change, cause it to be flipped.
+        // We shoudl clear these just to make sure we don't accidentaly buffer a forward dash in the air, change direction and execute a dash toward the opposing player.
+        // In the future, we could disable these animation triggers and flip the opposite trigger (if applicable).
+        ResetMovementInputBuffers();
         currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentDirectionalInputStruct.directionInput);
         DirectionalinputStruct dInput;
         for (int i = 0; i < DirectionalInputRecordList.Count; i++)
@@ -648,6 +652,19 @@ public class CommandInterpreter : MonoBehaviour
 
         lastInputPattern = ushort.MaxValue;
         currentDirectionalInputStruct = StartingDirection;
+    }
+
+    /// <summary>
+    /// Reset animation triggers associate with movement inputs.
+    /// </summary>
+    private void ResetMovementInputBuffers()
+    {
+        FramesRemainingUntilRemoveFromBuffer[QCB_ANIM_TRIGGER] = 0;
+        FramesRemainingUntilRemoveFromBuffer[QCF_ANIM_TRIGGER] = 0;
+        FramesRemainingUntilRemoveFromBuffer[DP_ANIM_TRIGGER] = 0;
+        FramesRemainingUntilRemoveFromBuffer[F_DASH_ANIM_TRIGGER] = 0;
+        FramesRemainingUntilRemoveFromBuffer[B_DASH_ANIM_TRIGGER] = 0;
+        FramesRemainingUntilRemoveFromBuffer[S_JUMP_ANIM_TRIGGER] = 0;
     }
 
     #endregion
