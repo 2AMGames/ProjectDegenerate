@@ -204,7 +204,7 @@ public class HitboxManager : MonoBehaviour
         if (hurtHandler && !hitHandler.MoveHitPlayer)
         {
             bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
-            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentMove, didMoveHit);
+            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentHitFromMove, didMoveHit);
             hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
         }
     }
@@ -303,13 +303,13 @@ public class HitboxManager : MonoBehaviour
         // Determine if blocked based on height
         switch (moveThatHit.Height)
         {
-            case InteractionHandler.MoveData.HitHeight.Low:
+            case InteractionHandler.HitHeight.Low:
                 wasGuarded &= isCharacterCrouching;
                 break;
-            case InteractionHandler.MoveData.HitHeight.Mid:
+            case InteractionHandler.HitHeight.Mid:
                 wasGuarded &= !isCharacterCrouching;
                 break;
-            case InteractionHandler.MoveData.HitHeight.Air:
+            case InteractionHandler.HitHeight.Air:
                 wasGuarded &= !isCharacterCrouching;
                 break;
         }

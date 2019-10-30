@@ -162,7 +162,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // DidMoveHit == False: Move was blocked
-    public void OnPlayerHitByEnemy(InteractionHandler.MoveData move, bool didMoveHit)
+    public void OnPlayerHitByEnemy(InteractionHandler.HitData hitData, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
@@ -176,14 +176,14 @@ public class CharacterStats : MonoBehaviour
                 // "Cash In" built up chip damage that has not been recovered yet.
                 CurrentHealth -= CurrentChipDamage;
 
-                ComboDamage += move.HitDamage;
-                CurrentHealth -= move.HitDamage;
+                ComboDamage += hitData.HitDamage;
+                CurrentHealth -= hitData.HitDamage;
 
                 CurrentChipDamage = 0;
             }
             else
             {
-                CurrentChipDamage += move.ChipDamage;
+                CurrentChipDamage += hitData.ChipDamage;
             }
 
             OnCharacterHealthChanged.Invoke();
@@ -192,11 +192,11 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.MoveData move, bool didMoveHit)
+    public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.HitData hit, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
-            float meterToAdd = didMoveHit ? move.HitMeterGain : move.ChipMeterGain;
+            float meterToAdd = didMoveHit ? hit.HitMeterGain : hit.ChipMeterGain;
             SpecialMeter = Mathf.Min(MaxSpecialMeter, SpecialMeter + meterToAdd);
 
             OnMoveHit.Invoke();
@@ -205,7 +205,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.MoveData move)
+    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.HitData hit)
     {
         print("Clash");
 

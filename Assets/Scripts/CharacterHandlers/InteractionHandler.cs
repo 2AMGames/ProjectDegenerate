@@ -57,6 +57,16 @@ public class InteractionHandler : MonoBehaviour
         }
     }
 
+    public HitData CurrentHitFromMove
+    {
+        get
+        {
+            return CurrentMove.Hits.Length > HitIndex ? CurrentMove.Hits[HitIndex] : default;
+        }
+    }
+
+    public int HitIndex;
+
     private IEnumerator HitConfirmCoroutine;
 
     private IEnumerator HitstunCoroutine;
@@ -99,6 +109,7 @@ public class InteractionHandler : MonoBehaviour
         }
         CharactersHit.Clear();
         MoveHitPlayer = false;
+        HitIndex = 0;
         CharacterStats.ExecuteMove(CurrentMove);
     }
 
@@ -108,6 +119,15 @@ public class InteractionHandler : MonoBehaviour
     public void ResetMoveHit()
     {
         MoveHitPlayer = false;
+    }
+
+    /// <summary>
+    /// If a move has more than one hit, increment the hit index. We should have code handle this variable, instead of having the animator set it.
+    /// This is in case we want to do extra crazy stuff (ex. On hit, spend meter to reset the hit index).
+    /// </summary>
+    public void IncrementHitIndex()
+    {
+        ++HitIndex;
     }
 
     private void Awake()
@@ -140,19 +160,19 @@ public class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, MoveData moveHitBy, bool didMoveLand)
+    public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
 
-        int frames = didMoveLand ? moveHitBy.OnHitFrames : moveHitBy.OnGuardFrames;
+        int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
         if (frames > 0)
         {
-            string triggerToSet = didMoveLand ? moveHitBy.Magnitude.ToString() : GUARD_TRIGGER;
+            string triggerToSet = didMoveLand ? hitData.Magnitude.ToString() : GUARD_TRIGGER;
             Animator.SetTrigger(triggerToSet);
             Animator.SetBool(HITSTUN_TRIGGER, true);
 
             Hitstun = frames;
 
-            CharacterStats.OnPlayerHitByEnemy(moveHitBy, didMoveLand);
+            CharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
 
             if (HitstunCoroutine != null)
             {
@@ -173,10 +193,10 @@ public class InteractionHandler : MonoBehaviour
                 CustomPhysics2D enemyPhysics = enemyPhysics = enemyHitbox.InteractionHandler.GetComponent<CustomPhysics2D>();
 
                 int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-                Vector2 destinationVelocity = didMoveLand ? moveHitBy.OnHitKnockback : moveHitBy.OnGuardKnockback;
+                Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                if (didMoveLand && moveHitBy.Knockdown)
+                if (didMoveLand && hitData.Knockdown)
                 {
                     IsKnockedDown = true;
                     Animator.SetBool("KnockedDown", true);
@@ -193,10 +213,6 @@ public class InteractionHandler : MonoBehaviour
                 }
                 else
                 {
-                    if (moveHitBy.Height == MoveData.HitHeight.Air && destinationVelocity.y.Equals(0.0f) && enemyPhysics != null)
-                    {
-                        destinationVelocity.y = enemyPhysics.Velocity.y;
-                    }
                     MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
                 }
 
@@ -227,7 +243,8 @@ public class InteractionHandler : MonoBehaviour
         MoveHitPlayer = true;
         CharactersHit.Add(enemyHurtbox.InteractionHandler);
         ++CurrentComboCount;
-        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentMove, didMoveLand);
+        HitData hitData = CurrentHitFromMove;
+        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
         if (HitConfirmCoroutine != null)
         {
             StopCoroutine(HitConfirmCoroutine);
@@ -242,7 +259,7 @@ public class InteractionHandler : MonoBehaviour
 
             if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0 && !MovementMechanics.IsInAir)
             {
-                Vector2 destinationVector = new Vector2(didMoveLand ? CurrentMove.OnHitKnockback.x : CurrentMove.OnGuardKnockback.x, 0);
+                Vector2 destinationVector = new Vector2(didMoveLand ? hitData.OnHitKnockback.x : hitData.OnGuardKnockback.x, 0);
                 destinationVector.x *= Mathf.Sign(enemyPhysics.isTouchingSide.x) * -1;
                 PushbackCoroutine = HandlePushback(destinationVector);
                 StartCoroutine(PushbackCoroutine);
@@ -363,50 +380,59 @@ public class InteractionHandler : MonoBehaviour
 
     #region structs
 
+    public enum HitHeight
+    {
+        Low,
+        Mid,
+        High,
+        Air
+    }
+    public enum HitMagnitude
+    {
+        LightHit,
+        MediumHit,
+        HeavyHit,
+    };
+
     [System.Serializable]
+    /// <summary>
+    /// Info about move. Contains array of hits to apply upon connecting with opposing player.
+    /// </summary>
     public struct MoveData
     {
         [Header("Move Info")]
         public string MoveName;
 
-        public enum HitHeight
-        {
-            Low,
-            Mid,
-            High,
-            Air
-        }
-        public enum HitMagnitude
-        {
-            LightHit,
-            MediumHit,
-            HeavyHit,
-        };
+        public float SpecialMeterRequired;
 
         public HitHeight Height;
 
+        public HitData[] Hits;
+
+    }
+
+    [System.Serializable]
+    /// <summary>
+    ///  Data to read when a move makes contact.
+    /// </summary>
+    public struct HitData
+    {
+
         public HitMagnitude Magnitude;
-
-        public float SpecialMeterRequired;
-
         public bool Knockdown;
 
         [Header("On Hit Parameters")]
-
-        // Damage to apply if hit or blocked.
         public float HitDamage;
         public int OnHitFrames;
         public float HitMeterGain;
         public Vector2 OnHitKnockback;
 
         [Header("On Guard Parameters")]
-
         public float ChipDamage;
         public int OnGuardFrames;
         public float ChipMeterGain;
         public Vector2 OnGuardKnockback;
         public bool GuardBreak;
-
     }
     #endregion
 }
