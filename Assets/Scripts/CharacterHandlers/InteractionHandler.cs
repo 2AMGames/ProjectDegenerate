@@ -30,8 +30,6 @@ public class InteractionHandler : MonoBehaviour
 
     public CharacterStats CharacterStats { get; set; }
 
-    public CommandInterpreter CommandInterpreter { get; private set; }
-
     public MovementMechanics MovementMechanics { get; private set; }
 
     public HashSet<InteractionHandler> CharactersHit { get; private set; }
@@ -134,7 +132,6 @@ public class InteractionHandler : MonoBehaviour
     {
         Animator = GetComponent<Animator>();
         CharacterStats = GetComponent<CharacterStats>();
-        CommandInterpreter = GetComponent<CommandInterpreter>();
         MovementMechanics = GetComponent<MovementMechanics>();
 
         CharactersHit = new HashSet<InteractionHandler>();
