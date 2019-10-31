@@ -24,7 +24,10 @@ public class CommandInterpreter : MonoBehaviour
         BACK_DOWN = 1,
     }
 
+    public enum BUTTON_COMMAND
+    {
 
+    }
     #endregion enum
 
     #region const variabes

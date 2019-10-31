@@ -18,10 +18,22 @@ public class YukariArrow : BaseProjectile
     {
         base.SetupProjectile(characterStats);
 
+        
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public override void LaunchProjectile()
     {
         
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void OnCharacterPressedButton()
+    {
+
     }
 }
