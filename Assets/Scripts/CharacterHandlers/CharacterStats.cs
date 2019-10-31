@@ -70,6 +70,8 @@ public class CharacterStats : MonoBehaviour
     /// </summary>
     public MovementMechanics MovementMechanics { get; private set; }
 
+    public CommandInterpreter CommandInterpreter { get; private set;}
+
     /// <summary>
     /// Character State
     /// </summary>
@@ -125,6 +127,7 @@ public class CharacterStats : MonoBehaviour
     private void Awake()
     {
         MovementMechanics = GetComponent<MovementMechanics>();
+        CommandInterpreter = GetComponent<CommandInterpreter>();
         Anim = GetComponent<Animator>();
 
         CurrentHealth = MaxHealth;

@@ -32,7 +32,6 @@ public abstract class Hitbox : MonoBehaviour
     /// </summary>
     public InteractionHandler InteractionHandler { get; set; }
 
-
     /// <summary>
     /// Hitboxes that we are currently intersecting
     /// </summary>

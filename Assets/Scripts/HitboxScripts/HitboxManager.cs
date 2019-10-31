@@ -291,7 +291,7 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool WasMoveBlocked(InteractionHandler.MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
     {
-        CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CommandInterpreter.CurrentDirection;
+        CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CharacterStats.CommandInterpreter.CurrentDirection;
         bool wasGuarded = hurtBox.InteractionHandler.CanPlayerBlock;
         wasGuarded &= hurtBox.InteractionHandler.Hitstun <= 0;
         if (!wasGuarded)

@@ -28,7 +28,7 @@ public class InteractionHandler : MonoBehaviour
 
     public Animator Animator { get; private set; }
 
-    public CharacterStats CharacterStats { get; private set; }
+    public CharacterStats CharacterStats { get; set; }
 
     public CommandInterpreter CommandInterpreter { get; private set; }
 
