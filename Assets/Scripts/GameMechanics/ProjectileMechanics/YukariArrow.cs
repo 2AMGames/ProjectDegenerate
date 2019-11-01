@@ -8,8 +8,20 @@ public class YukariArrow : BaseProjectile
     /// 
     /// </summary>
     public int bounceCount = 2;
-    
-    
+
+
+    #region monobehaviour methods
+    private void OnValidate()
+    {
+        if (rigid == null)
+        {
+            rigid = GetComponent<CustomPhysics2D>();
+        }
+        rigid.useGravity = false;
+    }
+    #endregion monobehaviour methods
+
+
 
     /// <summary>
     /// This method should be called upon spawning our projectile

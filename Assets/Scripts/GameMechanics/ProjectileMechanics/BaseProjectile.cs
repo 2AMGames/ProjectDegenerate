@@ -18,7 +18,7 @@ public abstract class BaseProjectile : MonoBehaviour
     private InteractionHandler associatedInteractionHandler;
     public float launchSpeed;
     public Vector2 launchAngle;
-    private CustomPhysics2D rigid;
+    protected CustomPhysics2D rigid;
 
     #region monobehaviour methods
 

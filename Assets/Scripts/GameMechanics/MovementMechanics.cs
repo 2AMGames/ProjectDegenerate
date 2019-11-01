@@ -16,7 +16,7 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
-    public const string JUMP_TRIGGER = "Jump";
+    public static readonly int JUMP_TRIGGER = Animator.StringToHash("Jump");
     private const float CROUCHING_THRESHOLD = .6f;
 
     #endregion
@@ -318,6 +318,8 @@ public class MovementMechanics : MonoBehaviour {
     #region jumping methods
     /// <summary>
     /// Method that performs a jump by applying a velocity in the y direction
+    /// 
+    /// NOTE: Wondering if these conditions should actually be found in the animator itself
     /// </summary>
     /// <returns></returns>
     public bool Jump()

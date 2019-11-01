@@ -38,61 +38,61 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// Light Punch trigger
     /// </summary>
-    public const string LP_ANIM_TRIGGER = "LP";
+    public static readonly int LP_ANIM_TRIGGER = Animator.StringToHash("LP");
     /// <summary>
     /// Medium Punch trigger
     /// </summary>
-    public const string MP_ANIM_TRIGGER = "MP";
+    public static readonly int MP_ANIM_TRIGGER = Animator.StringToHash("MP");
 
     /// <summary>
     /// Heavy punch trigger
     /// </summary>
-    public const string HP_ANIM_TRIGGER = "HP";
+    public static readonly int HP_ANIM_TRIGGER = Animator.StringToHash("HP");
 
     /// <summary>
     /// Light Kick Trigger
     /// </summary>
-    public const string LK_ANIM_TRIGGER = "LK";
+    public static readonly int LK_ANIM_TRIGGER = Animator.StringToHash("LK");
 
     /// <summary>
     /// Medium Kick Trigger
     /// </summary>
-    public const string MK_ANIM_TRIGGER = "MK";
+    public static readonly int MK_ANIM_TRIGGER = Animator.StringToHash("MK");
 
     /// <summary>
     /// Heavy Kick trigger
     /// </summary>
-    public const string HK_ANIM_TRIGGER = "HK";
+    public static readonly int HK_ANIM_TRIGGER = Animator.StringToHash("HK");
 
     /// <summary>
     /// Quarter Circle Forward
     /// </summary>
-    private const string QCF_ANIM_TRIGGER = "QCF";
+    private static readonly int QCF_ANIM_TRIGGER = Animator.StringToHash("QCF");
 
     /// <summary>
     /// Quartercircle Back
     /// </summary>
-    private const string QCB_ANIM_TRIGGER = "QCB";
+    private static readonly int QCB_ANIM_TRIGGER = Animator.StringToHash("QCB");
 
     /// <summary>
     /// Dragon punch input
     /// </summary>
-    private const string DP_ANIM_TRIGGER = "DP";
+    private static readonly int DP_ANIM_TRIGGER = Animator.StringToHash("DP");
 
     /// <summary>
     /// Super jump input
     /// </summary>
-    private const string S_JUMP_ANIM_TRIGGER = "S_Jump";
+    private static readonly int S_JUMP_ANIM_TRIGGER = Animator.StringToHash("S_Jump");
 
     /// <summary>
     /// Forward dash input
     /// </summary>
-    private const string F_DASH_ANIM_TRIGGER = "F_Dash";
+    private static readonly int F_DASH_ANIM_TRIGGER = Animator.StringToHash("F_Dash");
 
     /// <summary>
     /// Back dash input
     /// </summary>
-    private const string B_DASH_ANIM_TRIGGER = "B_Dash";
+    private static readonly int B_DASH_ANIM_TRIGGER = Animator.StringToHash("B_Dash");
 
     // Attack inputs that require a button trigger complement for them to be valid.
 
@@ -142,7 +142,7 @@ public class CommandInterpreter : MonoBehaviour
         DIRECTION.UP
     };
 
-    private const string BUTTON_ACTION_TRIGGER = "ButtonAction";
+    private readonly int BUTTON_ACTION_TRIGGER = Animator.StringToHash("ButtonAction");
 
     private readonly DirectionalinputStruct StartingDirection = new DirectionalinputStruct
     {
@@ -153,8 +153,8 @@ public class CommandInterpreter : MonoBehaviour
     #endregion const variables
 
     #region action methods
-    public UnityAction<string> OnButtonPressedEvent;
-    public UnityAction<string> OnButtonReleasedEvent;
+    public UnityAction<int> OnButtonPressedEvent;
+    public UnityAction<int> OnButtonReleasedEvent;
     public UnityAction<DIRECTION, Vector2Int> OnDirectionSetEvent;
 
     #endregion 
@@ -174,8 +174,8 @@ public class CommandInterpreter : MonoBehaviour
 
     private ushort lastInputPattern = ushort.MaxValue;
 
-    private Dictionary<string, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<string, int>();
-    public Dictionary<string, bool> ButtonsPressed = new Dictionary<string, bool>();
+    private Dictionary<int, int> FramesRemainingUntilRemoveFromBuffer = new Dictionary<int, int>();
+    public Dictionary<int, bool> ButtonsPressed = new Dictionary<int, bool>();
 
     /// <summary>
     /// Input queue. Delays input front of line input data until frame to execute is >= Current frame number.
@@ -386,7 +386,7 @@ public class CommandInterpreter : MonoBehaviour
         }   
     }
 
-    public void OnButtonEventTriggered(string buttonEventName)
+    public void OnButtonEventTriggered(int buttonEventName)
     {
         if (!ButtonsPressed[buttonEventName])
         {
@@ -427,7 +427,7 @@ public class CommandInterpreter : MonoBehaviour
         FramesSinceLastDirectionalInput = -1;
     }
 
-    private int IsButtonPressed(string buttonTrigger)
+    private int IsButtonPressed(int buttonTrigger)
     {
         return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
     }
@@ -558,7 +558,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    private void OnDirectionalInputExecuted(int startingIndex, DIRECTION[] moveExecuted, string animTrigger)
+    private void OnDirectionalInputExecuted(int startingIndex, DIRECTION[] moveExecuted, int animTrigger)
     {
         Anim.SetTrigger(animTrigger);
         DirectionalInputRecordList.RemoveRange(startingIndex, moveExecuted.Length);
@@ -619,7 +619,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public void OnButtonReleased(string buttonEventName)
+    public void OnButtonReleased(int buttonEventName)
     {
         if (ButtonsPressed[buttonEventName] == true)
         {
@@ -674,7 +674,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region Coroutines
 
-    private IEnumerator DisableButtonTriggerAfterTime(string buttonEventName)
+    private IEnumerator DisableButtonTriggerAfterTime(int buttonEventName)
     {
         yield return null;
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)

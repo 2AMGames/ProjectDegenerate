@@ -9,26 +9,19 @@ using UnityEngine.UI;
 /// </summary>
 public class CommandDisplayUI : MonoBehaviour
 {
-    #region const variables
-    private readonly Vector2 UP = Vector2.up;
-    private readonly Vector2 DOWN = Vector2.down;
-    private readonly Vector2 RIGHT = Vector2.right;
-    private readonly Vector2 LEFT = Vector2.left;
-    private readonly Vector2 UP_RIGHT = new Vector2(1, 1);
-    private readonly Vector2 UP_LEFT = new Vector2(-1, 1);
-    private readonly Vector2 DOWN_RIGHT = new Vector2(1, -1);
-    private readonly Vector2 DOWN_LEFT = new Vector2(-1, -1);
-    private readonly Vector2 NEUTRAL = Vector2.zero;
+    
 
-    #endregion const variables
-    [Tooltip("")]
+    [Tooltip("Color of the button while it is currently being held")]
     public Color buttonPressedColor = Color.green;
-    [Tooltip("")]
+    [Tooltip("The color of the button when it is not currenltly being held")]
     public Color buttonReleasedColor = Color.white;
-    [Tooltip("")]
-    public Dictionary<string, Image> buttonImageDictionary = new Dictionary<string, Image>();
+    [Tooltip("Dictionary of images that represent the buttons that the player currently is pressing. The key is the button value that is being pressed")]
+    public Dictionary<int, Image> buttonImageDictionary = new Dictionary<int, Image>();
+    [Tooltip("List of all the buttons that are displayed in our button pressed UI")]
     public Image[] buttonImages;
+    [Tooltip("The images of our joystick crosshair. Really just need this to map out the bounds of the image so that the cursor knows where to go when at max range")]
     public Image joystickImage;
+    [Tooltip("The pointer that visually represents where you're joystick is being held")]
     public Image cursorImage;
 
 
@@ -54,7 +47,7 @@ public class CommandDisplayUI : MonoBehaviour
     /// <summary>
     /// 
     /// </summary>
-    public void OnButtonPressed(string buttonPressed)
+    public void OnButtonPressed(int buttonPressed)
     {
         buttonImageDictionary[buttonPressed].color = buttonPressedColor;
     }
@@ -62,7 +55,7 @@ public class CommandDisplayUI : MonoBehaviour
     /// <summary>
     /// 
     /// </summary>
-    public void OnButtonReleased(string buttonReleased)
+    public void OnButtonReleased(int buttonReleased)
     {
         buttonImageDictionary[buttonReleased].color = buttonReleasedColor;
     }
