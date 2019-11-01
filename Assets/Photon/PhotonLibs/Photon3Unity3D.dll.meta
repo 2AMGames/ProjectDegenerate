@@ -157,7 +157,7 @@ PluginImporter:
       settings:
         CPU: AnyCPU
         DontProcess: false
-        PlaceholderPath: Assets/Photon/PhotonLibs/Metro/Photon3Unity3D.dll
+        PlaceholderPath: 
         SDK: AnySDK
         ScriptingBackend: AnyScriptingBackend
   - first:
