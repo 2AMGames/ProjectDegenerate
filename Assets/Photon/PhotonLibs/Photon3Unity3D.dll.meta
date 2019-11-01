@@ -17,6 +17,17 @@ PluginImporter:
   validateReferences: 1
   platformData:
   - first:
+      '': Any
+    second:
+      enabled: 0
+      settings:
+        Exclude Editor: 0
+        Exclude Linux64: 0
+        Exclude OSXUniversal: 0
+        Exclude Win: 0
+        Exclude Win64: 0
+        Exclude WindowsStoreApps: 0
+  - first:
       '': Linux
     second:
       enabled: 1
@@ -68,7 +79,7 @@ PluginImporter:
   - first:
       Any: 
     second:
-      enabled: 0
+      enabled: 1
       settings: {}
   - first:
       Editor: Editor
@@ -121,7 +132,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: 
+        CPU: AnyCPU
   - first:
       Standalone: Win
     second:
@@ -145,10 +156,10 @@ PluginImporter:
       enabled: 1
       settings:
         CPU: AnyCPU
-        DontProcess: False
-        PlaceholderPath: 
+        DontProcess: false
+        PlaceholderPath: Assets/Photon/PhotonLibs/Metro/Photon3Unity3D.dll
         SDK: AnySDK
-        ScriptingBackend: Il2Cpp
+        ScriptingBackend: AnyScriptingBackend
   - first:
       XboxOne: XboxOne
     second:
