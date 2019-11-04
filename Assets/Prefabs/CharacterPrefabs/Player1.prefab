@@ -172,7 +172,18 @@ MonoBehaviour:
   - MoveName: Medium_Punch
     SpecialMeterRequired: 0
     Height: 2
-    Hits: []
+    Hits:
+    - Magnitude: 1
+      Knockdown: 0
+      HitDamage: 4
+      OnHitFrames: 4
+      HitMeterGain: 4
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 2
+      ChipMeterGain: 2
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
   - MoveName: Hard_Punch
     SpecialMeterRequired: 0
     Height: 2
