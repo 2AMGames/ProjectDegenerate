@@ -18,7 +18,7 @@ public class InteractionHandler : MonoBehaviour
     /// <summary>
     /// Frames 
     /// </summary>
-    private const int PushbackFrames = 6;
+    private const int PushbackFrames = 16;
 
     private const int WakeupDelayFrames = 20;
 
@@ -332,7 +332,7 @@ public class InteractionHandler : MonoBehaviour
         int framesToPushback = PushbackFrames;
         MovementMechanics.TranslateForcedMovement(Vector3.zero, knockback, 1);
         yield return new WaitForEndOfFrame();
-        while (framesToPushback > 0 && !MovementMechanics.IsInAir)
+        while (framesToPushback >= 0 && !MovementMechanics.IsInAir)
         {
             if (Overseer.Instance.IsGameReady)
             {
@@ -366,6 +366,8 @@ public class InteractionHandler : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+        StopCoroutine(PushbackCoroutine);
+
         CharacterStats.OnComboFinished();
 
         handlerThatHitMe.OnComboEnded();
