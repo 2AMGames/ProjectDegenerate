@@ -191,7 +191,7 @@ MonoBehaviour:
   maxAvailableJumps: 1
   JumpingAcceleration: 4.9979177
   IsDashing: 0
-  GroundDashSpeed: 12
+  GroundDashSpeed: 16
   AirDashSpeed: 12
   canMoveWhileCrouching: 0
   ignoreJumpButton: 0
