@@ -27,10 +27,12 @@ public abstract class BaseProjectile : MonoBehaviour
         rigid = GetComponent<CustomPhysics2D>();
         associatedInteractionHandler = GetComponent<InteractionHandler>();
     }
+
+    
     #endregion monobheaviour methods
 
     /// <summary>
-    /// 
+    /// This should be called at run time when setting up our missile upon spawning it
     /// </summary>
     /// <param name="characterStats"></param>
     public virtual void SetupProjectile(CharacterStats characterStats)
