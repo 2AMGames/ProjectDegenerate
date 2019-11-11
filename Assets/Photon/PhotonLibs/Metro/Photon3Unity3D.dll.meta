@@ -12,17 +12,6 @@ PluginImporter:
   validateReferences: 1
   platformData:
   - first:
-      '': Any
-    second:
-      enabled: 0
-      settings:
-        Exclude Editor: 1
-        Exclude Linux64: 0
-        Exclude OSXUniversal: 0
-        Exclude Win: 0
-        Exclude Win64: 0
-        Exclude WindowsStoreApps: 0
-  - first:
       '': Linux
     second:
       enabled: 0
@@ -84,25 +73,19 @@ PluginImporter:
   - first:
       Standalone: Linux64
     second:
-      enabled: 1
-      settings:
-        CPU: AnyCPU
-  - first:
-      Standalone: OSXUniversal
-    second:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
   - first:
       Standalone: Win
     second:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
   - first:
       Standalone: Win64
     second:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
   - first:
@@ -111,8 +94,8 @@ PluginImporter:
       enabled: 1
       settings:
         CPU: AnyCPU
-        DontProcess: false
-        PlaceholderPath: 
+        DontProcess: False
+        PlaceholderPath: Assets/Photon/PhotonLibs/Photon3Unity3D.dll
         SDK: AnySDK
         ScriptingBackend: DotNet
   - first:
