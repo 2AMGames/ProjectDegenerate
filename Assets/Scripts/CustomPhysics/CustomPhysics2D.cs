@@ -20,6 +20,7 @@ public class CustomPhysics2D : MonoBehaviour {
     [Tooltip("If this is marked true, then the object will stop accelerating once it has reached the maximum velocity that it can travel")]
     public bool useTerminalVelocity = true;
 
+    [SerializeField]
     [Tooltip("This will be marked true when the animator is overriding the velocity of this actor to force movement.")]
     public bool UseAnimatorVelocity;
 
@@ -72,6 +73,11 @@ public class CustomPhysics2D : MonoBehaviour {
         {
             Overseer.Instance.ColliderManager.RemoveCustomPhysics(this);
         }
+    }
+
+    private void Update()
+    {
+        
     }
 
     /// <summary>
