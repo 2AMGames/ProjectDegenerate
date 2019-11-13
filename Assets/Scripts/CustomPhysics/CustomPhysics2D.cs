@@ -28,6 +28,7 @@ public class CustomPhysics2D : MonoBehaviour {
     [Tooltip("The direction that gravity will be acting on the object")]
     private Vector2 gravityVector = Vector2.down;
 
+    [System.NonSerialized]
     /// <summary>
     /// This will be a count of the number of objects that we are touching in any given direction. If the value is negative, this implies that we are hitting something in the negative direction
     /// 
