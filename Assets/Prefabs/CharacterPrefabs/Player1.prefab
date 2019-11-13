@@ -58,7 +58,6 @@ MonoBehaviour:
   useTerminalVelocity: 0
   UseAnimatorVelocity: 0
   gravityVector: {x: 0, y: -1}
-  isTouchingSide: {x: 0, y: 0}
   gravityScale: 4.9979177
   terminalVelocity: 10
 --- !u!114 &489040385781029630
@@ -165,7 +164,7 @@ MonoBehaviour:
       HitMeterGain: 4
       OnHitKnockback: {x: 4, y: 0}
       ChipDamage: 2
-      OnGuardFrames: 2
+      OnGuardFrames: 50
       ChipMeterGain: 2
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
@@ -180,9 +179,9 @@ MonoBehaviour:
       HitMeterGain: 4
       OnHitKnockback: {x: 4, y: 0}
       ChipDamage: 2
-      OnGuardFrames: 2
+      OnGuardFrames: 80
       ChipMeterGain: 2
-      OnGuardKnockback: {x: 2, y: 0}
+      OnGuardKnockback: {x: 18, y: 0}
       GuardBreak: 0
   - MoveName: Hard_Punch
     SpecialMeterRequired: 0
@@ -190,8 +189,19 @@ MonoBehaviour:
     Hits: []
   - MoveName: Cr_Light_Punch
     SpecialMeterRequired: 0
-    Height: 1
-    Hits: []
+    Height: 2
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 2
+      OnHitFrames: 2
+      HitMeterGain: 2
+      OnHitKnockback: {x: 2, y: 0}
+      ChipDamage: 1
+      OnGuardFrames: 1
+      ChipMeterGain: 1
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
   - MoveName: Cr_Light_Kick
     SpecialMeterRequired: 0
     Height: 0
