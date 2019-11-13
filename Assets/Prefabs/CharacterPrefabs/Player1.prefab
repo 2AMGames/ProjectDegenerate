@@ -223,11 +223,11 @@ MonoBehaviour:
     Height: 2
     Hits: []
   - MoveName: Cr_Hard_Punch
-    SpecialMeterRequired: 0
+    SpecialMeterRequired: 1
     Height: 2
     Hits:
     - Magnitude: 1
-      Knockdown: 0
+      Knockdown: 1
       HitDamage: 15
       OnHitFrames: 12
       HitMeterGain: 10
@@ -244,7 +244,18 @@ MonoBehaviour:
   - MoveName: Cr_Hard_Kick
     SpecialMeterRequired: 0
     Height: 0
-    Hits: []
+    Hits:
+    - Magnitude: 2
+      Knockdown: 1
+      HitDamage: 50
+      OnHitFrames: 0
+      HitMeterGain: 0
+      OnHitKnockback: {x: 0, y: -2}
+      ChipDamage: 4
+      OnGuardFrames: 4
+      ChipMeterGain: 4
+      OnGuardKnockback: {x: 5, y: 0}
+      GuardBreak: 0
   - MoveName: Air_Light_Punch
     SpecialMeterRequired: 0
     Height: 3

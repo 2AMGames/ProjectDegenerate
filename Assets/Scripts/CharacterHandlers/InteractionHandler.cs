@@ -20,7 +20,7 @@ public class InteractionHandler : MonoBehaviour
     /// </summary>
     private const int PushbackFrames = 16;
 
-    private const int WakeupDelayFrames = 20;
+    private const int WakeupDelayFrames = 30;
 
     #endregion
 
@@ -159,80 +159,77 @@ public class InteractionHandler : MonoBehaviour
 
     public void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
-
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
-        if (frames > 0)
+        string triggerToSet = didMoveLand ? hitData.Magnitude.ToString() : GUARD_TRIGGER;
+        Animator.SetTrigger(triggerToSet);
+        Animator.SetBool(HITSTUN_TRIGGER, true);
+
+        Hitstun = frames;
+
+        CharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
+
+        if (HitstunCoroutine != null)
         {
-            string triggerToSet = didMoveLand ? hitData.Magnitude.ToString() : GUARD_TRIGGER;
-            Animator.SetTrigger(triggerToSet);
-            Animator.SetBool(HITSTUN_TRIGGER, true);
+            StopCoroutine(HitstunCoroutine);
+        }
+        if (HitConfirmCoroutine != null)
+        {
+            StopCoroutine(HitConfirmCoroutine);
+        }
+        if (WakeupCoroutine != null)
+        {
+            StopCoroutine(WakeupCoroutine);
+        }
 
-            Hitstun = frames;
+        UnityAction onPauseComplete = () =>
+        {
 
-            CharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
+            CustomPhysics2D enemyPhysics = enemyPhysics = enemyHitbox.InteractionHandler.GetComponent<CustomPhysics2D>();
 
-            if (HitstunCoroutine != null)
+            int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
+            Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
+            destinationVelocity.x *= direction;
+
+            if (didMoveLand && hitData.Knockdown)
             {
-                StopCoroutine(HitstunCoroutine);
+                IsKnockedDown = true;
+                Animator.SetBool("KnockedDown", true);
             }
-            if (HitConfirmCoroutine != null)
+
+            if (!MovementMechanics.IsInAir)
             {
-                StopCoroutine(HitConfirmCoroutine);
-            }
-            if (WakeupCoroutine != null)
-            {
-                StopCoroutine(WakeupCoroutine);
-            }
-
-            UnityAction onPauseComplete = () =>
-            {
-
-                CustomPhysics2D enemyPhysics = enemyPhysics = enemyHitbox.InteractionHandler.GetComponent<CustomPhysics2D>();
-
-                int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
-                Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
-                destinationVelocity.x *= direction;
-
-                if (didMoveLand && hitData.Knockdown)
+                if (PushbackCoroutine != null)
                 {
-                    IsKnockedDown = true;
-                    Animator.SetBool("KnockedDown", true);
+                    StopCoroutine(PushbackCoroutine);
                 }
-
-                if (!MovementMechanics.IsInAir)
-                {
-                    if (PushbackCoroutine != null)
-                    {
-                        StopCoroutine(PushbackCoroutine);
-                    }
-                    PushbackCoroutine = HandlePushback(destinationVelocity);
-                    StartCoroutine(PushbackCoroutine);
-                }
-                else
-                {
-                    MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
-                }
-
-                HitstunCoroutine = HandleHitstun();
-                StartCoroutine(HitstunCoroutine);
-
-                if (ComboTrackingCoroutine == null)
-                {
-                    ComboTrackingCoroutine = HandleCurrentCombo(enemyHitbox.InteractionHandler);
-                    StartCoroutine(ComboTrackingCoroutine);
-                }
-            };
-
-            if (didMoveLand)
-            {
-                HitConfirmCoroutine = PauseCharacterOnHit(onPauseComplete);
-                StartCoroutine(HitConfirmCoroutine);
+                PushbackCoroutine = HandlePushback(destinationVelocity);
+                StartCoroutine(PushbackCoroutine);
             }
             else
             {
-                onPauseComplete();
+                MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
             }
+
+            HitstunCoroutine = HandleHitstun();
+            StartCoroutine(HitstunCoroutine);
+
+            if (ComboTrackingCoroutine == null)
+            {
+                ComboTrackingCoroutine = HandleCurrentCombo(enemyHitbox.InteractionHandler);
+                StartCoroutine(ComboTrackingCoroutine);
+            }
+        };
+
+        if (didMoveLand)
+        {
+            HitConfirmCoroutine = PauseCharacterOnHit(onPauseComplete);
+            StartCoroutine(HitConfirmCoroutine);
         }
+        else
+        {
+            onPauseComplete();
+        }
+
     }
 
     public void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
