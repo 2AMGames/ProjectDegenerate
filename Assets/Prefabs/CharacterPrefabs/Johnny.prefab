@@ -303,6 +303,21 @@ MonoBehaviour:
       ChipMeterGain: 20
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
+  - MoveName: Back_Jab
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 13
+      OnHitFrames: 7
+      HitMeterGain: 5
+      OnHitKnockback: {x: 2, y: 0}
+      ChipDamage: 1
+      OnGuardFrames: 1
+      ChipMeterGain: 1
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
   HitIndex: 0
   CurrentComboCount: 0
   CanPlayerBlock: 1
