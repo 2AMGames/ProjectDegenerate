@@ -29,7 +29,8 @@ public class YukariMechanics : MonoBehaviour
 
     #region event methods
     /// <summary>
-    /// Event that will launch an
+    /// Event that will launch an arrow. The animation will have to despawn the display arrow on its own. You can not toggle
+    /// gameobject active state from code if it is used by the animator
     /// </summary>
     public void OnLaunchArrow()
     {
