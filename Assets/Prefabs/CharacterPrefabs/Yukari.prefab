@@ -207,6 +207,7 @@ Transform:
   - {fileID: 7802398371562325160}
   - {fileID: 184292646052267204}
   - {fileID: 6676394923917580352}
+  - {fileID: 3387166013417500270}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -227,7 +228,6 @@ MonoBehaviour:
   useTerminalVelocity: 0
   UseAnimatorVelocity: 0
   gravityVector: {x: 0, y: -1}
-  isTouchingSide: {x: 0, y: 0}
   gravityScale: 4.9979177
   terminalVelocity: 10
 --- !u!114 &4562934858063402286
@@ -324,229 +324,71 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterMoves:
   - MoveName: Light_Punch
-    Height: 2
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 5
-    OnHitFrames: 11
-    HitMeterGain: 2
-    OnHitKnockback: {x: 2.75, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 9
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 1.9, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Medium_Punch
-    Height: 2
-    Magnitude: 1
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 6
-    OnHitFrames: 9
-    HitMeterGain: 0
-    OnHitKnockback: {x: 7, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 15
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 6, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Hard_Punch
-    Height: 2
-    Magnitude: 1
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 10
-    OnHitFrames: 11
-    HitMeterGain: 25
-    OnHitKnockback: {x: 10, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 4
-    ChipMeterGain: 8
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Cr_Light_Punch
+    SpecialMeterRequired: 0
     Height: 1
-    Magnitude: 0
-    SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 2.5
-    OnHitFrames: 7
-    HitMeterGain: 0
-    OnHitKnockback: {x: 2.5, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 2
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 1.25, y: 0}
-    GuardBreak: 0
+    Hits: []
   - MoveName: Cr_Light_Kick
-    Height: 0
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 2.5
-    OnHitFrames: 12
-    HitMeterGain: 0
-    OnHitKnockback: {x: 2.5, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 9
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 2, y: 0}
-    GuardBreak: 0
+    Height: 0
+    Hits: []
   - MoveName: Light_Kick
-    Height: 2
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 2.5
-    OnHitFrames: 6
-    HitMeterGain: 0
-    OnHitKnockback: {x: 5, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 2, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Medium_Kick
-    Height: 2
-    Magnitude: 1
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 2.5
-    OnHitFrames: 1
-    HitMeterGain: 0
-    OnHitKnockback: {x: 5, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 2, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Hard_Kick
-    Height: 2
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 5
-    OnHitFrames: 8
-    HitMeterGain: 0
-    OnHitKnockback: {x: 5, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 2, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Cr_Medium_Punch
-    Height: 2
-    Magnitude: 1
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 4
-    OnHitFrames: 2
-    HitMeterGain: 0
-    OnHitKnockback: {x: 3, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 2, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Cr_Hard_Punch
-    Height: 2
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 5
-    OnHitFrames: 5
-    HitMeterGain: 0
-    OnHitKnockback: {x: 0.5, y: 15}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
   - MoveName: Cr_Medium_Kick
-    Height: 0
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 5
-    OnHitFrames: 2
-    HitMeterGain: 0
-    OnHitKnockback: {x: 3, y: 1}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 1, y: 2}
-    GuardBreak: 0
+    Height: 0
+    Hits: []
   - MoveName: Cr_Hard_Kick
+    SpecialMeterRequired: 0
     Height: 0
-    Magnitude: 0
-    SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 7
-    OnHitFrames: 10
-    HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 20}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Hits: []
   - MoveName: Air_Light_Punch
-    Height: 3
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 3
-    OnHitFrames: 10
-    HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Height: 3
+    Hits: []
   - MoveName: Air_Medium_Punch
-    Height: 3
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 3
-    OnHitFrames: 10
-    HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Height: 3
+    Hits: []
   - MoveName: Air_Heavy_Punch
-    Height: 3
-    Magnitude: 0
     SpecialMeterRequired: 0
-    Knockdown: 0
-    HitDamage: 3
-    OnHitFrames: 10
-    HitMeterGain: 0
-    OnHitKnockback: {x: 1, y: -15}
-    ChipDamage: 0
-    OnGuardFrames: 5
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 5, y: 0}
-    GuardBreak: 0
+    Height: 3
+    Hits: []
   - MoveName: Shoulder_Charge
-    Height: 2
-    Magnitude: 1
     SpecialMeterRequired: 50
-    Knockdown: 0
-    HitDamage: 10
-    OnHitFrames: 4
-    HitMeterGain: 0
-    OnHitKnockback: {x: 15, y: 0}
-    ChipDamage: 0
-    OnGuardFrames: 8
-    ChipMeterGain: 0
-    OnGuardKnockback: {x: 4, y: 0}
-    GuardBreak: 0
+    Height: 2
+    Hits: []
+  HitIndex: 0
+  CurrentComboCount: 0
   CanPlayerBlock: 1
   MoveHitPlayer: 0
   Hitstun: 0
@@ -1000,7 +842,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 897c057fffbd95d43a57c60529dc56c6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7d93c043c5e01934181246096f9479ea, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1319,3 +1161,83 @@ Transform:
   m_Father: {fileID: 1035050716333555086}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7611508333928289674
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6811723046187891532}
+    m_Modifications:
+    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_Name
+      value: YukariArrowSprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.871
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba8f3c19c1583d74bac12d0aabbe576a, type: 3}
+--- !u!4 &3387166013417500270 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+    type: 3}
+  m_PrefabInstance: {fileID: 7611508333928289674}
+  m_PrefabAsset: {fileID: 0}
