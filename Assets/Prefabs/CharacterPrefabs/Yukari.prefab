@@ -436,8 +436,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47c56e80f5283bd40926acbede40c91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yukariArrowPrefab: {fileID: 0}
-  yukariArrowTransformReference: {fileID: 0}
+  yukariArrowPrefab: {fileID: 3920821400113480562, guid: 970da521554034f449d683242cd318ab,
+    type: 3}
+  yukariArrowTransformReference: {fileID: 3387166013417500270}
 --- !u!1 &1850954356739904614
 GameObject:
   m_ObjectHideFlags: 0

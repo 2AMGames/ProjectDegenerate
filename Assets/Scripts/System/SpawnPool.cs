@@ -101,7 +101,9 @@ public class SpawnPool : MonoBehaviour
         {
             AddNewObjectToSpawnPool(prefabObj);
         }
-        return (T)spawnPoolDictionary[hash].Dequeue();
+        T item = (T)spawnPoolDictionary[hash].Dequeue();
+        item.gameObject.SetActive(true);
+        return item;
     }
 
     /// <summary>

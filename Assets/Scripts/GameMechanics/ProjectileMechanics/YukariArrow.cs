@@ -39,6 +39,8 @@ public class YukariArrow : BaseProjectile
     public override void LaunchProjectile()
     {
         
+        rigid.Velocity = -this.transform.right * launchSpeed;
+        print(rigid.Velocity);
     }
 
     /// <summary>

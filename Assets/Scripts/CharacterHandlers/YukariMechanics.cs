@@ -34,11 +34,12 @@ public class YukariMechanics : MonoBehaviour
     /// </summary>
     public void OnLaunchArrow()
     {
-        YukariArrow newlySpawnedArrow = SpawnPool.Instance.Spawn<YukariArrow>(yukariArrowPrefab);
+        YukariArrow newlySpawnedArrow = SpawnPool.Instance.Spawn(yukariArrowPrefab);
 
+        newlySpawnedArrow.transform.SetParent(null);
         newlySpawnedArrow.SetupProjectile(associatedCharacterStats);
         newlySpawnedArrow.transform.position = yukariArrowTransformReference.position;
-        newlySpawnedArrow.transform.rotation = yukariArrowTransformReference.rotation;
+        newlySpawnedArrow.transform.right = Mathf.Sign(this.transform.localScale.x) * yukariArrowTransformReference.right;
         newlySpawnedArrow.LaunchProjectile();
     }
 
