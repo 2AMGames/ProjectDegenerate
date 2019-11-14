@@ -288,129 +288,21 @@ MonoBehaviour:
       ChipMeterGain: 2
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
-  - MoveName: Hard_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 1
-    Hits: []
-  - MoveName: Cr_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Light_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Hard_Punch
+  - MoveName: Back_Slash
     SpecialMeterRequired: 0
     Height: 2
     Hits:
     - Magnitude: 1
       Knockdown: 0
-      HitDamage: 15
-      OnHitFrames: 12
-      HitMeterGain: 10
-      OnHitKnockback: {x: 1, y: 20}
-      ChipDamage: 7
-      OnGuardFrames: 4
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 4, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Cr_Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Air_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Heavy_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Shoulder_Charge
-    SpecialMeterRequired: 50
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 1
-      Knockdown: 1
-      HitDamage: 10
-      OnHitFrames: 10
-      HitMeterGain: 10
-      OnHitKnockback: {x: 15, y: 10}
-      ChipDamage: 5
+      HitDamage: 20
+      OnHitFrames: 15
+      HitMeterGain: 20
+      OnHitKnockback: {x: 3.5, y: 0}
+      ChipDamage: 6
       OnGuardFrames: 5
-      ChipMeterGain: 5
-      OnGuardKnockback: {x: 8, y: 5}
+      ChipMeterGain: 20
+      OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
-  - MoveName: Air_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Heavy_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
   HitIndex: 0
   CurrentComboCount: 0
   CanPlayerBlock: 1
@@ -1024,7 +916,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.57
+      value: 0.26700002
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1719,7 +1611,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.165
+      value: 0.61
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
