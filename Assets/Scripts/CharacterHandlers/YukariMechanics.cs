@@ -8,6 +8,14 @@ using UnityEngine;
 /// </summary>
 public class YukariMechanics : MonoBehaviour
 {
+    #region const variables
+    /// <summary>
+    /// The number of arrow that we will spawn for our character at the start of the game
+    /// </summary>
+    private const int INITIAL_YUKARI_ARROW_COUNT = 3;
+    #endregion const variables
+
+
     #region main variables
     [Tooltip("A prefab reference to Yukaris Arrow projectile")]
     public YukariArrow yukariArrowPrefab;
@@ -23,7 +31,7 @@ public class YukariMechanics : MonoBehaviour
     private void Awake()
     {
         associatedCharacterStats = GetComponent<CharacterStats>();
-        SpawnPool.Instance.InitializeSpawnPool(yukariArrowPrefab, 3);//Initialize spawn pool so that we can appropriately use Yukari's arrows
+        SpawnPool.Instance.InitializeSpawnPool(yukariArrowPrefab, INITIAL_YUKARI_ARROW_COUNT);//Initialize spawn pool so that we can appropriately use Yukari's arrows
     }
     #endregion monobehaviour methods
 
@@ -42,6 +50,5 @@ public class YukariMechanics : MonoBehaviour
         newlySpawnedArrow.transform.right = Mathf.Sign(this.transform.localScale.x) * yukariArrowTransformReference.right;
         newlySpawnedArrow.LaunchProjectile();
     }
-
     #endregion event methods
 }
