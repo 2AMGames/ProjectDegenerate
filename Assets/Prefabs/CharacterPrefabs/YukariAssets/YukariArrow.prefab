@@ -164,6 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0837da226273b48869f3e3e14c706c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchSpeed: 6.5
+  launchSpeed: 15
   launchAngle: {x: 0, y: 0}
   bounceCount: 2

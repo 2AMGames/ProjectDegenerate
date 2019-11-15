@@ -11,6 +11,8 @@ public class YukariArrow : BaseProjectile
 
 
     #region monobehaviour methods
+
+
     private void OnValidate()
     {
         if (rigid == null)
@@ -29,7 +31,7 @@ public class YukariArrow : BaseProjectile
     public override void SetupProjectile(CharacterStats characterStats)
     {
         base.SetupProjectile(characterStats);
-
+        StartCoroutine(DespawnAfterTime());
         
     }
 
@@ -40,7 +42,6 @@ public class YukariArrow : BaseProjectile
     {
         
         rigid.Velocity = -this.transform.right * launchSpeed;
-        print(rigid.Velocity);
     }
 
     /// <summary>
@@ -49,5 +50,12 @@ public class YukariArrow : BaseProjectile
     public void OnCharacterPressedButton()
     {
 
+    }
+
+
+    private IEnumerator DespawnAfterTime()
+    {
+        yield return new WaitForSeconds(3);
+        SpawnPool.Instance.Despawn(this);
     }
 }
