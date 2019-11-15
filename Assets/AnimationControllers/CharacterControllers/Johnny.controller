@@ -3620,6 +3620,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -7157249964671853461}
     m_Position: {x: -470, y: -500, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 5085711635412507692}
+    m_Position: {x: -435, y: -435, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -5366721687652786230}
@@ -5055,6 +5058,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &5085711635412507692
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cr_Light_Kick
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: efffc0c574ef3d640a6d48edfd62910f, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &5336803550605568842
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5658,7 +5687,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a64f02fc2ad730541a312812b67bc8a2, type: 2}
+  m_Motion: {fileID: 7400000, guid: efffc0c574ef3d640a6d48edfd62910f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

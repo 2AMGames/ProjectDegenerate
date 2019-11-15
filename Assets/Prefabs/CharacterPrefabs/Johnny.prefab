@@ -348,6 +348,21 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
+  - MoveName: Cr_Light_Kick
+    SpecialMeterRequired: 0
+    Height: 2
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 3
+      OnHitFrames: 9
+      HitMeterGain: 5
+      OnHitKnockback: {x: 2, y: 0}
+      ChipDamage: 1
+      OnGuardFrames: 1
+      ChipMeterGain: 1
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
   HitIndex: 0
   CurrentComboCount: 0
   CanPlayerBlock: 1
@@ -381,7 +396,7 @@ MonoBehaviour:
   colliderOffset: {x: -0.06, y: -0.02}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.81, y: 0.99}
+  boxColliderSize: {x: 0.81, y: 1.69}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!1 &2601027187185761776
@@ -776,7 +791,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.553
+      value: 0.925
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -831,7 +846,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.75
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -956,7 +971,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.013
+      value: 0.024
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1016,7 +1031,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.x
-      value: 0.74
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1051,7 +1066,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: -0.109
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1116,7 +1131,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.12
+      value: 0.23
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
@@ -1396,7 +1411,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.869
+      value: 1.426
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1456,7 +1471,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.13
+      value: 0.28
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
@@ -1656,7 +1671,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.042
+      value: 0.61
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1716,7 +1731,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.27
+      value: 0.48
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
