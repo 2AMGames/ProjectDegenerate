@@ -44,18 +44,19 @@ public class YukariArrow : BaseProjectile
         rigid.Velocity = -this.transform.right * launchSpeed;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void OnCharacterPressedButton()
-    {
-
-    }
 
 
     private IEnumerator DespawnAfterTime()
     {
         yield return new WaitForSeconds(3);
+        OnDespawnArrow();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void OnDespawnArrow()
+    {
         SpawnPool.Instance.Despawn(this);
     }
 }
