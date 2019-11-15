@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// This is the base projectile class. All projectiles in the game should extend this class
 /// </summary>
-public abstract class BaseProjectile : MonoBehaviour
+public abstract class BaseProjectile : SpawnableObject //In general projectiles will be spawnable objects, that should be reused if possible
 {
     /// <summary>
     /// The associated character stats for our projectile. This should be the player that launched this projectile

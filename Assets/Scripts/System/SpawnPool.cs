@@ -16,7 +16,7 @@ public class SpawnPool : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = GameObject.FindObjectOfType<SpawnPool>();
+                instance = FindObjectOfType<SpawnPool>();
             }
             return instance;
         }
@@ -27,7 +27,7 @@ public class SpawnPool : MonoBehaviour
     /// </summary>
     private Dictionary<int, string> GeneratedSeeds = new Dictionary<int, string>();
 
-    public Dictionary<int, Queue<MonoBehaviour>> spawnPoolDictionary = new Dictionary<int, Queue<MonoBehaviour>>();
+    public Dictionary<int, Queue<SpawnableObject>> spawnPoolDictionary = new Dictionary<int, Queue<SpawnableObject>>();
 
     #region monobehaviour methods
     private void Awake()
@@ -41,14 +41,15 @@ public class SpawnPool : MonoBehaviour
     /// Adds a new Instantiated object to the spawnpool list
     /// </summary>
     /// <param name="obj"></param>
-    private void AddNewObjectToSpawnPool(MonoBehaviour obj)
+    private void AddNewObjectToSpawnPool(SpawnableObject obj)
     {
         int hash = obj.name.GetHashCode();
-        MonoBehaviour newMono = Instantiate<MonoBehaviour>(obj);
+        SpawnableObject newMono = Instantiate<SpawnableObject>(obj);
 
         newMono.name = newMono.name.Substring(0, obj.name.Length);//Removes the word clone from the instantiated object
         newMono.transform.SetParent(this.transform);
         newMono.gameObject.SetActive(false);
+        newMono.isInSpawnPool = true;
 
         spawnPoolDictionary[hash].Enqueue(newMono);
     }
@@ -58,14 +59,14 @@ public class SpawnPool : MonoBehaviour
     /// </summary>
     /// <param name="obj"></param>
     /// <param name="count"></param>
-    public void InitializeSpawnPool(MonoBehaviour obj, int count = 1)
+    public void InitializeSpawnPool(SpawnableObject obj, int count = 1)
     {
         int hash = obj.name.GetHashCode();
 
         if (!spawnPoolDictionary.ContainsKey(hash))
         {
             GeneratedSeeds.Add(hash, obj.name);
-            spawnPoolDictionary.Add(hash, new Queue<MonoBehaviour>());
+            spawnPoolDictionary.Add(hash, new Queue<SpawnableObject>());
         }
         else
         {
@@ -89,7 +90,7 @@ public class SpawnPool : MonoBehaviour
     /// <typeparam name="T"></typeparam>
     /// <param name="prefabObj"></param>
     /// <returns></returns>
-    public T Spawn<T>(T prefabObj) where T : MonoBehaviour
+    public T Spawn<T>(T prefabObj) where T : SpawnableObject
     {
         int hash = prefabObj.name.GetHashCode();
         if (!spawnPoolDictionary.ContainsKey(hash))
@@ -103,6 +104,9 @@ public class SpawnPool : MonoBehaviour
         }
         T item = (T)spawnPoolDictionary[hash].Dequeue();
         item.gameObject.SetActive(true);
+        item.isInSpawnPool = false;
+        item.OnSpawnItem();
+
         return item;
     }
 
@@ -110,8 +114,13 @@ public class SpawnPool : MonoBehaviour
     /// Despawns an item in the game to be spawned in at another time in the future
     /// </summary>
     /// <param name="obj"></param>
-    public void Despawn(MonoBehaviour obj)
+    public void Despawn(SpawnableObject obj)
     {
+        if (obj.isInSpawnPool)
+        {
+            Debug.LogError(obj.name + " was already despawned. Ignoring despawn call.");
+            return;
+        }
         int hash = obj.name.GetHashCode();
         if (!spawnPoolDictionary.ContainsKey(hash))
         {
@@ -121,6 +130,9 @@ public class SpawnPool : MonoBehaviour
 
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(this.transform);
+        obj.isInSpawnPool = true;
+        obj.OnDespawnItem();
+
         spawnPoolDictionary[hash].Enqueue(obj);
     }
 }
