@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 165182042436537853}
   - component: {fileID: 2392909585441513695}
   - component: {fileID: 3423198361245228845}
+  - component: {fileID: 756495634}
   m_Layer: 8
   m_Name: Yukari
   m_TagString: Untagged
@@ -423,6 +424,21 @@ MonoBehaviour:
   boxColliderSize: {x: 0.43, y: 1.41}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
+--- !u!114 &756495634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913990994674473675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c56e80f5283bd40926acbede40c91e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yukariArrowPrefab: {fileID: 3920821400113480562, guid: 970da521554034f449d683242cd318ab,
+    type: 3}
+  yukariArrowTransformReference: {fileID: 3387166013417500270}
 --- !u!1 &1850954356739904614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,6 +1248,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658447297601895874, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.135
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658447297601895874, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658447297601895874, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658447297601895874, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba8f3c19c1583d74bac12d0aabbe576a, type: 3}
