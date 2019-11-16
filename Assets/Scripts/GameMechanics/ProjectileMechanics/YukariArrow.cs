@@ -23,8 +23,6 @@ public class YukariArrow : BaseProjectile
     }
     #endregion monobehaviour methods
 
-
-
     /// <summary>
     /// This method should be called upon spawning our projectile
     /// </summary>

@@ -194,13 +194,11 @@ public class HitboxManager : MonoBehaviour
     /// <param name="hurtbox"></param>
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        //print(hitbox.name + " " + hurtbox.name + " entered!");
         InteractionHandler hitHandler = hitbox.InteractionHandler;
         InteractionHandler hurtHandler = hurtbox.InteractionHandler;
 
         // If the hitbox for this move allows multi hit, then we can register another hit on this frame.
         // If not, only register a hit if the move has not already hit the player.
-        // TODO Replace HitBox.AllowMultiHit with (CharacterMove).MultiHit
         if (hurtHandler && !hitHandler.MoveHitPlayer)
         {
             bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
