@@ -152,7 +152,7 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
-    public void ExecuteMove(InteractionHandler.MoveData move)
+    public void ExecuteMove(CharacterInteractionHandler.MoveData move)
     {
         if (string.IsNullOrEmpty(move.MoveName))
             return;
@@ -165,7 +165,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // DidMoveHit == False: Move was blocked
-    public void OnPlayerHitByEnemy(InteractionHandler.HitData hitData, bool didMoveHit)
+    public void OnPlayerHitByEnemy(CharacterInteractionHandler.HitData hitData, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
@@ -195,7 +195,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnPlayerHitEnemy(Hitbox myHitbox, InteractionHandler.HitData hit, bool didMoveHit)
+    public void OnPlayerHitEnemy(Hitbox myHitbox, CharacterInteractionHandler.HitData hit, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
@@ -208,7 +208,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,InteractionHandler.HitData hit)
+    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,CharacterInteractionHandler.HitData hit)
     {
         print("Clash");
 

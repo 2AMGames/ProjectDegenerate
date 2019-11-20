@@ -1117,11 +1117,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3873901699947432853, guid: bb4b45e2986f8514a9442a4561cad9ab,
-        type: 3}
-      propertyPath: boxColliderSize.y
-      value: 1.34
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb4b45e2986f8514a9442a4561cad9ab, type: 3}
 --- !u!1001 &6342723385208685618

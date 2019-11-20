@@ -234,7 +234,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
 
         playerController.CommandInterpreter = associatedPlayer.GetComponent<CommandInterpreter>();
-        playerController.InteractionHandler = associatedPlayer.GetComponent<InteractionHandler>();
+        playerController.InteractionHandler = associatedPlayer.GetComponent<CharacterInteractionHandler>();
         playerController.CharacterStats = associatedPlayer.GetComponent<CharacterStats>();
         playerController.CharacterStats.PlayerIndex = playerIndex;
 

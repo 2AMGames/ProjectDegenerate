@@ -15,7 +15,6 @@ public class YukariMechanics : MonoBehaviour
     private const int INITIAL_YUKARI_ARROW_COUNT = 3;
     #endregion const variables
 
-
     #region main variables
     [Tooltip("A prefab reference to Yukaris Arrow projectile")]
     public YukariArrow yukariArrowPrefab;
@@ -27,6 +26,7 @@ public class YukariMechanics : MonoBehaviour
     /// </summary>
     private CharacterStats associatedCharacterStats;
     #endregion main variables
+
     #region monobehaivour methods
     private void Awake()
     {

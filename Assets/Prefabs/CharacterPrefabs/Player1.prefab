@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 489040385781029624}
   - component: {fileID: 489040385781029626}
   - component: {fileID: 7808090552154802651}
-  - component: {fileID: 7518321783212868651}
   - component: {fileID: 489040384883500143}
   - component: {fileID: 1662675726438627876}
+  - component: {fileID: 8698929695516216935}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Untagged
@@ -140,200 +140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DirectionalInputRecordList: []
---- !u!114 &7518321783212868651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489040385781029602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterMoves:
-  - MoveName: Light_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 4, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 50
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 2, y: 0}
-      GuardBreak: 0
-  - MoveName: Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 4, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 80
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 18, y: 0}
-      GuardBreak: 0
-  - MoveName: Hard_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 2
-      OnHitFrames: 2
-      HitMeterGain: 2
-      OnHitKnockback: {x: 2, y: 0}
-      ChipDamage: 1
-      OnGuardFrames: 1
-      ChipMeterGain: 1
-      OnGuardKnockback: {x: 1, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Light_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Hard_Punch
-    SpecialMeterRequired: 1
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 1
-      HitDamage: 15
-      OnHitFrames: 12
-      HitMeterGain: 10
-      OnHitKnockback: {x: 1, y: 20}
-      ChipDamage: 7
-      OnGuardFrames: 4
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 4, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Cr_Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits:
-    - Magnitude: 2
-      Knockdown: 1
-      HitDamage: 50
-      OnHitFrames: 0
-      HitMeterGain: 0
-      OnHitKnockback: {x: 0, y: -2}
-      ChipDamage: 4
-      OnGuardFrames: 4
-      ChipMeterGain: 4
-      OnGuardKnockback: {x: 5, y: 0}
-      GuardBreak: 0
-  - MoveName: Air_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Heavy_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Shoulder_Charge
-    SpecialMeterRequired: 50
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 0, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 0, y: 0}
-      GuardBreak: 0
-    - Magnitude: 1
-      Knockdown: 1
-      HitDamage: 10
-      OnHitFrames: 10
-      HitMeterGain: 10
-      OnHitKnockback: {x: 15, y: 10}
-      ChipDamage: 5
-      OnGuardFrames: 5
-      ChipMeterGain: 5
-      OnGuardKnockback: {x: 8, y: 5}
-      GuardBreak: 0
-  - MoveName: Air_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Heavy_Kick
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  HitIndex: 0
-  CurrentComboCount: 0
-  CanPlayerBlock: 1
-  MoveHitPlayer: 0
-  Hitstun: 0
-  IsKnockedDown: 0
 --- !u!114 &489040384883500143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,6 +170,25 @@ MonoBehaviour:
   boxColliderSize: {x: 0.72, y: 1.5}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
+--- !u!114 &8698929695516216935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489040385781029602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98038c01b3a1aa34895908b6b5a31957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitIndex: 0
+  MoveHitPlayer: 0
+  CharacterMoves: []
+  CurrentComboCount: 0
+  CanPlayerBlock: 0
+  Hitstun: 0
+  IsKnockedDown: 0
 --- !u!1 &489040385881696257
 GameObject:
   m_ObjectHideFlags: 0

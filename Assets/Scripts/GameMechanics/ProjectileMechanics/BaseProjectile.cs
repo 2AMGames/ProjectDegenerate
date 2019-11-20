@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(CustomPhysics2D))]
-[RequireComponent(typeof(InteractionHandler))]
+[RequireComponent(typeof(CharacterInteractionHandler))]
 /// <summary>
 /// This is the base projectile class. All projectiles in the game should extend this class
 /// </summary>
@@ -15,7 +15,7 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
     /// The associated character stats for our projectile. This should be the player that launched this projectile
     /// </summary>
     public CharacterStats associatedCharacterStats { get; set; }
-    private InteractionHandler associatedInteractionHandler;
+    private CharacterInteractionHandler associatedInteractionHandler;
     public float launchSpeed;
     public Vector2 launchAngle;
     protected CustomPhysics2D rigid;
@@ -25,7 +25,7 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
     private void Awake()
     {
         rigid = GetComponent<CustomPhysics2D>();
-        associatedInteractionHandler = GetComponent<InteractionHandler>();
+        associatedInteractionHandler = GetComponent<CharacterInteractionHandler>();
     }
 
     

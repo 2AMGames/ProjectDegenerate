@@ -19,7 +19,7 @@ public class ComboUI : MonoBehaviour
 
     public Text ComboText;
 
-    public InteractionHandler InteractionHandler;
+    public CharacterInteractionHandler InteractionHandler;
 
     public CharacterStats CharacterStats;
 
@@ -30,7 +30,7 @@ public class ComboUI : MonoBehaviour
     private void Start()
     {
         CharacterStats = Overseer.Instance.PlayerObjects[CharacterId].GetComponent<CharacterStats>();
-        InteractionHandler = CharacterStats.gameObject.GetComponent<InteractionHandler>();
+        InteractionHandler = CharacterStats.gameObject.GetComponent<CharacterInteractionHandler>();
         CharacterStats.OnMoveHit.AddListener(OnComboCountChanged);
         OnComboCountChanged();
     }

@@ -183,10 +183,10 @@ GameObject:
   - component: {fileID: 6904269941144838273}
   - component: {fileID: 8271710281275870078}
   - component: {fileID: 3515751137008310264}
-  - component: {fileID: 165182042436537853}
   - component: {fileID: 2392909585441513695}
   - component: {fileID: 3423198361245228845}
   - component: {fileID: 756495634}
+  - component: {fileID: 4753161536363220188}
   m_Layer: 8
   m_Name: Yukari
   m_TagString: Untagged
@@ -311,89 +311,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DirectionalInputRecordList: []
---- !u!114 &165182042436537853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913990994674473675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterMoves:
-  - MoveName: Light_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Hard_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 1
-    Hits: []
-  - MoveName: Cr_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Light_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Hard_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits: []
-  - MoveName: Cr_Medium_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Cr_Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits: []
-  - MoveName: Air_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Air_Heavy_Punch
-    SpecialMeterRequired: 0
-    Height: 3
-    Hits: []
-  - MoveName: Shoulder_Charge
-    SpecialMeterRequired: 50
-    Height: 2
-    Hits: []
-  HitIndex: 0
-  CurrentComboCount: 0
-  CanPlayerBlock: 1
-  MoveHitPlayer: 0
-  Hitstun: 0
-  IsKnockedDown: 0
 --- !u!114 &2392909585441513695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,6 +356,25 @@ MonoBehaviour:
   yukariArrowPrefab: {fileID: 3920821400113480562, guid: 970da521554034f449d683242cd318ab,
     type: 3}
   yukariArrowTransformReference: {fileID: 3387166013417500270}
+--- !u!114 &4753161536363220188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913990994674473675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98038c01b3a1aa34895908b6b5a31957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitIndex: 0
+  MoveHitPlayer: 0
+  CharacterMoves: []
+  CurrentComboCount: 0
+  CanPlayerBlock: 0
+  Hitstun: 0
+  IsKnockedDown: 0
 --- !u!1 &1850954356739904614
 GameObject:
   m_ObjectHideFlags: 0

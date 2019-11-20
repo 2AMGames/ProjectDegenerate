@@ -81,7 +81,7 @@ public abstract class PlayerController : MonoBehaviour
 
     public CharacterStats CharacterStats;
 
-    public InteractionHandler InteractionHandler;
+    public CharacterInteractionHandler InteractionHandler;
 
     public CommandInterpreter CommandInterpreter;
 

@@ -119,9 +119,9 @@ GameObject:
   - component: {fileID: 2601027186934917961}
   - component: {fileID: 2601027186934917963}
   - component: {fileID: 5659396548768479338}
-  - component: {fileID: 5370452404952364442}
   - component: {fileID: 2601027187715003870}
   - component: {fileID: 3873901699947432853}
+  - component: {fileID: 2661832160723727127}
   m_Layer: 8
   m_Name: Johnny
   m_TagString: Untagged
@@ -245,145 +245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DirectionalInputRecordList: []
---- !u!114 &5370452404952364442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2601027186934917971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterMoves:
-  - MoveName: Light_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 4, y: 0}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 2, y: 0}
-      GuardBreak: 0
-  - MoveName: Medium_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 0
-      HitDamage: 4
-      OnHitFrames: 4
-      HitMeterGain: 4
-      OnHitKnockback: {x: 3, y: 10}
-      ChipDamage: 2
-      OnGuardFrames: 2
-      ChipMeterGain: 2
-      OnGuardKnockback: {x: 3, y: 0}
-      GuardBreak: 0
-  - MoveName: Back_Slash
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 0
-      HitDamage: 20
-      OnHitFrames: 15
-      HitMeterGain: 20
-      OnHitKnockback: {x: 3.5, y: 0}
-      ChipDamage: 6
-      OnGuardFrames: 5
-      ChipMeterGain: 20
-      OnGuardKnockback: {x: 1, y: 0}
-      GuardBreak: 0
-  - MoveName: Back_Jab
-    SpecialMeterRequired: 0
-    Height: 1
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 13
-      OnHitFrames: 7
-      HitMeterGain: 5
-      OnHitKnockback: {x: 2, y: 0}
-      ChipDamage: 1
-      OnGuardFrames: 1
-      ChipMeterGain: 1
-      OnGuardKnockback: {x: 1, y: 0}
-      GuardBreak: 0
-  - MoveName: Upward_Slash
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 0
-      HitDamage: 13
-      OnHitFrames: 13
-      HitMeterGain: 5
-      OnHitKnockback: {x: 2, y: 13}
-      ChipDamage: 1
-      OnGuardFrames: 1
-      ChipMeterGain: 1
-      OnGuardKnockback: {x: 4, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Light_Punch
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 3
-      OnHitFrames: 9
-      HitMeterGain: 5
-      OnHitKnockback: {x: 2, y: 0}
-      ChipDamage: 1
-      OnGuardFrames: 1
-      ChipMeterGain: 1
-      OnGuardKnockback: {x: 1, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Light_Kick
-    SpecialMeterRequired: 0
-    Height: 0
-    Hits:
-    - Magnitude: 0
-      Knockdown: 0
-      HitDamage: 3
-      OnHitFrames: 9
-      HitMeterGain: 5
-      OnHitKnockback: {x: 2, y: 0}
-      ChipDamage: 1
-      OnGuardFrames: 1
-      ChipMeterGain: 1
-      OnGuardKnockback: {x: 1, y: 0}
-      GuardBreak: 0
-  - MoveName: Cr_Hard_Kick
-    SpecialMeterRequired: 0
-    Height: 2
-    Hits:
-    - Magnitude: 1
-      Knockdown: 1
-      HitDamage: 20
-      OnHitFrames: 0
-      HitMeterGain: 15
-      OnHitKnockback: {x: 0, y: -1}
-      ChipDamage: 7
-      OnGuardFrames: 7
-      ChipMeterGain: 7
-      OnGuardKnockback: {x: 5, y: 0}
-      GuardBreak: 0
-  HitIndex: 0
-  CurrentComboCount: 0
-  CanPlayerBlock: 1
-  MoveHitPlayer: 0
-  Hitstun: 0
-  IsKnockedDown: 0
 --- !u!114 &2601027187715003870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,9 +272,28 @@ MonoBehaviour:
   colliderOffset: {x: -0.06, y: -0.02}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.81, y: 1}
+  boxColliderSize: {x: 0.81, y: 1.64}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
+--- !u!114 &2661832160723727127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2601027186934917971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98038c01b3a1aa34895908b6b5a31957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitIndex: 0
+  MoveHitPlayer: 0
+  CharacterMoves: []
+  CurrentComboCount: 0
+  CanPlayerBlock: 0
+  Hitstun: 0
+  IsKnockedDown: 0
 --- !u!1 &2601027187185761776
 GameObject:
   m_ObjectHideFlags: 0
