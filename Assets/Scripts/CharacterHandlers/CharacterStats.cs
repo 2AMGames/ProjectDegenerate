@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
+using MoveData = InteractionHandler.MoveData;
+using HitData = InteractionHandler.HitData;
+
 /// <summary>
 /// A reference to all important variables in our character. Such as the 
 /// </summary>
@@ -152,7 +155,7 @@ public class CharacterStats : MonoBehaviour
 
     #region public interface
 
-    public void ExecuteMove(CharacterInteractionHandler.MoveData move)
+    public void ExecuteMove(MoveData move)
     {
         if (string.IsNullOrEmpty(move.MoveName))
             return;
@@ -165,7 +168,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // DidMoveHit == False: Move was blocked
-    public void OnPlayerHitByEnemy(CharacterInteractionHandler.HitData hitData, bool didMoveHit)
+    public void OnPlayerHitByEnemy(HitData hitData, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
@@ -195,7 +198,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnPlayerHitEnemy(Hitbox myHitbox, CharacterInteractionHandler.HitData hit, bool didMoveHit)
+    public void OnPlayerHitEnemy(Hitbox myHitbox, HitData hit, bool didMoveHit)
     {
         if (Overseer.Instance.IsGameReady)
         {
@@ -208,7 +211,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,CharacterInteractionHandler.HitData hit)
+    public void OnClash(Hitbox myHitbox, Hitbox enemyHitbox,HitData hit)
     {
         print("Clash");
 

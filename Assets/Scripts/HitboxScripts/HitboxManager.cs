@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using HitHeight = InteractionHandler.HitHeight;
+using MoveData = InteractionHandler.MoveData;
+
 public class HitboxManager : MonoBehaviour
 {
     [System.NonSerialized]
@@ -194,16 +197,19 @@ public class HitboxManager : MonoBehaviour
     /// <param name="hurtbox"></param>
     private void OnHitboxEnteredHurtboxEvent(Hitbox hitbox, Hitbox hurtbox)
     {
-        CharacterInteractionHandler hitHandler = hitbox.InteractionHandler;
-        CharacterInteractionHandler hurtHandler = hurtbox.InteractionHandler;
+        InteractionHandler hitHandler = hitbox.InteractionHandler;
+        InteractionHandler hurtHandler = hurtbox.InteractionHandler;
 
         // If the hitbox for this move allows multi hit, then we can register another hit on this frame.
         // If not, only register a hit if the move has not already hit the player.
         if (hurtHandler && !hitHandler.MoveHitPlayer)
         {
-            bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
-            hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentHitFromMove, didMoveHit);
-            hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
+            if (hurtHandler is CharacterInteractionHandler)
+            {
+                bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
+                hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentHitFromMove, didMoveHit);
+                hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
+            }
         }
     }
 
@@ -246,8 +252,8 @@ public class HitboxManager : MonoBehaviour
     private void OnHitboxStayHitboxEvent(Hitbox hitbox1, Hitbox hitbox2)
     {
         print(hitbox1.name + "  " + hitbox2.name + " stayed!");
-        CharacterInteractionHandler hitHandler1 = hitbox1.InteractionHandler;
-        CharacterInteractionHandler hitHandler2 = hitbox2.InteractionHandler;
+        InteractionHandler hitHandler1 = hitbox1.InteractionHandler;
+        InteractionHandler hitHandler2 = hitbox2.InteractionHandler;
 
         if (hitHandler1)
         {
@@ -287,27 +293,30 @@ public class HitboxManager : MonoBehaviour
     /// <param name="hitBox"></param>
     /// <param name="hurtBox"></param>
     /// <returns></returns>
-    private bool WasMoveBlocked(CharacterInteractionHandler.MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
+    private bool WasMoveBlocked(MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
     {
-        CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.CharacterStats.CommandInterpreter.CurrentDirection;
-        bool wasGuarded = hurtBox.InteractionHandler.CanPlayerBlock;
-        wasGuarded &= hurtBox.InteractionHandler.Hitstun <= 0;
+        CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.AssociatedCharacterStats.CommandInterpreter.CurrentDirection;
+        CharacterInteractionHandler hurtInteractionHandler = hitBox.InteractionHandler is CharacterInteractionHandler ? (CharacterInteractionHandler)hitBox.InteractionHandler : null;
+        if (hurtInteractionHandler == null)
+            return false;
+        bool wasGuarded =hurtInteractionHandler.CanPlayerBlock;
+        wasGuarded &=hurtInteractionHandler.Hitstun <= 0;
         if (!wasGuarded)
         {
             return wasGuarded;
         }
 
-        bool isCharacterCrouching = hurtBox.InteractionHandler.MovementMechanics.IsCrouching;
+        bool isCharacterCrouching = hurtInteractionHandler.MovementMechanics.IsCrouching;
         // Determine if blocked based on height
         switch (moveThatHit.Height)
         {
-            case CharacterInteractionHandler.HitHeight.Low:
+            case HitHeight.Low:
                 wasGuarded &= isCharacterCrouching;
                 break;
-            case CharacterInteractionHandler.HitHeight.Mid:
+            case HitHeight.Mid:
                 wasGuarded &= !isCharacterCrouching;
                 break;
-            case CharacterInteractionHandler.HitHeight.Air:
+            case HitHeight.Air:
                 wasGuarded &= !isCharacterCrouching;
                 break;
         }

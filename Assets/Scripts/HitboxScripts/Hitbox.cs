@@ -30,7 +30,7 @@ public abstract class Hitbox : MonoBehaviour
     /// <summary>
     /// All hitboxes should have a reference to an interaction handler. Required for sending events properly to the associated character
     /// </summary>
-    public CharacterInteractionHandler InteractionHandler { get; set; }
+    public InteractionHandler InteractionHandler { get; set; }
 
     /// <summary>
     /// Hitboxes that we are currently intersecting
@@ -43,7 +43,7 @@ public abstract class Hitbox : MonoBehaviour
     private void Awake()
     {
         Overseer.Instance.HitboxManager.AddHitboxToList(this);
-        InteractionHandler = GetComponentInParent<CharacterInteractionHandler>();
+        InteractionHandler = GetComponentInParent<InteractionHandler>();
 
     }
 

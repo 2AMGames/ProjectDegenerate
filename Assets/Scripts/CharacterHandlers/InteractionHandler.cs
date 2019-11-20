@@ -96,7 +96,10 @@ public abstract class InteractionHandler : MonoBehaviour
 
     public virtual void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
-
+        MoveHitPlayer = true;
+        CharactersHit.Add((CharacterInteractionHandler)enemyHurtbox.InteractionHandler);
+        HitData hitData = CurrentHitFromMove;
+        AssociatedCharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
     }
 
     public virtual void OnClash(Hitbox enemyHitbox)

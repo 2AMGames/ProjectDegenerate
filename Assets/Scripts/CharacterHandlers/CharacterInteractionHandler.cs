@@ -21,8 +21,6 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region main variables
 
-    public CharacterStats CharacterStats { get; set; }
-
     public MovementMechanics MovementMechanics { get; private set; }
 
     [SerializeField]
@@ -74,7 +72,7 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             StopCoroutine(PushbackCoroutine);
         }
-        CharacterStats.ExecuteMove(CurrentMove);
+        AssociatedCharacterStats.ExecuteMove(CurrentMove);
     }
 
 
@@ -82,7 +80,7 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         base.Awake();
 
-        CharacterStats = GetComponent<CharacterStats>();
+        AssociatedCharacterStats = GetComponent<CharacterStats>();
         MovementMechanics = GetComponent<MovementMechanics>();
         CharacterMoveDict = new Dictionary<string, MoveData>();
         foreach (MoveData move in CharacterMoves)
@@ -115,7 +113,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
             Hitstun = frames;
 
-            CharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
+            AssociatedCharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
 
             if (HitstunCoroutine != null)
             {
@@ -164,7 +162,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
                 if (ComboTrackingCoroutine == null)
                 {
-                    ComboTrackingCoroutine = HandleCurrentCombo(enemyHitbox.InteractionHandler);
+                    ComboTrackingCoroutine = HandleCurrentCombo((CharacterInteractionHandler)enemyHitbox.InteractionHandler);
                     StartCoroutine(ComboTrackingCoroutine);
                 }
             };
@@ -183,11 +181,12 @@ public class CharacterInteractionHandler : InteractionHandler
 
     public override void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
-        MoveHitPlayer = true;
-        CharactersHit.Add(enemyHurtbox.InteractionHandler);
+        base.OnHitEnemy(myHitbox, enemyHurtbox, didMoveLand);
         ++CurrentComboCount;
+
         HitData hitData = CurrentHitFromMove;
-        CharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
+        AssociatedCharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
+
         if (HitConfirmCoroutine != null)
         {
             StopCoroutine(HitConfirmCoroutine);
@@ -218,7 +217,6 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             onPauseComplete();
         }
-
     }
 
     public override void OnClash(Hitbox enemyHitbox)
@@ -250,10 +248,10 @@ public class CharacterInteractionHandler : InteractionHandler
         while (framesToPause > 0)
         {
             yield return new WaitForEndOfFrame();
-            CharacterStats.ShouldCharacterMove = false;
+            AssociatedCharacterStats.ShouldCharacterMove = false;
             framesToPause -= Overseer.Instance.IsGameReady ? 1 : 0;
         }
-        CharacterStats.ShouldCharacterMove = true;
+        AssociatedCharacterStats.ShouldCharacterMove = true;
         onPauseComplete?.Invoke();
     }
 
@@ -314,7 +312,7 @@ public class CharacterInteractionHandler : InteractionHandler
         }
         StopCoroutine(PushbackCoroutine);
 
-        CharacterStats.OnComboFinished();
+        AssociatedCharacterStats.OnComboFinished();
 
         handlerThatHitMe.OnComboEnded();
 
