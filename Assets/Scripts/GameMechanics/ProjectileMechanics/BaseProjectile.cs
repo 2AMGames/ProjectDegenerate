@@ -35,7 +35,6 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
         //associatedInteractionHandler.AssociatedCharacterStats = associatedCharacterStats;
     }
 
-
     #endregion monobheaviour methods
 
     #region virtual methods
@@ -53,6 +52,7 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
 
     public virtual void DespawnProjectile()
     {
+        rigid.enabled = false;
     }
 
     protected IEnumerator DespawnAfterTime(float despawnTime)

@@ -68,8 +68,8 @@ public class YukariArrow : BaseProjectile
     /// </summary>
     public override void LaunchProjectile()
     {
-        
         rigid.Velocity = -this.transform.right * launchSpeed;
+        rigid.enabled = true;
     }
 
     public override void DespawnProjectile()
@@ -79,6 +79,7 @@ public class YukariArrow : BaseProjectile
             StopCoroutine(DespawnCoroutine);
         }
         DespawnCoroutine = null;
+        base.DespawnProjectile();
         OnDespawnArrow();
     }
 

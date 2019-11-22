@@ -194,8 +194,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedInteractionHandler: {fileID: 0}
   launchSpeed: 15
-  launchAngle: {x: 0, y: 0}
+  launchAngle: {x: 7, y: 0}
   bounceCount: 2
+  DespawnTime: 3
 --- !u!114 &3523554089713611660
 MonoBehaviour:
   m_ObjectHideFlags: 0
