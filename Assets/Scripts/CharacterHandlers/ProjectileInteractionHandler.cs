@@ -11,6 +11,18 @@ public class ProjectileInteractionHandler : InteractionHandler
 
     #region main variables
 
+    private BaseProjectile Projectile;
+
+    #endregion
+
+    #region monobehaviour methods
+
+    public override void Awake()
+    {
+        base.Awake();
+        Projectile = GetComponent<BaseProjectile>();
+    }
+
     #endregion
 
     #region public methods
@@ -18,21 +30,24 @@ public class ProjectileInteractionHandler : InteractionHandler
     public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
         Debug.LogWarning("Projectile hit by enemy");
+
+        Projectile.DespawnProjectile();
     }
 
     public override void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
         base.OnHitEnemy(myHitbox, enemyHurtbox, didMoveLand);
 
-        // TODO Do projectiles need to pause as well when they land?
-
         Debug.LogWarning("Projectile hit enemy");
+
+        Projectile.OnHit();
 
     }
 
     public override void OnClash(Hitbox enemyHitbox)
     {
         Debug.LogWarning("Projectile Clash");
+        Projectile.DespawnProjectile();
     }
 
     #endregion

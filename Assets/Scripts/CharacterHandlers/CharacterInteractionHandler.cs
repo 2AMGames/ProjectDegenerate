@@ -24,7 +24,7 @@ public class CharacterInteractionHandler : InteractionHandler
     public MovementMechanics MovementMechanics { get; private set; }
 
     [SerializeField]
-    private List<MoveData> CharacterMoves;
+    private List<MoveData> CharacterMoves = null;
 
     private Dictionary<string, MoveData> CharacterMoveDict;
 
@@ -128,12 +128,11 @@ public class CharacterInteractionHandler : InteractionHandler
                 StopCoroutine(WakeupCoroutine);
             }
 
+            float hitPosition = enemyHitbox.InteractionHandler.transform.position.x;
+
             UnityAction onPauseComplete = () =>
             {
-
-                CustomPhysics2D enemyPhysics = enemyPhysics = enemyHitbox.InteractionHandler.GetComponent<CustomPhysics2D>();
-
-                int direction = enemyHitbox.InteractionHandler.transform.position.x > transform.position.x ? -1 : 1;
+                int direction = hitPosition > transform.position.x ? -1 : 1;
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
@@ -162,7 +161,12 @@ public class CharacterInteractionHandler : InteractionHandler
 
                 if (ComboTrackingCoroutine == null)
                 {
-                    ComboTrackingCoroutine = HandleCurrentCombo((CharacterInteractionHandler)enemyHitbox.InteractionHandler);
+                    InteractionHandler handler = enemyHitbox.InteractionHandler;
+                    if (handler is ProjectileInteractionHandler)
+                    {
+                        handler = handler.AssociatedCharacterStats.gameObject.GetComponent<InteractionHandler>();
+                    }
+                    ComboTrackingCoroutine = HandleCurrentCombo(handler);
                     StartCoroutine(ComboTrackingCoroutine);
                 }
             };
@@ -232,7 +236,7 @@ public class CharacterInteractionHandler : InteractionHandler
         StartCoroutine(WakeupCoroutine);
     }
 
-    public void OnComboEnded()
+    public override void OnComboEnded()
     {
         CurrentComboCount = 0;
     }
@@ -303,7 +307,7 @@ public class CharacterInteractionHandler : InteractionHandler
         WakeupCoroutine = null;
     }
 
-    private IEnumerator HandleCurrentCombo(CharacterInteractionHandler handlerThatHitMe)
+    private IEnumerator HandleCurrentCombo(InteractionHandler handlerThatHitMe)
     {
         yield return new WaitForEndOfFrame();
         while (!CanPlayerBlock)

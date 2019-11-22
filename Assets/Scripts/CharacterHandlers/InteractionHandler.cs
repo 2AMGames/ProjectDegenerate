@@ -98,11 +98,15 @@ public abstract class InteractionHandler : MonoBehaviour
     {
         MoveHitPlayer = true;
         CharactersHit.Add((CharacterInteractionHandler)enemyHurtbox.InteractionHandler);
-        HitData hitData = CurrentHitFromMove;
         AssociatedCharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
     }
 
     public virtual void OnClash(Hitbox enemyHitbox)
+    {
+
+    }
+
+    public virtual void OnComboEnded()
     {
 
     }

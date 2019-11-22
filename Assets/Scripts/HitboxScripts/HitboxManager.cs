@@ -283,7 +283,7 @@ public class HitboxManager : MonoBehaviour
     /// <returns></returns>
     private bool IsValidHitBoxPair(Hitbox h1, Hitbox h2)
     {
-        return !(h1.InteractionHandler == h2.InteractionHandler || (h1.hitboxType == HitboxRect.HitboxType.Hurtbox && h2.hitboxType == HitboxRect.HitboxType.Hurtbox));
+        return !(h1.AssociatedCharacterStats == h2.AssociatedCharacterStats || (h1.hitboxType == HitboxRect.HitboxType.Hurtbox && h2.hitboxType == HitboxRect.HitboxType.Hurtbox));
     }
 
     /// <summary>

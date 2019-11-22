@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class YukariArrow : BaseProjectile
 {
+    #region main variables
     /// <summary>
     /// 
     /// </summary>
     public int bounceCount = 2;
 
+    public float DespawnTime = 3f;
+
+    #endregion
 
     #region monobehaviour methods
 
@@ -23,14 +27,40 @@ public class YukariArrow : BaseProjectile
     }
     #endregion monobehaviour methods
 
+    #region override methods
+
     /// <summary>
     /// This method should be called upon spawning our projectile
     /// </summary>
     public override void SetupProjectile(CharacterStats characterStats)
     {
         base.SetupProjectile(characterStats);
-        StartCoroutine(DespawnAfterTime());
-        
+
+        associatedInteractionHandler.CurrentMove = new InteractionHandler.MoveData
+        {
+            MoveName = "BasicArrow",
+            Height = InteractionHandler.HitHeight.High,
+            SpecialMeterRequired = 0,
+
+            Hits = new InteractionHandler.HitData[1]
+            {
+                new InteractionHandler.HitData
+                {
+                    HitDamage = 50,
+                    OnHitFrames = 6,
+                    HitMeterGain = 100,
+                    OnHitKnockback = new Vector2(5f, 0f),
+                    OnGuardFrames = 3,
+                    OnGuardKnockback = new Vector2(1f, 0f),
+                    ChipDamage = 1f,
+                    ChipMeterGain = 1,
+                    Magnitude = InteractionHandler.HitMagnitude.LightHit
+                }
+            }
+        };
+
+        DespawnCoroutine = StartCoroutine(DespawnAfterTime(DespawnTime));
+
     }
 
     /// <summary>
@@ -42,13 +72,24 @@ public class YukariArrow : BaseProjectile
         rigid.Velocity = -this.transform.right * launchSpeed;
     }
 
-
-
-    private IEnumerator DespawnAfterTime()
+    public override void DespawnProjectile()
     {
-        yield return new WaitForSeconds(3);
+        if (DespawnCoroutine != null)
+        {
+            StopCoroutine(DespawnCoroutine);
+        }
+        DespawnCoroutine = null;
         OnDespawnArrow();
     }
+
+    public override void OnHit()
+    {
+        DespawnProjectile();
+    }
+
+    #endregion
+
+    #region private methods
 
     /// <summary>
     /// 
@@ -57,4 +98,6 @@ public class YukariArrow : BaseProjectile
     {
         SpawnPool.Instance.Despawn(this);
     }
+
+    #endregion
 }

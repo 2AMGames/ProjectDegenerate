@@ -80,6 +80,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &7350991393909945693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2349174649680407332}
+  - component: {fileID: 4920812698377987738}
+  m_Layer: 0
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2349174649680407332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7350991393909945693}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9101206797186702154}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4920812698377987738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7350991393909945693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 333e6d43063c08246a6f5556a845c560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitboxType: 0
+  currentIntersectingHitboxes: []
+  boxColliderSize: {x: 0.475, y: 0.1}
 --- !u!1 &8499484148644892479
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,8 +136,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9101206797186702154}
   - component: {fileID: 4650307859596509839}
-  - component: {fileID: 8497839877085946939}
   - component: {fileID: 3920821400113480562}
+  - component: {fileID: 3523554089713611660}
   m_Layer: 0
   m_Name: YukariArrow
   m_TagString: Untagged
@@ -111,6 +157,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8532930967818820972}
+  - {fileID: 2349174649680407332}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -133,25 +180,6 @@ MonoBehaviour:
   gravityVector: {x: 0, y: -1}
   gravityScale: 1
   terminalVelocity: 10
---- !u!114 &8497839877085946939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8499484148644892479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a63d9a5bc9fdb4c9fa5a89bef812e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterMoves: []
-  HitIndex: 0
-  CurrentComboCount: 0
-  CanPlayerBlock: 0
-  MoveHitPlayer: 0
-  Hitstun: 0
-  IsKnockedDown: 0
 --- !u!114 &3920821400113480562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,6 +192,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d0837da226273b48869f3e3e14c706c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  associatedInteractionHandler: {fileID: 0}
   launchSpeed: 15
   launchAngle: {x: 0, y: 0}
   bounceCount: 2
+--- !u!114 &3523554089713611660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8499484148644892479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208804ec66970e04cac689c3407752a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitIndex: 0
+  MoveHitPlayer: 0
