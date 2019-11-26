@@ -272,7 +272,7 @@ MonoBehaviour:
   colliderOffset: {x: -0.06, y: -0.02}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.81, y: 1.64}
+  boxColliderSize: {x: 0.81, y: 1.46}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!114 &2661832160723727127
@@ -330,6 +330,21 @@ MonoBehaviour:
       OnGuardFrames: 5
       ChipMeterGain: 5
       OnGuardKnockback: {x: 5, y: 0}
+      GuardBreak: 0
+  - MoveName: Light_Kick
+    SpecialMeterRequired: 0
+    Height: 2
+    Hits:
+    - Magnitude: 1
+      Knockdown: 0
+      HitDamage: 4
+      OnHitFrames: 4
+      HitMeterGain: 4
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 1
+      OnGuardFrames: 2
+      ChipMeterGain: 1
+      OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
@@ -812,7 +827,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.698
+      value: 0.874
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1172,7 +1187,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.75
+      value: 0.876
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1227,7 +1242,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: boxColliderSize.y
-      value: 0.2
+      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
@@ -1687,7 +1702,7 @@ PrefabInstance:
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.868
+      value: -0.429
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910937, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1738,6 +1753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}
