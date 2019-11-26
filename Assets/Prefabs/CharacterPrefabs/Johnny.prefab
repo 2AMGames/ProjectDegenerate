@@ -305,6 +305,32 @@ MonoBehaviour:
       ChipMeterGain: 3
       OnGuardKnockback: {x: 1.5, y: 0}
       GuardBreak: 0
+  - MoveName: Cr_Hard_Punch
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 1
+      Knockdown: 0
+      HitDamage: 10
+      OnHitFrames: 10
+      HitMeterGain: 10
+      OnHitKnockback: {x: 0, y: -10}
+      ChipDamage: 7
+      OnGuardFrames: 7
+      ChipMeterGain: 7
+      OnGuardKnockback: {x: 3, y: 0}
+      GuardBreak: 0
+    - Magnitude: 1
+      Knockdown: 1
+      HitDamage: 10
+      OnHitFrames: 10
+      HitMeterGain: 10
+      OnHitKnockback: {x: 1, y: 15}
+      ChipDamage: 5
+      OnGuardFrames: 5
+      ChipMeterGain: 5
+      OnGuardKnockback: {x: 5, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
