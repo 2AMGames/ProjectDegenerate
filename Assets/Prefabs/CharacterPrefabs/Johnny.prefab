@@ -289,7 +289,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HitIndex: 0
   MoveHitPlayer: 0
-  CharacterMoves: []
+  CharacterMoves:
+  - MoveName: Cr_Medium_Punch
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 1
+      Knockdown: 0
+      HitDamage: 5
+      OnHitFrames: 5
+      HitMeterGain: 5
+      OnHitKnockback: {x: 3, y: 0}
+      ChipDamage: 3
+      OnGuardFrames: 3
+      ChipMeterGain: 3
+      OnGuardKnockback: {x: 1.5, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
