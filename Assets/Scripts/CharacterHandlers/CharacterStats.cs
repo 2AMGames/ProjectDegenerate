@@ -89,6 +89,7 @@ public class CharacterStats : MonoBehaviour
 
     #region main variables
 
+    [System.NonSerialized]
     /// <summary>
     /// If we are pausing the game due to the character being hit, this should be false.
     /// </summary>
