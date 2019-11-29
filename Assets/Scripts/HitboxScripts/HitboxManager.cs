@@ -296,11 +296,11 @@ public class HitboxManager : MonoBehaviour
     private bool WasMoveBlocked(MoveData moveThatHit, Hitbox hitBox, Hitbox hurtBox)
     {
         CommandInterpreter.DIRECTION hitPlayerInputDirection = hurtBox.InteractionHandler.AssociatedCharacterStats.CommandInterpreter.CurrentDirection;
-        CharacterInteractionHandler hurtInteractionHandler = hitBox.InteractionHandler is CharacterInteractionHandler ? (CharacterInteractionHandler)hitBox.InteractionHandler : null;
+        CharacterInteractionHandler hurtInteractionHandler = hurtBox.InteractionHandler is CharacterInteractionHandler ? (CharacterInteractionHandler)hurtBox.InteractionHandler : null;
         if (hurtInteractionHandler == null)
             return false;
-        bool wasGuarded =hurtInteractionHandler.CanPlayerBlock;
-        wasGuarded &=hurtInteractionHandler.Hitstun <= 0;
+        bool wasGuarded = hurtInteractionHandler.CanPlayerBlock;
+        wasGuarded &= hurtInteractionHandler.Hitstun <= 0;
         if (!wasGuarded)
         {
             return wasGuarded;
