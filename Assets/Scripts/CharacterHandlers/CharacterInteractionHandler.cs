@@ -159,7 +159,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 HitstunCoroutine = HandleHitstun();
                 StartCoroutine(HitstunCoroutine);
 
-                if (ComboTrackingCoroutine == null)
+                if (ComboTrackingCoroutine == null && didMoveLand)
                 {
                     InteractionHandler handler = enemyHitbox.InteractionHandler;
                     if (handler is ProjectileInteractionHandler)
@@ -277,7 +277,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private IEnumerator HandlePushback(Vector2 knockback)
     {
-        int framesToPushback = PushbackFrames;
+        int framesToPushback = PushbackFrames - 1;
         MovementMechanics.TranslateForcedMovement(Vector3.zero, knockback, 1);
         yield return new WaitForEndOfFrame();
         while (framesToPushback >= 0 && !MovementMechanics.IsInAir)

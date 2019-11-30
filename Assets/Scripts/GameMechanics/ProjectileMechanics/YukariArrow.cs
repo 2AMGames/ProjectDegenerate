@@ -47,11 +47,11 @@ public class YukariArrow : BaseProjectile
                 new InteractionHandler.HitData
                 {
                     HitDamage = 50,
-                    OnHitFrames = 6,
+                    OnHitFrames = 15,
                     HitMeterGain = 100,
                     OnHitKnockback = new Vector2(5f, 0f),
-                    OnGuardFrames = 3,
-                    OnGuardKnockback = new Vector2(1f, 0f),
+                    OnGuardFrames = 15,
+                    OnGuardKnockback = new Vector2(10f, 0f),
                     ChipDamage = 1f,
                     ChipMeterGain = 1,
                     Magnitude = InteractionHandler.HitMagnitude.LightHit

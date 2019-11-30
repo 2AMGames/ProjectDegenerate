@@ -313,9 +313,6 @@ public class HitboxManager : MonoBehaviour
             case HitHeight.Low:
                 wasGuarded &= isCharacterCrouching;
                 break;
-            case HitHeight.Mid:
-                wasGuarded &= !isCharacterCrouching;
-                break;
             case HitHeight.Air:
                 wasGuarded &= !isCharacterCrouching;
                 break;

@@ -294,7 +294,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerIndex: 0
-  ShouldCharacterMove: 1
   MaxHealth: 1000
   MaxSpecialMeter: 10000
   SpecialMeter: 1000
@@ -370,7 +369,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HitIndex: 0
   MoveHitPlayer: 0
-  CharacterMoves: []
+  CharacterMoves:
+  - MoveName: Yukari_KickLight
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 8
+      OnHitFrames: 8
+      HitMeterGain: 8
+      OnHitKnockback: {x: 2, y: 0}
+      ChipDamage: 8
+      OnGuardFrames: 8
+      ChipMeterGain: 8
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_KickMedium
+    SpecialMeterRequired: 0
+    Height: 2
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
@@ -1120,16 +1149,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6811723046187891532}
     m_Modifications:
-    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
-        type: 3}
-      propertyPath: m_Name
-      value: YukariArrowSprite
-      objectReference: {fileID: 0}
-    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1183,6 +1202,16 @@ PrefabInstance:
     - target: {fileID: 5089106111257000932, guid: ba8f3c19c1583d74bac12d0aabbe576a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_Name
+      value: YukariArrowSprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555721866206506897, guid: ba8f3c19c1583d74bac12d0aabbe576a,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5658447297601895874, guid: ba8f3c19c1583d74bac12d0aabbe576a,
