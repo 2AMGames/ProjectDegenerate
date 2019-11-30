@@ -186,7 +186,7 @@ public class CharacterInteractionHandler : InteractionHandler
     public override void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)
     {
         base.OnHitEnemy(myHitbox, enemyHurtbox, didMoveLand);
-        ++CurrentComboCount;
+        CurrentComboCount += didMoveLand ? 1 : 0;
 
         HitData hitData = CurrentHitFromMove;
         AssociatedCharacterStats.OnPlayerHitEnemy(myHitbox, CurrentHitFromMove, didMoveLand);
