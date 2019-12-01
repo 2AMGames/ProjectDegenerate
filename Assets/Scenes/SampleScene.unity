@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -499,10 +500,61 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 178139622229722448, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 178139622229722448, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.707
+      objectReference: {fileID: 0}
+    - target: {fileID: 816985967769142608, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 816985967769142608, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.26
+      objectReference: {fileID: 0}
     - target: {fileID: 913990994674473675, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
       propertyPath: m_Name
       value: Yukari
+      objectReference: {fileID: 0}
+    - target: {fileID: 1509476703587744599, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955093276075966794, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3423198361245228845, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.y
+      value: 1.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3423198361245228845, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846795715461343824, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 897c057fffbd95d43a57c60529dc56c6,
+        type: 3}
+    - target: {fileID: 3990539544259986206, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.065
       objectReference: {fileID: 0}
     - target: {fileID: 4753161536363220188, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
@@ -518,6 +570,16 @@ PrefabInstance:
         type: 3}
       propertyPath: CharacterMoves.Array.data[0].Hits.Array.data[0].Knockdown
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5383308068872198568, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.208
+      objectReference: {fileID: 0}
+    - target: {fileID: 5383308068872198568, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 6811723046187891532, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
@@ -573,6 +635,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7814968882555843744, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 7814968882555843744, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.464
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249106067608261018, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8882346484823656123, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 9198528935685918459, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.956
+      objectReference: {fileID: 0}
+    - target: {fileID: 9198528935685918459, guid: 22f3f3deefc542a4db06baa29579bc42,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22f3f3deefc542a4db06baa29579bc42, type: 3}

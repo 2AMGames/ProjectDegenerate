@@ -102,7 +102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 716559957860844975}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.027, y: 0.473, z: 0}
+  m_LocalPosition: {x: 0.02, y: 0.464, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 184292646052267204}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxType: 1
   currentIntersectingHitboxes: []
-  boxColliderSize: {x: 0.42, y: 0.25}
+  boxColliderSize: {x: 0.26, y: 0.25}
 --- !u!1 &790660984933267363
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +337,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.43, y: 1.41}
+  boxColliderSize: {x: 0.4, y: 1.35}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!114 &756495634
@@ -375,11 +375,11 @@ MonoBehaviour:
     Height: 1
     Hits:
     - Magnitude: 0
-      Knockdown: 0
+      Knockdown: 1
       HitDamage: 8
       OnHitFrames: 8
       HitMeterGain: 8
-      OnHitKnockback: {x: 2, y: 0}
+      OnHitKnockback: {x: 10, y: 10}
       ChipDamage: 8
       OnGuardFrames: 8
       ChipMeterGain: 8
@@ -429,7 +429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850954356739904614}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.03, y: 0.173, z: 0}
+  m_LocalPosition: {x: 0.065, y: 0.173, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 184292646052267204}
@@ -449,7 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxType: 1
   currentIntersectingHitboxes: []
-  boxColliderSize: {x: 0.39, y: 0.33}
+  boxColliderSize: {x: 0.42, y: 0.33}
 --- !u!1 &2295647887065591495
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4043216913041355890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.016, y: 1.24, z: 0}
+  m_LocalPosition: {x: 0.001, y: 1.208, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 184292646052267204}
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxType: 1
   currentIntersectingHitboxes: []
-  boxColliderSize: {x: 0.24, y: 0.25}
+  boxColliderSize: {x: 0.15, y: 0.25}
 --- !u!1 &4440900221069974494
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,7 +733,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4869112636842019650}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.018, y: 0.982, z: 0}
+  m_LocalPosition: {x: 0.03, y: 0.956, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 184292646052267204}
@@ -753,7 +753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxType: 1
   currentIntersectingHitboxes: []
-  boxColliderSize: {x: 0.37, y: 0.25}
+  boxColliderSize: {x: 0.27, y: 0.25}
 --- !u!1 &5049315761697496427
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,6 +799,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -823,7 +824,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 7d93c043c5e01934181246096f9479ea, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 897c057fffbd95d43a57c60529dc56c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1043,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8477851408491763472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.039, y: 0.73, z: 0}
+  m_LocalPosition: {x: -0.002, y: 0.707, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 184292646052267204}
@@ -1063,7 +1064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxType: 1
   currentIntersectingHitboxes: []
-  boxColliderSize: {x: 0.53, y: 0.25}
+  boxColliderSize: {x: 0.22, y: 0.25}
 --- !u!1 &8493011934516178745
 GameObject:
   m_ObjectHideFlags: 0
