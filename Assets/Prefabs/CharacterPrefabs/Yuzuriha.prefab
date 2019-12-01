@@ -215,7 +215,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HitIndex: 0
   MoveHitPlayer: 0
-  CharacterMoves: []
+  CharacterMoves:
+  - MoveName: Low_Kick
+    SpecialMeterRequired: 0
+    Height: 0
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 5
+      OnHitFrames: 5
+      HitMeterGain: 5
+      OnHitKnockback: {x: 6, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 2
+      ChipMeterGain: 2
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
