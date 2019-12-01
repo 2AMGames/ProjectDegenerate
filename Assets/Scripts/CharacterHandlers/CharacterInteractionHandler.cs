@@ -15,7 +15,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private const string GUARD_TRIGGER = "Guard";
 
-    private const int WakeupDelayFrames = 30;
+    private const int DefaultWakeupDelayFrames = 15;
 
     #endregion
 
@@ -293,7 +293,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private IEnumerator HandleWakeup()
     {
-        int framesToWait = WakeupDelayFrames;
+        int framesToWait = DefaultWakeupDelayFrames;
         yield return new WaitForEndOfFrame();
         while (framesToWait > 0)
         {

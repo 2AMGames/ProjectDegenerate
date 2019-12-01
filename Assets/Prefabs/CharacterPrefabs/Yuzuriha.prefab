@@ -198,7 +198,7 @@ MonoBehaviour:
   colliderOffset: {x: -0.13, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.72, y: 1.56}
+  boxColliderSize: {x: 0.86, y: 1.56}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!114 &3062025119057498964
@@ -301,6 +301,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
