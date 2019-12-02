@@ -231,6 +231,21 @@ MonoBehaviour:
       ChipMeterGain: 2
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
+  - MoveName: Medium_Slash
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 1
+      Knockdown: 0
+      HitDamage: 7
+      OnHitFrames: 24
+      HitMeterGain: 10
+      OnHitKnockback: {x: 6, y: 0}
+      ChipDamage: 4
+      OnGuardFrames: 8
+      ChipMeterGain: 4
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
