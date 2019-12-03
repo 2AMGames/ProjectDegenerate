@@ -508,12 +508,12 @@ PrefabInstance:
     - target: {fileID: 4753161536363220188, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
       propertyPath: CharacterMoves.Array.data[0].Hits.Array.data[0].OnHitKnockback.x
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4753161536363220188, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
       propertyPath: CharacterMoves.Array.data[0].Hits.Array.data[0].OnHitKnockback.y
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4753161536363220188, guid: 22f3f3deefc542a4db06baa29579bc42,
         type: 3}
