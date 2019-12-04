@@ -276,6 +276,21 @@ MonoBehaviour:
       ChipMeterGain: 7
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
+  - MoveName: Cr_Medium
+    SpecialMeterRequired: 0
+    Height: 0
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 5
+      OnHitFrames: 9
+      HitMeterGain: 10
+      OnHitKnockback: {x: 5, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 3
+      ChipMeterGain: 7
+      OnGuardKnockback: {x: 3, y: 0}
+      GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
   Hitstun: 0
