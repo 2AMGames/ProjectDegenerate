@@ -46,7 +46,11 @@ public class YukariMechanics : MonoBehaviour
 
         newlySpawnedArrow.transform.SetParent(null);
         newlySpawnedArrow.SetupProjectile(associatedCharacterStats);
+
         newlySpawnedArrow.transform.position = yukariArrowTransformReference.position;
+        newlySpawnedArrow.arrowSpriteRendererReference.transform.localScale = yukariArrowTransformReference.localScale;
+        newlySpawnedArrow.transform.rotation = yukariArrowTransformReference.rotation;
+
         newlySpawnedArrow.transform.right = Mathf.Sign(this.transform.localScale.x) * yukariArrowTransformReference.right;
         newlySpawnedArrow.LaunchProjectile();
     }
