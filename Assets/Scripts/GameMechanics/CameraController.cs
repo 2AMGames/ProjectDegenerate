@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// COMMENT HERE
     /// </summary>
-    private const float CameraVerticalOffset = .75f;
+    public float CameraVerticalOffset = .75f;
     /// <summary>
     /// COMMENT HERE
     /// </summary>
