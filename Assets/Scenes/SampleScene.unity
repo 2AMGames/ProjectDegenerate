@@ -288,7 +288,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 32.6
+  field of view: 26
   orthographic: 0
   orthographic size: 3.2
   m_Depth: -1
@@ -741,11 +741,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Yuzuriha
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978614007417908, guid: 2876a0db17c13234dbb9a050d88805a4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2876a0db17c13234dbb9a050d88805a4, type: 3}
