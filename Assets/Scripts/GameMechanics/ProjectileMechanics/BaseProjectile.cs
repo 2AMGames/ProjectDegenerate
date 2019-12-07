@@ -18,7 +18,7 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
     /// The associated character stats for our projectile. This should be the player that launched this projectile
     /// </summary>
     public CharacterStats associatedCharacterStats { get; set; }
-    public ProjectileInteractionHandler associatedInteractionHandler;
+    public ProjectileInteractionHandler associatedInteractionHandler { get; set; }
     public float launchSpeed;
     public Vector2 launchAngle;
     protected CustomPhysics2D rigid;
