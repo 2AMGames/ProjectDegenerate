@@ -317,7 +317,7 @@ MonoBehaviour:
       ChipMeterGain: 4
       OnGuardKnockback: {x: 8, y: 0}
       GuardBreak: 0
-  - MoveName: Back_Medium
+  - MoveName: Back_Hard
     SpecialMeterRequired: 0
     Height: 1
     Hits:
@@ -364,6 +364,21 @@ MonoBehaviour:
       OnGuardFrames: 5
       ChipMeterGain: 1
       OnGuardKnockback: {x: 4, y: 0}
+      GuardBreak: 0
+  - MoveName: Back_Medium
+    SpecialMeterRequired: 0
+    Height: 1
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 3
+      OnHitFrames: 5
+      HitMeterGain: 4
+      OnHitKnockback: {x: 1, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 3
+      ChipMeterGain: 1
+      OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
