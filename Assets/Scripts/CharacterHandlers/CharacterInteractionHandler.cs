@@ -314,7 +314,10 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             yield return new WaitForEndOfFrame();
         }
-        StopCoroutine(PushbackCoroutine);
+        if (PushbackCoroutine != null)
+        {
+            StopCoroutine(PushbackCoroutine);
+        }
 
         AssociatedCharacterStats.OnComboFinished();
 
