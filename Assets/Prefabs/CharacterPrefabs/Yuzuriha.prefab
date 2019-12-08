@@ -90,7 +90,7 @@ MonoBehaviour:
   useTerminalVelocity: 0
   UseAnimatorVelocity: 0
   gravityVector: {x: 0, y: -1}
-  gravityScale: 4.9979177
+  gravityScale: 5.668934
   terminalVelocity: 10
 --- !u!114 &6057300011755358157
 MonoBehaviour:
@@ -111,11 +111,11 @@ MonoBehaviour:
   MaximumAirSpeed: 8
   AirAcceleration: 20
   isFacingRight: 0
-  timeToReachJumpApex: 0.35
-  heightOfJump: 3
+  timeToReachJumpApex: 0.3
+  heightOfJump: 2.5
   fastFallScale: 1.7
   maxAvailableJumps: 1
-  JumpingAcceleration: 4.9979177
+  JumpingAcceleration: 5.668934
   IsDashing: 0
   GroundDashSpeed: 13.75
   AirDashSpeed: 12
@@ -379,6 +379,21 @@ MonoBehaviour:
       OnGuardFrames: 12
       ChipMeterGain: 4
       OnGuardKnockback: {x: 6, y: 0}
+      GuardBreak: 0
+  - MoveName: Air_Light
+    SpecialMeterRequired: 0
+    Height: 2
+    Hits:
+    - Magnitude: 0
+      Knockdown: 0
+      HitDamage: 5
+      OnHitFrames: 8
+      HitMeterGain: 5
+      OnHitKnockback: {x: 0, y: -5}
+      ChipDamage: 3
+      OnGuardFrames: 6
+      ChipMeterGain: 2
+      OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   CurrentComboCount: 0
   CanPlayerBlock: 0
@@ -652,11 +667,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hitbox6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dab27b64ec9b0e4c8f799107be83540, type: 3}

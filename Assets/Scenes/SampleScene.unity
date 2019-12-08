@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ece018cf007276b4095749f2f5172e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraVerticalOffset: 2.75
+  CameraVerticalOffset: 2
   MainCamera: {fileID: 519420031}
   LeftCameraBound: {fileID: 108982979}
   RightCameraBound: {fileID: 353011935}
@@ -288,7 +288,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 32.6
+  field of view: 26
   orthographic: 0
   orthographic size: 3.2
   m_Depth: -1
