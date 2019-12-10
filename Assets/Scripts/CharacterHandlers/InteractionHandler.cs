@@ -89,9 +89,8 @@ public abstract class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
+    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitHeight height, bool didMoveLand)
     {
-
     }
 
     public virtual void OnHitEnemy(Hitbox myHitbox, Hitbox enemyHurtbox, bool didMoveLand)

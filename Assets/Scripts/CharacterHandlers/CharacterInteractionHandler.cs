@@ -15,6 +15,8 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private const string GUARD_TRIGGER = "Guard";
 
+    private const string HIT_STRING = "Hit";
+
     private const int DefaultWakeupDelayFrames = 15;
 
     #endregion
@@ -102,12 +104,12 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region public methods
 
-    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
+    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitHeight height, bool didMoveLand)
     {
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
         if (frames > 0 || hitData.Knockdown)
         {
-            string triggerToSet = didMoveLand ? hitData.Magnitude.ToString() : GUARD_TRIGGER;
+            string triggerToSet = didMoveLand ? height.ToString() + HIT_STRING : GUARD_TRIGGER;
             Animator.SetTrigger(triggerToSet);
             Animator.SetBool(HITSTUN_TRIGGER, true);
 

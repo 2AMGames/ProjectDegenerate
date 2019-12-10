@@ -207,7 +207,7 @@ public class HitboxManager : MonoBehaviour
             if (hurtHandler is CharacterInteractionHandler)
             {
                 bool didMoveHit = !WasMoveBlocked(hitHandler.CurrentMove, hitbox, hurtbox);
-                hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentHitFromMove, didMoveHit);
+                hurtHandler.OnHitByEnemy(hurtbox, hitbox, hitHandler.CurrentHitFromMove, hitHandler.CurrentMove.Height, didMoveHit);
                 hitHandler.OnHitEnemy(hitbox, hurtbox, didMoveHit);
             }
         }
