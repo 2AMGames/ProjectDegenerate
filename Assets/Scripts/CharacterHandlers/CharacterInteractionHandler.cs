@@ -11,12 +11,6 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region const variables
 
-    private const string HITSTUN_TRIGGER = "Hitstun";
-
-    private const string GUARD_TRIGGER = "Guard";
-
-    private const string HIT_STRING = "Hit";
-
     private const int DefaultWakeupDelayFrames = 15;
 
     #endregion
@@ -216,6 +210,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
         if (didMoveLand)
         {
+            Animator.SetTrigger(DID_MOVE_LAND);
             HitConfirmCoroutine = PauseHandlerOnHit(onPauseComplete);
             StartCoroutine(HitConfirmCoroutine);
         }

@@ -10,9 +10,13 @@ public abstract class InteractionHandler : MonoBehaviour
 {
     #region const variables
 
-    private const string HITSTUN_TRIGGER = "Hitstun";
+    protected const string HITSTUN_TRIGGER = "Hitstun";
 
-    private const string GUARD_TRIGGER = "Guard";
+    protected const string GUARD_TRIGGER = "Guard";
+
+    protected const string HIT_STRING = "Hit";
+
+    public const string DID_MOVE_LAND = "DidMoveLand";
 
     protected const int PushbackFrames = 16;
 
@@ -67,6 +71,7 @@ public abstract class InteractionHandler : MonoBehaviour
     public void ResetMoveHit()
     {
         MoveHitPlayer = false;
+        Animator.SetBool(DID_MOVE_LAND, false);
     }
 
     /// <summary>
