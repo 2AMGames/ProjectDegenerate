@@ -98,7 +98,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region public methods
 
-    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitHeight height, bool didMoveLand)
+    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
     {
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
         if (frames > 0 || hitData.Knockdown)

@@ -27,7 +27,7 @@ public class ProjectileInteractionHandler : InteractionHandler
 
     #region public methods
 
-    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitHeight height, bool didMoveLand)
+    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
     {
         Debug.LogWarning("Projectile hit by enemy");
 

@@ -45,7 +45,7 @@ public class YukariArrow : BaseProjectile
         associatedInteractionHandler.CurrentMove = new InteractionHandler.MoveData
         {
             MoveName = "BasicArrow",
-            Height = InteractionHandler.HitHeight.High,
+            Height = InteractionHandler.HitType.Mid,
             SpecialMeterRequired = 0,
 
             Hits = new InteractionHandler.HitData[1]
@@ -60,7 +60,6 @@ public class YukariArrow : BaseProjectile
                     OnGuardKnockback = new Vector2(10f, 0f),
                     ChipDamage = 1f,
                     ChipMeterGain = 1,
-                    Magnitude = InteractionHandler.HitMagnitude.LightHit
                 }
             }
         };

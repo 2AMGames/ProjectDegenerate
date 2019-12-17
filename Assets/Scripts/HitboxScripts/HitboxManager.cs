@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using HitHeight = InteractionHandler.HitHeight;
+using HitType = InteractionHandler.HitType;
 using MoveData = InteractionHandler.MoveData;
 
 public class HitboxManager : MonoBehaviour
@@ -310,10 +310,10 @@ public class HitboxManager : MonoBehaviour
         // Determine if blocked based on height
         switch (moveThatHit.Height)
         {
-            case HitHeight.Low:
+            case HitType.Low:
                 wasGuarded &= isCharacterCrouching;
                 break;
-            case HitHeight.Air:
+            case HitType.Air:
                 wasGuarded &= !isCharacterCrouching;
                 break;
         }

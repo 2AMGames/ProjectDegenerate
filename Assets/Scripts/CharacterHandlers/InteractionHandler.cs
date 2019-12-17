@@ -94,7 +94,7 @@ public abstract class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitHeight height, bool didMoveLand)
+    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
     {
     }
 
@@ -128,19 +128,14 @@ public abstract class InteractionHandler : MonoBehaviour
 
     #region structs
 
-    public enum HitHeight
+    public enum HitType
     {
+        Crumple,
         Low,
         Mid,
         High,
         Air
     }
-    public enum HitMagnitude
-    {
-        LightHit,
-        MediumHit,
-        HeavyHit,
-    };
 
     [System.Serializable]
     /// <summary>
@@ -153,7 +148,7 @@ public abstract class InteractionHandler : MonoBehaviour
 
         public float SpecialMeterRequired;
 
-        public HitHeight Height;
+        public HitType Height;
 
         public HitData[] Hits;
 
@@ -165,8 +160,6 @@ public abstract class InteractionHandler : MonoBehaviour
     /// </summary>
     public struct HitData
     {
-
-        public HitMagnitude Magnitude;
         public bool Knockdown;
 
         [Header("On Hit Parameters")]
