@@ -139,18 +139,13 @@ public class MovementMechanics : MonoBehaviour {
             anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
         }
 
-        if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD && !rigid.isInAir && !anim.GetBool("Hitstun") && !anim.GetBool("KnockedDown"))  
+        if (!IsCrouching && verticalInput <= -CROUCHING_THRESHOLD && !rigid.isInAir && !anim.GetBool("Hitstun") && !anim.GetBool("Knockdown"))  
         {
             IsCrouching = true;
-            if (anim && anim.runtimeAnimatorController)
-            {
-                anim.SetBool(IS_CROUCHING_PARAMETER, IsCrouching);
-            }
         }
         else if(IsCrouching && verticalInput > -CROUCHING_THRESHOLD)
         {
             IsCrouching = false;
-            anim.SetBool(IS_CROUCHING_PARAMETER, IsCrouching);
         }
 
         PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);

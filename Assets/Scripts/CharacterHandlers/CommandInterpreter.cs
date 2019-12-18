@@ -38,16 +38,16 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// Light Punch trigger
     /// </summary>
-    public static readonly int LP_ANIM_TRIGGER = Animator.StringToHash("LP");
+    public static readonly int LP_ANIM_TRIGGER = Animator.StringToHash("Light");
     /// <summary>
     /// Medium Punch trigger
     /// </summary>
-    public static readonly int MP_ANIM_TRIGGER = Animator.StringToHash("MP");
+    public static readonly int MP_ANIM_TRIGGER = Animator.StringToHash("Medium");
 
     /// <summary>
     /// Heavy punch trigger
     /// </summary>
-    public static readonly int HP_ANIM_TRIGGER = Animator.StringToHash("HP");
+    public static readonly int HP_ANIM_TRIGGER = Animator.StringToHash("Heavy");
 
     /// <summary>
     /// Light Kick Trigger
@@ -57,7 +57,7 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// Medium Kick Trigger
     /// </summary>
-    public static readonly int MK_ANIM_TRIGGER = Animator.StringToHash("MK");
+    public static readonly int MK_ANIM_TRIGGER = Animator.StringToHash("Special");
 
     /// <summary>
     /// Heavy Kick trigger

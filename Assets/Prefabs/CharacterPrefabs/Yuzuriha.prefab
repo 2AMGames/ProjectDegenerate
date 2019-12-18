@@ -133,7 +133,7 @@ Animator:
   m_GameObject: {fileID: 6057300011755358161}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 80e117972229c854d9176578f0b667c9, type: 2}
+  m_Controller: {fileID: 9100000, guid: ecf32ebfe990f914a8943ae1a1c23c60, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -220,8 +220,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 0
     Hits:
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 5
       OnHitFrames: 5
       HitMeterGain: 5
@@ -235,8 +234,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 1
     Hits:
-    - Magnitude: 1
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 7
       OnHitFrames: 24
       HitMeterGain: 10
@@ -250,8 +248,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 1
     Hits:
-    - Magnitude: 1
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 7
       OnHitFrames: 24
       HitMeterGain: 10
@@ -265,8 +262,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 1
     Hits:
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -280,8 +276,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 0
     Hits:
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -295,8 +290,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 0
     Hits:
-    - Magnitude: 1
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 12
       OnHitFrames: 4
       HitMeterGain: 10
@@ -306,8 +300,7 @@ MonoBehaviour:
       ChipMeterGain: 4
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
-    - Magnitude: 1
-      Knockdown: 1
+    - Knockdown: 1
       HitDamage: 12
       OnHitFrames: 1
       HitMeterGain: 10
@@ -321,8 +314,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 1
     Hits:
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -332,8 +324,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -343,8 +334,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -354,8 +344,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Magnitude: 1
-      Knockdown: 1
+    - Knockdown: 1
       HitDamage: 3
       OnHitFrames: 3
       HitMeterGain: 4
@@ -369,8 +358,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 1
     Hits:
-    - Magnitude: 0
-      Knockdown: 1
+    - Knockdown: 1
       HitDamage: 7
       OnHitFrames: 7
       HitMeterGain: 10
@@ -384,8 +372,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 3
     Hits:
-    - Magnitude: 0
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 5
       OnHitFrames: 8
       HitMeterGain: 5
@@ -399,8 +386,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 3
     Hits:
-    - Magnitude: 1
-      Knockdown: 0
+    - Knockdown: 0
       HitDamage: 8
       OnHitFrames: 8
       HitMeterGain: 9
@@ -414,8 +400,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 3
     Hits:
-    - Magnitude: 1
-      Knockdown: 1
+    - Knockdown: 1
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13
@@ -429,8 +414,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Height: 3
     Hits:
-    - Magnitude: 1
-      Knockdown: 1
+    - Knockdown: 1
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13

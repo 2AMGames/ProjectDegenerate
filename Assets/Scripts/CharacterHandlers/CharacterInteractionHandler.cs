@@ -13,6 +13,8 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private const int DefaultWakeupDelayFrames = 15;
 
+    private const string KnockdownKey = "Knockdown";
+
     #endregion
 
     #region main variables
@@ -135,7 +137,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 if (didMoveLand && hitData.Knockdown)
                 {
                     IsKnockedDown = true;
-                    Animator.SetBool("KnockedDown", true);
+                    Animator.SetBool(KnockdownKey, true);
                 }
 
                 if (!MovementMechanics.IsInAir)
