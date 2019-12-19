@@ -152,6 +152,11 @@ public class CharacterStats : MonoBehaviour
         OnCharacterHealthChanged.Invoke();
     }
 
+    private void Update()
+    {
+        Anim.SetBool("IsCrouching", MovementMechanics.IsCrouching);
+    }
+
     #endregion
 
     #region public interface

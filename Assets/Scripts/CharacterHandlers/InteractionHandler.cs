@@ -67,6 +67,7 @@ public abstract class InteractionHandler : MonoBehaviour
         CharactersHit.Clear();
         MoveHitPlayer = false;
         HitIndex = 0;
+        Animator.SetBool(DID_MOVE_LAND, false);
     }
 
     /// <summary>

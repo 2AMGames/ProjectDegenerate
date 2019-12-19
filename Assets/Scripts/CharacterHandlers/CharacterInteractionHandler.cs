@@ -110,6 +110,7 @@ public class CharacterInteractionHandler : InteractionHandler
             else
             {
                 Animator.SetTrigger(GUARD_TRIGGER);
+                Animator.SetInteger(HitHeightKey, -1);
             }
             Animator.SetBool(HitstunTrigger, true);
 
@@ -138,11 +139,8 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                if (didMoveLand && hitData.Knockdown)
-                {
-                    IsKnockedDown = true;
-                    Animator.SetBool(KnockdownKey, true);
-                }
+                IsKnockedDown = didMoveLand && (hitData.Knockdown || height == HitType.Crumple);
+                Animator.SetBool(KnockdownKey, IsKnockedDown);
 
                 if (!MovementMechanics.IsInAir)
                 {

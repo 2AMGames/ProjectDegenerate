@@ -122,6 +122,7 @@ MonoBehaviour:
   canMoveWhileCrouching: 0
   ignoreJumpButton: 0
   CanChangeDirection: 1
+  IsCrouching: 0
   GoalVelocity: {x: 0, y: 0}
 --- !u!95 &6057300011755358155
 Animator:
@@ -236,7 +237,7 @@ MonoBehaviour:
     Hits:
     - Knockdown: 0
       HitDamage: 7
-      OnHitFrames: 24
+      OnHitFrames: 17
       HitMeterGain: 10
       OnHitKnockback: {x: 6, y: 0}
       ChipDamage: 4
@@ -250,7 +251,7 @@ MonoBehaviour:
     Hits:
     - Knockdown: 0
       HitDamage: 7
-      OnHitFrames: 24
+      OnHitFrames: 12
       HitMeterGain: 10
       OnHitKnockback: {x: 6, y: 0}
       ChipDamage: 4
