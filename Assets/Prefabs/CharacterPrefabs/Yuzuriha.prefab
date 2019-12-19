@@ -218,7 +218,7 @@ MonoBehaviour:
   CharacterMoves:
   - MoveName: Low_Kick
     SpecialMeterRequired: 0
-    Height: 0
+    Height: 1
     Hits:
     - Knockdown: 0
       HitDamage: 5
@@ -232,7 +232,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Medium_Slash
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 3
     Hits:
     - Knockdown: 0
       HitDamage: 7
@@ -246,7 +246,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Heavy_Slash
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 3
     Hits:
     - Knockdown: 0
       HitDamage: 7
@@ -260,7 +260,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Light
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 2
     Hits:
     - Knockdown: 0
       HitDamage: 5
@@ -274,7 +274,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Medium
     SpecialMeterRequired: 0
-    Height: 0
+    Height: 1
     Hits:
     - Knockdown: 0
       HitDamage: 5
@@ -288,7 +288,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Hard
     SpecialMeterRequired: 0
-    Height: 0
+    Height: 2
     Hits:
     - Knockdown: 0
       HitDamage: 12
@@ -312,7 +312,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Back_Hard
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 2
     Hits:
     - Knockdown: 0
       HitDamage: 3
@@ -356,7 +356,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Back_Medium
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 2
     Hits:
     - Knockdown: 1
       HitDamage: 7
@@ -370,7 +370,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Light
     SpecialMeterRequired: 0
-    Height: 3
+    Height: 4
     Hits:
     - Knockdown: 0
       HitDamage: 5
@@ -384,7 +384,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Medium
     SpecialMeterRequired: 0
-    Height: 3
+    Height: 4
     Hits:
     - Knockdown: 0
       HitDamage: 8
@@ -398,7 +398,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Down_Hard
     SpecialMeterRequired: 0
-    Height: 3
+    Height: 4
     Hits:
     - Knockdown: 1
       HitDamage: 14
@@ -412,7 +412,7 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Hard
     SpecialMeterRequired: 0
-    Height: 3
+    Height: 4
     Hits:
     - Knockdown: 1
       HitDamage: 14

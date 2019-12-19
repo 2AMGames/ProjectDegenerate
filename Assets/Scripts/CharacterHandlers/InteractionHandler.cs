@@ -10,13 +10,17 @@ public abstract class InteractionHandler : MonoBehaviour
 {
     #region const variables
 
-    protected const string HITSTUN_TRIGGER = "Hitstun";
+    protected const string HitstunTrigger = "Hitstun";
 
     protected const string GUARD_TRIGGER = "Guard";
 
     protected const string HIT_STRING = "Hit";
 
     public const string DID_MOVE_LAND = "DidMoveLand";
+
+    public const string KnockdownKey = "Knockdown";
+
+    public const string HitHeightKey = "HitHeight";
 
     protected const int PushbackFrames = 16;
 

@@ -13,8 +13,6 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private const int DefaultWakeupDelayFrames = 15;
 
-    private const string KnockdownKey = "Knockdown";
-
     #endregion
 
     #region main variables
@@ -105,9 +103,15 @@ public class CharacterInteractionHandler : InteractionHandler
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
         if (frames > 0 || hitData.Knockdown)
         {
-            string triggerToSet = didMoveLand ? height.ToString() + HIT_STRING : GUARD_TRIGGER;
-            Animator.SetTrigger(triggerToSet);
-            Animator.SetBool(HITSTUN_TRIGGER, true);
+            if (didMoveLand)
+            {
+                Animator.SetInteger(HitHeightKey, (int)height + 1);
+            }
+            else
+            {
+                Animator.SetTrigger(GUARD_TRIGGER);
+            }
+            Animator.SetBool(HitstunTrigger, true);
 
             Hitstun = frames;
 
@@ -260,7 +264,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     private IEnumerator HandleHitstun()
     {
-        Animator.SetBool(HITSTUN_TRIGGER, true);
+        Animator.SetBool(HitstunTrigger, true);
         while (Hitstun > 0)
         {
             MovementMechanics.ignoreJumpButton = true;
@@ -270,10 +274,10 @@ public class CharacterInteractionHandler : InteractionHandler
                 --Hitstun;
             }
         }
-        Animator.SetBool(HITSTUN_TRIGGER, false);
+        Animator.SetBool(HitstunTrigger, false);
+        Animator.SetInteger(HitHeightKey, -1);
         HitstunCoroutine = null;
     }
-
     private IEnumerator HandlePushback(Vector2 knockback)
     {
         int framesToPushback = PushbackFrames - 1;
