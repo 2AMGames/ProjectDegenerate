@@ -196,6 +196,11 @@ public class CharacterInteractionHandler : InteractionHandler
             StopCoroutine(HitConfirmCoroutine);
         }
 
+        if (PushbackCoroutine != null)
+        {
+            StopCoroutine(PushbackCoroutine);
+        }
+
         UnityAction onPauseComplete = () =>
         {
 
