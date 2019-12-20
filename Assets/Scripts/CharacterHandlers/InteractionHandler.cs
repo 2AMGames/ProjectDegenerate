@@ -120,6 +120,14 @@ public abstract class InteractionHandler : MonoBehaviour
 
     }
 
+    public void StopInteractionCoroutine(IEnumerator coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+    }
+
     #endregion
 
     #region private methods

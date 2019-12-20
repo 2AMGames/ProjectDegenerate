@@ -64,13 +64,13 @@ public class CharacterInteractionHandler : InteractionHandler
     public override void OnMoveBegin()
     {
         base.OnMoveBegin();
-        if (PushbackCoroutine != null)
+        StopInteractionCoroutine(PushbackCoroutine);
+        if (!MovementMechanics.IsInAir)
         {
-            StopCoroutine(PushbackCoroutine);
+            MovementMechanics.TranslateForcedMovement(Vector3.zero, Vector3.zero, 0);
         }
         AssociatedCharacterStats.ExecuteMove(CurrentMove);
     }
-
 
     public override void Awake()
     {
@@ -92,6 +92,25 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             CharacterMoveDict.Add(move.MoveName, move);
         }
+    }
+
+    public void OnKnockedDown()
+    {
+        Hitstun = 0;
+        Animator.SetBool(HitstunTrigger, false);
+        Animator.SetBool(KnockdownKey, true);
+        WakeupCoroutine = HandleWakeup();
+        StartCoroutine(WakeupCoroutine);
+    }
+
+    public void OnRecovery()
+    {
+        Hitstun = 0;
+        Animator.SetBool(HitstunTrigger, false);
+        Animator.SetBool(KnockdownKey, true);
+        StopInteractionCoroutine(WakeupCoroutine);
+        StopInteractionCoroutine(HitstunCoroutine);
+        StopInteractionCoroutine(PushbackCoroutine);
     }
 
     #endregion
@@ -234,14 +253,6 @@ public class CharacterInteractionHandler : InteractionHandler
 
     }
 
-    public void OnKnockedDown()
-    {
-        Hitstun = 0;
-        Animator.SetBool("Hitstun", false);
-        WakeupCoroutine = HandleWakeup();
-        StartCoroutine(WakeupCoroutine);
-    }
-
     public override void OnComboEnded()
     {
         CurrentComboCount = 0;
@@ -300,8 +311,7 @@ public class CharacterInteractionHandler : InteractionHandler
     private IEnumerator HandleWakeup()
     {
         int framesToWait = DefaultWakeupDelayFrames;
-        yield return new WaitForEndOfFrame();
-        while (framesToWait > 0)
+        while (framesToWait >= 0)
         {
             if (Overseer.Instance.IsGameReady)
             {
@@ -309,7 +319,7 @@ public class CharacterInteractionHandler : InteractionHandler
             }
             yield return new WaitForEndOfFrame();
         }
-        Animator.SetBool("KnockedDown", false);
+        Animator.SetBool(KnockdownKey, false);
         WakeupCoroutine = null;
     }
 
