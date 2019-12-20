@@ -12,6 +12,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     public float HorizontalBuffer = .02f;
     [Tooltip("We will thin our box collider vertically to check our horizontal collisions")]
     public float VerticalBuffer = .02f;
+
     /// <summary>
     /// 
     /// </summary>
