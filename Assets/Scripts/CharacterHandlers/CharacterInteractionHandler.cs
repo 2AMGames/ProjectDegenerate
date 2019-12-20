@@ -266,6 +266,7 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         yield return new WaitForEndOfFrame();
         int framesToPause = GameStateManager.Instance.HitConfirmFrameDelay;
+
         while (framesToPause > 0)
         {
             yield return new WaitForEndOfFrame();
