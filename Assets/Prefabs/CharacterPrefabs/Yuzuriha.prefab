@@ -90,7 +90,7 @@ MonoBehaviour:
   useTerminalVelocity: 0
   UseAnimatorVelocity: 0
   gravityVector: {x: 0, y: -1}
-  gravityScale: 2.0408163
+  gravityScale: 5.668934
   terminalVelocity: 10
 --- !u!114 &6057300011755358157
 MonoBehaviour:
@@ -111,11 +111,11 @@ MonoBehaviour:
   MaximumAirSpeed: 8
   AirAcceleration: 20
   isFacingRight: 0
-  timeToReachJumpApex: 0.5
+  timeToReachJumpApex: 0.3
   heightOfJump: 2.5
   fastFallScale: 1.7
   maxAvailableJumps: 1
-  JumpingAcceleration: 2.0408163
+  JumpingAcceleration: 5.668934
   IsDashing: 0
   GroundDashSpeed: 13.75
   AirDashSpeed: 12
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c996b8232709f14f84eb2f27ae7bb1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderOffset: {x: -0.13, y: 0}
+  colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.63, y: 1.6}
