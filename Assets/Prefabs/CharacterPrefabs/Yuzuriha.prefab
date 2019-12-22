@@ -219,7 +219,7 @@ MonoBehaviour:
   CharacterMoves:
   - MoveName: Low_Kick
     SpecialMeterRequired: 0
-    Height: 1
+    Height: 2
     Hits:
     - Knockdown: 0
       HitDamage: 5

@@ -39,15 +39,31 @@ public class CommandInterpreter : MonoBehaviour
     /// Light Punch trigger
     /// </summary>
     public static readonly int LP_ANIM_TRIGGER = Animator.StringToHash("Light");
+
+    /// <summary>
+    /// Light Punch Release Trigger
+    /// </summary>
+    public static readonly int LP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Light_Release");
+
     /// <summary>
     /// Medium Punch trigger
     /// </summary>
     public static readonly int MP_ANIM_TRIGGER = Animator.StringToHash("Medium");
 
     /// <summary>
+    /// Medium Punch Release Trigger
+    /// </summary>
+    public static readonly int MP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Medium_Release");
+
+    /// <summary>
     /// Heavy punch trigger
     /// </summary>
     public static readonly int HP_ANIM_TRIGGER = Animator.StringToHash("Heavy");
+
+    /// <summary>
+    /// Hard Punch Release Trigger;
+    /// </summary>
+    public static readonly int HP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Heavy_Release");
 
     /// <summary>
     /// Light Kick Trigger
@@ -57,7 +73,9 @@ public class CommandInterpreter : MonoBehaviour
     /// <summary>
     /// Medium Kick Trigger
     /// </summary>
-    public static readonly int MK_ANIM_TRIGGER = Animator.StringToHash("Special");
+    public static readonly int SPECIAL_ANIM_TRIGGER = Animator.StringToHash("Special");
+
+    public static readonly int SPECIAL_RELEASE_TRIGGER = Animator.StringToHash("Special_Release");
 
     /// <summary>
     /// Heavy Kick trigger
@@ -93,6 +111,8 @@ public class CommandInterpreter : MonoBehaviour
     /// Back dash input
     /// </summary>
     private static readonly int B_DASH_ANIM_TRIGGER = Animator.StringToHash("B_Dash");
+
+    private static readonly int RELEASE_TRIGGER = Animator.StringToHash(" RELEASE");
 
     // Attack inputs that require a button trigger complement for them to be valid.
 
@@ -297,7 +317,7 @@ public class CommandInterpreter : MonoBehaviour
         inputData |= IsButtonPressed(MP_ANIM_TRIGGER) << 1;
         inputData |= IsButtonPressed(HP_ANIM_TRIGGER) << 2;
         inputData |= IsButtonPressed(LK_ANIM_TRIGGER) << 3;
-        inputData |= IsButtonPressed(MK_ANIM_TRIGGER) << 4;
+        inputData |= IsButtonPressed(SPECIAL_ANIM_TRIGGER) << 4;
         inputData |= IsButtonPressed(HK_ANIM_TRIGGER) << 5;
 
         inputData |= (currentDirectionalInputStruct.directionInput.x < 0f ? 1 : 0) << 6;
@@ -325,7 +345,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(LP_ANIM_TRIGGER);
+                OnButtonReleased(LP_ANIM_TRIGGER, LP_RELEASE_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 1) & 1) == 1)
@@ -335,7 +355,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(MP_ANIM_TRIGGER);
+                OnButtonReleased(MP_ANIM_TRIGGER, LP_RELEASE_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 2) & 1) == 1)
@@ -345,7 +365,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(HP_ANIM_TRIGGER);
+                OnButtonReleased(HP_ANIM_TRIGGER, HP_RELEASE_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 3) & 1) == 1)
@@ -360,12 +380,12 @@ public class CommandInterpreter : MonoBehaviour
 
             if (((inputData.InputPattern >> 4) & 1) == 1)
             {
-                OnButtonEventTriggered(MK_ANIM_TRIGGER);
-                OnButtonPressedEvent?.Invoke(MK_ANIM_TRIGGER);
+                OnButtonEventTriggered(SPECIAL_ANIM_TRIGGER);
+                OnButtonPressedEvent?.Invoke(SPECIAL_ANIM_TRIGGER);
             }
             else
             {
-                OnButtonReleased(MK_ANIM_TRIGGER);
+                OnButtonReleased(SPECIAL_ANIM_TRIGGER, SPECIAL_RELEASE_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 5) & 1) == 1)
@@ -606,7 +626,7 @@ public class CommandInterpreter : MonoBehaviour
     private void OnDirectionChanged(bool isFacingRight)
     {
         // In the case that character has buffered a movement direction input in the air, upon landing their direction will change, cause it to be flipped.
-        // We shoudl clear these just to make sure we don't accidentaly buffer a forward dash in the air, change direction and execute a dash toward the opposing player.
+        // We should clear these just to make sure we don't accidentaly buffer a forward dash in the air, change direction and execute a dash toward the opposing player.
         // In the future, we could disable these animation triggers and flip the opposite trigger (if applicable).
         ResetMovementInputBuffers();
         currentDirectionalInputStruct.direction = InterpretJoystickAsDirection(currentDirectionalInputStruct.directionInput);
@@ -619,12 +639,20 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public void OnButtonReleased(int buttonEventName)
+    public void OnButtonReleased(int buttonEventName, int releaseTrigger = 0)
     {
         if (ButtonsPressed[buttonEventName] == true)
         {
             OnButtonReleasedEvent?.Invoke(buttonEventName);
             ButtonsPressed[buttonEventName] = false;
+
+            if (releaseTrigger != 0)
+            {
+                Anim.SetTrigger(releaseTrigger);
+
+                FramesRemainingUntilRemoveFromBuffer[releaseTrigger] = FRAMES_TO_BUFFER;
+                StartCoroutine(DisableButtonTriggerAfterTime(releaseTrigger));
+            }
         }
     }
 
@@ -636,14 +664,14 @@ public class CommandInterpreter : MonoBehaviour
         FramesRemainingUntilRemoveFromBuffer.Add(MP_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(HP_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(LK_ANIM_TRIGGER, 0);
-        FramesRemainingUntilRemoveFromBuffer.Add(MK_ANIM_TRIGGER, 0);
+        FramesRemainingUntilRemoveFromBuffer.Add(SPECIAL_ANIM_TRIGGER, 0);
         FramesRemainingUntilRemoveFromBuffer.Add(HK_ANIM_TRIGGER, 0);
 
         ButtonsPressed.Add(LP_ANIM_TRIGGER, false);
         ButtonsPressed.Add(MP_ANIM_TRIGGER, false);
         ButtonsPressed.Add(HP_ANIM_TRIGGER, false);
         ButtonsPressed.Add(LK_ANIM_TRIGGER, false);
-        ButtonsPressed.Add(MK_ANIM_TRIGGER, false);
+        ButtonsPressed.Add(SPECIAL_ANIM_TRIGGER, false);
         ButtonsPressed.Add(HK_ANIM_TRIGGER, false);
 
         FramesRemainingUntilRemoveFromBuffer.Add(QCB_ANIM_TRIGGER, 0);

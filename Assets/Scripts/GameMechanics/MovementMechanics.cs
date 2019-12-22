@@ -16,6 +16,7 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
+    private const string TurnAroundTrigger = "TurnAround";
     public static readonly int JUMP_TRIGGER = Animator.StringToHash("Jump");
     private const float CROUCHING_THRESHOLD = .6f;
 
@@ -280,6 +281,7 @@ public class MovementMechanics : MonoBehaviour {
             currentScale.x = Mathf.Abs(currentScale.x); ;
             transform.localScale = currentScale;
         }
+
         if (anim)
         {
             anim.SetInteger(HORIZONTAL_INPUT, (isFacingRight ? 1 : -1) * this.horizontalInput);

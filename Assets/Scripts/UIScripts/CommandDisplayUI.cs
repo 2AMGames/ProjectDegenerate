@@ -39,7 +39,7 @@ public class CommandDisplayUI : MonoBehaviour
         buttonImageDictionary.Add(CommandInterpreter.MP_ANIM_TRIGGER, buttonImages[1]);
         buttonImageDictionary.Add(CommandInterpreter.HP_ANIM_TRIGGER, buttonImages[2]);
         buttonImageDictionary.Add(CommandInterpreter.LK_ANIM_TRIGGER, buttonImages[3]);
-        buttonImageDictionary.Add(CommandInterpreter.MK_ANIM_TRIGGER, buttonImages[4]);
+        buttonImageDictionary.Add(CommandInterpreter.SPECIAL_ANIM_TRIGGER, buttonImages[4]);
         buttonImageDictionary.Add(CommandInterpreter.HK_ANIM_TRIGGER, buttonImages[5]);
     }
     #endregion monobehaviour methods
