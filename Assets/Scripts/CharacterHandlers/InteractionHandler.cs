@@ -143,6 +143,7 @@ public abstract class InteractionHandler : MonoBehaviour
 
     public enum HitType
     {
+        Knockdown,
         Crumple,
         Low,
         Mid,

@@ -124,7 +124,7 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             if (didMoveLand)
             {
-                Animator.SetInteger(HitHeightKey, (int)height + 1);
+                Animator.SetInteger(HitHeightKey, (int)height);
             }
             else
             {
