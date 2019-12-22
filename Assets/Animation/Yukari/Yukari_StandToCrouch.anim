@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Yukari_TurnAround
+  m_Name: Yukari_StandToCrouch
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,13 +20,13 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: 83705e76006192e42b4a77d9bccbd2b2, type: 3}
+      value: {fileID: 21300000, guid: 0652a789c281728448d9fbe07dec381c, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: 250274eff7798f14c95a224fda932714, type: 3}
+      value: {fileID: 21300000, guid: b40bc1f2b3d6f3d46a2261ed8d225023, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: 08304510b14fc994486eb089189380d1, type: 3}
+      value: {fileID: 21300000, guid: 7c0dcdc013e140f4ba0dfe075dacbabd, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: 08304510b14fc994486eb089189380d1, type: 3}
+      value: {fileID: 21300000, guid: 7c0dcdc013e140f4ba0dfe075dacbabd, type: 3}
     attribute: m_Sprite
     path: SpriteRenderer
     classID: 212
@@ -46,10 +46,10 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 83705e76006192e42b4a77d9bccbd2b2, type: 3}
-    - {fileID: 21300000, guid: 250274eff7798f14c95a224fda932714, type: 3}
-    - {fileID: 21300000, guid: 08304510b14fc994486eb089189380d1, type: 3}
-    - {fileID: 21300000, guid: 08304510b14fc994486eb089189380d1, type: 3}
+    - {fileID: 21300000, guid: 0652a789c281728448d9fbe07dec381c, type: 3}
+    - {fileID: 21300000, guid: b40bc1f2b3d6f3d46a2261ed8d225023, type: 3}
+    - {fileID: 21300000, guid: 7c0dcdc013e140f4ba0dfe075dacbabd, type: 3}
+    - {fileID: 21300000, guid: 7c0dcdc013e140f4ba0dfe075dacbabd, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
