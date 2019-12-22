@@ -255,6 +255,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     public override void OnComboEnded()
     {
+        Debug.LogWarning("Combo ended");
         CurrentComboCount = 0;
     }
 
