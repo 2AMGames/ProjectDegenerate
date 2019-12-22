@@ -147,7 +147,9 @@ public abstract class InteractionHandler : MonoBehaviour
         Low,
         Mid,
         High,
-        Air
+        Air,
+        Launch,
+        HitToWall
     }
 
     [System.Serializable]
