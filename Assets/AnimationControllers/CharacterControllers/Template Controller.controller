@@ -2828,7 +2828,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Light Release
+  - m_Name: Light_Release
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2840,7 +2840,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Medium Release
+  - m_Name: Medium_Release
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2852,7 +2852,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Heavy Release
+  - m_Name: Heavy_Release
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2864,7 +2864,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Special Release
+  - m_Name: Special_Release
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
