@@ -41,29 +41,14 @@ public class CommandInterpreter : MonoBehaviour
     public static readonly int LP_ANIM_TRIGGER = Animator.StringToHash("Light");
 
     /// <summary>
-    /// Light Punch Release Trigger
-    /// </summary>
-    public static readonly int LP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Light_Release");
-
-    /// <summary>
     /// Medium Punch trigger
     /// </summary>
     public static readonly int MP_ANIM_TRIGGER = Animator.StringToHash("Medium");
 
     /// <summary>
-    /// Medium Punch Release Trigger
-    /// </summary>
-    public static readonly int MP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Medium_Release");
-
-    /// <summary>
     /// Heavy punch trigger
     /// </summary>
     public static readonly int HP_ANIM_TRIGGER = Animator.StringToHash("Heavy");
-
-    /// <summary>
-    /// Hard Punch Release Trigger;
-    /// </summary>
-    public static readonly int HP_RELEASE_ANIM_TRIGGER = Animator.StringToHash("Heavy_Release");
 
     /// <summary>
     /// Light Kick Trigger
@@ -74,8 +59,6 @@ public class CommandInterpreter : MonoBehaviour
     /// Medium Kick Trigger
     /// </summary>
     public static readonly int SPECIAL_ANIM_TRIGGER = Animator.StringToHash("Special");
-
-    public static readonly int SPECIAL_RELEASE_TRIGGER = Animator.StringToHash("Special_Release");
 
     /// <summary>
     /// Heavy Kick trigger
@@ -112,7 +95,7 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private static readonly int B_DASH_ANIM_TRIGGER = Animator.StringToHash("B_Dash");
 
-    private static readonly int RELEASE_TRIGGER = Animator.StringToHash(" RELEASE");
+    private static readonly int RELEASE_TRIGGER = Animator.StringToHash("ButtonRelease");
 
     // Attack inputs that require a button trigger complement for them to be valid.
 
@@ -345,7 +328,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(LP_ANIM_TRIGGER, LP_RELEASE_ANIM_TRIGGER);
+                OnButtonReleased(LP_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 1) & 1) == 1)
@@ -355,7 +338,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(MP_ANIM_TRIGGER, LP_RELEASE_ANIM_TRIGGER);
+                OnButtonReleased(MP_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 2) & 1) == 1)
@@ -365,7 +348,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(HP_ANIM_TRIGGER, HP_RELEASE_ANIM_TRIGGER);
+                OnButtonReleased(HP_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 3) & 1) == 1)
@@ -385,7 +368,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(SPECIAL_ANIM_TRIGGER, SPECIAL_RELEASE_TRIGGER);
+                OnButtonReleased(SPECIAL_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 5) & 1) == 1)
@@ -410,11 +393,8 @@ public class CommandInterpreter : MonoBehaviour
     {
         if (!ButtonsPressed[buttonEventName])
         {
-            Anim.SetTrigger(buttonEventName);
+            Anim.SetBool(buttonEventName, true);
             Anim.SetTrigger(BUTTON_ACTION_TRIGGER);
-
-            FramesRemainingUntilRemoveFromBuffer[buttonEventName] = FRAMES_TO_BUFFER;
-            StartCoroutine(DisableButtonTriggerAfterTime(buttonEventName));
 
             FramesRemainingUntilRemoveFromBuffer[BUTTON_ACTION_TRIGGER] = FRAMES_TO_BUFFER;
             StartCoroutine(DisableButtonTriggerAfterTime(BUTTON_ACTION_TRIGGER));
@@ -639,20 +619,18 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public void OnButtonReleased(int buttonEventName, int releaseTrigger = 0)
+    public void OnButtonReleased(int buttonEventName)
     {
         if (ButtonsPressed[buttonEventName] == true)
         {
             OnButtonReleasedEvent?.Invoke(buttonEventName);
             ButtonsPressed[buttonEventName] = false;
+            Anim.SetBool(buttonEventName, false);
 
-            if (releaseTrigger != 0)
-            {
-                Anim.SetTrigger(releaseTrigger);
+            Anim.SetTrigger(RELEASE_TRIGGER);
 
-                FramesRemainingUntilRemoveFromBuffer[releaseTrigger] = FRAMES_TO_BUFFER;
-                StartCoroutine(DisableButtonTriggerAfterTime(releaseTrigger));
-            }
+            FramesRemainingUntilRemoveFromBuffer[RELEASE_TRIGGER] = FRAMES_TO_BUFFER;
+            StartCoroutine(DisableButtonTriggerAfterTime(RELEASE_TRIGGER));
         }
     }
 
