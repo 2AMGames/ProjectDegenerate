@@ -312,6 +312,11 @@ public class CommandInterpreter : MonoBehaviour
 
     }
 
+    public int IsButtonPressed(int buttonTrigger)
+    {
+        return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
+    }
+
     #endregion
 
     #region private interface
@@ -425,11 +430,6 @@ public class CommandInterpreter : MonoBehaviour
         CheckForJumpInput(lastJoystickInput, currentJoystickVec);
         currentDirectionalInputStruct.directionInput = currentJoystickVec;
         FramesSinceLastDirectionalInput = -1;
-    }
-
-    private int IsButtonPressed(int buttonTrigger)
-    {
-        return ButtonsPressed.ContainsKey(buttonTrigger) && ButtonsPressed[buttonTrigger] == true ? 1 : 0;
     }
 
     private Vector2Int GetJoystickInputFromData(PlayerInputPacket.PlayerInputData inputData)
