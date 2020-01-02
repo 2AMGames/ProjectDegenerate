@@ -556,7 +556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WalkingSpeed: 2.5
-  RunningSpeed: 6
+  RunningSpeed: 4.5
   GroundAcceleration: 60
   GroundAccelerationScale: 0
   MaximumAirSpeed: 8
@@ -568,7 +568,7 @@ MonoBehaviour:
   maxAvailableJumps: 1
   JumpingAcceleration: 4.9979177
   IsDashing: 0
-  GroundDashSpeed: 12
+  GroundDashSpeed: 10
   AirDashSpeed: 12
   canMoveWhileCrouching: 0
   ignoreJumpButton: 0
