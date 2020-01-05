@@ -70,8 +70,12 @@ public class HitboxRect : Hitbox
         bounds = new CustomCollider2D.BoundsRect();
         Vector2 origin = this.transform.position; //new Vector3(boxColliderOffset.x, boxColliderOffset.y);
         Vector2 charLocalScale;
+
         if (transformToUseAsScale && !ignoreParentScale)
+        {
             charLocalScale = transformToUseAsScale.localScale; //We need this to properly scale the hitboxes to our parent object
+            charLocalScale = new Vector2(Mathf.Abs(charLocalScale.x), Mathf.Abs(charLocalScale.y));
+        }
         else
             charLocalScale = Vector2.one;
         
