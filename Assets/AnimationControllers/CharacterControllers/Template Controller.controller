@@ -1872,12 +1872,12 @@ AnimatorStateMachine:
   m_EntryTransitions:
   - {fileID: 6060853654667037434}
   m_StateMachineTransitions:
-  - first: {fileID: -8451855692104516998}
-    second:
-    - {fileID: -723640686377554806}
   - first: {fileID: 8043613086358247144}
     second:
     - {fileID: 5816163444754529117}
+  - first: {fileID: -8451855692104516998}
+    second:
+    - {fileID: -723640686377554806}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: -20, z: 0}
   m_EntryPosition: {x: 20, y: 50, z: 0}
@@ -2930,6 +2930,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: DashCount
+    m_Type: 3
+    m_DefaultFloat: 0
+    m_DefaultInt: 1
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -3020,14 +3026,14 @@ AnimatorStateMachine:
   m_EntryTransitions:
   - {fileID: 288226507410350148}
   m_StateMachineTransitions:
-  - first: {fileID: -2408410225858712092}
-    second: []
-  - first: {fileID: 1234882288372165774}
-    second:
-    - {fileID: -5193670599667087760}
   - first: {fileID: 6595721555642363394}
     second:
     - {fileID: 2149583514202505112}
+  - first: {fileID: 1234882288372165774}
+    second:
+    - {fileID: -5193670599667087760}
+  - first: {fileID: -2408410225858712092}
+    second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -70, y: -110, z: 0}
   m_EntryPosition: {x: -40, y: 40, z: 0}

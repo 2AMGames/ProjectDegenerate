@@ -17,6 +17,7 @@ public class MovementMechanics : MonoBehaviour {
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
     private const string TurnAroundTrigger = "TurnAround";
+    private const string DashCount= "DashCount";
     public static readonly int JUMP_TRIGGER = Animator.StringToHash("Jump");
     private const float CROUCHING_THRESHOLD = .6f;
 
@@ -336,6 +337,12 @@ public class MovementMechanics : MonoBehaviour {
     public void AnimatorJump()
     {
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
+        anim.SetInteger(DashCount, 1);
+    }
+
+    public void AnimatorAirDash()
+    {
+        anim.SetInteger(DashCount, anim.GetInteger(DashCount) - 1);
     }
 
     /// <summary>

@@ -537,7 +537,6 @@ public class CommandInterpreter : MonoBehaviour
         if (fDashIndex >= 0)
         {
             OnDirectionalInputExecuted(fDashIndex, F_DASH_INPUT, F_DASH_ANIM_TRIGGER);
-            Debug.LogWarning("Forward Dash Successful");
             return;
         }
 
@@ -545,7 +544,6 @@ public class CommandInterpreter : MonoBehaviour
         if (bDashIndex >= 0)
         {
             OnDirectionalInputExecuted(bDashIndex, B_DASH_INPUT, B_DASH_ANIM_TRIGGER);
-            Debug.LogWarning("Back Dash Successful");
             return;
         }
 
