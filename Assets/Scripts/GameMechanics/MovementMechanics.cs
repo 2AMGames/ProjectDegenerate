@@ -62,20 +62,6 @@ public class MovementMechanics : MonoBehaviour {
     public bool IsDashing;
     public float GroundDashSpeed = 6.5f;
     public float AirDashSpeed = 6.5f;
-    /// <summary>
-    /// Some characters may have the ability to move while they are crouching. Mark this value to true if they cay
-    /// </summary>
-    public bool canMoveWhileCrouching;
-    [HideInInspector]
-    /// <summary>
-    /// Ignores inputs related to the jump function
-    /// </summary>
-    public bool ignoreJumpButton;
-
-    /// <summary>
-    /// Can this actor change direction. Usually set to true when animating an attack move.
-    /// </summary>
-    public bool CanChangeDirection = true;
     
     /// <summary>
     /// The number of jumps remaining that a character can pull off before landing. Once they land, their jumps will typically
@@ -141,7 +127,7 @@ public class MovementMechanics : MonoBehaviour {
         }
 
         PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
-        if (CanChangeDirection && opponent != null)
+        if (opponent != null)
         {
             FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform);
         }
@@ -172,7 +158,7 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     public void SetHorizontalInput(float horizontalInput)
     {
-        if (canMoveWhileCrouching && IsCrouching)
+        if (IsCrouching)
         {
             horizontalInput = 0;
         }
@@ -312,24 +298,11 @@ public class MovementMechanics : MonoBehaviour {
     /// <returns></returns>
     public bool Jump()
     {
-        if (ignoreJumpButton)
+        if (currentJumpsAvailable <= 0)
         {
             return false;
         }
-        if (!rigid.isInAir)
-        {
-        }
-        else if (currentJumpsAvailable > 0)
-        {
-            currentJumpsAvailable--;
-
-        }
-        else
-        {
-            return false;
-        }
-
-        //FlipSpriteBasedOnInput(this.horizontalInput, true);
+        --currentJumpsAvailable;
         anim.SetTrigger(JUMP_TRIGGER);
         return true;
     }

@@ -282,7 +282,6 @@ public class CharacterInteractionHandler : InteractionHandler
         Animator.SetBool(HitstunTrigger, true);
         while (Hitstun > 0)
         {
-            MovementMechanics.ignoreJumpButton = true;
             yield return null;
             if (Overseer.Instance.IsGameReady)
             {
