@@ -166,6 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.175, y: 5.07}
   HorizontalBuffer: 0.02
@@ -384,6 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.175, y: 5.07}
   HorizontalBuffer: 0.02
@@ -786,6 +788,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 88466982054086403, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 88466982054086403, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: boxColliderSize.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 88466982054086404, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -805,6 +817,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.599
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057300011755358155, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057300011755358157, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: isFacingRight
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6057300011755358159, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
@@ -861,6 +883,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6057300011755358159, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6057300011755358161, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
       propertyPath: m_Name
@@ -871,10 +898,25 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.182
       objectReference: {fileID: 0}
+    - target: {fileID: 6057300012067346906, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.059
+      objectReference: {fileID: 0}
     - target: {fileID: 6057300012067346908, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057300012067346909, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: boxColliderSize.x
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 6057300012988414300, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6139978614007417908, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
@@ -960,6 +1002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.2, y: 11.43}
   HorizontalBuffer: 0.02
@@ -1014,6 +1057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 15.57, y: 2.23}
   HorizontalBuffer: 0.02
@@ -1172,6 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 1, y: 1}
   HorizontalBuffer: 0.02
@@ -1216,6 +1261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.22, y: 11.49}
   HorizontalBuffer: 0.02

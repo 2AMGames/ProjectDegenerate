@@ -32,7 +32,7 @@ public class CommandInterpreter : MonoBehaviour
 
     #region const variabes
 
-    private const int FRAMES_TO_BUFFER = 20;
+    private const int FRAMES_TO_BUFFER = 8;
     private const int DIRECTIONAL_INPUT_LENIENCY = 8;
 
     /// <summary>
@@ -453,8 +453,8 @@ public class CommandInterpreter : MonoBehaviour
             bool jumpSuccessful = characterStats.MovementMechanics.Jump();
             if (jumpSuccessful)
             {
-                FramesRemainingUntilRemoveFromBuffer[MovementMechanics.JUMP_TRIGGER] = FRAMES_TO_BUFFER;
-                StartCoroutine(DisableButtonTriggerAfterTime(MovementMechanics.JUMP_TRIGGER));
+                FramesRemainingUntilRemoveFromBuffer[MovementMechanics.JumpTrigger] = FRAMES_TO_BUFFER;
+                StartCoroutine(DisableButtonTriggerAfterTime(MovementMechanics.JumpTrigger));
             }
         }
     }

@@ -7,6 +7,7 @@ using UnityEngine;
 /// running, jumping, crouching, etc. 
 /// </summary>
 [RequireComponent(typeof(CustomPhysics2D))]
+[RequireComponent(typeof(Animator))]
 public class MovementMechanics : MonoBehaviour {
 
     #region const variables
@@ -16,9 +17,11 @@ public class MovementMechanics : MonoBehaviour {
     private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
-    private const string TurnAroundTrigger = "TurnAround";
     private const string DashCount= "DashCount";
-    public static readonly int JUMP_TRIGGER = Animator.StringToHash("Jump");
+
+    public static readonly int ShouldChangeDirection = Animator.StringToHash("ShouldChangeDirection");
+    public static readonly int JumpTrigger = Animator.StringToHash("Jump");
+
     private const float CROUCHING_THRESHOLD = .6f;
 
     #endregion
@@ -188,18 +191,46 @@ public class MovementMechanics : MonoBehaviour {
     /// If opponent is in the air, should not rotate sprite until grounded
     /// </summary>
     ///   /// <param name="opponentPosition"></param>
-    public void FlipSpriteBasedOnOpponentDirection(Transform opponentPosition)
+    public void FlipSpriteBasedOnOpponentDirection(Transform opponentPosition, bool instant = false)
     {
         if (rigid.isInAir)
         {
             return;
         }
         Vector2 opponentDirection = (opponentPosition.position - transform.position).normalized;
+        bool shouldChangeDirection = opponentDirection.x > 0 & !isFacingRight || opponentDirection.x < 0 && isFacingRight || instant;
+
+        if (shouldChangeDirection)
+        {
+            if (instant)
+            {
+                if (opponentDirection.x < 0 && isFacingRight)
+                {
+                    SetSpriteFlipped(false);
+                }
+                else if (opponentDirection.x > 0 && !isFacingRight)
+                {
+                    SetSpriteFlipped(true);
+                }
+            }
+            else
+            {
+                anim.SetBool(ShouldChangeDirection, true);
+            }
+        }
+    }
+
+    public void ChangeDirection()
+    {
+        Debug.LogWarning("Change direction");
+        PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
+        Vector2 opponentDirection = (opponent.CharacterStats.transform.position - transform.position).normalized;
+
         if (opponentDirection.x < 0 && isFacingRight)
         {
             SetSpriteFlipped(false);
         }
-        if (opponentDirection.x > 0 && !isFacingRight)
+        else if (opponentDirection.x > 0 && !isFacingRight)
         {
             SetSpriteFlipped(true);
         }
@@ -272,7 +303,9 @@ public class MovementMechanics : MonoBehaviour {
         if (anim)
         {
             anim.SetInteger(HORIZONTAL_INPUT, (isFacingRight ? 1 : -1) * this.horizontalInput);
+            anim.SetBool(ShouldChangeDirection, false);
         }
+
         OnDirectionChanged?.Invoke(spriteFacingright);
     }
 
@@ -303,14 +336,13 @@ public class MovementMechanics : MonoBehaviour {
             return false;
         }
         --currentJumpsAvailable;
-        anim.SetTrigger(JUMP_TRIGGER);
+        anim.SetTrigger(JumpTrigger);
         return true;
     }
 
     public void AnimatorJump()
     {
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
-        anim.SetInteger(DashCount, 1);
     }
 
     public void AnimatorAirDash()
@@ -334,18 +366,22 @@ public class MovementMechanics : MonoBehaviour {
             rigid.gravityScale = JumpingAcceleration * fastFallScale;
         }
     }
-    
+
     /// <summary>
     /// This method will be called any time our character touches the ground after being
     /// in an in-air state
     /// </summary>
     public void OnGroundedEvent()
     {
-        if (anim && anim.runtimeAnimatorController)
-        {
-            anim.SetBool(IN_AIR_ANIMATION_PARAMETER, false);
-        }
+        anim.SetBool(IN_AIR_ANIMATION_PARAMETER, false);
+        anim.SetInteger(DashCount, 1);
         this.currentJumpsAvailable = maxAvailableJumps;
+
+        PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
+        if (opponent != null)
+        {
+            FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform, true);
+        }
     }
 
     /// <summary>
@@ -379,18 +415,6 @@ public class MovementMechanics : MonoBehaviour {
         Vector2 newVelocity = Vector2.Lerp(startingVector, destinationVector, lerpValue);
         rigid.Velocity = newVelocity;
         anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
-    }
-
-    #endregion
-
-    #region coroutines
-
-    private IEnumerator LoseUpwardMomentumFromJump()
-    {
-        if (rigid.Velocity.y < 0)
-        {
-            yield break;
-        }
     }
 
     #endregion
