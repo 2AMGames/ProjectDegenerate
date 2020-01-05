@@ -67,7 +67,10 @@ public class CustomBoxCollider2D : CustomCollider2D
         BoundsRect b = new BoundsRect();
         Vector2 localScale;
         if (!ignoreParentScale)
+        {
             localScale = this.transform.localScale;
+            localScale = new Vector2(Mathf.Abs(localScale.x), Mathf.Abs(localScale.y));
+        }
         else
             localScale = Vector2.one;
         Vector2 origin = this.transform.position + (isStatic ? Vector3.zero : localScale.x * Vector3.up * boxColliderSize.y / 2) + new Vector3(colliderOffset.x * localScale.x, colliderOffset.y * localScale.y);
