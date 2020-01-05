@@ -65,13 +65,14 @@ public class CustomBoxCollider2D : CustomCollider2D
     {
         
         BoundsRect b = new BoundsRect();
-        Vector2 origin = this.transform.position + (isStatic ? Vector3.zero : Vector3.up * boxColliderSize.y / 2) + new Vector3(colliderOffset.x, colliderOffset.y);
-
+        Vector2 localScale = this.transform.localScale;
+        Vector2 origin = this.transform.position + (isStatic ? Vector3.zero : localScale.x * Vector3.up * boxColliderSize.y / 2) + new Vector3(colliderOffset.x * localScale.x, colliderOffset.y * localScale.y);
+        
         b.center = origin;
-        b.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        b.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-        b.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        b.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
+        b.topLeft = origin + localScale.y * (Vector2.up * boxColliderSize.y / 2) - localScale.x * (Vector2.right * boxColliderSize.x / 2);
+        b.topRight = origin + localScale.y * (Vector2.up * boxColliderSize.y / 2) + localScale.x * (Vector2.right * boxColliderSize.x / 2);
+        b.bottomLeft = origin - localScale.y * (Vector2.up * boxColliderSize.y / 2) - localScale.x * (Vector2.right * boxColliderSize.x / 2);
+        b.bottomRight = origin - localScale.y * (Vector2.up * boxColliderSize.y / 2) + localScale.x * (Vector2.right * boxColliderSize.x / 2);
 
         this.bounds = b;
 

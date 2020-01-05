@@ -13,21 +13,32 @@ public class HitboxRect : Hitbox
 
     public CustomCollider2D.BoundsRect bounds;
 
-   
+    
 
     #region monobehaviour methods
-    
+
 
     private void OnValidate()
     {
-        UpdateColliderBounds();
+        if (Application.isPlaying)
+            UpdateColliderBounds();
+        else if (highestParentTransform != null)
+            UpdateColliderBoundsForGizmos(highestParentTransform);
     }
 
     protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
-            UpdateColliderBounds();
+            if (highestParentTransform == null)
+            {
+                highestParentTransform = this.transform;
+                while (highestParentTransform.parent)
+                {
+                    highestParentTransform = highestParentTransform.parent;
+                }
+            }
+            UpdateColliderBoundsForGizmos(highestParentTransform);
         }
         Color colorToDraw = GetColorToDrawGizmos();
         
@@ -47,14 +58,27 @@ public class HitboxRect : Hitbox
     /// </summary>
     public override void UpdateColliderBounds()
     {
+        UpdateColliderBoundsForGizmos(this.AssociatedCharacterStats.transform);
+    }
+
+    /// <summary>
+    /// This functions similarly to how our update bounds works but removes the need for an interaction handler but replacing it with their parent
+    /// most object
+    /// </summary>
+    public void UpdateColliderBoundsForGizmos(Transform transformToUseAsScale)
+    {
         bounds = new CustomCollider2D.BoundsRect();
         Vector2 origin = this.transform.position; //new Vector3(boxColliderOffset.x, boxColliderOffset.y);
-
-        bounds.topLeft = origin + Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        bounds.topRight = origin + Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-        bounds.bottomLeft = origin - Vector2.up * boxColliderSize.y / 2 - Vector2.right * boxColliderSize.x / 2;
-        bounds.bottomRight = origin - Vector2.up * boxColliderSize.y / 2 + Vector2.right * boxColliderSize.x / 2;
-
+        Vector2 charLocalScale;
+        if (transformToUseAsScale)
+            charLocalScale = transformToUseAsScale.localScale; //We need this to properly scale the hitboxes to our parent object
+        else
+            charLocalScale = Vector2.one;
+        
+        bounds.topLeft = origin + (charLocalScale.y * Vector2.up * boxColliderSize.y / 2) - (charLocalScale.x * Vector2.right * boxColliderSize.x / 2);
+        bounds.topRight = origin + (charLocalScale.y * Vector2.up * boxColliderSize.y / 2) + (charLocalScale.x * Vector2.right * boxColliderSize.x / 2);
+        bounds.bottomLeft = origin - (charLocalScale.y * Vector2.up * boxColliderSize.y / 2) - (charLocalScale.x * Vector2.right * boxColliderSize.x / 2);
+        bounds.bottomRight = origin - (charLocalScale.y * Vector2.up * boxColliderSize.y / 2) + (charLocalScale.x * Vector2.right * boxColliderSize.x / 2);
     }
 
     public override bool CheckHitboxIntersect(Hitbox hboxToCheck)

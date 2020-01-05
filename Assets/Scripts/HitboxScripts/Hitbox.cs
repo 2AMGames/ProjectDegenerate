@@ -47,6 +47,15 @@ public abstract class Hitbox : MonoBehaviour
 
     #endregion
 
+    #region debugging variables
+    /// <summary>
+    /// This will be a debugging variable that can be set OnDrawGizmos to be used to visualize our hitboxes without needing to assign our
+    /// interaction handler
+    /// </summary>
+    [System.NonSerialized]
+    protected Transform highestParentTransform;
+    #endregion debugging variables
+
     #region monobehaivour methods
     private void Awake()
     {
@@ -76,6 +85,7 @@ public abstract class Hitbox : MonoBehaviour
         {
             return;
         }
+
         foreach (Hitbox hbox in currentIntersectingHitboxes.ToArray())
         {
             if (hbox)
