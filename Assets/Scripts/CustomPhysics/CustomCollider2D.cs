@@ -17,6 +17,10 @@ public abstract class CustomCollider2D : MonoBehaviour {
     
     [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
+
+    [SerializeField]
+    [Tooltip("This should be removed in later iterations of the game. Adding this just so that we do not have to redo hitboxes that have already been setup")]
+    protected bool ignoreParentScale;
     
     /// <summary>
     /// The attached Custom physics component that is attached to our custom collider

@@ -199,6 +199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
+  ignoreParentScale: 1
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.63, y: 1.6}
   HorizontalBuffer: 0.02
@@ -707,6 +708,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.28
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -797,6 +803,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.57
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -877,6 +888,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -956,6 +972,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1047,6 +1068,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.13
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1137,6 +1163,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1226,6 +1257,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1322,6 +1358,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.09
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1417,6 +1458,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.21
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1496,6 +1542,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1582,6 +1633,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1666,6 +1722,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -1757,6 +1818,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1842,6 +1908,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -1921,6 +1992,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
@@ -2012,6 +2088,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}
       propertyPath: m_Name
@@ -2091,6 +2172,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.y
       value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6139978615194910942, guid: 6dab27b64ec9b0e4c8f799107be83540,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6139978615194910943, guid: 6dab27b64ec9b0e4c8f799107be83540,
         type: 3}

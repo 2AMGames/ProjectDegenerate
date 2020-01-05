@@ -45,6 +45,9 @@ public abstract class Hitbox : MonoBehaviour
     /// </summary>
     public List<Hitbox> currentIntersectingHitboxes = new List<Hitbox>();
 
+    [SerializeField]
+    [Tooltip("This should be removed in later iterations of the game. Adding this simply so that we do not have to redo animations in our game")]
+    protected bool ignoreParentScale;
     #endregion
 
     #region debugging variables
