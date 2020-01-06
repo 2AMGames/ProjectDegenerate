@@ -334,7 +334,6 @@ public class MovementMechanics : MonoBehaviour {
         {
             return false;
         }
-        --currentJumpsAvailable;
         anim.SetTrigger(JumpTrigger);
         return true;
     }
@@ -342,6 +341,7 @@ public class MovementMechanics : MonoBehaviour {
     public void AnimatorJump()
     {
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
+        --currentJumpsAvailable;
     }
 
     public void AnimatorAirDash()
