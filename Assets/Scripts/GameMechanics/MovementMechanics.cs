@@ -222,7 +222,6 @@ public class MovementMechanics : MonoBehaviour {
 
     public void ChangeDirection()
     {
-        Debug.LogWarning("Change direction");
         PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
         Vector2 opponentDirection = (opponent.CharacterStats.transform.position - transform.position).normalized;
 
