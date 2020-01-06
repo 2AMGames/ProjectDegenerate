@@ -150,6 +150,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 StopCoroutine(WakeupCoroutine);
             }
 
+            MovementMechanics.FlipSpriteBasedOnOpponentDirection(enemyHitbox.AssociatedCharacterStats.transform, true);
             float hitPosition = enemyHitbox.InteractionHandler.transform.position.x;
 
             UnityAction onPauseComplete = () =>
