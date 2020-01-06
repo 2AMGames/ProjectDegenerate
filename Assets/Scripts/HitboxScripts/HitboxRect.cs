@@ -20,10 +20,14 @@ public class HitboxRect : Hitbox
 
     private void OnValidate()
     {
-        if (Application.isPlaying)
-            UpdateColliderBounds();
-        else if (highestParentTransform != null)
-            UpdateColliderBoundsForGizmos(highestParentTransform);
+        if (boxColliderSize.x < 0)
+        {
+            boxColliderSize.x = 0;
+        }
+        if (boxColliderSize.y < 0)
+        {
+            boxColliderSize.y = 0;
+        }
     }
 
     protected virtual void OnDrawGizmos()
