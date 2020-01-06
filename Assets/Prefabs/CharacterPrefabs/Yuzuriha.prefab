@@ -66,7 +66,7 @@ Transform:
   m_GameObject: {fileID: 6057300011755358161}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.66, y: 1.52, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children:
   - {fileID: 6057300012475437427}
   - {fileID: 6057300011856033075}
@@ -111,7 +111,7 @@ MonoBehaviour:
   GroundAccelerationScale: 0
   MaximumAirSpeed: 8
   AirAcceleration: 20
-  isFacingRight: 0
+  isFacingRight: 1
   timeToReachJumpApex: 0.3
   heightOfJump: 2.5
   fastFallScale: 1.7
@@ -120,9 +120,6 @@ MonoBehaviour:
   IsDashing: 0
   GroundDashSpeed: 13.75
   AirDashSpeed: 10
-  canMoveWhileCrouching: 0
-  ignoreJumpButton: 0
-  CanChangeDirection: 1
   IsCrouching: 0
   GoalVelocity: {x: 0, y: 0}
 --- !u!95 &6057300011755358155
