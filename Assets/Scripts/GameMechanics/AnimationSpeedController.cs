@@ -19,13 +19,19 @@ public class AnimationSpeedController : MonoBehaviour
         Anim = GetComponent<Animator>();
         CharacterStats = GetComponent<CharacterStats>();
         Anim.enabled = false;
+
+        StartCoroutine(UpdateAnimator());
     }
 
-    void Update()
+    private IEnumerator UpdateAnimator()
     {
-        SetAnimationSpeed();
-    }
+        while (true)
+        {
+            SetAnimationSpeed();
+            yield return null;
 
+        }
+    }
     #endregion
 
     #region private methods
