@@ -18,9 +18,12 @@ public abstract class CustomCollider2D : MonoBehaviour {
     [Tooltip("Mark this value true if you would like to treat this value as a trigger")]
     public bool isTrigger;
 
+
     [SerializeField]
     [Tooltip("This should be removed in later iterations of the game. Adding this just so that we do not have to redo hitboxes that have already been setup")]
     protected bool ignoreParentScale;
+
+    public int colliderLayer;
     
     /// <summary>
     /// The attached Custom physics component that is attached to our custom collider
@@ -49,6 +52,7 @@ public abstract class CustomCollider2D : MonoBehaviour {
 
     protected virtual void Awake()
     {
+        colliderLayer = gameObject.layer;
         UpdateBoundsOfCollider();
         rigid = GetComponent<CustomPhysics2D>();
         
@@ -638,7 +642,13 @@ public abstract class CustomCollider2D : MonoBehaviour {
         }
     }
 
-    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nonstaticCapsule"></param>
+    /// <param name="staticCircle"></param>
+    /// <param name="collidedVertically"></param>
+    /// <returns></returns>
     public static Vector2 IntersectionPointNonstaticCapsuleStaticCircle(CustomCapsuleCollider2D nonstaticCapsule, CustomCircleCollider2D staticCircle, bool collidedVertically = true)
     {
         Vector2 cCenter = staticCircle.GetCenter();
@@ -675,6 +685,13 @@ public abstract class CustomCollider2D : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="staticCapsule"></param>
+    /// <param name="nonstaticCircle"></param>
+    /// <param name="collidedVertically"></param>
+    /// <returns></returns>
     public static Vector2 IntersectionPointStaticCapsuleNonstaticCircle(CustomCapsuleCollider2D staticCapsule, CustomCircleCollider2D nonstaticCircle, bool collidedVertically = true)
     {
         Vector2 capCenter = staticCapsule.GetCenter();
@@ -868,6 +885,19 @@ public abstract class CustomCollider2D : MonoBehaviour {
         return c1.center + (c2.center - c1.center) * c1.radius / totalRadius;
     }
     #endregion intersection point methods
+
+    #region layer methods
+
+    /// <summary>
+    /// Return whether or not we ignore the collider based ignorelayer value. If a collider is ignored any collision calculations shoudld be skipped
+    /// </summary>
+    /// <param name="colliderToCheck"></param>
+    /// <returns></returns>
+    protected bool GetIngoreLayerCollision(CustomCollider2D colliderToCheck)
+    {
+        return Physics2D.GetIgnoreLayerCollision(this.colliderLayer, colliderToCheck.colliderLayer);
+    }
+    #endregion layer methods
 
 
     #region get outter bounds of collider

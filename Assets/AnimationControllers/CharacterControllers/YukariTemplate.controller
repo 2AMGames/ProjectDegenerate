@@ -1933,23 +1933,23 @@ AnimatorStateMachine:
     m_Position: {x: -320, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8656074410765041592}
-    m_Position: {x: 240, y: 390, z: 0}
+    m_Position: {x: 240, y: 420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6801455186006328759}
-    m_Position: {x: -60, y: 240, z: 0}
+    m_Position: {x: -60, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5300227194279153755}
     m_Position: {x: -170, y: 510, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2879032693192588659}
-    m_Position: {x: -60, y: 390, z: 0}
+    m_Position: {x: -60, y: 420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5001893459822497253}
-    m_Position: {x: -320, y: 400, z: 0}
+    m_Position: {x: -320, y: 420, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -8451855692104516998}
-    m_Position: {x: 640, y: 200, z: 0}
+    m_Position: {x: 430, y: 130, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 8043613086358247144}
     m_Position: {x: 390, y: -10, z: 0}
