@@ -220,16 +220,16 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
-    public void ChangeDirection()
+    public void AnimatorChangeDirection()
     {
         PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
         Vector2 opponentDirection = (opponent.CharacterStats.transform.position - transform.position).normalized;
 
-        if (opponentDirection.x < 0 && isFacingRight)
+        if (opponentDirection.x < 0)
         {
             SetSpriteFlipped(false);
         }
-        else if (opponentDirection.x > 0 && !isFacingRight)
+        else if (opponentDirection.x > 0)
         {
             SetSpriteFlipped(true);
         }

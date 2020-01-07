@@ -231,7 +231,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectVertically(CustomCollider2D colliderToCheck)
     {
-        if (colliderToCheck == this) return false;
+        if (colliderToCheck == this || GetIngoreLayerCollision(colliderToCheck)) return false;
 
 
         if (rigid.Velocity.y == 0)
@@ -270,7 +270,7 @@ public class CustomBoxCollider2D : CustomCollider2D
     /// <returns></returns>
     public override bool ColliderIntersectHorizontally(CustomCollider2D colliderToCheck)
     {
-        if (colliderToCheck == this) return false;
+        if (colliderToCheck == this || GetIngoreLayerCollision(colliderToCheck)) return false;
 
 
         if (ColliderIntersectBounds(horizontalCheckBounds, colliderToCheck))
