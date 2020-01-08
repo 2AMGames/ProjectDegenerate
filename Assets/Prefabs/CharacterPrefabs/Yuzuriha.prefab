@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 5032125129394513687}
   - component: {fileID: 3062025119057498964}
   - component: {fileID: 6480653417655569293}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Yuzuriha
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,6 +197,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 10
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.63, y: 1.6}
   HorizontalBuffer: 0.02

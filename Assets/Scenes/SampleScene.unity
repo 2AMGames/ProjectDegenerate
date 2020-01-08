@@ -167,6 +167,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.175, y: 5.07}
   HorizontalBuffer: 0.02
@@ -386,6 +387,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.175, y: 5.07}
   HorizontalBuffer: 0.02
@@ -1048,6 +1050,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.2, y: 11.43}
   HorizontalBuffer: 0.02
@@ -1103,6 +1106,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 15.57, y: 2.23}
   HorizontalBuffer: 0.02
@@ -1262,6 +1266,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 1, y: 1}
   HorizontalBuffer: 0.02
@@ -1307,6 +1312,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
+  colliderLayer: 0
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 2.22, y: 11.49}
   HorizontalBuffer: 0.02
@@ -1537,6 +1543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: GoalVelocity.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125535387021769223, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: colliderLayer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb69ae1c3a665e048bd18c0f64db7751, type: 3}
