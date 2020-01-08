@@ -116,8 +116,9 @@ public class CommandInterpreter : MonoBehaviour
     private readonly DIRECTION[] DP_INPUT = new DIRECTION[]
     {
         DIRECTION.FORWARD,
+        DIRECTION.FORWARD_DOWN,
         DIRECTION.DOWN,
-        DIRECTION.FORWARD
+        DIRECTION.FORWARD_DOWN
     };
 
     // Movement inputs that do not require a button trigger to be activated.
@@ -507,7 +508,7 @@ public class CommandInterpreter : MonoBehaviour
         if (dpIndex >= 0)
         {
             OnDirectionalInputExecuted(dpIndex, DP_INPUT, DP_ANIM_TRIGGER);
-            Debug.LogWarning("DP successful");
+            Debug.LogWarning("DP Successful");
             return;
         }
 
