@@ -161,10 +161,6 @@ public class MovementMechanics : MonoBehaviour {
     /// <param name="horizontalInput"></param>
     public void SetHorizontalInput(float horizontalInput)
     {
-        if (IsCrouching)
-        {
-            horizontalInput = 0;
-        }
 
         this.horizontalInput = (int)Mathf.Sign(horizontalInput) * (Mathf.Abs(horizontalInput) > PlayerController.INPUT_THRESHOLD_RUNNING ? 1:0 );
        //FlipSpriteBasedOnInput(this.horizontalInput);
