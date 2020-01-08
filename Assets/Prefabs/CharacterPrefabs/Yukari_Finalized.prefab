@@ -655,7 +655,7 @@ MonoBehaviour:
   colliderOffset: {x: 0, y: 0}
   isTrigger: 0
   ignoreParentScale: 0
-  colliderLayer: 0
+  colliderLayer: 10
   originalVelocity: {x: 0, y: 0}
   boxColliderSize: {x: 0.4, y: 1.35}
   HorizontalBuffer: 0.02
