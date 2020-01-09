@@ -902,11 +902,11 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 1
   m_HasExitTime: 1
-  m_HasFixedDuration: 1
+  m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
@@ -2188,7 +2188,7 @@ AnimatorTransition:
     m_ConditionEvent: QCF
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -3131,13 +3131,10 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: ButtonAction
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -648918013826625588}
@@ -3223,7 +3220,7 @@ AnimatorTransition:
     m_ConditionEvent: ButtonAction
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: QCF
@@ -3434,10 +3431,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: ButtonAction
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5547012328197082047}
@@ -4283,13 +4277,10 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: ButtonAction
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3985009968083422629}
@@ -4561,7 +4552,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 414335813476954949}
@@ -4715,10 +4706,7 @@ AnimatorTransition:
     m_ConditionEvent: QCF
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: ButtonAction
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6592388611212026448}
@@ -7322,12 +7310,12 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
+  - {fileID: 2616182146020997275}
+  - {fileID: -2349134464791764488}
   - {fileID: 6797184603132114315}
   - {fileID: 7826024971959013552}
   - {fileID: 7035962480489759589}
-  - {fileID: 2616182146020997275}
   - {fileID: -7153711874498836360}
-  - {fileID: -2349134464791764488}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -7792,11 +7780,11 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
-  m_HasExitTime: 1
-  m_HasFixedDuration: 1
+  m_ExitTime: 0
+  m_HasExitTime: 0
+  m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
@@ -8657,7 +8645,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: HorizontalInput
@@ -9134,7 +9122,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1532081312001503659}
@@ -9424,10 +9412,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: ButtonAction
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2409653582077126779}
@@ -9472,7 +9457,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3075472366453587386}
@@ -11529,7 +11514,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -486605074015095240}
