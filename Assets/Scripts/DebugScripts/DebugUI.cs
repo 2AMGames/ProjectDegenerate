@@ -48,6 +48,14 @@ public class DebugUI : MonoBehaviour
         {
             debugTextElement.text = "";
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Time.timeScale = .3f;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Time.timeScale = 1;
+        }
     }
 
     /// <summary>
