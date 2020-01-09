@@ -277,7 +277,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -545,7 +545,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -1228,7 +1228,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -1728,7 +1728,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -1929,7 +1929,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -2154,7 +2154,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -2364,13 +2364,13 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -290451948476735196}
-    m_Position: {x: 230, y: -20, z: 0}
+    m_Position: {x: 100, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9161898475948388554}
-    m_Position: {x: 460, y: -100, z: 0}
+    m_Position: {x: 350, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1200070403432260209}
-    m_Position: {x: 700, y: -20, z: 0}
+    m_Position: {x: 530, y: 80, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions:
@@ -2382,7 +2382,7 @@ AnimatorStateMachine:
   m_AnyStatePosition: {x: 790, y: -160, z: 0}
   m_EntryPosition: {x: -90, y: 100, z: 0}
   m_ExitPosition: {x: 1170, y: 170, z: 0}
-  m_ParentStateMachinePosition: {x: 460, y: 120, z: 0}
+  m_ParentStateMachinePosition: {x: 350, y: 190, z: 0}
   m_DefaultState: {fileID: -290451948476735196}
 --- !u!1101 &-1182502512184460810
 AnimatorStateTransition:
@@ -3189,25 +3189,25 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: LightPress
+  - m_Name: LightPressed
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: MediumPress
+  - m_Name: MediumPressed
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: HeavyPress
+  - m_Name: HeavyPressed
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: SpecialPress
+  - m_Name: SpecialPressed
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -3284,7 +3284,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -3312,17 +3312,17 @@ AnimatorStateMachine:
     m_Position: {x: 120, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2723795117144163481}
-    m_Position: {x: 480, y: -150, z: 0}
+    m_Position: {x: 530, y: -60, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 6595721555642363394}
-    m_Position: {x: 310, y: 30, z: 0}
+    m_Position: {x: 310, y: 20, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 1234882288372165774}
     m_Position: {x: 310, y: 180, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: -2408410225858712092}
-    m_Position: {x: 300, y: -280, z: 0}
+    m_Position: {x: 300, y: -240, z: 0}
   m_AnyStateTransitions:
   - {fileID: 4077041394467397675}
   - {fileID: 7034501672710366556}
@@ -3793,7 +3793,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -5247,10 +5247,10 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Special
+    m_ConditionEvent: SpecialPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -5350,7 +5350,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
@@ -5655,16 +5655,16 @@ AnimatorStateMachine:
     m_Position: {x: -90, y: -40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1379620180660106437}
-    m_Position: {x: 270, y: -30, z: 0}
+    m_Position: {x: 270, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 929211202324645900}
-    m_Position: {x: -80, y: 110, z: 0}
+    m_Position: {x: -90, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2110148364326310055}
-    m_Position: {x: 520, y: 150, z: 0}
+    m_Position: {x: 520, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8668493349258916904}
-    m_Position: {x: 520, y: 70, z: 0}
+    m_Position: {x: 520, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7303351270902293087}
     m_Position: {x: 270, y: 140, z: 0}
@@ -5677,7 +5677,7 @@ AnimatorStateMachine:
     m_Position: {x: -80, y: -320, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 8690441025689546356}
-    m_Position: {x: 1280, y: -120, z: 0}
+    m_Position: {x: 990, y: -70, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 944701668150015641}
     m_Position: {x: 220, y: -320, z: 0}
@@ -5747,7 +5747,7 @@ AnimatorStateTransition:
     m_ConditionEvent: ButtonAction
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Medium
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: DidMoveLand
@@ -5822,7 +5822,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: DidMoveLand
@@ -6151,7 +6151,7 @@ AnimatorStateTransition:
     m_ConditionEvent: ButtonAction
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Light
+    m_ConditionEvent: LightPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: DidMoveLand
@@ -6327,9 +6327,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 6
+  - m_ConditionMode: 3
     m_ConditionEvent: VerticalInput
-    m_EventTreshold: 0
+    m_EventTreshold: -1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4400958590976526120}
   m_Solo: 0
@@ -6454,10 +6454,10 @@ AnimatorStateMachine:
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions:
+  - {fileID: 5612733050120216014}
   - {fileID: 5704806196633022106}
   - {fileID: -2589944623904271265}
   - {fileID: 8859590092453234255}
-  - {fileID: 5612733050120216014}
   - {fileID: -7188691151854694167}
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
@@ -6522,7 +6522,7 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: MediumPressed
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -486605074015095240}
@@ -6561,7 +6561,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Heavy
+    m_ConditionEvent: HeavyPressed
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: ButtonAction
