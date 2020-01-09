@@ -362,7 +362,7 @@ public class CommandInterpreter : MonoBehaviour
             }
             else
             {
-                OnButtonReleased(MP_ANIM_TRIGGER, LP_RELEASED_ANIM_TRIGGER);
+                OnButtonReleased(MP_ANIM_TRIGGER, MP_RELEASED_ANIM_TRIGGER);
             }
 
             if (((inputData.InputPattern >> 2) & 1) == 1)
