@@ -14,6 +14,8 @@ public class YuzurihaMechanics : MonoBehaviour
 
     private bool HeavyAttack;
 
+    private bool SpecialAttack;
+
     private CommandInterpreter CommandInterpreter;
 
     private Animator Animator;
@@ -42,30 +44,16 @@ public class YuzurihaMechanics : MonoBehaviour
         LightAttack = true;
         MediumAttack = true;
         HeavyAttack = true;
+        SpecialAttack = true;
 
         UpdateAnimator();
         Animator.SetBool(ValidStanceKey, true);
     }
 
-    public void HighAttackStart()
+    public void StanceAttackStart()
     {
-        LightAttack = false;
-        UpdateAnimator();
         UpdateButtonPressed();
-    }
-
-    public void MidAttackStart()
-    {
-        MediumAttack = false;
         UpdateAnimator();
-        UpdateButtonPressed();
-    }
-
-    public void LowAttackStart()
-    {
-        HeavyAttack = false;
-        UpdateAnimator();
-        UpdateButtonPressed();
     }
 
     public void StanceIdleEnter()
@@ -76,17 +64,25 @@ public class YuzurihaMechanics : MonoBehaviour
 
     public void OnButtonPressed(int buttonKey)
     {
-        if (buttonKey != ButtonPressed && CommandInterpreter.IsButtonPressed(ButtonPressed) == 0)
+        var button = buttonKey;
+        bool validButton = false;
+        validButton |= button == CommandInterpreter.LP_ANIM_TRIGGER && LightAttack;
+        validButton |= button == CommandInterpreter.MP_ANIM_TRIGGER && MediumAttack;
+        validButton |= button == CommandInterpreter.HP_ANIM_TRIGGER && HeavyAttack;
+        validButton |= button == CommandInterpreter.SPECIAL_ANIM_TRIGGER && SpecialAttack;
+        
+        if (validButton)
         {
-            Animator.SetBool(ValidStanceKey, false);
+            ButtonPressed = buttonKey;
+            Animator.SetBool(ValidStanceKey, true);
         }
+
     }
 
     public void OnButtonReleased(int buttonKey)
     {
         if (buttonKey == ButtonPressed)
         {
-            ButtonPressed = 0;
             Animator.SetBool(ValidStanceKey, false);
         }
     }
@@ -100,6 +96,7 @@ public class YuzurihaMechanics : MonoBehaviour
         Animator.SetBool("LightReady", LightAttack);
         Animator.SetBool("MediumReady", MediumAttack);
         Animator.SetBool("HeavyReady", HeavyAttack);
+        Animator.SetBool("SpecialReady", SpecialAttack);
     }
 
     private int GetButtonPressed()
@@ -116,6 +113,10 @@ public class YuzurihaMechanics : MonoBehaviour
         {
             return CommandInterpreter.HP_ANIM_TRIGGER;
         }
+        else if (CommandInterpreter.IsButtonPressed(CommandInterpreter.SPECIAL_ANIM_TRIGGER) == 1)
+        {
+            return CommandInterpreter.SPECIAL_ANIM_TRIGGER;
+        }
 
         return 0;
     }
@@ -123,9 +124,26 @@ public class YuzurihaMechanics : MonoBehaviour
     private void UpdateButtonPressed()
     {
         var buttonPressed = GetButtonPressed();
-        if (buttonPressed != ButtonPressed)
+        if (buttonPressed != ButtonPressed && CommandInterpreter.IsButtonPressed(ButtonPressed) == 0)
         {
             ButtonPressed = buttonPressed;
+        }
+
+        if (ButtonPressed == CommandInterpreter.LP_ANIM_TRIGGER)
+        {
+            LightAttack = false;
+        }
+        else if (ButtonPressed == CommandInterpreter.MP_ANIM_TRIGGER)
+        {
+            MediumAttack = false;
+        }
+        else if (ButtonPressed == CommandInterpreter.HP_ANIM_TRIGGER)
+        {
+            HeavyAttack = false;
+        }
+        else
+        {
+            SpecialAttack = false;
         }
     }
 

@@ -119,6 +119,11 @@ public class CommandInterpreter : MonoBehaviour
     /// </summary>
     private static readonly int B_DASH_ANIM_TRIGGER = Animator.StringToHash("B_Dash");
 
+    /// <summary>
+    /// Double down input (Down, Neutral, Down)
+    /// </summary>
+    private static readonly int DOUBLE_DOWN_ANIM_TRIGGER = Animator.StringToHash("Double_Down");
+
     // Attack inputs that require a button trigger complement for them to be valid.
 
     private readonly DIRECTION[] QCF_INPUT = new DIRECTION[]
@@ -166,6 +171,13 @@ public class CommandInterpreter : MonoBehaviour
         DIRECTION.DOWN,
         DIRECTION.NEUTRAL,
         DIRECTION.UP
+    };
+
+    private readonly DIRECTION[] DOUBLE_DOWN_INPUT = new DIRECTION[]
+    {
+        DIRECTION.DOWN,
+        DIRECTION.NEUTRAL,
+        DIRECTION.DOWN
     };
 
     private readonly DirectionalinputStruct StartingDirection = new DirectionalinputStruct
@@ -556,6 +568,14 @@ public class CommandInterpreter : MonoBehaviour
         {
             OnDirectionalInputExecuted(sJumpIndex, S_JUMP_INPUT, S_JUMP_ANIM_TRIGGER);
             Debug.LogWarning("Super Jump Successful");
+            return;
+        }
+
+        int doubleDownIndex = CheckIfDirectionalArrayMatches(DOUBLE_DOWN_INPUT);
+        if (doubleDownIndex >= 0)
+        {
+            OnDirectionalInputExecuted(doubleDownIndex, DOUBLE_DOWN_INPUT, DOUBLE_DOWN_ANIM_TRIGGER);
+            Debug.LogWarning("Double Down Successful");
             return;
         }
     }
