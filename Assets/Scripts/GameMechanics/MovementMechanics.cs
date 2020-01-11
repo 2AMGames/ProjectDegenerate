@@ -144,6 +144,7 @@ public class MovementMechanics : MonoBehaviour {
         }
         SetSpriteFlipped(isFacingRight);
         InitializeMovementParameters();
+        timeToReachJumpApex = Mathf.Max(.05f, timeToReachJumpApex);
     }
    
     private void OnDestroy()
@@ -336,6 +337,11 @@ public class MovementMechanics : MonoBehaviour {
 
     public void AnimatorJump()
     {
+        float gravity = (2 * heightOfJump) / Mathf.Pow(timeToReachJumpApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToReachJumpApex;
+        JumpingAcceleration = gravity / CustomPhysics2D.GRAVITY_CONSTANT;
+        rigid.gravityScale = JumpingAcceleration;
+
         rigid.Velocity = new Vector2(rigid.Velocity.x, jumpVelocity);
         --currentJumpsAvailable;
     }
