@@ -34,15 +34,8 @@ public class HitboxRect : Hitbox
     {
         if (!Application.isPlaying)
         {
-            if (highestParentTransform == null)
-            {
-                highestParentTransform = this.transform;
-                while (highestParentTransform.parent)
-                {
-                    highestParentTransform = highestParentTransform.parent;
-                }
-            }
-            UpdateColliderBoundsForGizmos(highestParentTransform);
+            
+            UpdateColliderBoundsForGizmos(transform.root);
         }
         Color colorToDraw = GetColorToDrawGizmos();
         
