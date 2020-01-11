@@ -29,7 +29,6 @@ public class YuzurihaMechanics : MonoBehaviour
     private void Start()
     {
         CommandInterpreter = GetComponent<CommandInterpreter>();
-        CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;
         CommandInterpreter.OnButtonReleasedEvent += OnButtonReleased;
         Animator = GetComponent<Animator>();
         ResetStanceAttacks();
@@ -56,10 +55,22 @@ public class YuzurihaMechanics : MonoBehaviour
         UpdateAnimator();
     }
 
+    /// <summary>
+    /// Called when entering stance idle by the animator.
+    /// </summary>
     public void StanceIdleEnter()
     {
         var input = GetButtonPressed();
-        Animator.SetBool(ValidStanceKey, ButtonPressed != 0 && ButtonPressed == input);
+        bool valid = true;
+        valid &= CommandInterpreter.IsButtonPressed(ButtonPressed) != 0;
+        if (!valid)
+        {
+            OnButtonPressed(input);
+        }
+        else
+        {
+            Animator.SetBool(ValidStanceKey, true);
+        }
     }
 
     public void OnButtonPressed(int buttonKey)
@@ -73,8 +84,11 @@ public class YuzurihaMechanics : MonoBehaviour
         
         if (validButton)
         {
-            ButtonPressed = buttonKey;
-            Animator.SetBool(ValidStanceKey, true);
+            ButtonPressed = buttonKey;                                              
+        }
+        else
+        {
+            Animator.SetBool(ValidStanceKey, false);
         }
 
     }
@@ -84,6 +98,7 @@ public class YuzurihaMechanics : MonoBehaviour
         if (buttonKey == ButtonPressed)
         {
             Animator.SetBool(ValidStanceKey, false);
+            ButtonPressed = 0;
         }
     }
 
@@ -126,18 +141,19 @@ public class YuzurihaMechanics : MonoBehaviour
         var buttonPressed = GetButtonPressed();
         if (buttonPressed != ButtonPressed && CommandInterpreter.IsButtonPressed(ButtonPressed) == 0)
         {
+            Debug.LogWarning("Button pressed");
             ButtonPressed = buttonPressed;
         }
 
-        if (ButtonPressed == CommandInterpreter.LP_ANIM_TRIGGER)
+        if (buttonPressed == CommandInterpreter.LP_ANIM_TRIGGER)
         {
             LightAttack = false;
         }
-        else if (ButtonPressed == CommandInterpreter.MP_ANIM_TRIGGER)
+        else if (buttonPressed == CommandInterpreter.MP_ANIM_TRIGGER)
         {
             MediumAttack = false;
         }
-        else if (ButtonPressed == CommandInterpreter.HP_ANIM_TRIGGER)
+        else if (buttonPressed == CommandInterpreter.HP_ANIM_TRIGGER)
         {
             HeavyAttack = false;
         }
