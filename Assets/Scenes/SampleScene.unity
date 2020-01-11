@@ -1654,11 +1654,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 41362844271019435, guid: bb69ae1c3a665e048bd18c0f64db7751,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 14bb5d121ef97264db0b728605adefef, type: 2}
     - target: {fileID: 128930532001717862, guid: bb69ae1c3a665e048bd18c0f64db7751,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1714,20 +1709,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996306, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996306, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996306, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996306, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996306, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450580602327996307, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047545195578179553, guid: bb69ae1c3a665e048bd18c0f64db7751,
         type: 3}
       propertyPath: m_Name
       value: Yukari_Finalized
-      objectReference: {fileID: 0}
-    - target: {fileID: 6922273094046920708, guid: bb69ae1c3a665e048bd18c0f64db7751,
-        type: 3}
-      propertyPath: GoalVelocity.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8125535387021769223, guid: bb69ae1c3a665e048bd18c0f64db7751,
-        type: 3}
-      propertyPath: colliderLayer
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb69ae1c3a665e048bd18c0f64db7751, type: 3}

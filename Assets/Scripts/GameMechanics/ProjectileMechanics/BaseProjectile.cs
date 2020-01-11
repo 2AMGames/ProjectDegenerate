@@ -37,6 +37,8 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
 
     #endregion monobheaviour methods
 
+    public InteractionHandler.HitData[] projectileHitDataList;
+
     #region virtual methods
 
     /// <summary>

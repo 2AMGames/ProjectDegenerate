@@ -45,21 +45,22 @@ public class YukariArrow : BaseProjectile
             MoveName = "BasicArrow",
             Height = InteractionHandler.HitType.Mid,
             SpecialMeterRequired = 0,
+            Hits = projectileHitDataList,
 
-            Hits = new InteractionHandler.HitData[1]
-            {
-                new InteractionHandler.HitData
-                {
-                    HitDamage = 50,
-                    OnHitFrames = 15,
-                    HitMeterGain = 100,
-                    OnHitKnockback = new Vector2(5f, 0f),
-                    OnGuardFrames = 15,
-                    OnGuardKnockback = new Vector2(10f, 0f),
-                    ChipDamage = 1f,
-                    ChipMeterGain = 1,
-                }
-            }
+            //Hits = new InteractionHandler.HitData[1]
+            //{
+            //    new InteractionHandler.HitData
+            //    {
+            //        HitDamage = 50,
+            //        OnHitFrames = 15,
+            //        HitMeterGain = 100,
+            //        OnHitKnockback = new Vector2(5f, 0f),
+            //        OnGuardFrames = 15,
+            //        OnGuardKnockback = new Vector2(10f, 0f),
+            //        ChipDamage = 1f,
+            //        ChipMeterGain = 1,
+            //    }
+            //}
         };
 
         DespawnCoroutine = StartCoroutine(DespawnAfterTime(DespawnTime));
