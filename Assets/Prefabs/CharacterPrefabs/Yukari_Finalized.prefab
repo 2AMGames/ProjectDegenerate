@@ -645,9 +645,9 @@ MonoBehaviour:
   yukariArrowPrefab: {fileID: 3920821400113480562, guid: 970da521554034f449d683242cd318ab,
     type: 3}
   yukariArrowTransformReferenceList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5450580602327996306}
+  - {fileID: 2457022297807043721}
+  - {fileID: 4174013464298900068}
 --- !u!114 &2212543520979167734
 MonoBehaviour:
   m_ObjectHideFlags: 0

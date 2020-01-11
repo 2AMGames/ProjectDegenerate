@@ -16,8 +16,6 @@ public class YukariArrow : BaseProjectile
     [Tooltip("This will set the maximum of Yukari's arrow")]
     public float maxStretchOfArrow = 1.2f;
 
-    public SpriteRenderer arrowSpriteRendererReference;
-
     #endregion
 
     #region monobehaviour methods
