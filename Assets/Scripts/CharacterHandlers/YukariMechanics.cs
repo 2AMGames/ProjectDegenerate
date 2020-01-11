@@ -18,8 +18,8 @@ public class YukariMechanics : MonoBehaviour
     #region main variables
     [Tooltip("A prefab reference to Yukaris Arrow projectile")]
     public YukariArrow yukariArrowPrefab;
-    [Tooltip("This is a placeholder arrow that will be swapped out by Yukari upon launching an arrow. This will also be used to set the direction and position of the arrow upon launch")]
-    public Transform yukariArrowTransformReference;
+    [Tooltip("A list of placeholder arrows that wil be swapped out for YukariArrowPrefab when it is shot. This simply shows a sprite representation of where the prefab will appear")]
+    public Transform[] yukariArrowTransformReferenceList = new Transform[3];
 
     /// <summary>
     /// A reference to Yukari's Character Stats
@@ -42,17 +42,24 @@ public class YukariMechanics : MonoBehaviour
     /// </summary>
     public void OnLaunchArrow()
     {
-        YukariArrow newlySpawnedArrow = SpawnPool.Instance.Spawn(yukariArrowPrefab);
+        foreach (Transform yukariArrowTransformReference in yukariArrowTransformReferenceList)
+        {
+            if (yukariArrowTransformReference.gameObject.activeSelf)
+            {
+                YukariArrow newlySpawnedArrow = SpawnPool.Instance.Spawn(yukariArrowPrefab);
 
-        newlySpawnedArrow.transform.SetParent(null);
-        newlySpawnedArrow.SetupProjectile(associatedCharacterStats);
+                newlySpawnedArrow.transform.SetParent(null);
+                newlySpawnedArrow.SetupProjectile(associatedCharacterStats);
 
-        newlySpawnedArrow.transform.position = yukariArrowTransformReference.position;
-        newlySpawnedArrow.arrowSpriteRendererReference.transform.localScale = yukariArrowTransformReference.localScale;
-        newlySpawnedArrow.transform.rotation = yukariArrowTransformReference.rotation;
+                newlySpawnedArrow.transform.position = yukariArrowTransformReference.position;
+                newlySpawnedArrow.transform.localScale = yukariArrowTransformReference.localScale;
+                newlySpawnedArrow.transform.rotation = yukariArrowTransformReference.rotation;
 
-        newlySpawnedArrow.transform.right = Mathf.Sign(this.transform.localScale.x) * yukariArrowTransformReference.right;
-        newlySpawnedArrow.LaunchProjectile();
+                newlySpawnedArrow.transform.right = Mathf.Sign(this.transform.localScale.x) * yukariArrowTransformReference.right;
+                newlySpawnedArrow.LaunchProjectile();
+            }
+        }
+        
     }
     #endregion event methods
 }
