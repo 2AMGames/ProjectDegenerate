@@ -26,14 +26,9 @@ public class DebugUI : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        if (!Application.isEditor)
-        {
-            this.gameObject.SetActive(false);
-        }
-        else
-        {
-            this.gameObject.SetActive(!Overseer.Instance.DebugEnabled);
-        }
+        this.gameObject.SetActive(!Overseer.Instance.DebugEnabled);
+
+        
         debugTextElement.text = "";
     }
 
@@ -74,11 +69,15 @@ public class DebugUI : MonoBehaviour
 
     public void DisplayDebugTextForFrames(string textToDisplay, int framesToDisplay = 1)
     {
+        if (!this.gameObject.activeSelf)
+            return;
         StartCoroutine(DisplayTextForFramesCoroutine(textToDisplay, framesToDisplay));
     }
 
     public void DisplayDebugTextForSeconds(string textToDisplay, float timeToDisplay = 1)
     {
+        if (!this.gameObject.activeSelf)
+            return;
         StartCoroutine(DisplayTextForSecondsCoroutine(textToDisplay, timeToDisplay));
     }
 

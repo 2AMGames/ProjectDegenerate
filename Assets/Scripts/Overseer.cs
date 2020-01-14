@@ -65,8 +65,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     #endregion
 
     #region member variables
-
+    #region debug variables
+    [Tooltip("")]
     public bool DebugEnabled;
+
+    public UnityAction<bool> OnDebugEnableToggled;
+    #endregion debug variables
 
     public GameObject[] PlayerObjects;
 
