@@ -119,7 +119,7 @@ MonoBehaviour:
   JumpingAcceleration: 5.668934
   IsDashing: 0
   GroundDashSpeed: 13.75
-  AirDashSpeed: 13.75
+  AirDashSpeed: 10
   IsCrouching: 0
   GoalVelocity: {x: 0, y: 0}
 --- !u!95 &6057300011755358155
