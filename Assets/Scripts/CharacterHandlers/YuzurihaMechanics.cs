@@ -22,6 +22,8 @@ public class YuzurihaMechanics : MonoBehaviour
 
     private int ButtonPressed = 0;
 
+    private int EnterStanceButton = 0;
+
     #endregion
 
     #region monobehaviour
@@ -30,6 +32,7 @@ public class YuzurihaMechanics : MonoBehaviour
     {
         CommandInterpreter = GetComponent<CommandInterpreter>();
         CommandInterpreter.OnButtonReleasedEvent += OnButtonReleased;
+        //CommandInterpreter.OnButtonPressedEvent += OnButtonPressed;
         Animator = GetComponent<Animator>();
         ResetStanceAttacks();
     }
@@ -60,7 +63,7 @@ public class YuzurihaMechanics : MonoBehaviour
     /// </summary>
     public void StanceIdleEnter()
     {
-        var input = GetButtonPressed();
+        var input = GetButtonPressed(0);
         bool valid = true;
         valid &= CommandInterpreter.IsButtonPressed(ButtonPressed) != 0;
         if (!valid)
@@ -75,22 +78,24 @@ public class YuzurihaMechanics : MonoBehaviour
 
     public void OnButtonPressed(int buttonKey)
     {
-        var button = buttonKey;
-        bool validButton = false;
-        validButton |= button == CommandInterpreter.LP_ANIM_TRIGGER && LightAttack;
-        validButton |= button == CommandInterpreter.MP_ANIM_TRIGGER && MediumAttack;
-        validButton |= button == CommandInterpreter.HP_ANIM_TRIGGER && HeavyAttack;
-        validButton |= button == CommandInterpreter.SPECIAL_ANIM_TRIGGER && SpecialAttack;
-        
-        if (validButton)
+        if (CommandInterpreter.IsButtonPressed(ButtonPressed) == 0)
         {
-            ButtonPressed = buttonKey;                                              
-        }
-        else
-        {
-            Animator.SetBool(ValidStanceKey, false);
-        }
+            var button = buttonKey;
+            bool validButton = false;
+            validButton |= button == CommandInterpreter.LP_ANIM_TRIGGER && LightAttack;
+            validButton |= button == CommandInterpreter.MP_ANIM_TRIGGER && MediumAttack;
+            validButton |= button == CommandInterpreter.HP_ANIM_TRIGGER && HeavyAttack;
+            validButton |= button == CommandInterpreter.SPECIAL_ANIM_TRIGGER && SpecialAttack;
 
+            if (validButton)
+            {
+                ButtonPressed = buttonKey;
+            }
+            else
+            {
+                Animator.SetBool(ValidStanceKey, false);
+            }
+        }
     }
 
     public void OnButtonReleased(int buttonKey)
@@ -100,6 +105,11 @@ public class YuzurihaMechanics : MonoBehaviour
             Animator.SetBool(ValidStanceKey, false);
             ButtonPressed = 0;
         }
+    }
+
+    public void EnterStanceButtonPressed()
+    {
+        EnterStanceButton = GetButtonPressed(0);
     }
 
     #endregion
@@ -114,34 +124,37 @@ public class YuzurihaMechanics : MonoBehaviour
         Animator.SetBool("SpecialReady", SpecialAttack);
     }
 
-    private int GetButtonPressed()
+    private int GetButtonPressed(int ignoreButton)
     {
-        if (CommandInterpreter.IsButtonPressed(CommandInterpreter.LP_ANIM_TRIGGER) == 1)
+        if (ignoreButton != CommandInterpreter.LP_ANIM_TRIGGER && CommandInterpreter.IsButtonPressed(CommandInterpreter.LP_ANIM_TRIGGER) == 1)
         {
             return CommandInterpreter.LP_ANIM_TRIGGER;
         }
-        else if (CommandInterpreter.IsButtonPressed(CommandInterpreter.MP_ANIM_TRIGGER) == 1)
+        else if (ignoreButton != CommandInterpreter.MP_ANIM_TRIGGER && CommandInterpreter.IsButtonPressed(CommandInterpreter.MP_ANIM_TRIGGER) == 1)
         {
             return CommandInterpreter.MP_ANIM_TRIGGER;
         }
-        else if (CommandInterpreter.IsButtonPressed(CommandInterpreter.HP_ANIM_TRIGGER) == 1)
+        else if (ignoreButton != CommandInterpreter.HP_ANIM_TRIGGER && CommandInterpreter.IsButtonPressed(CommandInterpreter.HP_ANIM_TRIGGER) == 1)
         {
             return CommandInterpreter.HP_ANIM_TRIGGER;
         }
-        else if (CommandInterpreter.IsButtonPressed(CommandInterpreter.SPECIAL_ANIM_TRIGGER) == 1)
+        else if (ignoreButton != CommandInterpreter.SPECIAL_ANIM_TRIGGER && CommandInterpreter.IsButtonPressed(CommandInterpreter.SPECIAL_ANIM_TRIGGER) == 1)
         {
             return CommandInterpreter.SPECIAL_ANIM_TRIGGER;
         }
-
         return 0;
     }
 
     private void UpdateButtonPressed()
     {
-        var buttonPressed = GetButtonPressed();
+        var buttonPressed = GetButtonPressed(ButtonPressed);
+        if (buttonPressed == 0 && EnterStanceButton != 0)
+        {
+            buttonPressed = EnterStanceButton;
+            EnterStanceButton = 0;
+        }
         if (buttonPressed != ButtonPressed && CommandInterpreter.IsButtonPressed(ButtonPressed) == 0)
         {
-            Debug.LogWarning("Button pressed");
             ButtonPressed = buttonPressed;
         }
 
