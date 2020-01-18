@@ -7,7 +7,12 @@ using UnityEngine;
 /// </summary>
 public class IsisMechanics : InteractionHandler
 {
+    [Tooltip("Set the speed of the hover frequency. This is how fast isis will move up and down")]
+    public float hoverSpeed = 1;
 
+    private YukariMechanics associatedYukariMechanics;
+
+    
 
     #region monobehaviour methods
     public override void Awake()
@@ -26,4 +31,27 @@ public class IsisMechanics : InteractionHandler
 
     }
     #endregion animator events
+
+    #region helper methods
+    /// <summary>
+    /// Call this method on creating our yukari mechanics to properly setup Isis
+    /// </summary>
+    /// <param name="associatedYukariMechanics"></param>
+    public void SetupIsis(YukariMechanics associatedYukariMechanics)
+    {
+        AssociatedCharacterStats = associatedYukariMechanics.GetComponent<CharacterStats>();
+        this.associatedYukariMechanics = associatedYukariMechanics;
+        this.gameObject.SetActive(false);//Turn off isis on start
+    }
+
+
+    /// <summary>
+    /// This method updates the hover position of our character. 
+    /// </summary>
+    private void UpdateHover()
+    {
+
+    }
+    #endregion helper methods
+
 }
