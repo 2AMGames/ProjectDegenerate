@@ -129,10 +129,13 @@ public class MovementMechanics : MonoBehaviour {
             anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
         }
 
-        PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
-        if (opponent != null)
+        if (Overseer.Instance.IsGameReady)
         {
-            FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform);
+            PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
+            if (opponent != null)
+            {
+                FlipSpriteBasedOnOpponentDirection(opponent.CharacterStats.transform);
+            }
         }
     }
 

@@ -46,9 +46,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             }
             if (instance == null)
             {
-                //GameObject container = new GameObject("Overseer");
-                //instance = container.AddComponent<Overseer>();
-                //Debug.LogWarning("Make sure to assign GameOverseer to an instance of an object in the Hierarchy.");//if we got here, we should make sure to assign it ourselves
+                GameObject container = new GameObject("Overseer");
+                instance = container.AddComponent<Overseer>();
+                Debug.LogWarning("Make sure to assign GameOverseer to an instance of an object in the Hierarchy.");//if we got here, we should make sure to assign it ourselves
             }
             return instance;
         }
@@ -124,7 +124,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void OnApplicationPause(bool pause)
     {
-        Overseer.Instance.IsGameReady = !pause;
+        SetGameReady(!pause && CheckIfGameReady());
     }
 
     #endregion
@@ -169,6 +169,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         IsGameReady = isGameReady;
         Time.timeScale = isGameReady ? 1 : 0;
+        Debug.LogWarning("Is Game Ready: " + IsGameReady);
     }
 
     private void CreateGameType()
@@ -256,6 +257,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
         else
         {
+            Debug.LogWarning("Adding player");
             Players.Add(playerController);
         }
     }
