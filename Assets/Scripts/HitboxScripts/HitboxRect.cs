@@ -55,7 +55,7 @@ public class HitboxRect : Hitbox
     /// </summary>
     public override void UpdateColliderBounds()
     {
-        UpdateColliderBoundsForGizmos(this.AssociatedCharacterStats.transform);
+        UpdateColliderBoundsForGizmos(this.transform.root);
     }
 
     /// <summary>
