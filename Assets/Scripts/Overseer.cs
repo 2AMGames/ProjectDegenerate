@@ -44,12 +44,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             {
                 instance = FindObjectOfType<Overseer>();
             }
+            /*
             if (instance == null)
             {
                 GameObject container = new GameObject("Overseer");
                 instance = container.AddComponent<Overseer>();
                 Debug.LogWarning("Make sure to assign GameOverseer to an instance of an object in the Hierarchy.");//if we got here, we should make sure to assign it ourselves
             }
+            */
             return instance;
         }
     }
