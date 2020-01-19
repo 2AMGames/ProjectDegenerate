@@ -29,6 +29,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
     public const string CANCEL_BUTTON = "Cancel";
     #endregion UI input names
     #endregion const variables
+
     [Tooltip("This is the option that we will select fist upon running the screen for the first time")]
     public BaseSelectionNode initialNode;
 
@@ -81,6 +82,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
         {
             Debug.LogWarning("There is no selection pointer set for this selection screen...");
         }
+        OpenSelectionMenu();
     }
 
     

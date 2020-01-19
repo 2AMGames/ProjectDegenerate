@@ -28,8 +28,6 @@ public class LoadSceneManager : MonoBehaviour
     #endregion main ui variables
 
 
-
-
     private void Awake()
     {
         instance = this;

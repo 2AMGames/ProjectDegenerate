@@ -22,6 +22,17 @@ public abstract class BaseSelectionNode : MonoBehaviour
     public BaseSelectionNode selectionNodeDown;
     #endregion main variables
 
+    #region monobehaviour methods
+
+
+    public void Awake()
+    {
+        enabled = false;
+    }
+
+    #endregion
+
+    #region public inteface
 
     public BaseSelectionNode GetNodeInDirection(DIRECTION direction)
     {
@@ -43,4 +54,6 @@ public abstract class BaseSelectionNode : MonoBehaviour
 
         return null;
     }
+
+    #endregion
 }
