@@ -50,6 +50,7 @@ public abstract class BaseSelectionUI : MonoBehaviour
     private void Awake()
     {
         currentBaseSelectionNode = initialNode;
+        OpenSelectionMenu();
     }
 
     protected virtual void Update()

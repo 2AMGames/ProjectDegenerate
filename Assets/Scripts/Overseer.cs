@@ -112,6 +112,14 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public bool HasGameStarted { get; private set; }
     #endregion
 
+    #region UI variables
+
+    [Header("UI variables")]
+
+    public PostMatchUI PostMatchUiGameObject;
+
+    #endregion
+
     #region Events
 
     public UnityAction<bool> OnGameReady;
@@ -128,9 +136,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public void OnMatchEnd(PlayerController winningPlayer)
     {
-        AllowInput = false;
         Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex.ToString() : "Draw"));
+
+        AllowInput = false;
         SetGameReady(false);
+        PostMatchUiGameObject.SetupPanel(winningPlayer);
+        PostMatchUiGameObject.gameObject.SetActive(true);
     }
 
     #endregion

@@ -1,12 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Utilities;
 public class PostMatchUI : BaseSelectionUI
 {
+
+    #region const fields
+
+    private const string PlayerWinText = "Player {0} wins";
+
+    private const string DrawMatchText = "DRAW";
+
+    #endregion
+
+    #region member variables
     [SerializeField]
     private SceneField MainMenuScene;
+
+    [SerializeField]
+    private Text MatchResultText;
+
+    #endregion
+
+    public void SetupPanel(PlayerController winningPlayer)
+    {
+        MatchResultText.text = winningPlayer != null ? string.Format(PlayerWinText, winningPlayer.PlayerIndex + 1).ToUpper() : DrawMatchText;
+    }
 
     public void OnRematchPressed()
     {
