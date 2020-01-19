@@ -46,21 +46,6 @@ public class YukariArrow : BaseProjectile
             Height = InteractionHandler.HitType.Mid,
             SpecialMeterRequired = 0,
             Hits = projectileHitDataList,
-
-            //Hits = new InteractionHandler.HitData[1]
-            //{
-            //    new InteractionHandler.HitData
-            //    {
-            //        HitDamage = 50,
-            //        OnHitFrames = 15,
-            //        HitMeterGain = 100,
-            //        OnHitKnockback = new Vector2(5f, 0f),
-            //        OnGuardFrames = 15,
-            //        OnGuardKnockback = new Vector2(10f, 0f),
-            //        ChipDamage = 1f,
-            //        ChipMeterGain = 1,
-            //    }
-            //}
         };
 
         DespawnCoroutine = StartCoroutine(DespawnAfterTime(DespawnTime));
@@ -76,33 +61,39 @@ public class YukariArrow : BaseProjectile
         rigid.enabled = true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public override void DespawnProjectile()
     {
         if (DespawnCoroutine != null)
         {
             StopCoroutine(DespawnCoroutine);
         }
+
         DespawnCoroutine = null;
         base.DespawnProjectile();
-        OnDespawnArrow();
     }
 
-    public override void OnHit()
+    /// <summary>
+    /// Upon landing a hit we despawn our projectile object from existence
+    /// </summary>
+    public override void OnHitEnemy()
     {
         DespawnProjectile();
     }
 
-    #endregion
+    public override void OnHitByEnemy()
+    {
+    }
+
+    public override void OnClashWithEnemy()
+    {
+    }
+
+    #endregion override methods
 
     #region private methods
 
-    /// <summary>
-    /// 
-    /// </summary>
-    private void OnDespawnArrow()
-    {
-        SpawnPool.Instance.Despawn(this);
-    }
-
-    #endregion
+    #endregion private methods
 }

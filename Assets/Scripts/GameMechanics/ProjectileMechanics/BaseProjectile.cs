@@ -55,20 +55,42 @@ public abstract class BaseProjectile : SpawnableObject //In general projectiles 
     public virtual void DespawnProjectile()
     {
         rigid.enabled = false;
+        SpawnPool.Instance.Despawn(this);
     }
 
+    /// <summary>
+    /// Coroutine method that will despawn our projectile after some time
+    /// </summary>
+    /// <param name="despawnTime"></param>
+    /// <returns></returns>
     protected IEnumerator DespawnAfterTime(float despawnTime)
     {
         yield return new WaitForSeconds(despawnTime);
         DespawnProjectile();
     }
+    #endregion virtual methods
 
-    public abstract void OnHit();
+    #region abstract methods
+    /// <summary>
+    /// This method will be called upon our hitbox colliding with an enemy hurtbox
+    /// </summary>
+    public abstract void OnHitEnemy();
+
+    /// <summary>
+    /// This method will be called if our projectile has a hurtbox that was hit by an enemy hitbox
+    /// </summary>
+    public abstract void OnHitByEnemy();
+
+    /// <summary>
+    /// This method will be called whenever our hitbox collides with another enemy hit box
+    /// </summary>
+    public abstract void OnClashWithEnemy();
+
 
     /// <summary>
     /// Projectiles are typically shot. This method should be called upon launching the projectile
     /// </summary>
     public abstract void LaunchProjectile();
 
-    #endregion
+    #endregion abstract methods
 }
