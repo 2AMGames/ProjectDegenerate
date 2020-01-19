@@ -43,6 +43,9 @@ public class CharacterStats : MonoBehaviour
     [System.NonSerialized]
     public UnityEvent OnMoveHit = new UnityEvent();
 
+    [System.NonSerialized]
+    public UnityEvent OnComboFinished = new UnityEvent();
+
     #endregion event functions
 
     #region const variables
@@ -224,7 +227,7 @@ public class CharacterStats : MonoBehaviour
         Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
     }
 
-    public void OnComboFinished()
+    public void ComboFinished()
     {
         ComboDamage = 0;
 

@@ -259,6 +259,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     public override void OnComboEnded()
     {
+        AssociatedCharacterStats.OnComboFinished.Invoke();
         CurrentComboCount = 0;
     }
 
@@ -350,7 +351,7 @@ public class CharacterInteractionHandler : InteractionHandler
             StopCoroutine(PushbackCoroutine);
         }
 
-        AssociatedCharacterStats.OnComboFinished();
+        AssociatedCharacterStats.ComboFinished();
 
         handlerThatHitMe.OnComboEnded();
 

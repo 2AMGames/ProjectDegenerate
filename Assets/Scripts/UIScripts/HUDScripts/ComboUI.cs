@@ -7,7 +7,9 @@ public class ComboUI : MonoBehaviour
 {
     #region const variables
 
-    private const float TimeUntilFadeout = .43f;
+    private const float TimeUntilFadeout = 1.5f;
+
+    private const float FadeoutTime = 1f;
 
     private const string HitString = "HITS";
 
@@ -23,6 +25,8 @@ public class ComboUI : MonoBehaviour
 
     public CharacterStats CharacterStats;
 
+    private IEnumerator ComboEndCoroutine;
+
     #endregion
 
     #region monobehaviour methods
@@ -32,6 +36,7 @@ public class ComboUI : MonoBehaviour
         CharacterStats = Overseer.Instance.PlayerObjects[CharacterId].GetComponent<CharacterStats>();
         InteractionHandler = CharacterStats.gameObject.GetComponent<CharacterInteractionHandler>();
         CharacterStats.OnMoveHit.AddListener(OnComboCountChanged);
+        CharacterStats.OnComboFinished.AddListener(OnComboFinished);
         OnComboCountChanged();
     }
 
@@ -41,13 +46,48 @@ public class ComboUI : MonoBehaviour
 
     public void OnComboCountChanged()
     {
+        if (ComboEndCoroutine != null)
+        {
+            StopCoroutine(ComboEndCoroutine);
+        }
+        ComboText.color = Color.white;
         ComboText.enabled = InteractionHandler.CurrentComboCount > 1;
         ComboText.text = InteractionHandler.CurrentComboCount + " " + HitString;
     }
 
-    public void OnComboEnded()
+    public void OnComboFinished()
     {
-        // TODO Add coroutine to fade out text.
+        if (InteractionHandler.CurrentComboCount > 1)
+        {
+            ComboEndCoroutine = ComboFadeOut();
+            StartCoroutine(ComboEndCoroutine);
+        }
+    }
+
+    #endregion
+
+    #region private interface
+
+    private IEnumerator ComboFadeOut()
+    {
+        yield return new WaitForSeconds(TimeUntilFadeout);
+
+        float fadeOutTime = FadeoutTime;
+
+        while (fadeOutTime > 0.0f)
+        {
+            if (Overseer.Instance.GameReady)
+            {
+                Color textColor = Color.white;
+                textColor.a = fadeOutTime / FadeoutTime;
+                ComboText.color = textColor;
+                yield return new WaitForEndOfFrame();
+                fadeOutTime -= Time.deltaTime;
+            }
+        }
+
+        ComboText.enabled = false;
+
     }
 
     #endregion

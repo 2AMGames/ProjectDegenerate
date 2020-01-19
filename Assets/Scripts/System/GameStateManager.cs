@@ -55,7 +55,7 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundTimeLimit = 30f;
+    public float? RoundTimeLimit = null;
 
     public short RoundCount = 1;
 
