@@ -9,6 +9,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 
+using PlayerMatchStatistics = GameState.PlayerMatchStatistics;
 public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 {
     #region const variables
@@ -78,6 +79,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public List<PlayerController> Players;
 
+    public List<PlayerMatchStatistics> PlayerMatchStats = new List<PlayerMatchStatistics>();
+
     public HitboxManager HitboxManager;
 
     public PhysicsManager ColliderManager;
@@ -126,7 +129,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public void OnMatchEnd(PlayerController winningPlayer)
     {
         AllowInput = false;
-        Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex : -1));
+        Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex.ToString() : "Draw"));
+        SetGameReady(false);
     }
 
     #endregion
@@ -286,6 +290,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         else
         {
             Players.Add(playerController);
+            PlayerMatchStatistics stats = new PlayerMatchStatistics();
+            stats.PlayerIndex = playerIndex;
+            PlayerMatchStats.Add(stats);
         }
     }
 

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-using PlayerInputData = PlayerInputPacket.PlayerInputData;
-
 // Class responsible for maintaining the gamestate
 public class GameStateManager : MonoBehaviour
 {
@@ -57,9 +55,11 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = 30f;
+    public float? RoundTimeLimit = 30f;
 
     public short RoundCount = 1;
+
+    public short RoundCountLimit;
 
     public uint FrameCount;
 
@@ -101,6 +101,7 @@ public class GameStateManager : MonoBehaviour
     private void OnValidate()
     {
         LocalFrameDelay = Math.Min(MaxPacketFrameDelay, LocalFrameDelay);
+        RoundCountLimit = Math.Max((short)1, RoundCountLimit);
     }
 
     #endregion
@@ -196,7 +197,6 @@ public class GameStateManager : MonoBehaviour
 
     private void ApplyGameState(GameState gameState)
     {
-        Debug.LogWarning("Applying game state.");
         foreach (GameState.PlayerState playerState in gameState.PlayerStates)
         {
             PlayerController player = Overseer.Instance.Players[playerState.PlayerIndex];
@@ -222,14 +222,15 @@ public class GameStateManager : MonoBehaviour
         }
         
         // If we haven't determined a winner when the round timer ends, choose the player with the greatest amount of health.
-        if (playersThatWon.Count == Overseer.NumberOfPlayers && RoundLimit != null && RoundTime >= RoundLimit)
+        if (playersThatWon.Count == Overseer.NumberOfPlayers && RoundTimeLimit != null && RoundTime >= RoundTimeLimit)
         {
             EvaluateTimeOver(playersThatWon);
         }
-        if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundLimit != null && RoundTime >= RoundLimit)
+        if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundTimeLimit != null && RoundTime >= RoundTimeLimit)
         {
             RoundStarted = false;
-            Overseer.Instance.OnRoundEnd(playersThatWon);
+
+            EvaluateRoundWinner(playersThatWon);
         }
     }
 
@@ -246,6 +247,43 @@ public class GameStateManager : MonoBehaviour
         else if (playersThatWon[0].CharacterStats.CurrentHealth < playersThatWon[1].CharacterStats.CurrentHealth)
         {
             playersThatWon.RemoveAt(0);
+        }
+    }
+
+    private void EvaluateRoundWinner(List<PlayerController> roundWinners)
+    {
+        PlayerController matchWinner = null;
+        foreach (PlayerController controller in roundWinners)
+        {
+            GameState.PlayerMatchStatistics matchStats = Overseer.Instance.PlayerMatchStats[controller.PlayerIndex];
+            matchStats.RoundsWon += 1;
+            Overseer.Instance.PlayerMatchStats[controller.PlayerIndex] = matchStats;
+
+            if (matchStats.RoundsWon >= Mathf.RoundToInt(RoundCountLimit / 2f))
+            {
+                if (matchWinner != null)
+                {
+                    // If we've already declared a winner, the game is a draw since both players have the needed number of wins
+                    Overseer.Instance.OnMatchEnd(null);
+                }
+                else
+                {
+                    matchWinner = controller;
+                }
+            }
+        }
+
+        if (matchWinner != null)
+        {
+            Overseer.Instance.OnMatchEnd(matchWinner);
+        }
+        else if (RoundCount >= RoundCountLimit)
+        {
+            Overseer.Instance.OnMatchEnd(null);
+        }
+        else
+        {
+            Overseer.Instance.OnRoundEnd(roundWinners);
         }
     }
 

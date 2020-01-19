@@ -46,4 +46,21 @@ public class GameState
 
         public PlayerInputPacket.PlayerInputData InputData;
     }
+
+    public struct PlayerMatchStatistics
+    {
+
+        public int PlayerIndex;
+
+        public ushort RoundsWon;
+
+        public ushort MaxCombo;
+
+        public float DamageDone;
+
+        public float DamageTaken;
+
+        public float DamageBlocked;
+
+    }
 }
