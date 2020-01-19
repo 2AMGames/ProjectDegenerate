@@ -236,15 +236,17 @@ public class GameStateManager : MonoBehaviour
 
     private void EvaluateTimeOver(List<PlayerController> playersThatWon)
     {
-        if (playersThatWon[0].CharacterStats.CurrentHealth.Equals(playersThatWon[1].CharacterStats.CurrentHealth))
+        float player1Health = (playersThatWon[0].CharacterStats.CurrentHealth + playersThatWon[0].CharacterStats.CurrentChipDamage) / playersThatWon[0].CharacterStats.MaxHealth;
+        float player2Health = (playersThatWon[1].CharacterStats.CurrentHealth + playersThatWon[1].CharacterStats.CurrentChipDamage) / playersThatWon[1].CharacterStats.MaxHealth;
+        if (player1Health.Equals(player2Health))
         {
             return;
         }
-        if (playersThatWon[0].CharacterStats.CurrentHealth > playersThatWon[1].CharacterStats.CurrentHealth)
+        if (player1Health > player2Health)
         {
             playersThatWon.RemoveAt(1);
         }
-        else if (playersThatWon[0].CharacterStats.CurrentHealth < playersThatWon[1].CharacterStats.CurrentHealth)
+        else
         {
             playersThatWon.RemoveAt(0);
         }
@@ -265,6 +267,7 @@ public class GameStateManager : MonoBehaviour
                 {
                     // If we've already declared a winner, the game is a draw since both players have the needed number of wins
                     Overseer.Instance.OnMatchEnd(null);
+                    return;
                 }
                 else
                 {
