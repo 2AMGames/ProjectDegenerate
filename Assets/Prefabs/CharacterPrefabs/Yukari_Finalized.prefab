@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerIndex: 0
-  MaxHealth: 1000
+  MaxHealth: 100
   MaxSpecialMeter: 10000
   SpecialMeter: 1000
 --- !u!114 &8036782042374648530

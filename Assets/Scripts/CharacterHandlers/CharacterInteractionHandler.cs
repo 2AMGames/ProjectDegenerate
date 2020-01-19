@@ -99,8 +99,11 @@ public class CharacterInteractionHandler : InteractionHandler
         Hitstun = 0;
         Animator.SetBool(HitstunTrigger, false);
         Animator.SetBool(KnockdownKey, true);
-        WakeupCoroutine = HandleWakeup();
-        StartCoroutine(WakeupCoroutine);
+        if (AssociatedCharacterStats.TotalHealth >= 0)
+        {
+            WakeupCoroutine = HandleWakeup();
+            StartCoroutine(WakeupCoroutine);
+        }
     }
 
     public void OnRecovery()
@@ -159,7 +162,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                IsKnockedDown = didMoveLand && (hitData.Knockdown || height == HitType.Crumple);
+                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.TotalHealth <= 0;
                 Animator.SetBool(KnockdownKey, IsKnockedDown);
 
                 if (!MovementMechanics.IsInAir)
@@ -257,6 +260,17 @@ public class CharacterInteractionHandler : InteractionHandler
     public override void OnComboEnded()
     {
         CurrentComboCount = 0;
+    }
+
+    public override void ResetInteractionHandler()
+    {
+        base.ResetInteractionHandler();
+        StopInteractionCoroutine(HitConfirmCoroutine);
+        StopInteractionCoroutine(HitstunCoroutine);
+        StopInteractionCoroutine(PushbackCoroutine);
+        StopInteractionCoroutine(ComboTrackingCoroutine);
+        StopInteractionCoroutine(WakeupCoroutine);
+
     }
 
     #endregion

@@ -27,7 +27,6 @@ public class LocalPlayerController : PlayerController
         {
             if (Overseer.Instance.AllowInput)
             {
-                Debug.LogWarning("Here");
                 PlayerInputData currentFrameInputData = new PlayerInputData();
                 currentFrameInputData.FrameNumber = GameStateManager.Instance.FrameCount;
                 currentFrameInputData.PlayerIndex = PlayerIndex;

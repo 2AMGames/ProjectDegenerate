@@ -308,6 +308,14 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    public void ResetInterpreter()
+    {
+        lastInputPattern = ushort.MaxValue;
+        HighestReceivedFrameNumber = 0;
+        FramesSinceLastDirectionalInput = 0;
+        ResetMovementInputBuffers();
+    }
+
     public void ClearPlayerInputQueue()
     {
         InputBuffer.Clear();
@@ -696,6 +704,10 @@ public class CommandInterpreter : MonoBehaviour
         FramesRemainingUntilRemoveFromBuffer[B_DASH_ANIM_TRIGGER] = 0;
         FramesRemainingUntilRemoveFromBuffer[S_JUMP_ANIM_TRIGGER] = 0;
     }
+
+    #endregion
+
+    #region Game Events
 
     #endregion
 

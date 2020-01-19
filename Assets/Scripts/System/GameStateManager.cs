@@ -57,7 +57,7 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = 20;
+    public float? RoundLimit = 10f;
 
     public short RoundCount = -1;
 
@@ -121,6 +121,11 @@ public class GameStateManager : MonoBehaviour
     {
         InitialRoundState.RoundCount = ++RoundCount;
         ApplyGameState(InitialRoundState);
+        foreach(PlayerController controller in Overseer.Instance.Players)
+        {
+            controller.CharacterStats.ResetCharacterState();
+            controller.InteractionHandler.ResetInteractionHandler();
+        }
     }
 
     public void StartRound()
@@ -156,7 +161,6 @@ public class GameStateManager : MonoBehaviour
 
         foreach (PlayerController player in Overseer.Instance.Players)
         {
-            Debug.LogWarning("Creating game state for player: " + player.PlayerIndex);
             GameState.PlayerState state = player.CharacterStats.CreatePlayerState();
 
             NewGameState.PlayerStates.Add(state);

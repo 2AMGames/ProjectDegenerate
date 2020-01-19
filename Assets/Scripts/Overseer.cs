@@ -82,6 +82,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public PhysicsManager ColliderManager;
 
+    public CameraController CameraController;
     
     public GameType SelectedGameType;
 
@@ -118,8 +119,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         Debug.LogWarning("Round ended. Winner: " + winningPlayers[0].PlayerIndex);
         SetGameReady(false);
         GameStateManager.Instance.PrepareNextRound();
-        GameStateManager.Instance.StartRound();
-        AllowInput = true;
+        StartRound();
         SetGameReady(true);
     }
 
@@ -231,10 +231,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
         HasGameStarted = true;
         GameStateManager.Instance.StartGame();
-        GameStateManager.Instance.StartRound();
-        AllowInput = true;
-        SetGameReady(true);
-        OnGameReady?.Invoke(true);
+        StartRound();
     }
 
     private void CreatePlayerController(int playerIndex, PlayerController.PlayerType playerType)
@@ -288,7 +285,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
         else
         {
-            Debug.LogWarning("Adding player");
             Players.Add(playerController);
         }
     }
@@ -310,6 +306,15 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 60;
         Screen.SetResolution(800, 600, false, 60);
+    }
+
+    private void StartRound()
+    {
+        GameStateManager.Instance.StartRound();
+        AllowInput = true;
+        CameraController.UpdateCameraPosition(false);
+        SetGameReady(true);
+        OnGameReady?.Invoke(true);
     }
 
     #endregion

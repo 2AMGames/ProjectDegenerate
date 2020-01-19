@@ -250,7 +250,13 @@ public class CharacterStats : MonoBehaviour
         ComboDamage = playerState.ComboDamage;
         SpecialMeter = playerState.SpecialMeter;
 
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
+
+        OnCharacterHealthChanged.Invoke();
+        OnMoveExecuted.Invoke();
+
         CommandInterpreter.ClearPlayerInputQueue();
+
     }
 
     public GameState.PlayerState CreatePlayerState()
@@ -268,6 +274,19 @@ public class CharacterStats : MonoBehaviour
         newPlayerState.InputData.InputPattern = CommandInterpreter.GetPlayerInputByte();
 
         return newPlayerState;
+    }
+
+    public void ResetCharacterState()
+    {
+
+        // Cycling the gameobject on and off resets the animator.
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+
+        MovementMechanics.TranslateForcedMovement(Vector2.zero, Vector2.zero, 1);
+        CommandInterpreter.ResetInterpreter();
+
+        gameObject.GetComponent<AnimationSpeedController>().Start();
     }
 
     #endregion
