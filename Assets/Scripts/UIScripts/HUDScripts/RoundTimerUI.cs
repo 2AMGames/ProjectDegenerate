@@ -33,7 +33,7 @@ public class RoundTimerUI : MonoBehaviour
 
     public void Awake()
     {
-        if (GameStateManager.Instance.RoundLimit == null)
+        if (GameStateManager.Instance.RoundTimeLimit == null)
         {
             RoundTimer.text = Infinity;
             enabled = false;
@@ -42,7 +42,7 @@ public class RoundTimerUI : MonoBehaviour
 
     public void Update()
     {
-        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsGameReady && GameStateManager.Instance.RoundLimit != null)
+        if (Overseer.Instance.HasGameStarted && Overseer.Instance.GameReady && GameStateManager.Instance.RoundTimeLimit != null)
         {
             UpdateRoundTimerText();
         }
@@ -54,9 +54,9 @@ public class RoundTimerUI : MonoBehaviour
 
     private void UpdateRoundTimerText()
     {
-        int timeRemaining = Mathf.RoundToInt(GameStateManager.Instance.RoundLimit.GetValueOrDefault() - GameStateManager.Instance.RoundTime);
+        int timeRemaining = Mathf.RoundToInt(GameStateManager.Instance.RoundTimeLimit.GetValueOrDefault() - GameStateManager.Instance.RoundTime);
         RoundTimer.text = timeRemaining.ToString();
-        RoundTimer.color = timeRemaining > GameStateManager.Instance.RoundLimit.GetValueOrDefault() * TimeWarningPercentage ? Color.white : TimeWarningColor;
+        RoundTimer.color = timeRemaining > GameStateManager.Instance.RoundTimeLimit.GetValueOrDefault() * TimeWarningPercentage ? Color.white : TimeWarningColor;
     }
 
     #endregion

@@ -43,6 +43,9 @@ public class CharacterStats : MonoBehaviour
     [System.NonSerialized]
     public UnityEvent OnMoveHit = new UnityEvent();
 
+    [System.NonSerialized]
+    public UnityEvent OnComboFinished = new UnityEvent();
+
     #endregion event functions
 
     #region const variables
@@ -176,7 +179,7 @@ public class CharacterStats : MonoBehaviour
     // DidMoveHit == False: Move was blocked
     public void OnPlayerHitByEnemy(HitData hitData, bool didMoveHit)
     {
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.GameReady)
         {
             if (ChipDamageCoroutine != null)
             {
@@ -206,7 +209,7 @@ public class CharacterStats : MonoBehaviour
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, HitData hit, bool didMoveHit)
     {
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.GameReady)
         {
             float meterToAdd = didMoveHit ? hit.HitMeterGain : hit.ChipMeterGain;
             SpecialMeter = Mathf.Min(MaxSpecialMeter, SpecialMeter + meterToAdd);
@@ -224,7 +227,7 @@ public class CharacterStats : MonoBehaviour
         Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
     }
 
-    public void OnComboFinished()
+    public void ComboFinished()
     {
         ComboDamage = 0;
 
@@ -239,6 +242,54 @@ public class CharacterStats : MonoBehaviour
             StartCoroutine(ChipDamageCoroutine);
         }
         OnCharacterHealthChanged.Invoke();
+    }
+
+    public void ApplyPlayerState(GameState.PlayerState playerState)
+    {
+        this.transform.position = playerState.PlayerPosition;
+
+        CurrentHealth = playerState.Health;
+        CurrentChipDamage = playerState.ChipDamage;
+        ComboDamage = playerState.ComboDamage;
+        SpecialMeter = playerState.SpecialMeter;
+
+        Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
+
+        OnCharacterHealthChanged.Invoke();
+        OnMoveExecuted.Invoke();
+
+        CommandInterpreter.ClearPlayerInputQueue();
+
+    }
+
+    public GameState.PlayerState CreatePlayerState()
+    {
+        GameState.PlayerState newPlayerState = new GameState.PlayerState();
+        newPlayerState.PlayerIndex = PlayerIndex;
+
+        newPlayerState.PlayerPosition = this.transform.position;
+        newPlayerState.Health = CurrentHealth;
+        newPlayerState.ChipDamage = CurrentChipDamage;
+        newPlayerState.ComboDamage = ComboDamage;
+        newPlayerState.SpecialMeter = SpecialMeter;
+
+        newPlayerState.InputData = new PlayerInputPacket.PlayerInputData();
+        newPlayerState.InputData.InputPattern = CommandInterpreter.GetPlayerInputByte();
+
+        return newPlayerState;
+    }
+
+    public void ResetCharacterState()
+    {
+
+        // Cycling the gameobject on and off resets the animator.
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+
+        MovementMechanics.TranslateForcedMovement(Vector2.zero, Vector2.zero, 1);
+        CommandInterpreter.ResetInterpreter();
+
+        gameObject.GetComponent<AnimationSpeedController>().Start();
     }
 
     #endregion

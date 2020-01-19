@@ -9,6 +9,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 
+using PlayerMatchStatistics = GameState.PlayerMatchStatistics;
 public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 {
     #region const variables
@@ -78,10 +79,13 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     public List<PlayerController> Players;
 
+    public List<PlayerMatchStatistics> PlayerMatchStats = new List<PlayerMatchStatistics>();
+
     public HitboxManager HitboxManager;
 
     public PhysicsManager ColliderManager;
 
+    public CameraController CameraController;
     
     public GameType SelectedGameType;
 
@@ -95,7 +99,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
-    public bool IsGameReady
+    public bool GameReady
+    {
+        get; private set;
+    }
+
+    public bool AllowInput
     {
         get; private set;
     }
@@ -106,6 +115,23 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     #region Events
 
     public UnityAction<bool> OnGameReady;
+
+    public void OnRoundEnd(List<PlayerController> winningPlayers)
+    {
+        AllowInput = false;
+        Debug.LogWarning("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
+        SetGameReady(false);
+        GameStateManager.Instance.PrepareNextRound();
+        StartRound();
+        SetGameReady(true);
+    }
+
+    public void OnMatchEnd(PlayerController winningPlayer)
+    {
+        AllowInput = false;
+        Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex.ToString() : "Draw"));
+        SetGameReady(false);
+    }
 
     #endregion
 
@@ -169,9 +195,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void SetGameReady(bool isGameReady)
     {
-        IsGameReady = isGameReady;
+        GameReady = isGameReady;
         Time.timeScale = isGameReady ? 1 : 0;
-        Debug.LogWarning("Is Game Ready: " + IsGameReady);
     }
 
     private void CreateGameType()
@@ -190,13 +215,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         if (SelectedGameType == GameType.Local)
         {
-            for (int index = 0; index < NumberOfPlayers; ++index)
-            {
-                CreateLocalPlayer(index);
-            }
-            HasGameStarted = true;
-            SetGameReady(true);
-            OnGameReady?.Invoke(true);
+            SetupLocalGame();
         }
         else if (SelectedGameType == GameType.PlayerVsAI)
         {
@@ -206,6 +225,17 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             WaitForGameReadyCoroutine = StartCoroutine(WaitUntilNetworkedGameReady());
         }
+    }
+
+    private void SetupLocalGame()
+    {
+        for (int index = 0; index < NumberOfPlayers; ++index)
+        {
+            CreateLocalPlayer(index);
+        }
+        HasGameStarted = true;
+        GameStateManager.Instance.StartGame();
+        StartRound();
     }
 
     private void CreatePlayerController(int playerIndex, PlayerController.PlayerType playerType)
@@ -259,8 +289,10 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
         else
         {
-            Debug.LogWarning("Adding player");
             Players.Add(playerController);
+            PlayerMatchStatistics stats = new PlayerMatchStatistics();
+            stats.PlayerIndex = playerIndex;
+            PlayerMatchStats.Add(stats);
         }
     }
 
@@ -281,6 +313,15 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 60;
         Screen.SetResolution(800, 600, false, 60);
+    }
+
+    private void StartRound()
+    {
+        GameStateManager.Instance.StartRound();
+        AllowInput = true;
+        CameraController.UpdateCameraPosition(false);
+        SetGameReady(true);
+        OnGameReady?.Invoke(true);
     }
 
     #endregion

@@ -99,8 +99,11 @@ public class CharacterInteractionHandler : InteractionHandler
         Hitstun = 0;
         Animator.SetBool(HitstunTrigger, false);
         Animator.SetBool(KnockdownKey, true);
-        WakeupCoroutine = HandleWakeup();
-        StartCoroutine(WakeupCoroutine);
+        if (AssociatedCharacterStats.TotalHealth >= 0)
+        {
+            WakeupCoroutine = HandleWakeup();
+            StartCoroutine(WakeupCoroutine);
+        }
     }
 
     public void OnRecovery()
@@ -159,7 +162,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                IsKnockedDown = didMoveLand && (hitData.Knockdown || height == HitType.Crumple);
+                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.TotalHealth <= 0;
                 Animator.SetBool(KnockdownKey, IsKnockedDown);
 
                 if (!MovementMechanics.IsInAir)
@@ -256,7 +259,19 @@ public class CharacterInteractionHandler : InteractionHandler
 
     public override void OnComboEnded()
     {
+        AssociatedCharacterStats.OnComboFinished.Invoke();
         CurrentComboCount = 0;
+    }
+
+    public override void ResetInteractionHandler()
+    {
+        base.ResetInteractionHandler();
+        StopInteractionCoroutine(HitConfirmCoroutine);
+        StopInteractionCoroutine(HitstunCoroutine);
+        StopInteractionCoroutine(PushbackCoroutine);
+        StopInteractionCoroutine(ComboTrackingCoroutine);
+        StopInteractionCoroutine(WakeupCoroutine);
+
     }
 
     #endregion
@@ -272,7 +287,7 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             yield return new WaitForEndOfFrame();
             AssociatedCharacterStats.ShouldCharacterMove = false;
-            framesToPause -= Overseer.Instance.IsGameReady ? 1 : 0;
+            framesToPause -= Overseer.Instance.GameReady ? 1 : 0;
         }
         AssociatedCharacterStats.ShouldCharacterMove = true;
         onPauseComplete?.Invoke();
@@ -284,7 +299,7 @@ public class CharacterInteractionHandler : InteractionHandler
         while (Hitstun > 0)
         {
             yield return null;
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 --Hitstun;
             }
@@ -300,7 +315,7 @@ public class CharacterInteractionHandler : InteractionHandler
         yield return new WaitForEndOfFrame();
         while (framesToPushback >= 0 && !MovementMechanics.IsInAir)
         {
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 MovementMechanics.TranslateForcedMovement(knockback, Vector3.zero, (float)(PushbackFrames - framesToPushback) / PushbackFrames);
                 --framesToPushback;
@@ -314,7 +329,7 @@ public class CharacterInteractionHandler : InteractionHandler
         int framesToWait = DefaultWakeupDelayFrames;
         while (framesToWait >= 0)
         {
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 --framesToWait;
             }
@@ -336,7 +351,7 @@ public class CharacterInteractionHandler : InteractionHandler
             StopCoroutine(PushbackCoroutine);
         }
 
-        AssociatedCharacterStats.OnComboFinished();
+        AssociatedCharacterStats.ComboFinished();
 
         handlerThatHitMe.OnComboEnded();
 

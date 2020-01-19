@@ -38,6 +38,11 @@ public class CameraController : MonoBehaviour
     /// </summary>
     public float CameraWorldBounds = 10f;
 
+    /// <summary>
+    /// How much should the camera lerp between old and new positions
+    /// </summary>
+    public float CameraLerpValue = .5f;
+
     #endregion
 
     #region monobehaviour methods
@@ -56,16 +61,13 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        UpdateCameraPosition();
+        UpdateCameraPosition(true);
         SetCameraBounds();
     }
 
     private void OnValidate()
     {
-        if (CameraWorldBounds < 10f)
-        {
-            CameraWorldBounds = 10f;
-        }
+        CameraWorldBounds = Mathf.Min(10f, CameraWorldBounds);
     }
 
     #endregion
@@ -77,7 +79,7 @@ public class CameraController : MonoBehaviour
         enabled = isReady;
     }
 
-    private void UpdateCameraPosition()
+    public void UpdateCameraPosition(bool shouldLerp = false)
     {
         if (MainCamera != null)
         {
@@ -111,7 +113,7 @@ public class CameraController : MonoBehaviour
                 cameraPosition.x = MainCamera.transform.position.x;
             }
 
-            MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, .5f);
+            MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, cameraPosition, shouldLerp ? .5f : 1f);
         }
     }
 

@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-using PlayerInputData = PlayerInputPacket.PlayerInputData;
-
 // Class responsible for maintaining the gamestate
 public class GameStateManager : MonoBehaviour
 {
@@ -57,13 +55,26 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = null;
+    public float? RoundTimeLimit = null;
+
+    public short RoundCount = 1;
+
+    public short RoundCountLimit;
 
     public uint FrameCount;
 
     public float RoundTime { get; private set; }
 
+    public bool RoundStarted { get; private set; }
+
     public bool RollbackEnabled;
+
+    /// <summary>
+    /// Initial state of the at the start of each round.
+    /// We should set this at the start of the game and only update the round count.
+    /// Use this to reset the state and positions of all characters at the beginning of each round.
+    /// </summary>
+    private GameState InitialRoundState;
 
     private Stack<GameState> FrameStack;
 
@@ -90,6 +101,7 @@ public class GameStateManager : MonoBehaviour
     private void OnValidate()
     {
         LocalFrameDelay = Math.Min(MaxPacketFrameDelay, LocalFrameDelay);
+        RoundCountLimit = Math.Max((short)1, RoundCountLimit);
     }
 
     #endregion
@@ -99,6 +111,27 @@ public class GameStateManager : MonoBehaviour
     {
         StopRunGameCoroutine();
         StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
+    }
+
+    public void StartGame()
+    {
+        InitialRoundState = CreateNewGameState();
+    }
+
+    public void PrepareNextRound()
+    {
+        InitialRoundState.RoundCount = ++RoundCount;
+        ApplyGameState(InitialRoundState);
+        foreach(PlayerController controller in Overseer.Instance.Players)
+        {
+            controller.CharacterStats.ResetCharacterState();
+            controller.InteractionHandler.ResetInteractionHandler();
+        }
+    }
+
+    public void StartRound()
+    {
+        RoundStarted = true;
     }
 
     #endregion
@@ -122,21 +155,16 @@ public class GameStateManager : MonoBehaviour
     {
         GameState NewGameState = new GameState();
 
+        NewGameState.RoundCount = RoundCount;
         NewGameState.FrameCount = (ushort)FrameCount;
         NewGameState.RoundTime = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 
         foreach (PlayerController player in Overseer.Instance.Players)
         {
-            GameState.PlayerState state = new GameState.PlayerState();
-            CommandInterpreter interpreter = player.CommandInterpreter;
+            GameState.PlayerState state = player.CharacterStats.CreatePlayerState();
 
-            state.PlayerPosition = player.CommandInterpreter.gameObject.transform.position;
-            state.PlayerIndex = player.PlayerIndex;
-
-            PlayerInputData inputData = new PlayerInputData();
-            inputData.FrameNumber = FrameCount;
-            inputData.InputPattern = interpreter.GetPlayerInputByte();
+            NewGameState.PlayerStates.Add(state);
         }
 
         return NewGameState;
@@ -159,7 +187,7 @@ public class GameStateManager : MonoBehaviour
 
         if (targetGameState != null)
         {
-            RollbackGameState(targetGameState);
+            ApplyGameState(targetGameState);
         }
         else
         {
@@ -167,16 +195,14 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void RollbackGameState(GameState gameState)
+    private void ApplyGameState(GameState gameState)
     {
-        Debug.LogWarning("Applying game state");
         foreach (GameState.PlayerState playerState in gameState.PlayerStates)
         {
             PlayerController player = Overseer.Instance.Players[playerState.PlayerIndex];
             if (player != null)
             {
-                player.transform.position = playerState.PlayerPosition;
-                player.CommandInterpreter.ClearPlayerInputQueue();
+                player.CharacterStats.ApplyPlayerState(playerState);
             }
         }
         FrameCount = gameState.FrameCount;
@@ -196,36 +222,71 @@ public class GameStateManager : MonoBehaviour
         }
         
         // If we haven't determined a winner when the round timer ends, choose the player with the greatest amount of health.
-        if (playersThatWon.Count == Overseer.NumberOfPlayers && RoundLimit != null && RoundTime >= RoundLimit)
+        if (playersThatWon.Count == Overseer.NumberOfPlayers && RoundTimeLimit != null && RoundTime >= RoundTimeLimit)
         {
             EvaluateTimeOver(playersThatWon);
         }
-        if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundLimit != null && RoundTime >= RoundLimit)
+        if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundTimeLimit != null && RoundTime >= RoundTimeLimit)
         {
-            // Evaluate round ended.
-            string winningPlayers = "";
-            foreach(PlayerController player in playersThatWon)
-            {
-                winningPlayers += player.PlayerIndex + ",";
-            }
+            RoundStarted = false;
 
-            Debug.Log("Round ended. Winning players: " + winningPlayers);
+            EvaluateRoundWinner(playersThatWon);
         }
     }
 
     private void EvaluateTimeOver(List<PlayerController> playersThatWon)
     {
-        if (playersThatWon[0].CharacterStats.CurrentHealth.Equals(playersThatWon[1].CharacterStats.CurrentHealth))
+        float player1Health = (playersThatWon[0].CharacterStats.CurrentHealth + playersThatWon[0].CharacterStats.CurrentChipDamage) / playersThatWon[0].CharacterStats.MaxHealth;
+        float player2Health = (playersThatWon[1].CharacterStats.CurrentHealth + playersThatWon[1].CharacterStats.CurrentChipDamage) / playersThatWon[1].CharacterStats.MaxHealth;
+        if (player1Health.Equals(player2Health))
         {
             return;
         }
-        if (playersThatWon[0].CharacterStats.CurrentHealth > playersThatWon[1].CharacterStats.CurrentHealth)
+        if (player1Health > player2Health)
         {
             playersThatWon.RemoveAt(1);
         }
-        else if (playersThatWon[0].CharacterStats.CurrentHealth < playersThatWon[1].CharacterStats.CurrentHealth)
+        else
         {
             playersThatWon.RemoveAt(0);
+        }
+    }
+
+    private void EvaluateRoundWinner(List<PlayerController> roundWinners)
+    {
+        PlayerController matchWinner = null;
+        foreach (PlayerController controller in roundWinners)
+        {
+            GameState.PlayerMatchStatistics matchStats = Overseer.Instance.PlayerMatchStats[controller.PlayerIndex];
+            matchStats.RoundsWon += 1;
+            Overseer.Instance.PlayerMatchStats[controller.PlayerIndex] = matchStats;
+
+            if (matchStats.RoundsWon >= Mathf.RoundToInt(RoundCountLimit / 2f))
+            {
+                if (matchWinner != null)
+                {
+                    // If we've already declared a winner, the game is a draw since both players have the needed number of wins
+                    Overseer.Instance.OnMatchEnd(null);
+                    return;
+                }
+                else
+                {
+                    matchWinner = controller;
+                }
+            }
+        }
+
+        if (matchWinner != null)
+        {
+            Overseer.Instance.OnMatchEnd(matchWinner);
+        }
+        else if (RoundCount >= RoundCountLimit)
+        {
+            Overseer.Instance.OnMatchEnd(null);
+        }
+        else
+        {
+            Overseer.Instance.OnRoundEnd(roundWinners);
         }
     }
 
@@ -240,7 +301,7 @@ public class GameStateManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady && RoundStarted)
             {
                 if (Application.isPlaying && Overseer.Instance.IsNetworkedMode && RollbackEnabled)
                 {

@@ -264,7 +264,7 @@ public class CommandInterpreter : MonoBehaviour
     private void Update()
     {
 
-        if (InputBuffer.Count > 0 && Overseer.Instance.IsGameReady)
+        if (InputBuffer.Count > 0 && Overseer.Instance.GameReady)
         {
             PlayerInputData dataToExecute = InputBuffer.Peek();
             uint currentFrame = GameStateManager.Instance.FrameCount;
@@ -292,7 +292,7 @@ public class CommandInterpreter : MonoBehaviour
                 {
                     // Execute immediately if queue the frame to execute on the frame it was supposed to be executed.
                     // Ex. Frame 57 was sent with 7 frames of delay, but we receive it on frame 64.
-                    if (Overseer.Instance.IsGameReady && GameStateManager.Instance.FrameCount == dataToQueue.FrameNumber + FrameDelay)
+                    if (Overseer.Instance.GameReady && GameStateManager.Instance.FrameCount == dataToQueue.FrameNumber + FrameDelay)
                     {
                         ExecuteInput(dataToQueue);
                         return true;
@@ -306,6 +306,14 @@ public class CommandInterpreter : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public void ResetInterpreter()
+    {
+        lastInputPattern = ushort.MaxValue;
+        HighestReceivedFrameNumber = 0;
+        FramesSinceLastDirectionalInput = 0;
+        ResetMovementInputBuffers();
     }
 
     public void ClearPlayerInputQueue()
@@ -699,6 +707,10 @@ public class CommandInterpreter : MonoBehaviour
 
     #endregion
 
+    #region Game Events
+
+    #endregion
+
     #region Coroutines
 
     private IEnumerator DisableButtonTriggerAfterTime(int buttonEventName)
@@ -707,7 +719,7 @@ public class CommandInterpreter : MonoBehaviour
         while (FramesRemainingUntilRemoveFromBuffer[buttonEventName] > 0)
         {
             yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 if (!Anim.GetBool(buttonEventName))
                 {
@@ -726,7 +738,7 @@ public class CommandInterpreter : MonoBehaviour
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 ++FramesSinceLastDirectionalInput;
             }

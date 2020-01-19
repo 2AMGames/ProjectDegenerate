@@ -128,6 +128,13 @@ public abstract class InteractionHandler : MonoBehaviour
         }
     }
 
+    public virtual void ResetInteractionHandler()
+    {
+        HitIndex = 0;
+        CharactersHit.Clear();
+        MoveHitPlayer = false;
+    }
+
     #endregion
 
     #region private methods

@@ -10,11 +10,13 @@ public class AnimationSpeedController : MonoBehaviour
 
     private CharacterStats CharacterStats;
 
+    private IEnumerator UpdateAnimatorCoroutine;
+
     #endregion
 
     #region monobehaviour methods
 
-    void Start()
+    public void Start()
     {
         Anim = GetComponent<Animator>();
         CharacterStats = GetComponent<CharacterStats>();
@@ -22,6 +24,10 @@ public class AnimationSpeedController : MonoBehaviour
 
         StartCoroutine(UpdateAnimator());
     }
+
+    #endregion
+
+    #region private methods
 
     private IEnumerator UpdateAnimator()
     {
@@ -32,13 +38,10 @@ public class AnimationSpeedController : MonoBehaviour
 
         }
     }
-    #endregion
-
-    #region private methods
 
     private void SetAnimationSpeed()
     {
-        if (Overseer.Instance.IsGameReady && CharacterStats.ShouldCharacterMove)
+        if (Overseer.Instance.GameReady && CharacterStats.ShouldCharacterMove)
         {
             Anim.Update(Overseer.DELTA_TIME);
         }
