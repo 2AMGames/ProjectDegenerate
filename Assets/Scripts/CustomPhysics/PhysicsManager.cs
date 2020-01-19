@@ -42,7 +42,7 @@ public class PhysicsManager : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (!Overseer.Instance.IsGameReady)
+        if (!Overseer.Instance.GameReady)
         {
             return;
         }

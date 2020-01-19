@@ -57,13 +57,24 @@ public class GameStateManager : MonoBehaviour
     /// Probably should be set by the defined game type when creating the scene.
     /// Null value means unlimited time.
     /// </summary>
-    public float? RoundLimit = null;
+    public float? RoundLimit = 20;
+
+    public short RoundCount = -1;
 
     public uint FrameCount;
 
     public float RoundTime { get; private set; }
 
+    public bool RoundStarted { get; private set; }
+
     public bool RollbackEnabled;
+
+    /// <summary>
+    /// Initial state of the at the start of each round.
+    /// We should set this at the start of the game and only update the round count.
+    /// Use this to reset the state and positions of all characters at the beginning of each round.
+    /// </summary>
+    private GameState InitialRoundState;
 
     private Stack<GameState> FrameStack;
 
@@ -101,6 +112,22 @@ public class GameStateManager : MonoBehaviour
         StartCoroutine(EvaluateRollbackRequest(frameToRollbackTo));
     }
 
+    public void StartGame()
+    {
+        InitialRoundState = CreateNewGameState();
+    }
+
+    public void PrepareNextRound()
+    {
+        InitialRoundState.RoundCount = ++RoundCount;
+        ApplyGameState(InitialRoundState);
+    }
+
+    public void StartRound()
+    {
+        RoundStarted = true;
+    }
+
     #endregion
 
     #region private interface
@@ -122,21 +149,17 @@ public class GameStateManager : MonoBehaviour
     {
         GameState NewGameState = new GameState();
 
+        NewGameState.RoundCount = RoundCount;
         NewGameState.FrameCount = (ushort)FrameCount;
         NewGameState.RoundTime = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 
         foreach (PlayerController player in Overseer.Instance.Players)
         {
-            GameState.PlayerState state = new GameState.PlayerState();
-            CommandInterpreter interpreter = player.CommandInterpreter;
+            Debug.LogWarning("Creating game state for player: " + player.PlayerIndex);
+            GameState.PlayerState state = player.CharacterStats.CreatePlayerState();
 
-            state.PlayerPosition = player.CommandInterpreter.gameObject.transform.position;
-            state.PlayerIndex = player.PlayerIndex;
-
-            PlayerInputData inputData = new PlayerInputData();
-            inputData.FrameNumber = FrameCount;
-            inputData.InputPattern = interpreter.GetPlayerInputByte();
+            NewGameState.PlayerStates.Add(state);
         }
 
         return NewGameState;
@@ -159,7 +182,7 @@ public class GameStateManager : MonoBehaviour
 
         if (targetGameState != null)
         {
-            RollbackGameState(targetGameState);
+            ApplyGameState(targetGameState);
         }
         else
         {
@@ -167,16 +190,15 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void RollbackGameState(GameState gameState)
+    private void ApplyGameState(GameState gameState)
     {
-        Debug.LogWarning("Applying game state");
+        Debug.LogWarning("Applying game state.");
         foreach (GameState.PlayerState playerState in gameState.PlayerStates)
         {
             PlayerController player = Overseer.Instance.Players[playerState.PlayerIndex];
             if (player != null)
             {
-                player.transform.position = playerState.PlayerPosition;
-                player.CommandInterpreter.ClearPlayerInputQueue();
+                player.CharacterStats.ApplyPlayerState(playerState);
             }
         }
         FrameCount = gameState.FrameCount;
@@ -202,14 +224,8 @@ public class GameStateManager : MonoBehaviour
         }
         if (playersThatWon.Count < Overseer.NumberOfPlayers || RoundLimit != null && RoundTime >= RoundLimit)
         {
-            // Evaluate round ended.
-            string winningPlayers = "";
-            foreach(PlayerController player in playersThatWon)
-            {
-                winningPlayers += player.PlayerIndex + ",";
-            }
-
-            Debug.Log("Round ended. Winning players: " + winningPlayers);
+            RoundStarted = false;
+            Overseer.Instance.OnRoundEnd(playersThatWon);
         }
     }
 
@@ -240,7 +256,7 @@ public class GameStateManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForEndOfFrame();
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady && RoundStarted)
             {
                 if (Application.isPlaying && Overseer.Instance.IsNetworkedMode && RollbackEnabled)
                 {

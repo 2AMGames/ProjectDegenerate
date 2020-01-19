@@ -66,7 +66,7 @@ public class HitboxManager : MonoBehaviour
 
     public void UpdateHitboxManager()
     {
-        if (!Overseer.Instance.IsGameReady)
+        if (!Overseer.Instance.GameReady)
         {
             return;
         }

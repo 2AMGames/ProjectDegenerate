@@ -272,7 +272,7 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             yield return new WaitForEndOfFrame();
             AssociatedCharacterStats.ShouldCharacterMove = false;
-            framesToPause -= Overseer.Instance.IsGameReady ? 1 : 0;
+            framesToPause -= Overseer.Instance.GameReady ? 1 : 0;
         }
         AssociatedCharacterStats.ShouldCharacterMove = true;
         onPauseComplete?.Invoke();
@@ -284,7 +284,7 @@ public class CharacterInteractionHandler : InteractionHandler
         while (Hitstun > 0)
         {
             yield return null;
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 --Hitstun;
             }
@@ -300,7 +300,7 @@ public class CharacterInteractionHandler : InteractionHandler
         yield return new WaitForEndOfFrame();
         while (framesToPushback >= 0 && !MovementMechanics.IsInAir)
         {
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 MovementMechanics.TranslateForcedMovement(knockback, Vector3.zero, (float)(PushbackFrames - framesToPushback) / PushbackFrames);
                 --framesToPushback;
@@ -314,7 +314,7 @@ public class CharacterInteractionHandler : InteractionHandler
         int framesToWait = DefaultWakeupDelayFrames;
         while (framesToWait >= 0)
         {
-            if (Overseer.Instance.IsGameReady)
+            if (Overseer.Instance.GameReady)
             {
                 --framesToWait;
             }

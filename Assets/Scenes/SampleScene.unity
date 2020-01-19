@@ -815,6 +815,11 @@ PrefabInstance:
       propertyPath: boxColliderSize.y
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 88466980865595005, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 88466981341032040, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}
       propertyPath: boxColliderSize.x
@@ -909,6 +914,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boxColliderSize.x
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 88466981988436636, guid: 2876a0db17c13234dbb9a050d88805a4,
+        type: 3}
+      propertyPath: ignoreParentScale
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 88466981988436637, guid: 2876a0db17c13234dbb9a050d88805a4,
         type: 3}

@@ -94,7 +94,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
     public void SendInput(PlayerInputData input, bool addDataToList)
     {
         // If we are currently synchronizing the game state by catching up to the highest frame, do not send off any inputs.
-        if (Overseer.Instance.IsGameReady && !NetworkManager.Instance.IsSynchronizing)
+        if (Overseer.Instance.GameReady && !NetworkManager.Instance.IsSynchronizing)
         {
             PlayerInputPacket packetToSend = new PlayerInputPacket();
 
@@ -186,7 +186,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
     private void OnFrameLimitReached()
     {
         // Stop the game if it is not already stopped.
-        if (Overseer.Instance.IsGameReady && ShouldRunGame)
+        if (Overseer.Instance.GameReady && ShouldRunGame)
         {
             Debug.LogError("Frame limit reached at: " + GameStateManager.Instance.FrameCount + ", Last received frame: " + FramesTillWait);
             Overseer.Instance.SetShouldRunGame(false);

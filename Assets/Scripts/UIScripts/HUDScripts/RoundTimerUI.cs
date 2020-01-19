@@ -42,7 +42,7 @@ public class RoundTimerUI : MonoBehaviour
 
     public void Update()
     {
-        if (Overseer.Instance.HasGameStarted && Overseer.Instance.IsGameReady && GameStateManager.Instance.RoundLimit != null)
+        if (Overseer.Instance.HasGameStarted && Overseer.Instance.GameReady && GameStateManager.Instance.RoundLimit != null)
         {
             UpdateRoundTimerText();
         }

@@ -95,7 +95,12 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         }
     }
 
-    public bool IsGameReady
+    public bool GameReady
+    {
+        get; private set;
+    }
+
+    public bool AllowInput
     {
         get; private set;
     }
@@ -106,6 +111,23 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     #region Events
 
     public UnityAction<bool> OnGameReady;
+
+    public void OnRoundEnd(List<PlayerController> winningPlayers)
+    {
+        AllowInput = false;
+        Debug.LogWarning("Round ended. Winner: " + winningPlayers[0].PlayerIndex);
+        SetGameReady(false);
+        GameStateManager.Instance.PrepareNextRound();
+        GameStateManager.Instance.StartRound();
+        AllowInput = true;
+        SetGameReady(true);
+    }
+
+    public void OnMatchEnd(PlayerController winningPlayer)
+    {
+        AllowInput = false;
+        Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex : -1));
+    }
 
     #endregion
 
@@ -169,9 +191,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
     private void SetGameReady(bool isGameReady)
     {
-        IsGameReady = isGameReady;
+        GameReady = isGameReady;
         Time.timeScale = isGameReady ? 1 : 0;
-        Debug.LogWarning("Is Game Ready: " + IsGameReady);
     }
 
     private void CreateGameType()
@@ -190,13 +211,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         if (SelectedGameType == GameType.Local)
         {
-            for (int index = 0; index < NumberOfPlayers; ++index)
-            {
-                CreateLocalPlayer(index);
-            }
-            HasGameStarted = true;
-            SetGameReady(true);
-            OnGameReady?.Invoke(true);
+            SetupLocalGame();
         }
         else if (SelectedGameType == GameType.PlayerVsAI)
         {
@@ -206,6 +221,20 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             WaitForGameReadyCoroutine = StartCoroutine(WaitUntilNetworkedGameReady());
         }
+    }
+
+    private void SetupLocalGame()
+    {
+        for (int index = 0; index < NumberOfPlayers; ++index)
+        {
+            CreateLocalPlayer(index);
+        }
+        HasGameStarted = true;
+        GameStateManager.Instance.StartGame();
+        GameStateManager.Instance.StartRound();
+        AllowInput = true;
+        SetGameReady(true);
+        OnGameReady?.Invoke(true);
     }
 
     private void CreatePlayerController(int playerIndex, PlayerController.PlayerType playerType)

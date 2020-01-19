@@ -176,7 +176,7 @@ public class CharacterStats : MonoBehaviour
     // DidMoveHit == False: Move was blocked
     public void OnPlayerHitByEnemy(HitData hitData, bool didMoveHit)
     {
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.GameReady)
         {
             if (ChipDamageCoroutine != null)
             {
@@ -206,7 +206,7 @@ public class CharacterStats : MonoBehaviour
 
     public void OnPlayerHitEnemy(Hitbox myHitbox, HitData hit, bool didMoveHit)
     {
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.GameReady)
         {
             float meterToAdd = didMoveHit ? hit.HitMeterGain : hit.ChipMeterGain;
             SpecialMeter = Mathf.Min(MaxSpecialMeter, SpecialMeter + meterToAdd);
@@ -239,6 +239,35 @@ public class CharacterStats : MonoBehaviour
             StartCoroutine(ChipDamageCoroutine);
         }
         OnCharacterHealthChanged.Invoke();
+    }
+
+    public void ApplyPlayerState(GameState.PlayerState playerState)
+    {
+        this.transform.position = playerState.PlayerPosition;
+
+        CurrentHealth = playerState.Health;
+        CurrentChipDamage = playerState.ChipDamage;
+        ComboDamage = playerState.ComboDamage;
+        SpecialMeter = playerState.SpecialMeter;
+
+        CommandInterpreter.ClearPlayerInputQueue();
+    }
+
+    public GameState.PlayerState CreatePlayerState()
+    {
+        GameState.PlayerState newPlayerState = new GameState.PlayerState();
+        newPlayerState.PlayerIndex = PlayerIndex;
+
+        newPlayerState.PlayerPosition = this.transform.position;
+        newPlayerState.Health = CurrentHealth;
+        newPlayerState.ChipDamage = CurrentChipDamage;
+        newPlayerState.ComboDamage = ComboDamage;
+        newPlayerState.SpecialMeter = SpecialMeter;
+
+        newPlayerState.InputData = new PlayerInputPacket.PlayerInputData();
+        newPlayerState.InputData.InputPattern = CommandInterpreter.GetPlayerInputByte();
+
+        return newPlayerState;
     }
 
     #endregion

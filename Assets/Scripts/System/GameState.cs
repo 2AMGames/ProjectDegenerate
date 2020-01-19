@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameState
 {
 
+    public short RoundCount;
+
     public ushort FrameCount;
 
     public ushort RoundTime;
@@ -13,9 +15,24 @@ public class GameState
 
     public struct PlayerState
     {
+
+        // Player Info
+
         public int PlayerIndex;
 
         public Vector3 PlayerPosition;
+
+        // Health
+
+        public float Health;
+
+        public float ChipDamage;
+
+        public float ComboDamage;
+
+        public float SpecialMeter;
+
+        // Animation Info
 
         public string CurrentAnimationClip;
 
@@ -24,5 +41,9 @@ public class GameState
         public AnimatorTransitionInfo CurrentAnimatorTransition;
 
         public List<AnimatorControllerParameter> AnimationParameters;
+
+        // Input Data
+
+        public PlayerInputPacket.PlayerInputData InputData;
     }
 }

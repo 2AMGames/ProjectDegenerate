@@ -129,7 +129,7 @@ public class MovementMechanics : MonoBehaviour {
             anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
         }
 
-        if (Overseer.Instance.IsGameReady)
+        if (Overseer.Instance.GameReady)
         {
             PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
             if (opponent != null)
