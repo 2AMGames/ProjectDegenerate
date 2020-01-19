@@ -8,7 +8,7 @@ public class LocalPlayerController : PlayerController
 {
 
     #region const variables
-
+    private const float JOYSTICK_DEADZONE = .5F;
     #endregion
 
     #region main variables
@@ -56,6 +56,9 @@ public class LocalPlayerController : PlayerController
         enabled = false;
         InputHandler = GetComponent<NetworkInputHandler>();
         Overseer.Instance.OnGameReady += OnGameReady;
+
+        //REMOVE THIS LATER
+        CustomInput.AssignPlayerIndexJoystickIndex(PlayerIndex, PlayerIndex - 1);
     }
 
     public void Start()
@@ -69,29 +72,28 @@ public class LocalPlayerController : PlayerController
     protected override void UpdateButtonInput(ref ushort input)
     {
 
-        input |= (ushort) IsButtonPressed(LightPunchKey);
-        input |= (ushort) (IsButtonPressed(MediumPunchKey) << 1);
-        input |= (ushort) (IsButtonPressed(HardPunchKey) << 2);
+        input |= (ushort) IsButtonPressed(LightHitKey);
+        input |= (ushort) (IsButtonPressed(MediumHitKey) << 1);
+        input |= (ushort) (IsButtonPressed(HardHitKey) << 2);
 
-        input |= (ushort) (IsButtonPressed(LightKickKey) << 3);
-        input |= (ushort) (IsButtonPressed(MediumKickKey) << 4);
-        input |= (ushort) (IsButtonPressed(HardKickKey) << 5);
+        input |= (ushort) (IsButtonPressed(SpecialHitKey) << 3);
+        
     }
 
     protected override void UpdateJoystickInput(ref ushort input)
     {
-        float horizontal = Input.GetAxisRaw(HorizontalInputKey);
-        float vertical = Input.GetAxisRaw(VerticalInputKey);
+        float horizontal = HorizontalInputValue;
+        float vertical = VerticalInputValue;
 
-        input |= (ushort) ((horizontal < 0f ? 1 : 0) << 6);
-        input |= (ushort) ((horizontal > 0f ? 1 : 0) << 7);
-        input |= (ushort) ((vertical > 0f ? 1 : 0) << 8);
-        input |= (ushort) ((vertical < 0f ? 1 : 0) << 9);
+        input |= (ushort) ((horizontal < JOYSTICK_DEADZONE ? 1 : 0) << 6);
+        input |= (ushort) ((horizontal > -JOYSTICK_DEADZONE ? 1 : 0) << 7);
+        input |= (ushort) ((vertical > JOYSTICK_DEADZONE ? 1 : 0) << 8);
+        input |= (ushort) ((vertical < -JOYSTICK_DEADZONE ? 1 : 0) << 9);
     }
 
-    private int IsButtonPressed(string buttonTrigger)
+    private int IsButtonPressed(KeyCode playerKeycode)
     {
-        return Input.GetButton(buttonTrigger) ? 1 : 0;
+        return Input.GetKey(playerKeycode) ? 1 : 0;
     }
 
     #endregion

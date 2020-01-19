@@ -19,41 +19,6 @@ public abstract class PlayerController : MonoBehaviour
     public const string MOVEMENT_JUMP = "Jump_";
     public const float INPUT_THRESHOLD_RUNNING = .6f;
 
-    /// <summary>
-    /// Player Key. Append this to the end of an input key to get the specific player that pressed the button.
-    /// Ex. LP_P1 = Player one light punch
-    /// </summary>
-    protected const string PlayerKey = "_P";
-
-    /// <summary>
-    /// Light Punch trigger
-    /// </summary>
-    public const string LP_ANIM_TRIGGER = "LP";
-    /// <summary>
-    /// Medium Punch trigger
-    /// </summary>
-    public const string MP_ANIM_TRIGGER = "MP";
-
-    /// <summary>
-    /// Heavy punch trigger
-    /// </summary>
-    public const string HP_ANIM_TRIGGER = "HP";
-
-    /// <summary>
-    /// Light Kick Trigger
-    /// </summary>
-    public const string LK_ANIM_TRIGGER = "LK";
-
-    /// <summary>
-    /// Medium Kick Trigger
-    /// </summary>
-    public const string MK_ANIM_TRIGGER = "MK";
-
-    /// <summary>
-    /// Heavy Kick trigger
-    /// </summary>
-    public const string HK_ANIM_TRIGGER = "HK";
-
     #endregion
 
     #region enum
@@ -87,71 +52,84 @@ public abstract class PlayerController : MonoBehaviour
 
     public int PlayerIndex;
 
+
     #endregion
 
     #region player specific input keys
 
-    protected string LightPunchKey
+    protected KeyCode LightHitKey
     {
         get
         {
-            return LP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+            if (PlayerIndex == 0)
+            {
+                return CustomInput.LightHitKey_Player1;
+            }
+            else
+            {
+                return CustomInput.LightHitKey_Player2;
+            }
         }
     }
 
-    protected string MediumPunchKey
+    protected KeyCode MediumHitKey
     {
         get
         {
-            return MP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+            if (PlayerIndex == 0)
+            {
+                return CustomInput.MediumKey_Player1;
+            }
+            else
+            {
+                return CustomInput.MediumKey_Player2;
+            }
         }
     }
 
-    protected string HardPunchKey
+    protected KeyCode HardHitKey
     {
         get
         {
-            return HP_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+            if (PlayerIndex == 0)
+            {
+                return CustomInput.HeavyKey_Player1;
+            }
+            else
+            {
+                return CustomInput.HeavyKey_Player2;
+            }
         }
     }
 
-    protected string LightKickKey
+    protected KeyCode SpecialHitKey
     {
         get
         {
-            return LK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+            if (PlayerIndex == 0)
+            {
+                return CustomInput.SpecialKey_Player1;
+            }
+            else
+            {
+                return CustomInput.SpecialKey_Player2;
+            }
         }
     }
 
-    protected string MediumKickKey
+    protected float HorizontalInputValue
     {
         get
         {
-            return MK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
+            return CustomInput.GetHorizontalAxis(PlayerIndex);
         }
     }
 
-    protected string HardKickKey
+    protected float VerticalInputValue
     {
         get
         {
-            return HK_ANIM_TRIGGER + PlayerKey + (PlayerIndex + 1);
-        }
-    }
-
-    protected string HorizontalInputKey
-    {
-        get
-        {
-            return MOVEMENT_HORIZONTAL + (PlayerIndex + 1);
-        }
-    }
-
-    protected string VerticalInputKey
-    {
-        get
-        {
-            return MOVEMENT_VERTICAL + (PlayerIndex + 1);
+            return CustomInput.GetVerticalAxis(PlayerIndex);
         }
     }
 
