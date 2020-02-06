@@ -214,10 +214,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         if (!DebugEnabled)
             SelectedGameType = GameSettingPreferences.GameType;
-        else
-        {
-            Debug.LogWarning("Debug Enable Using: " + SelectedGameType);
-        }
 
         for(int index = 0; index < NumberOfPlayers; ++index)
         {
@@ -330,6 +326,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     {
         GameStateManager.Instance.StartRound();
         AllowInput = true;
+        HasGameStarted = true;
         CameraController.UpdateCameraPosition(false);
         SetGameReady(true);
         OnGameReady?.Invoke(true);
@@ -372,7 +369,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
 
         if (Players.Count < NumberOfPlayers && HasGameStarted)
         {
-            Debug.LogWarning("Ending game");
+            Debug.LogWarning("Overseer.OnPlayerLeftRoom Ending game");
             SetGameReady(false);
             OnGameReady(false);
             HasGameStarted = false;
@@ -442,11 +439,9 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
             yield return null;
         }
 
-        Debug.LogWarning("Starting game");
-        SetGameReady(true);
-        HasGameStarted = true;
-        OnGameReady(true);
-
+        Debug.LogWarning("Overseer.WaitUntilNetworkedGameReady Starting game");
+        GameStateManager.Instance.StartGame();
+        StartRound();
     }
 
     public void SetShouldRunGame(bool shouldRunGame)

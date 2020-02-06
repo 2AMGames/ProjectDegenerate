@@ -42,6 +42,7 @@ public class LocalPlayerController : PlayerController
                 bool addDataToInputHandlerList = currentFrameInputData.InputPattern != LastSavedInputPattern;
                 CommandInterpreter.QueuePlayerInput(currentFrameInputData);
                 LastSavedInputPattern = currentFrameInputData.InputPattern;
+
                 if (InputHandler != null)
                 {
                     InputHandler.SendInput(currentFrameInputData, addDataToInputHandlerList);

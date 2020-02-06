@@ -171,7 +171,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
         Debug.LogWarning("NetworkManager.ConnectToNetwork() ");
         if (!PhotonNetwork.IsConnected)
         {
-            Debug.LogWarning("?");
             PhotonNetwork.AddCallbackTarget(this);
             RegisterEventTypes();
             PhotonNetwork.ConnectUsingSettings();
@@ -318,7 +317,10 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Debug.Log("Sucessfully Left Photon Room");
         CurrentRoomId = null;
-        Overseer.Instance.HandleLeftRoom();
+        if (Overseer.Instance)
+        {
+            Overseer.Instance.HandleLeftRoom();
+        }
     }
 
     #endregion
@@ -326,18 +328,18 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     #region Connection Callback Interface
     public void OnConnected()
     {
-        Debug.LogWarning("Connected");
+        Debug.LogWarning("NetworkManager.OnConnected: Connected to Photon successfully");
     }
 
     public void OnConnectedToMaster()
     {
-        Debug.LogWarning("Connected to master");
+        Debug.LogWarning("NetworkManager.OnConnectedToMaster ");
         PhotonNetwork.JoinLobby();
     }
 
     public void OnCustomAuthenticationFailed(string debugMessage)
     {
-        Debug.LogWarning("Custom authentication failed: " + debugMessage);
+        Debug.LogWarning("NetworkManager.OnCustomAuthenticationFailed: " + debugMessage);
     }
 
     public void OnCustomAuthenticationResponse(Dictionary<string, object> data)
@@ -347,7 +349,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
 
     public void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarning("Disconnected: " + cause.ToString());
+        Debug.LogWarning("NetworkManager.OnDisconnected: " + cause.ToString());
         CurrentRoomId = null;
     }
 
