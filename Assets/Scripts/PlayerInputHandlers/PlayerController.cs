@@ -151,6 +151,10 @@ public abstract class PlayerController : MonoBehaviour
     #endregion
 
     #region virtual interface
+    public virtual void ResetController()
+    {
+
+    }
 
     protected virtual void UpdateButtonInput(ref ushort inputPattern)
     {

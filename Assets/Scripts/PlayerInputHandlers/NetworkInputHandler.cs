@@ -91,6 +91,13 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
     #endregion
 
     #region public interface
+
+    public void ResetHandler()
+    {
+        PacketsSent = 0;
+        DataSent.Clear();
+    }
+
     public void SendInput(PlayerInputData input, bool addDataToList)
     {
         // If we are currently synchronizing the game state by catching up to the highest frame, do not send off any inputs.

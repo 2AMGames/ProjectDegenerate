@@ -95,6 +95,15 @@ public class LocalPlayerController : PlayerController
         input |= (ushort) ((vertical < -JOYSTICK_DEADZONE ? 1 : 0) << 9);
     }
 
+    public override void ResetController()
+    {
+        base.ResetController();
+        if (InputHandler != null)
+        {
+            InputHandler.ResetHandler();
+        }
+    }
+
     private int IsButtonPressed(KeyCode playerKeycode)
     {
         return Input.GetKey(playerKeycode) ? 1 : 0;
