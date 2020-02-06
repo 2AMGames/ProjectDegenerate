@@ -143,7 +143,7 @@ namespace Photon.Pun
         protected void LateUpdate()
         {
             // see MinimalTimeScaleToDispatchInFixedUpdate and FixedUpdate for explanation:
-            if (Time.timeScale <= PhotonNetwork.MinimalTimeScaleToDispatchInFixedUpdate)
+            if (Time.timeScale >= PhotonNetwork.MinimalTimeScaleToDispatchInFixedUpdate)
             {
                 this.Dispatch();
             }
