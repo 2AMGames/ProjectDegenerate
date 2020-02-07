@@ -68,7 +68,8 @@ public class RemotePlayerController : PlayerController, IOnEventCallback
                 {
                     foreach (PlayerInputData inputFrame in data.InputData)
                     {
-                        if (CommandInterpreter.QueuePlayerInput(inputFrame))
+                        // FrameNumber == 0: Initial packet of round. Should be okay to ACK.
+                        if (inputFrame.RoundNumber == GameStateManager.Instance.RoundCount && CommandInterpreter.QueuePlayerInput(inputFrame))
                         {
                             SendInputAck(inputFrame.PacketId);
                         }

@@ -7,7 +7,7 @@ public class GameState
 
     public short RoundCount;
 
-    public ushort FrameCount;
+    public uint FrameCount;
 
     public ushort RoundTime;
 

@@ -95,6 +95,7 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
     public void ResetHandler()
     {
         PacketsSent = 0;
+        ResetFrameWaitTime((uint)NetworkManager.Instance.TotalDelayFrames);
         DataSent.Clear();
     }
 
@@ -111,12 +112,12 @@ public class NetworkInputHandler : MonoBehaviour, IOnEventCallback
             {
                 input.PacketId = PacketsSent;
                 DataSent.Add(input);
+                ++PacketsSent;
             }
             packetToSend.InputData = DataSent;
 
-            ++PacketsSent;
-
             float rand = Random.Range(0.0f, 1.0f);
+
             if (rand <= NetworkManager.Instance.SendPercentage)
             {
                 NetworkManager.Instance.SendEventData(NetworkManager.PlayerInputUpdate, packetToSend, ReceiverGroup.Others, true);

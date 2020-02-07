@@ -285,6 +285,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     public void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.LogError("Failed to create room: Code=[" + returnCode + "], Error = " + message);
+        PhotonNetwork.JoinRoom("Bitch Niggas Only 0");
     }
 
     public void OnFriendListUpdate(List<FriendInfo> friendList)
@@ -513,7 +514,7 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             UpdatePing();
         }
         yield return null;
-
+        Debug.LogWarning("aS:LMddsa");
         IsNetworkedGameReady = true;
         SendEventData(StartGame, true, ReceiverGroup.Others);
 
@@ -595,11 +596,12 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     private IEnumerator CheckPlayerPing()
     {
         CurrentlyPingingPlayers = true;
-
+        Debug.LogWarning("Check player ping");
         while (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(ActivePlayerKey))
         {
             yield return null;
         }
+        Debug.LogWarning("Beginning ping");
 
         long averagePing = 0;
 
@@ -612,7 +614,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
             rtt.Start();
             yield return new WaitUntil(CheckIfPingCompleted);
             rtt.Stop();
-
             averagePing += rtt.ElapsedMilliseconds;
         }
 
@@ -627,7 +628,6 @@ public class NetworkManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingC
     {
         Hashtable activePlayers = GetActivePlayers();
         PlayersToPing.Clear();
-
         foreach (int actorNumber in activePlayers.Keys)
         {
             if (PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber) && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)

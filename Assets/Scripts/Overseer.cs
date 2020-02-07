@@ -127,7 +127,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public void OnRoundEnd(List<PlayerController> winningPlayers)
     {
         AllowInput = false;
-        Debug.LogWarning("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
+        Debug.LogError("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
         SetGameReady(false);
         GameStateManager.Instance.PrepareNextRound();
         StartRound();
@@ -240,7 +240,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         {
             CreateLocalPlayer(index);
         }
-        HasGameStarted = true;
         GameStateManager.Instance.StartGame();
         StartRound();
     }
@@ -328,8 +327,8 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         AllowInput = true;
         HasGameStarted = true;
         CameraController.UpdateCameraPosition(false);
-        SetGameReady(true);
         OnGameReady?.Invoke(true);
+        SetGameReady(true);
     }
 
     #endregion

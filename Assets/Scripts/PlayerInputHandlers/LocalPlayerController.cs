@@ -28,6 +28,8 @@ public class LocalPlayerController : PlayerController
             if (Overseer.Instance.AllowInput)
             {
                 PlayerInputData currentFrameInputData = new PlayerInputData();
+
+                currentFrameInputData.RoundNumber = GameStateManager.Instance.RoundCount;
                 currentFrameInputData.FrameNumber = GameStateManager.Instance.FrameCount;
                 currentFrameInputData.PlayerIndex = PlayerIndex;
                 currentFrameInputData.InputPattern = DefaultInputPattern;

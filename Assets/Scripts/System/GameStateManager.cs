@@ -61,7 +61,7 @@ public class GameStateManager : MonoBehaviour
 
     public short RoundCountLimit;
 
-    public uint FrameCount;
+    public uint FrameCount = 1;
 
     public float RoundTime { get; private set; }
 
@@ -120,10 +120,12 @@ public class GameStateManager : MonoBehaviour
 
     public void PrepareNextRound()
     {
+        Debug.LogWarning("Prepare next round");
         InitialRoundState.RoundCount = ++RoundCount;
         ApplyGameState(InitialRoundState);
         foreach(PlayerController controller in Overseer.Instance.Players)
         {
+            controller.ResetController();
             controller.CharacterStats.ResetCharacterState();
             controller.InteractionHandler.ResetInteractionHandler();
         }
@@ -156,7 +158,7 @@ public class GameStateManager : MonoBehaviour
         GameState NewGameState = new GameState();
 
         NewGameState.RoundCount = RoundCount;
-        NewGameState.FrameCount = (ushort)FrameCount;
+        NewGameState.FrameCount = FrameCount;
         NewGameState.RoundTime = (ushort)RoundTime;
         NewGameState.PlayerStates = new List<GameState.PlayerState>();
 

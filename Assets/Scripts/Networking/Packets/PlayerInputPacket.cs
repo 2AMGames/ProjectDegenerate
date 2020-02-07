@@ -23,6 +23,9 @@ public class PlayerInputPacket
     public struct PlayerInputData
     {
         [JsonProperty]
+        public short RoundNumber { get; set; }
+
+        [JsonProperty]
         public uint FrameNumber { get; set; }
 
         [JsonProperty]
