@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: 5486599228105211787
     second: yk611_05_1
+  - first:
+      213: 4676669350704366581
+    second: yk611_05_0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -96,39 +99,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 178
-        width: 65
-        height: 221
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1ec609eba7fc7a120800000000000000
-      internalID: 2425135050452397281
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: yk611_05_1
-      rect:
-        serializedVersion: 2
-        x: 0
         y: 0
         width: 234
         height: 401
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.49145302, y: 0.0074812965}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8fb420cde0542c40800000000000000
-      internalID: 5486599228105211787
+      spriteID: 5f3c0b41ffdd6e040800000000000000
+      internalID: 4676669350704366581
       vertices: []
       indices: 
       edges: []
