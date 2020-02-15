@@ -7,6 +7,9 @@ using MoveData = InteractionHandler.MoveData;
 
 public class HitboxManager : MonoBehaviour
 {
+
+    #region hitboxes
+
     [System.NonSerialized]
     /// <summary>
     /// 
@@ -18,8 +21,10 @@ public class HitboxManager : MonoBehaviour
     /// </summary>
     public List<Hitbox> allActiveHitboxes = new List<Hitbox>();
 
+    #endregion
+
     #region monobehavoiur methods
-   
+
     /// <summary>
     /// Adds a new hitbox to the list of all available hitboxes
     /// </summary>
