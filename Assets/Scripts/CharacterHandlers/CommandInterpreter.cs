@@ -237,7 +237,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
-    public List<DirectionalinputStruct> DirectionalInputRecordList = new List<DirectionalinputStruct>();
+    private List<DirectionalinputStruct> DirectionalInputRecordList = new List<DirectionalinputStruct>();
 
     #endregion
 

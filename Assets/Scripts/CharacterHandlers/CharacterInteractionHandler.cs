@@ -162,7 +162,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.TotalHealth <= 0;
+                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.CurrentHealth <= 0;
                 Animator.SetBool(KnockdownKey, IsKnockedDown);
 
                 if (!MovementMechanics.IsInAir)
