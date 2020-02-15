@@ -308,6 +308,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchSpeed: 15
   launchAngle: {x: 7, y: 0}
+  projectileHitDataList:
+  - Knockdown: 0
+    HitDamage: 30
+    OnHitFrames: 5
+    HitMeterGain: 50
+    OnHitKnockback: {x: 1, y: 0}
+    ChipDamage: 0
+    OnGuardFrames: 3
+    ChipMeterGain: 2
+    OnGuardKnockback: {x: 1, y: 0}
+    GuardBreak: 0
   bounceCount: 2
   DespawnTime: 3
   maxStretchOfArrow: 0
