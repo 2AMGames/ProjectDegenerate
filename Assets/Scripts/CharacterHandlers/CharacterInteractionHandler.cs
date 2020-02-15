@@ -65,6 +65,7 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         base.OnMoveBegin();
         StopInteractionCoroutine(PushbackCoroutine);
+        Animator.SetBool(DID_MOVE_LAND, false);
         if (!MovementMechanics.IsInAir)
         {
             MovementMechanics.TranslateForcedMovement(Vector3.zero, Vector3.zero, 0);
@@ -99,7 +100,7 @@ public class CharacterInteractionHandler : InteractionHandler
         Hitstun = 0;
         Animator.SetBool(HitstunTrigger, false);
         Animator.SetBool(KnockdownKey, true);
-        if (AssociatedCharacterStats.TotalHealth >= 0)
+        if (AssociatedCharacterStats.CurrentHealth >= 0)
         {
             WakeupCoroutine = HandleWakeup();
             StartCoroutine(WakeupCoroutine);
@@ -125,20 +126,25 @@ public class CharacterInteractionHandler : InteractionHandler
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
         if (frames > 0 || hitData.Knockdown)
         {
+
+            AssociatedCharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
+
             if (didMoveLand)
             {
+                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.CurrentHealth <= 0;
+
+                Animator.SetBool(KnockdownKey, IsKnockedDown);
                 Animator.SetInteger(HitHeightKey, (int)height);
+
             }
             else
             {
                 Animator.SetTrigger(GUARD_TRIGGER);
                 Animator.SetInteger(HitHeightKey, -1);
             }
+
             Animator.SetBool(HitstunTrigger, true);
-
             Hitstun = frames;
-
-            AssociatedCharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
 
             if (HitstunCoroutine != null)
             {
@@ -162,8 +168,6 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.CurrentHealth <= 0;
-                Animator.SetBool(KnockdownKey, IsKnockedDown);
 
                 if (!MovementMechanics.IsInAir)
                 {

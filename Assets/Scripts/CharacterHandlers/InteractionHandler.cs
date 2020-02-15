@@ -67,7 +67,6 @@ public abstract class InteractionHandler : MonoBehaviour
         CharactersHit.Clear();
         MoveHitPlayer = false;
         HitIndex = 0;
-        Animator.SetBool(DID_MOVE_LAND, false);
     }
 
     /// <summary>
@@ -91,7 +90,6 @@ public abstract class InteractionHandler : MonoBehaviour
     public virtual void Awake()
     {
         Animator = GetComponent<Animator>();
-        CustomPhysics2D rigid = GetComponent<CustomPhysics2D>();
         CharactersHit = new HashSet<CharacterInteractionHandler>();
     }
 

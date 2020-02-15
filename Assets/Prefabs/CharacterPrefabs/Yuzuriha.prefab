@@ -170,7 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DirectionalInputRecordList: []
 --- !u!114 &6057300012988414300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +199,7 @@ MonoBehaviour:
   ignoreParentScale: 0
   colliderLayer: 10
   originalVelocity: {x: 0, y: 0}
-  boxColliderSize: {x: 0.63, y: 1.6}
+  boxColliderSize: {x: 0.43, y: 1.41}
   HorizontalBuffer: 0.02
   VerticalBuffer: 0.02
 --- !u!114 &3062025119057498964
