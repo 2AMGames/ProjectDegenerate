@@ -2394,6 +2394,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 41362844271019435, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 128930532001717862, guid: bb69ae1c3a665e048bd18c0f64db7751,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2458,6 +2463,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Yukari_Finalized
+      objectReference: {fileID: 0}
+    - target: {fileID: 9112828447883429365, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb69ae1c3a665e048bd18c0f64db7751, type: 3}
