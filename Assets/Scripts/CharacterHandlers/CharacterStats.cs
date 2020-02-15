@@ -50,6 +50,8 @@ public class CharacterStats : MonoBehaviour
 
     #region const variables
 
+    public static readonly int Win_State = Animator.StringToHash("WinState");
+
     private const string SpecialMeterParameter = "SpecialMeter";
 
     /// <summary>
@@ -288,8 +290,14 @@ public class CharacterStats : MonoBehaviour
 
         MovementMechanics.TranslateForcedMovement(Vector2.zero, Vector2.zero, 1);
         CommandInterpreter.ResetInterpreter();
+        Anim.SetInteger(Win_State, -1);
 
         gameObject.GetComponent<AnimationSpeedController>().Start();
+    }
+
+    public void OnPlayerWin(bool matchWon)
+    {
+        Anim.SetInteger(Win_State, matchWon ? 1 : 0);
     }
 
     #endregion

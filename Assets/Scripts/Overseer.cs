@@ -127,11 +127,16 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public void OnRoundEnd(List<PlayerController> winningPlayers)
     {
         AllowInput = false;
-        Debug.Log("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
-        SetGameReady(false);
-        GameStateManager.Instance.PrepareNextRound();
-        StartRound();
-        SetGameReady(true);
+        bool draw = winningPlayers.Count > 1;
+        Debug.Log("Round ended. Winner: " + (!draw? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
+        foreach(PlayerController player in winningPlayers)
+        {
+            player.CharacterStats.OnPlayerWin(false);
+        }
+        //SetGameReady(false);
+        //GameStateManager.Instance.PrepareNextRound();
+       // StartRound();
+        //SetGameReady(true);
     }
 
     public void OnMatchEnd(PlayerController winningPlayer)
@@ -139,9 +144,15 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex.ToString() : "Draw"));
 
         AllowInput = false;
-        SetGameReady(false);
-        PostMatchUiGameObject.SetupPanel(winningPlayer);
-        PostMatchUiGameObject.gameObject.SetActive(true);
+
+        if (winningPlayer)
+        {
+            winningPlayer.CharacterStats.OnPlayerWin(true);
+        }
+
+        //SetGameReady(false);
+        //PostMatchUiGameObject.SetupPanel(winningPlayer);
+        //PostMatchUiGameObject.gameObject.SetActive(true);
     }
 
     #endregion
