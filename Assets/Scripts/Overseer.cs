@@ -127,7 +127,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
     public void OnRoundEnd(List<PlayerController> winningPlayers)
     {
         AllowInput = false;
-        Debug.LogError("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
+        Debug.Log("Round ended. Winner: " + (winningPlayers.Count == 1 ? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
         SetGameReady(false);
         GameStateManager.Instance.PrepareNextRound();
         StartRound();
