@@ -413,13 +413,13 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Hard
     SpecialMeterRequired: 0
-    Height: 4
+    Height: 6
     Hits:
     - Knockdown: 1
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13
-      OnHitKnockback: {x: 1, y: -10}
+      OnHitKnockback: {x: 10, y: 10}
       ChipDamage: 7
       OnGuardFrames: 9
       ChipMeterGain: 4
