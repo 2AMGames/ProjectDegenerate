@@ -298,6 +298,7 @@ public class CharacterStats : MonoBehaviour
 
     public void OnPlayerWin(bool matchWon)
     {
+        CommandInterpreter.ResetInterpreter();
         Anim.SetInteger(Win_State, matchWon ? 1 : 0);
     }
 

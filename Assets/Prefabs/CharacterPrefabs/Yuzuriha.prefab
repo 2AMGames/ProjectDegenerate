@@ -219,9 +219,8 @@ MonoBehaviour:
   CharacterMoves:
   - MoveName: Low_Kick
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 5
       OnHitFrames: 11
       HitMeterGain: 5
@@ -233,9 +232,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Medium_Slash
     SpecialMeterRequired: 0
-    Height: 3
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 7
       OnHitFrames: 17
       HitMeterGain: 10
@@ -247,9 +245,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Heavy_Slash
     SpecialMeterRequired: 0
-    Height: 3
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 7
       OnHitFrames: 25
       HitMeterGain: 10
@@ -261,9 +258,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Light
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -275,9 +271,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Medium
     SpecialMeterRequired: 0
-    Height: 1
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -289,9 +284,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Cr_Hard
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 0
+    - HitType: 2
       HitDamage: 12
       OnHitFrames: 4
       HitMeterGain: 10
@@ -301,11 +295,11 @@ MonoBehaviour:
       ChipMeterGain: 4
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
-    - Knockdown: 1
+    - HitType: 0
       HitDamage: 12
       OnHitFrames: 1
       HitMeterGain: 10
-      OnHitKnockback: {x: 4, y: -3}
+      OnHitKnockback: {x: 4, y: 10}
       ChipDamage: 4
       OnGuardFrames: 6
       ChipMeterGain: 4
@@ -313,9 +307,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Back_Hard
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -325,7 +318,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -335,7 +328,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -345,7 +338,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - Knockdown: 1
+    - HitType: 0
       HitDamage: 3
       OnHitFrames: 3
       HitMeterGain: 4
@@ -357,9 +350,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Back_Medium
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 1
+    - HitType: 0
       HitDamage: 7
       OnHitFrames: 7
       HitMeterGain: 10
@@ -371,9 +363,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Light
     SpecialMeterRequired: 0
-    Height: 4
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 5
       OnHitFrames: 8
       HitMeterGain: 5
@@ -385,9 +376,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Medium
     SpecialMeterRequired: 0
-    Height: 4
     Hits:
-    - Knockdown: 0
+    - HitType: 0
       HitDamage: 8
       OnHitFrames: 8
       HitMeterGain: 9
@@ -399,9 +389,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Down_Hard
     SpecialMeterRequired: 0
-    Height: 4
     Hits:
-    - Knockdown: 1
+    - HitType: 0
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13
@@ -413,9 +402,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Air_Hard
     SpecialMeterRequired: 0
-    Height: 6
     Hits:
-    - Knockdown: 1
+    - HitType: 6
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13

@@ -314,6 +314,8 @@ public class CommandInterpreter : MonoBehaviour
         HighestReceivedFrameNumber = 0;
         FramesSinceLastDirectionalInput = 0;
         ResetMovementInputBuffers();
+        characterStats.MovementMechanics.SetHorizontalInput(0.0f);
+        characterStats.MovementMechanics.SetVerticalInput(0.0f);
     }
 
     public void ClearPlayerInputQueue()

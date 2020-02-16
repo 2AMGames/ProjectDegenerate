@@ -20,7 +20,7 @@ public abstract class InteractionHandler : MonoBehaviour
 
     public const string KnockdownKey = "Knockdown";
 
-    public const string HitHeightKey = "HitHeight";
+    public const string HitTypeKey = "HitType";
 
     protected const int PushbackFrames = 16;
 
@@ -97,7 +97,7 @@ public abstract class InteractionHandler : MonoBehaviour
 
     #region public methods
 
-    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
+    public virtual void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
     }
 
@@ -169,8 +169,6 @@ public abstract class InteractionHandler : MonoBehaviour
 
         public float SpecialMeterRequired;
 
-        public HitType Height;
-
         public HitData[] Hits;
 
     }
@@ -181,7 +179,7 @@ public abstract class InteractionHandler : MonoBehaviour
     /// </summary>
     public struct HitData
     {
-        public bool Knockdown;
+        public HitType HitType;
 
         [Header("On Hit Parameters")]
         public float HitDamage;

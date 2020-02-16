@@ -34,7 +34,7 @@ public class ProjectileInteractionHandler : InteractionHandler
     /// <param name="hitData"></param>
     /// <param name="height"></param>
     /// <param name="didMoveLand"></param>
-    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
+    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
         //Debug.LogWarning("Projectile hit by enemy");
         Projectile.OnHitByEnemy();

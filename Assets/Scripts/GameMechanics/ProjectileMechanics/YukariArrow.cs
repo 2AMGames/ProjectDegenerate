@@ -43,7 +43,6 @@ public class YukariArrow : BaseProjectile
         associatedInteractionHandler.CurrentMove = new InteractionHandler.MoveData
         {
             MoveName = "BasicArrow",
-            Height = InteractionHandler.HitType.Mid,
             SpecialMeterRequired = 0,
             Hits = projectileHitDataList,
         };

@@ -125,25 +125,26 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region public methods
 
-    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, HitType height, bool didMoveLand)
+    public override void OnHitByEnemy(Hitbox myHurtbox, Hitbox enemyHitbox, HitData hitData, bool didMoveLand)
     {
         int frames = didMoveLand ? hitData.OnHitFrames : hitData.OnGuardFrames;
-        if (frames > 0 || hitData.Knockdown)
+        HitType type = hitData.HitType;
+        if (frames > 0 || hitData.HitType == HitType.Knockdown)
         {
 
             AssociatedCharacterStats.OnPlayerHitByEnemy(hitData, didMoveLand);
 
             if (didMoveLand)
             {
-                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple))|| AssociatedCharacterStats.CurrentHealth <= 0;
+                IsKnockedDown = (didMoveLand && (type == HitType.Knockdown || type == HitType.Crumple))|| AssociatedCharacterStats.CurrentHealth <= 0;
 
                 Animator.SetBool(KnockdownKey, IsKnockedDown);
-                Animator.SetInteger(HitHeightKey, (int)height);
+                Animator.SetInteger(HitTypeKey, (int)hitData.HitType);
             }
             else
             {
                 Animator.SetTrigger(GUARD_TRIGGER);
-                Animator.SetInteger(HitHeightKey, -1);
+                Animator.SetInteger(HitTypeKey, -1);
             }
 
             Animator.SetBool(HitstunTrigger, true);
@@ -173,7 +174,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
-                bool forceMovement = MovementMechanics.IsInAir || height == HitType.Launch || height == HitType.Knockdown || height == HitType.HitToWall;
+                bool forceMovement = MovementMechanics.IsInAir || type == HitType.Launch || type == HitType.Knockdown || type == HitType.HitToWall;
 
                 if (!forceMovement)
                 {
@@ -317,7 +318,7 @@ public class CharacterInteractionHandler : InteractionHandler
         }
         Animator.SetBool(HitstunTrigger, false);
         Animator.SetBool(WasHitTrigger, false);
-        Animator.SetInteger(HitHeightKey, -1);
+        Animator.SetInteger(HitTypeKey, -1);
         HitstunCoroutine = null;
     }
     private IEnumerator HandlePushback(Vector2 knockback)
