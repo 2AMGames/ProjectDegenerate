@@ -220,7 +220,7 @@ MonoBehaviour:
   - MoveName: Low_Kick
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 2
       HitDamage: 5
       OnHitFrames: 11
       HitMeterGain: 5
@@ -233,7 +233,7 @@ MonoBehaviour:
   - MoveName: Medium_Slash
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 4
       HitDamage: 7
       OnHitFrames: 17
       HitMeterGain: 10
@@ -246,7 +246,7 @@ MonoBehaviour:
   - MoveName: Heavy_Slash
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 4
       HitDamage: 7
       OnHitFrames: 25
       HitMeterGain: 10
@@ -259,7 +259,7 @@ MonoBehaviour:
   - MoveName: Cr_Light
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 2
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -272,7 +272,7 @@ MonoBehaviour:
   - MoveName: Cr_Medium
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 3
       HitDamage: 5
       OnHitFrames: 9
       HitMeterGain: 10
@@ -308,7 +308,7 @@ MonoBehaviour:
   - MoveName: Back_Hard
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 3
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -318,7 +318,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - HitType: 0
+    - HitType: 3
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -328,7 +328,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - HitType: 0
+    - HitType: 3
       HitDamage: 3
       OnHitFrames: 5
       HitMeterGain: 4
@@ -338,7 +338,7 @@ MonoBehaviour:
       ChipMeterGain: 1
       OnGuardKnockback: {x: 0, y: 0}
       GuardBreak: 0
-    - HitType: 0
+    - HitType: 3
       HitDamage: 3
       OnHitFrames: 3
       HitMeterGain: 4
@@ -364,7 +364,7 @@ MonoBehaviour:
   - MoveName: Air_Light
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 5
       HitDamage: 5
       OnHitFrames: 8
       HitMeterGain: 5
@@ -377,7 +377,7 @@ MonoBehaviour:
   - MoveName: Air_Medium
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 5
       HitDamage: 8
       OnHitFrames: 8
       HitMeterGain: 9
@@ -390,7 +390,7 @@ MonoBehaviour:
   - MoveName: Air_Down_Hard
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 5
       HitDamage: 14
       OnHitFrames: 4
       HitMeterGain: 13
