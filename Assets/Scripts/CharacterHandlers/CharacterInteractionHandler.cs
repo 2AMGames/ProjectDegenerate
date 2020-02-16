@@ -11,6 +11,8 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region const variables
 
+    public readonly int WasHitTrigger = Animator.StringToHash("WasHit");
+
     private const int DefaultWakeupDelayFrames = 15;
 
     #endregion
@@ -99,6 +101,7 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         Hitstun = 0;
         Animator.SetBool(HitstunTrigger, false);
+        Animator.SetBool(WasHitTrigger, false);
         Animator.SetBool(KnockdownKey, true);
         if (AssociatedCharacterStats.CurrentHealth >= 0)
         {
@@ -111,7 +114,8 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         Hitstun = 0;
         Animator.SetBool(HitstunTrigger, false);
-        Animator.SetBool(KnockdownKey, true);
+        Animator.SetBool(WasHitTrigger, false);
+        Animator.SetBool(KnockdownKey, false);
         StopInteractionCoroutine(WakeupCoroutine);
         StopInteractionCoroutine(HitstunCoroutine);
         StopInteractionCoroutine(PushbackCoroutine);
@@ -131,11 +135,10 @@ public class CharacterInteractionHandler : InteractionHandler
 
             if (didMoveLand)
             {
-                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple)) || AssociatedCharacterStats.CurrentHealth <= 0;
+                IsKnockedDown = (didMoveLand && (hitData.Knockdown || height == HitType.Crumple))|| AssociatedCharacterStats.CurrentHealth <= 0;
 
                 Animator.SetBool(KnockdownKey, IsKnockedDown);
                 Animator.SetInteger(HitHeightKey, (int)height);
-
             }
             else
             {
@@ -144,6 +147,7 @@ public class CharacterInteractionHandler : InteractionHandler
             }
 
             Animator.SetBool(HitstunTrigger, true);
+            Animator.SetTrigger(WasHitTrigger);
             Hitstun = frames;
 
             if (HitstunCoroutine != null)
@@ -164,12 +168,14 @@ public class CharacterInteractionHandler : InteractionHandler
 
             UnityAction onPauseComplete = () =>
             {
+
                 int direction = hitPosition > transform.position.x ? -1 : 1;
                 Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
                 destinationVelocity.x *= direction;
 
+                bool forceMovement = MovementMechanics.IsInAir || height == HitType.Launch || height == HitType.Knockdown || height == HitType.HitToWall;
 
-                if (!MovementMechanics.IsInAir)
+                if (!forceMovement)
                 {
                     if (PushbackCoroutine != null)
                     {
@@ -181,6 +187,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 else
                 {
                     MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
+
                 }
 
                 HitstunCoroutine = HandleHitstun();
@@ -309,6 +316,7 @@ public class CharacterInteractionHandler : InteractionHandler
             }
         }
         Animator.SetBool(HitstunTrigger, false);
+        Animator.SetBool(WasHitTrigger, false);
         Animator.SetInteger(HitHeightKey, -1);
         HitstunCoroutine = null;
     }

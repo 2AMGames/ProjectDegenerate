@@ -124,10 +124,8 @@ public class MovementMechanics : MonoBehaviour {
     {
         UpdateVelocity();
 
-        if (anim && anim.runtimeAnimatorController)
-        {
-            anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
-        }
+        anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
+        
 
         if (Overseer.Instance.GameReady)
         {
