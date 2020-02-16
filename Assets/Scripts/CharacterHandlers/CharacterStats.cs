@@ -160,6 +160,7 @@ public class CharacterStats : MonoBehaviour
     private void Update()
     {
         Anim.SetBool("IsCrouching", MovementMechanics.IsCrouching);
+        MovementMechanics.UpdateVerticalVelocity();
     }
 
     #endregion

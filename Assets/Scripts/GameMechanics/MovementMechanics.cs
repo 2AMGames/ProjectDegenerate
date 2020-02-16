@@ -12,9 +12,10 @@ public class MovementMechanics : MonoBehaviour {
 
     #region const variables
 
+    public const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
+
     private const string IN_AIR_ANIMATION_PARAMETER = "InAir";
     private const string IS_CROUCHING_PARAMETER = "IsCrouching";
-    private const string VERTICAL_SPEED_ANIMATION_PARAMETER = "VerticalSpeed";
     private const string HORIZONTAL_INPUT = "HorizontalInput";
     private const string VERTICAL_INPUT = "VerticalInput";
     private const string DashCount= "DashCount";
@@ -124,9 +125,6 @@ public class MovementMechanics : MonoBehaviour {
     {
         UpdateVelocity();
 
-        anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
-        
-
         if (Overseer.Instance.GameReady)
         {
             PlayerController opponent = Overseer.Instance.GetNextCharacterByIndex(GetComponent<CharacterStats>().PlayerIndex);
@@ -231,6 +229,11 @@ public class MovementMechanics : MonoBehaviour {
         {
             SetSpriteFlipped(true);
         }
+    }
+
+    public void UpdateVerticalVelocity()
+    {
+        anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
     }
 
     #endregion
