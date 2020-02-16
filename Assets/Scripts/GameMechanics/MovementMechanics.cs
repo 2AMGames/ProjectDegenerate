@@ -417,6 +417,10 @@ public class MovementMechanics : MonoBehaviour {
         Vector2 newVelocity = Vector2.Lerp(startingVector, destinationVector, lerpValue);
         rigid.Velocity = newVelocity;
         anim.SetFloat(VERTICAL_SPEED_ANIMATION_PARAMETER, rigid.Velocity.y);
+        if (rigid.Velocity.y > 0)
+        {
+            rigid.OnPhysicsObjectAirborne();
+        }
     }
 
     #endregion
