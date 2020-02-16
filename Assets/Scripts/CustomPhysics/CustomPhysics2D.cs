@@ -117,7 +117,6 @@ public class CustomPhysics2D : MonoBehaviour {
         if (!isInAir && Mathf.Abs(Velocity.y) > 0)
         {
             OnPhysicsObjectAirborne();
-            this.isInAir = true;
         }
 
         if (!useGravity || UseAnimatorVelocity || (AssociatedCharacterStats != null && !AssociatedCharacterStats.ShouldCharacterMove))
@@ -169,6 +168,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     public void OnPhysicsObjectGrounded()
     {
+        isInAir = false;
         if (OnGroundedEvent == null) return;
         OnGroundedEvent();
     }
@@ -178,6 +178,7 @@ public class CustomPhysics2D : MonoBehaviour {
     /// </summary>
     public void OnPhysicsObjectAirborne()
     {
+        isInAir = true;
         if (OnAirborneEvent == null) return;
         OnAirborneEvent();
     }
