@@ -57,6 +57,7 @@ public class GameStateManager : MonoBehaviour
     /// </summary>
     public float? RoundTimeLimit = null;
 
+    [NonSerialized]
     public short RoundCount = 1;
 
     public short RoundCountLimit;

@@ -425,7 +425,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.1
-        value: {x: -0.87, y: 0.611, z: 0}
+        value: {x: -0.797, y: 0.611, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -459,7 +459,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.1
-        value: {x: -0.87, y: 0.361, z: 0}
+        value: {x: -0.797, y: 0.361, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -2009,7 +2009,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: 0.835
+        value: 0.92
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2083,7 +2083,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: 0.835
+        value: 0.92
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -5807,7 +5807,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: 0.835
+        value: 0.92
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -5881,7 +5881,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: -0.87
+        value: -0.797
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -5992,7 +5992,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: 0.835
+        value: 0.92
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -6112,7 +6112,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.1
-        value: -0.87
+        value: -0.797
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
