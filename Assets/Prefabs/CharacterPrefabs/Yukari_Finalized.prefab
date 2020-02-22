@@ -558,7 +558,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6047545195578179553}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 14bb5d121ef97264db0b728605adefef, type: 2}
   m_CullingMode: 0
@@ -597,7 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DirectionalInputRecordList: []
 --- !u!114 &9112828447883429365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,7 +604,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6047545195578179553}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a557c5d2ed9cbd48835cf63457f344a, type: 3}
   m_Name: 
@@ -665,9 +664,8 @@ MonoBehaviour:
   CharacterMoves:
   - MoveName: Yukari_KickLight
     SpecialMeterRequired: 0
-    Height: 1
     Hits:
-    - Knockdown: 1
+    - HitType: 3
       HitDamage: 8
       OnHitFrames: 8
       HitMeterGain: 8
@@ -679,9 +677,8 @@ MonoBehaviour:
       GuardBreak: 0
   - MoveName: Yukari_KickMedium
     SpecialMeterRequired: 0
-    Height: 2
     Hits:
-    - Knockdown: 0
+    - HitType: 3
       HitDamage: 12
       OnHitFrames: 12
       HitMeterGain: 12

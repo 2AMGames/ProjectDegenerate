@@ -533,7 +533,7 @@ public class CommandInterpreter : MonoBehaviour
         if (dpIndex >= 0)
         {
             OnDirectionalInputExecuted(dpIndex, DP_INPUT, DP_ANIM_TRIGGER);
-            Debug.LogWarning("DP Successful");
+            //Debug.LogWarning("DP Successful");
             return;
         }
 
@@ -541,7 +541,7 @@ public class CommandInterpreter : MonoBehaviour
         if (qcbIndex >= 0)
         {
             OnDirectionalInputExecuted(qcbIndex, QCB_INPUT, QCB_ANIM_TRIGGER);
-            Debug.LogWarning("QCB Successful");
+            //Debug.LogWarning("QCB Successful");
             return;
         }
 
@@ -549,7 +549,7 @@ public class CommandInterpreter : MonoBehaviour
         if (qcfIndex >= 0)
         {
             OnDirectionalInputExecuted(qcfIndex, QCF_INPUT, QCF_ANIM_TRIGGER);
-            Debug.LogWarning("QCF successful");
+            //Debug.LogWarning("QCF successful");
             return;
         }
     }
@@ -577,7 +577,7 @@ public class CommandInterpreter : MonoBehaviour
         if (sJumpIndex >= 0)
         {
             OnDirectionalInputExecuted(sJumpIndex, S_JUMP_INPUT, S_JUMP_ANIM_TRIGGER);
-            Debug.LogWarning("Super Jump Successful");
+            //Debug.LogWarning("Super Jump Successful");
             return;
         }
 
@@ -585,7 +585,7 @@ public class CommandInterpreter : MonoBehaviour
         if (doubleDownIndex >= 0)
         {
             OnDirectionalInputExecuted(doubleDownIndex, DOUBLE_DOWN_INPUT, DOUBLE_DOWN_ANIM_TRIGGER);
-            Debug.LogWarning("Double Down Successful");
+            //Debug.LogWarning("Double Down Successful");
             return;
         }
     }
