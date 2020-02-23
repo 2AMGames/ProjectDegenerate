@@ -167,6 +167,8 @@ public abstract class InteractionHandler : MonoBehaviour
         [Header("Move Info")]
         public string MoveName;
 
+        public AnimationClip AnimationClip;
+
         public float SpecialMeterRequired;
 
         public HitData[] Hits;

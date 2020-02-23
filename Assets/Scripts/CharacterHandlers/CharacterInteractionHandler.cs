@@ -84,7 +84,10 @@ public class CharacterInteractionHandler : InteractionHandler
         CharacterMoveDict = new Dictionary<string, MoveData>();
         foreach (MoveData move in CharacterMoves)
         {
-            CharacterMoveDict.Add(move.MoveName, move);
+            if (move.AnimationClip != null)
+            {
+                CharacterMoveDict.Add(move.AnimationClip.name, move);
+            }
         }
     }
 
@@ -93,7 +96,10 @@ public class CharacterInteractionHandler : InteractionHandler
         CharacterMoveDict = new Dictionary<string, MoveData>();
         foreach (MoveData move in CharacterMoves)
         {
-            CharacterMoveDict.Add(move.MoveName, move);
+            if (move.AnimationClip != null)
+            {
+                CharacterMoveDict.Add(move.AnimationClip.name, move);
+            }
         }
     }
 
