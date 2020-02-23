@@ -291,15 +291,15 @@ public class CharacterStats : MonoBehaviour
 
         MovementMechanics.TranslateForcedMovement(Vector2.zero, Vector2.zero, 1);
         CommandInterpreter.ResetInterpreter();
-        Anim.SetInteger(Win_State, -1);
+        Anim.SetInteger(Win_State, 0);
 
         gameObject.GetComponent<AnimationSpeedController>().Start();
     }
 
-    public void OnPlayerWin(bool matchWon)
+    public void OnRoundEnd(bool playerWon)
     {
         CommandInterpreter.ResetInterpreter();
-        Anim.SetInteger(Win_State, matchWon ? 1 : 0);
+        Anim.SetInteger(Win_State, playerWon ? 1 : -1);
     }
 
     #endregion

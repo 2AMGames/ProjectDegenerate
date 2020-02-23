@@ -220,6 +220,7 @@ public class GameStateManager : MonoBehaviour
         {
             if (player.CharacterStats.CurrentHealth <= 0)
             {
+                player.CharacterStats.OnRoundEnd(false);
                 playersThatWon.Remove(player);
             }
         }
@@ -243,14 +244,18 @@ public class GameStateManager : MonoBehaviour
         float player2Health = (playersThatWon[1].CharacterStats.CurrentHealth + playersThatWon[1].CharacterStats.CurrentChipDamage) / playersThatWon[1].CharacterStats.MaxHealth;
         if (player1Health.Equals(player2Health))
         {
+            playersThatWon[0].CharacterStats.OnRoundEnd(false);
+            playersThatWon[1].CharacterStats.OnRoundEnd(false);
             return;
         }
         if (player1Health > player2Health)
         {
+            playersThatWon[1].CharacterStats.OnRoundEnd(false);
             playersThatWon.RemoveAt(1);
         }
         else
         {
+            playersThatWon[0].CharacterStats.OnRoundEnd(false);
             playersThatWon.RemoveAt(0);
         }
     }
@@ -281,6 +286,7 @@ public class GameStateManager : MonoBehaviour
 
         if (matchWinner != null)
         {
+            matchWinner.CharacterStats.OnRoundEnd(true);
             Overseer.Instance.OnMatchEnd(matchWinner);
         }
         else if (RoundCount >= RoundCountLimit)

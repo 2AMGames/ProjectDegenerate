@@ -129,10 +129,7 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         AllowInput = false;
         bool draw = winningPlayers.Count > 1;
         Debug.Log("Round ended. Winner: " + (!draw? winningPlayers[0].PlayerIndex.ToString() : "Draw"));
-        foreach(PlayerController player in winningPlayers)
-        {
-            player.CharacterStats.OnPlayerWin(false);
-        }
+        winningPlayers[0].CharacterStats.OnRoundEnd(true);
         //SetGameReady(false);
         //GameStateManager.Instance.PrepareNextRound();
        // StartRound();
@@ -144,11 +141,6 @@ public class Overseer : MonoBehaviour, IOnEventCallback, IInRoomCallbacks
         Debug.LogWarning("Match end. Winner: " + (winningPlayer != null ? winningPlayer.PlayerIndex.ToString() : "Draw"));
 
         AllowInput = false;
-
-        if (winningPlayer)
-        {
-            winningPlayer.CharacterStats.OnPlayerWin(true);
-        }
 
         //SetGameReady(false);
         //PostMatchUiGameObject.SetupPanel(winningPlayer);
