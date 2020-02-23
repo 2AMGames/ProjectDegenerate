@@ -82,16 +82,15 @@ public class CharacterInteractionHandler : InteractionHandler
         AssociatedCharacterStats = GetComponent<CharacterStats>();
         MovementMechanics = GetComponent<MovementMechanics>();
         CharacterMoveDict = new Dictionary<string, MoveData>();
-        SetCharacterMoveDictionary();
+        SetCharacterMoveDictionary(true);
     }
 
     private void OnValidate()
     {
-        CharacterMoveDict = new Dictionary<string, MoveData>();
-        SetCharacterMoveDictionary();
+        SetCharacterMoveDictionary(false);
     }
 
-    private void SetCharacterMoveDictionary()
+    private void SetCharacterMoveDictionary(bool addDictionary)
     {
         for(int index = 0; index < CharacterMoves.Count; ++index)
         {
@@ -99,7 +98,11 @@ public class CharacterInteractionHandler : InteractionHandler
             if (move.AnimationClip != null)
             {
                 move.MoveName = move.AnimationClip.name;
-                CharacterMoveDict.Add(move.AnimationClip.name, move);
+                if (addDictionary)
+                {
+                    CharacterMoveDict.Add(move.MoveName, move);
+                }
+                CharacterMoves[index] = move;
             }
         }
     }
