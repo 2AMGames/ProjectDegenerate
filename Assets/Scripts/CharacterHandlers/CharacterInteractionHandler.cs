@@ -197,6 +197,10 @@ public class CharacterInteractionHandler : InteractionHandler
                 }
                 else
                 {
+                    if (type == HitType.AirCombo && didMoveLand && MovementMechanics.IsInAir && enemyHitbox.AssociatedCharacterStats.MovementMechanics.IsInAir)
+                    {
+                        destinationVelocity = enemyHitbox.AssociatedCharacterStats.MovementMechanics.GetVelocity();
+                    }
                     MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
 
                 }
