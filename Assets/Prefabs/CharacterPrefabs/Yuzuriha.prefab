@@ -218,6 +218,7 @@ MonoBehaviour:
   MoveHitPlayer: 0
   CharacterMoves:
   - MoveName: Low_Kick
+    AnimationClip: {fileID: 7400000, guid: e1d897312ca544340b821ab001cf5086, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 2
@@ -231,6 +232,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   - MoveName: Medium_Slash
+    AnimationClip: {fileID: 7400000, guid: c09efb252ef5ca8489cf4bdfa18e1762, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 4
@@ -244,6 +246,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
   - MoveName: Heavy_Slash
+    AnimationClip: {fileID: 7400000, guid: 8a25de61e4fb79e448373b53842616fc, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 4
@@ -257,6 +260,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
   - MoveName: Cr_Light
+    AnimationClip: {fileID: 7400000, guid: b7b08e9be06755f439daf77011b04532, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 2
@@ -270,6 +274,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
   - MoveName: Cr_Medium
+    AnimationClip: {fileID: 7400000, guid: 232495a2d2753cc47bddd1235260081a, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
@@ -283,6 +288,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   - MoveName: Cr_Hard
+    AnimationClip: {fileID: 7400000, guid: bbde0846391e57c42b5ef8678fb8bbff, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 2
@@ -306,6 +312,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 8, y: 0}
       GuardBreak: 0
   - MoveName: Back_Hard
+    AnimationClip: {fileID: 7400000, guid: efc9bad30d1d5c8488d78383aaf1e402, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
@@ -349,6 +356,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 4, y: 0}
       GuardBreak: 0
   - MoveName: Back_Medium
+    AnimationClip: {fileID: 0}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 0
@@ -362,6 +370,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 6, y: 0}
       GuardBreak: 0
   - MoveName: Air_Light
+    AnimationClip: {fileID: 7400000, guid: 1d07eeff8a3805642bb0e9ff9d49a341, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 5
@@ -375,6 +384,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   - MoveName: Air_Medium
+    AnimationClip: {fileID: 7400000, guid: 392c12411c6c2ed4db1a4b9ecb183832, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 5
@@ -388,6 +398,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 3, y: 0}
       GuardBreak: 0
   - MoveName: Air_Down_Hard
+    AnimationClip: {fileID: 7400000, guid: 99866ee1770e38542b1ae7c4c70068ae, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 5
@@ -401,6 +412,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 5, y: -3}
       GuardBreak: 0
   - MoveName: Air_Hard
+    AnimationClip: {fileID: 7400000, guid: d1c1695cbf0bcf043a6c09a5277300c8, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 6

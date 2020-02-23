@@ -82,22 +82,23 @@ public class CharacterInteractionHandler : InteractionHandler
         AssociatedCharacterStats = GetComponent<CharacterStats>();
         MovementMechanics = GetComponent<MovementMechanics>();
         CharacterMoveDict = new Dictionary<string, MoveData>();
-        foreach (MoveData move in CharacterMoves)
-        {
-            if (move.AnimationClip != null)
-            {
-                CharacterMoveDict.Add(move.AnimationClip.name, move);
-            }
-        }
+        SetCharacterMoveDictionary();
     }
 
     private void OnValidate()
     {
         CharacterMoveDict = new Dictionary<string, MoveData>();
-        foreach (MoveData move in CharacterMoves)
+        SetCharacterMoveDictionary();
+    }
+
+    private void SetCharacterMoveDictionary()
+    {
+        for(int index = 0; index < CharacterMoves.Count; ++index)
         {
+            MoveData move = CharacterMoves[index];
             if (move.AnimationClip != null)
             {
+                move.MoveName = move.AnimationClip.name;
                 CharacterMoveDict.Add(move.AnimationClip.name, move);
             }
         }
