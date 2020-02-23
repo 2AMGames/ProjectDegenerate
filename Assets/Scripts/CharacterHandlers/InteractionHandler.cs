@@ -154,6 +154,7 @@ public abstract class InteractionHandler : MonoBehaviour
         Mid,
         High,
         Air,
+        AirCombo,
         Launch,
         HitToWall
     }

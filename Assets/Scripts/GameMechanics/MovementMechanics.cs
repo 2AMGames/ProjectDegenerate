@@ -426,6 +426,11 @@ public class MovementMechanics : MonoBehaviour {
         }
     }
 
+    public Vector2 GetVelocity()
+    {
+        return rigid.Velocity;
+    }
+
     #endregion
 
 }
