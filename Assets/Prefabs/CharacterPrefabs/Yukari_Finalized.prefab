@@ -474,7 +474,7 @@ GameObject:
   - component: {fileID: 9112828447883429365}
   - component: {fileID: 8125535387021769223}
   - component: {fileID: 6864074791614402616}
-  - component: {fileID: 2212543520979167734}
+  - component: {fileID: 1847361021}
   m_Layer: 10
   m_Name: Yukari_Finalized
   m_TagString: Untagged
@@ -647,7 +647,7 @@ MonoBehaviour:
   - {fileID: 5450580602327996306}
   - {fileID: 2457022297807043721}
   - {fileID: 4174013464298900068}
---- !u!114 &2212543520979167734
+--- !u!114 &1847361021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -663,6 +663,7 @@ MonoBehaviour:
   MoveHitPlayer: 0
   CharacterMoves:
   - MoveName: Yukari_KickLight
+    AnimationClip: {fileID: 7400000, guid: e9c52a07ecadac049bed3c692a0b8ed1, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
@@ -676,6 +677,7 @@ MonoBehaviour:
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
   - MoveName: Yukari_KickMedium
+    AnimationClip: {fileID: 7400000, guid: eef24218e64c45d438d60153d9a10aba, type: 2}
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
@@ -688,8 +690,105 @@ MonoBehaviour:
       ChipMeterGain: 12
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
-  CurrentComboCount: 0
-  CanPlayerBlock: 0
+  - MoveName: Yukari_PunchLight
+    AnimationClip: {fileID: 7400000, guid: 0f66cd10e8092114eb16a33795d1f586, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 3
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_CrouchKickLight
+    AnimationClip: {fileID: 7400000, guid: 5df51fb48f8a5dc468634170d4a59e18, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 2
+      HitDamage: 5
+      OnHitFrames: 15
+      HitMeterGain: 20
+      OnHitKnockback: {x: 2, y: 0}
+      ChipDamage: 1
+      OnGuardFrames: 10
+      ChipMeterGain: 2
+      OnGuardKnockback: {x: 1, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_PersonaCrouch01
+    AnimationClip: {fileID: 7400000, guid: 1baedf250e0738c4291c067174dc51c1, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 3
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_CrouchKickMedium
+    AnimationClip: {fileID: 7400000, guid: 4304b7559361cb945b4ecb43493b876c, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 0
+      HitDamage: 20
+      OnHitFrames: 25
+      HitMeterGain: 25
+      OnHitKnockback: {x: 0.5, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 12
+      ChipMeterGain: 5
+      OnGuardKnockback: {x: 3, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_AirKick
+    AnimationClip: {fileID: 7400000, guid: 62dedea0e92618b4d870768da26dd906, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 5
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_PersonaAir
+    AnimationClip: {fileID: 7400000, guid: a95cb91799d70024eb6dbb1c1c171f82, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 3
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_PersonaAir3
+    AnimationClip: {fileID: 7400000, guid: 9e2e1506a32e949428a9731db3f7f89a, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 3
+      HitDamage: 12
+      OnHitFrames: 12
+      HitMeterGain: 12
+      OnHitKnockback: {x: 4, y: 0}
+      ChipDamage: 12
+      OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  CanPlayerBlock: 1
   Hitstun: 0
   IsKnockedDown: 0
 --- !u!1 &6177507528142869129

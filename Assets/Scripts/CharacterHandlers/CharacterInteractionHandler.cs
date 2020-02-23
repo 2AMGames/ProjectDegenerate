@@ -46,7 +46,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
     #region Interaction Data
 
-    public int CurrentComboCount;
+    public int CurrentComboCount { get; set; }
 
     /// <summary>
     /// True if the player can block any incoming attacks. Should be set by the animator.
