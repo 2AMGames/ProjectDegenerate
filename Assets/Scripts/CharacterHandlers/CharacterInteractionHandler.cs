@@ -159,12 +159,18 @@ public class CharacterInteractionHandler : InteractionHandler
 
             Animator.SetBool(HitstunTrigger, true);
             Animator.SetTrigger(WasHitTrigger);
-            Hitstun = frames;
 
-            if (HitstunCoroutine != null)
+            float hitPosition = enemyHitbox.InteractionHandler.transform.position.x;
+            int direction = hitPosition > transform.position.x ? -1 : 1;
+            Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
+            destinationVelocity.x *= direction;
+            if (type == HitType.AirCombo && didMoveLand && MovementMechanics.IsInAir && enemyHitbox.AssociatedCharacterStats.MovementMechanics.IsInAir)
             {
-                StopCoroutine(HitstunCoroutine);
+                destinationVelocity = enemyHitbox.AssociatedCharacterStats.MovementMechanics.GetVelocity();
             }
+            MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
+
+            Hitstun = frames;
             if (HitConfirmCoroutine != null)
             {
                 StopCoroutine(HitConfirmCoroutine);
@@ -175,14 +181,9 @@ public class CharacterInteractionHandler : InteractionHandler
             }
 
             MovementMechanics.FlipSpriteBasedOnOpponentDirection(enemyHitbox.AssociatedCharacterStats.transform, true);
-            float hitPosition = enemyHitbox.InteractionHandler.transform.position.x;
 
             UnityAction onPauseComplete = () =>
             {
-
-                int direction = hitPosition > transform.position.x ? -1 : 1;
-                Vector2 destinationVelocity = didMoveLand ? hitData.OnHitKnockback : hitData.OnGuardKnockback;
-                destinationVelocity.x *= direction;
 
                 bool forceMovement = MovementMechanics.IsInAir || type == HitType.Launch || type == HitType.Knockdown || type == HitType.HitToWall;
 
@@ -195,18 +196,12 @@ public class CharacterInteractionHandler : InteractionHandler
                     PushbackCoroutine = HandlePushback(destinationVelocity);
                     StartCoroutine(PushbackCoroutine);
                 }
-                else
+
+                if (HitstunCoroutine == null)
                 {
-                    if (type == HitType.AirCombo && didMoveLand && MovementMechanics.IsInAir && enemyHitbox.AssociatedCharacterStats.MovementMechanics.IsInAir)
-                    {
-                        destinationVelocity = enemyHitbox.AssociatedCharacterStats.MovementMechanics.GetVelocity();
-                    }
-                    MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVelocity, 1);
-
+                    HitstunCoroutine = HandleHitstun();
+                    StartCoroutine(HitstunCoroutine);
                 }
-
-                HitstunCoroutine = HandleHitstun();
-                StartCoroutine(HitstunCoroutine);
 
                 if (ComboTrackingCoroutine == null)
                 {
@@ -250,17 +245,21 @@ public class CharacterInteractionHandler : InteractionHandler
             StopCoroutine(PushbackCoroutine);
         }
 
+        CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
+        Vector2 destinationVector = Vector2.zero;
+        if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0 && !MovementMechanics.IsInAir)
+        {
+            destinationVector = new Vector2(didMoveLand ? hitData.OnHitKnockback.x : hitData.OnGuardKnockback.x, 0);
+            destinationVector.x *= Mathf.Sign(enemyPhysics.isTouchingSide.x) * -1;
+        }
+        MovementMechanics.TranslateForcedMovement(Vector2.zero, destinationVector, 1);
+
         UnityAction onPauseComplete = () =>
         {
-
             // Handle case where player hit an enemy that is against a wall / static collider.
             // We should push this player away in this case.
-            CustomPhysics2D enemyPhysics = enemyHurtbox.InteractionHandler.GetComponent<CustomPhysics2D>();
-
             if (Mathf.Abs(enemyPhysics.isTouchingSide.x) > 0 && !MovementMechanics.IsInAir)
             {
-                Vector2 destinationVector = new Vector2(didMoveLand ? hitData.OnHitKnockback.x : hitData.OnGuardKnockback.x, 0);
-                destinationVector.x *= Mathf.Sign(enemyPhysics.isTouchingSide.x) * -1;
                 PushbackCoroutine = HandlePushback(destinationVector);
                 StartCoroutine(PushbackCoroutine);
             }
