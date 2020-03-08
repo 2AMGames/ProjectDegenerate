@@ -67,7 +67,7 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         base.OnMoveBegin();
         StopInteractionCoroutine(PushbackCoroutine);
-        Animator.SetBool(DID_MOVE_LAND, false);
+        Animator.ResetTrigger(DID_MOVE_LAND);
         if (!MovementMechanics.IsInAir)
         {
             MovementMechanics.TranslateForcedMovement(Vector3.zero, Vector3.zero, 0);
@@ -268,7 +268,7 @@ public class CharacterInteractionHandler : InteractionHandler
 
         if (didMoveLand)
         {
-            Animator.SetTrigger(DID_MOVE_LAND);
+            TriggerDidMoveLandInAnimator();
             HitConfirmCoroutine = PauseHandlerOnHit(onPauseComplete);
             StartCoroutine(HitConfirmCoroutine);
         }
@@ -276,6 +276,14 @@ public class CharacterInteractionHandler : InteractionHandler
         {
             onPauseComplete();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void TriggerDidMoveLandInAnimator()
+    {
+        Animator.SetTrigger(DID_MOVE_LAND);
     }
 
     public override void OnClash(Hitbox enemyHitbox)
