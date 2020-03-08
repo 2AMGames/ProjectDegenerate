@@ -33,9 +33,8 @@ public class AnimationSpeedController : MonoBehaviour
     {
         while (true)
         {
-            SetAnimationSpeed();
             yield return null;
-
+            SetAnimationSpeed();
         }
     }
 
