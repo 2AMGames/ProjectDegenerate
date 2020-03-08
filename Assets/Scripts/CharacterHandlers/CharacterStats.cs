@@ -236,7 +236,6 @@ public class CharacterStats : MonoBehaviour
     public void ComboFinished()
     {
         ComboDamage = 0;
-
         if (ChipDamageCoroutine != null)
         {
             StopCoroutine(ChipDamageCoroutine);

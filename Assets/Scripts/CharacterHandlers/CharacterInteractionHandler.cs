@@ -208,7 +208,7 @@ public class CharacterInteractionHandler : InteractionHandler
                 HitstunCoroutine = HandleHitstun();
                 StartCoroutine(HitstunCoroutine);
 
-                if (ComboTrackingCoroutine == null && didMoveLand)
+                if (ComboTrackingCoroutine == null)
                 {
                     InteractionHandler handler = enemyHitbox.InteractionHandler;
                     if (handler is ProjectileInteractionHandler)
@@ -378,6 +378,10 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         yield return new WaitForEndOfFrame();
         while (!CanPlayerBlock)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        while (Hitstun > 0)
         {
             yield return new WaitForEndOfFrame();
         }

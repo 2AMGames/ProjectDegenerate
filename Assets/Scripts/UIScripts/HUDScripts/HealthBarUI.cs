@@ -47,7 +47,7 @@ public class HealthBarUI : MonoBehaviour
     #region visually update methods
     private void OnCharacterHealthUpdated()
     {
-        healthSlider.value = associatedCharacterStats.CurrentHealth / associatedCharacterStats.MaxHealth;
+        healthSlider.value = (associatedCharacterStats.CurrentHealth - associatedCharacterStats.CurrentChipDamage) / associatedCharacterStats.MaxHealth;
         chipDamageSlider.value = (associatedCharacterStats.CurrentHealth + associatedCharacterStats.CurrentChipDamage) / associatedCharacterStats.MaxHealth;
         comboDamageSlider.value = (associatedCharacterStats.CurrentHealth + associatedCharacterStats.ComboDamage) / associatedCharacterStats.MaxHealth;
     }
