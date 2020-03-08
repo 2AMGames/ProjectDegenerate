@@ -80,6 +80,8 @@ public class CharacterStats : MonoBehaviour
 
     public CommandInterpreter CommandInterpreter { get; private set;}
 
+    public CharacterInteractionHandler CharacterInteractionHandler { get; private set; }
+
     /// <summary>
     /// Character State
     /// </summary>
@@ -137,6 +139,7 @@ public class CharacterStats : MonoBehaviour
     {
         MovementMechanics = GetComponent<MovementMechanics>();
         CommandInterpreter = GetComponent<CommandInterpreter>();
+        CharacterInteractionHandler = GetComponent<CharacterInteractionHandler>();
         Anim = GetComponent<Animator>();
 
         CurrentHealth = MaxHealth;

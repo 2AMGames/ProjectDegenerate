@@ -40,12 +40,7 @@ public class YukariArrow : BaseProjectile
     {
         base.SetupProjectile(characterStats);
 
-        associatedInteractionHandler.CurrentMove = new InteractionHandler.MoveData
-        {
-            MoveName = "BasicArrow",
-            SpecialMeterRequired = 0,
-            Hits = projectileHitDataList,
-        };
+        associatedInteractionHandler.CurrentMove = associatedCharacterStats.CharacterInteractionHandler.CurrentMove;
 
         DespawnCoroutine = StartCoroutine(DespawnAfterTime(DespawnTime));
 
@@ -79,6 +74,8 @@ public class YukariArrow : BaseProjectile
     /// </summary>
     public override void OnHitEnemy()
     {
+
+        associatedCharacterStats.CharacterInteractionHandler.TriggerDidMoveLandInAnimator();
         DespawnProjectile();
     }
 

@@ -75,7 +75,7 @@ public abstract class InteractionHandler : MonoBehaviour
     public void ResetMoveHit()
     {
         MoveHitPlayer = false;
-        Animator.SetBool(DID_MOVE_LAND, false);
+        Animator.ResetTrigger(DID_MOVE_LAND);
     }
 
     /// <summary>
