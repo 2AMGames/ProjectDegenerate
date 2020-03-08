@@ -40,7 +40,22 @@ public class PhysicsManager : MonoBehaviour
     {
         instance = this;
     }
-    private void LateUpdate()
+
+    private void Start()
+    {
+        StartCoroutine(UpdatePhysicsCoroutine());
+    }
+
+    private IEnumerator UpdatePhysicsCoroutine()
+    {
+        while (true)
+        {
+            PhysicsManagerUpdate();
+            yield return null;
+        }
+    }
+
+    private void PhysicsManagerUpdate()
     {
         if (!Overseer.Instance.GameReady)
         {
