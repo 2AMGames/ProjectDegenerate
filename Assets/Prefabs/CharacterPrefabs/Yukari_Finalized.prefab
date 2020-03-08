@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerIndex: 0
-  MaxHealth: 100
+  MaxHealth: 980
   MaxSpecialMeter: 1000
   SpecialMeter: 50
 --- !u!114 &8036782042374648530
@@ -668,12 +668,12 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
-      HitDamage: 8
+      HitDamage: 1
       OnHitFrames: 8
       HitMeterGain: 8
-      OnHitKnockback: {x: 10, y: 10}
-      ChipDamage: 8
-      OnGuardFrames: 8
+      OnHitKnockback: {x: 1, y: 0}
+      ChipDamage: 2
+      OnGuardFrames: 6
       ChipMeterGain: 8
       OnGuardKnockback: {x: 1, y: 0}
       GuardBreak: 0
@@ -682,13 +682,13 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
-      HitDamage: 12
+      HitDamage: 1
       OnHitFrames: 12
       HitMeterGain: 12
       OnHitKnockback: {x: 4, y: 0}
-      ChipDamage: 12
-      OnGuardFrames: 12
-      ChipMeterGain: 12
+      ChipDamage: 2
+      OnGuardFrames: 10
+      ChipMeterGain: 2
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   - MoveName: Yukari_PunchLight
@@ -696,13 +696,13 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Hits:
     - HitType: 3
-      HitDamage: 12
-      OnHitFrames: 12
+      HitDamage: 1
+      OnHitFrames: 20
       HitMeterGain: 12
       OnHitKnockback: {x: 4, y: 0}
-      ChipDamage: 12
-      OnGuardFrames: 12
-      ChipMeterGain: 12
+      ChipDamage: 3
+      OnGuardFrames: 10
+      ChipMeterGain: 10
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
   - MoveName: Yukari_CrouchKickLight
@@ -710,7 +710,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Hits:
     - HitType: 2
-      HitDamage: 5
+      HitDamage: 1
       OnHitFrames: 15
       HitMeterGain: 20
       OnHitKnockback: {x: 2, y: 0}
@@ -738,7 +738,7 @@ MonoBehaviour:
     SpecialMeterRequired: 0
     Hits:
     - HitType: 0
-      HitDamage: 20
+      HitDamage: 1
       OnHitFrames: 25
       HitMeterGain: 25
       OnHitKnockback: {x: 0.5, y: 0}
@@ -786,6 +786,34 @@ MonoBehaviour:
       OnHitKnockback: {x: 4, y: 0}
       ChipDamage: 12
       OnGuardFrames: 12
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_StandArrowStraight_Shoot1
+    AnimationClip: {fileID: 7400000, guid: 3fd2c160ff9d9364db261f6e570d318a, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 6
+      HitDamage: 1
+      OnHitFrames: 15
+      HitMeterGain: 12
+      OnHitKnockback: {x: 1.5, y: 13}
+      ChipDamage: 1
+      OnGuardFrames: 8
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_AirArrowStraight_Shoot1
+    AnimationClip: {fileID: 7400000, guid: fa8b547242266f2488c08e2e985346ee, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 5
+      HitDamage: 1
+      OnHitFrames: 15
+      HitMeterGain: 12
+      OnHitKnockback: {x: 1, y: 11}
+      ChipDamage: 1
+      OnGuardFrames: 8
       ChipMeterGain: 12
       OnGuardKnockback: {x: 2, y: 0}
       GuardBreak: 0
