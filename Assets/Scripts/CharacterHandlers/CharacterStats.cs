@@ -82,6 +82,8 @@ public class CharacterStats : MonoBehaviour
 
     public CharacterInteractionHandler CharacterInteractionHandler { get; private set; }
 
+    public SpriteRenderer CharacterSpriteRenderer { get; private set; }
+
     /// <summary>
     /// Character State
     /// </summary>
@@ -140,6 +142,7 @@ public class CharacterStats : MonoBehaviour
         MovementMechanics = GetComponent<MovementMechanics>();
         CommandInterpreter = GetComponent<CommandInterpreter>();
         CharacterInteractionHandler = GetComponent<CharacterInteractionHandler>();
+        CharacterSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         Anim = GetComponent<Animator>();
 
         CurrentHealth = MaxHealth;

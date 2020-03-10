@@ -26,7 +26,7 @@ public class DebugUI : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        this.gameObject.SetActive(!Overseer.Instance.DebugEnabled);
+        //this.gameObject.SetActive(!Overseer.Instance.DebugEnabled);
 
         
         debugTextElement.text = "";

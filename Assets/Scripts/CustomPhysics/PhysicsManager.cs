@@ -46,13 +46,20 @@ public class PhysicsManager : MonoBehaviour
         StartCoroutine(UpdatePhysicsCoroutine());
     }
 
+    
+    private void LateUpdate()
+    {
+        PhysicsManagerUpdate();
+    }
+
     private IEnumerator UpdatePhysicsCoroutine()
     {
-        while (true)
-        {
-            PhysicsManagerUpdate();
-            yield return null;
-        }
+        //while (true)
+        //{
+        //    PhysicsManagerUpdate();
+        //    yield return null;
+        //}
+        yield break;
     }
 
     private void PhysicsManagerUpdate()
@@ -133,7 +140,7 @@ public class PhysicsManager : MonoBehaviour
 
                 if (nonStaticCollider.ColliderIntersectHorizontally(staticCollider))
                 {
-                    DebugUI.Instance.DisplayDebugTextForFrames(nonStaticCollider.name + "::" + staticCollider.name);
+                    
                     collidedHorizontallyWithAnyStatic = true;
                     if (nonStaticCollider.rigid.Velocity.x > 0 && nonStaticCollider.rigid.isTouchingSide.x == 0)
                     {
@@ -168,6 +175,7 @@ public class PhysicsManager : MonoBehaviour
                     nonStaticCollider.originalVelocity.y = 0;
                     nonStaticCollider.UpdateBoundsOfCollider();
                 }
+                
             }
 
             if (!collidedVerticallyWithAnyStatic && Mathf.Abs(nonStaticCollider.rigid.Velocity.y) > 0)
@@ -178,7 +186,14 @@ public class PhysicsManager : MonoBehaviour
             {
                 nonStaticCollider.rigid.isTouchingSide.x = 0;
             }
+            if (Mathf.Abs(nonStaticCollider.rigid.isTouchingSide.x) > 0)
+            {
+                DebugUI.Instance.DisplayDebugTextForFrames(nonStaticCollider.name + ": " + nonStaticCollider.rigid.isTouchingSide.x, 1);
+            }
+
         }
+
+        
     }
 
     /// <summary>
@@ -247,7 +262,8 @@ public class PhysicsManager : MonoBehaviour
                     secondary = nonStaticColliderList[i];
                 }
                 
-                bool movingTheSameDirection = Mathf.Sign(primary.rigid.Velocity.x) == Mathf.Sign(secondary.rigid.Velocity.x);
+                bool movingTheSameDirection = Mathf.Sign(primary.rigid.Velocity.x) == Mathf.Sign(secondary.rigid.Velocity.x) && 
+                    primary.rigid.Velocity.x != 0;
 
 
 
