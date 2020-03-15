@@ -47,19 +47,15 @@ public class PhysicsManager : MonoBehaviour
     }
 
     
-    private void LateUpdate()
-    {
-        PhysicsManagerUpdate();
-    }
+   
 
     private IEnumerator UpdatePhysicsCoroutine()
     {
-        //while (true)
-        //{
-        //    PhysicsManagerUpdate();
-        //    yield return null;
-        //}
-        yield break;
+        while (true)
+        {
+            PhysicsManagerUpdate();
+            yield return null;
+        }
     }
 
     private void PhysicsManagerUpdate()
