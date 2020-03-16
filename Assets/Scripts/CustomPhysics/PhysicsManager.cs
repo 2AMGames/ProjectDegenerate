@@ -48,7 +48,11 @@ public class PhysicsManager : MonoBehaviour
 
     
    
-
+    /// <summary>
+    /// Coroutine to update our physics. This makes it so that we update our physics after every update() function has been carried out
+    /// and before any lateupdate method has started
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator UpdatePhysicsCoroutine()
     {
         while (true)
@@ -60,7 +64,7 @@ public class PhysicsManager : MonoBehaviour
 
     private void PhysicsManagerUpdate()
     {
-        if (!Overseer.Instance.GameReady)
+        if (!Overseer.Instance.GameReady)//Does not run physics if we are not currently playing the game
         {
             return;
         }
@@ -259,7 +263,7 @@ public class PhysicsManager : MonoBehaviour
                 }
                 
                 bool movingTheSameDirection = Mathf.Sign(primary.rigid.Velocity.x) == Mathf.Sign(secondary.rigid.Velocity.x) && 
-                    primary.rigid.Velocity.x != 0;
+                    primary.rigid.Velocity.x != 0 && secondary.rigid.Velocity.y != 0;
 
 
 
@@ -278,13 +282,6 @@ public class PhysicsManager : MonoBehaviour
                         secondary.rigid.Velocity.x = primary.rigid.Velocity.x;
                     }
                 }
-                //else if (secondary.ColliderIntersectHorizontally(primary))
-                //{
-                //    if (movingTheSameDirection)
-                //    {
-                //        primary.rigid.Velocity.x = secondary.rigid.Velocity.x;
-                //    }
-                //}
                 else
                 {
                     continue;//The two colliders did not intersect with each other
