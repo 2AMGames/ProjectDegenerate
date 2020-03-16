@@ -237,6 +237,7 @@ public class CommandInterpreter : MonoBehaviour
         }
     }
 
+    [SerializeField]
     private List<DirectionalinputStruct> DirectionalInputRecordList = new List<DirectionalinputStruct>();
 
     #endregion
