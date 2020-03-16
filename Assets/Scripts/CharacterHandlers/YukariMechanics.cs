@@ -61,5 +61,7 @@ public class YukariMechanics : MonoBehaviour
         }
         
     }
+
+
     #endregion event methods
 }
