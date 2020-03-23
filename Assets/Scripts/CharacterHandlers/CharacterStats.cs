@@ -137,7 +137,7 @@ public class CharacterStats : MonoBehaviour
 
     #region monobehaviour methods
 
-    private void Awake()
+    protected virtual void Awake()
     {
         MovementMechanics = GetComponent<MovementMechanics>();
         CommandInterpreter = GetComponent<CommandInterpreter>();
@@ -153,7 +153,7 @@ public class CharacterStats : MonoBehaviour
         OnCharacterHealthChanged.Invoke();
     }
 
-    private void OnValidate()
+    protected virtual void OnValidate()
     {
         SpecialMeter = Mathf.Max(0f, SpecialMeter);
         if (Anim)
@@ -163,7 +163,7 @@ public class CharacterStats : MonoBehaviour
         OnCharacterHealthChanged.Invoke();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         Anim.SetBool("IsCrouching", MovementMechanics.IsCrouching);
         MovementMechanics.UpdateVerticalVelocity();

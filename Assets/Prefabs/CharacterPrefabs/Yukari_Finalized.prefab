@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &400233994959041404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3846472705530932556}
+  m_Layer: 10
+  m_Name: IsisContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3846472705530932556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400233994959041404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4887159595518277564}
+  m_Father: {fileID: 128930532001717862}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &520647507122101901
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +441,20 @@ MonoBehaviour:
   currentIntersectingHitboxes: []
   ignoreParentScale: 0
   boxColliderSize: {x: 0.25, y: 0.25}
+--- !u!114 &378488536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4887159595518277565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208804ec66970e04cac689c3407752a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitIndex: 0
+  MoveHitPlayer: 0
 --- !u!1 &5111021019653828940
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +514,6 @@ GameObject:
   - component: {fileID: 2335272734438737452}
   - component: {fileID: 6922273094046920708}
   - component: {fileID: 41362844271019435}
-  - component: {fileID: 3281174741826793044}
   - component: {fileID: 8036782042374648530}
   - component: {fileID: 9112828447883429365}
   - component: {fileID: 8125535387021769223}
@@ -499,7 +543,7 @@ Transform:
   - {fileID: 5450580602327996306}
   - {fileID: 2457022297807043721}
   - {fileID: 4174013464298900068}
-  - {fileID: 4887159595518277564}
+  - {fileID: 3846472705530932556}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -570,22 +614,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3281174741826793044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6047545195578179553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80535f8c5e759664a969be0c1e46b106, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerIndex: 0
-  MaxHealth: 980
-  MaxSpecialMeter: 1000
-  SpecialMeter: 50
 --- !u!114 &8036782042374648530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,6 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9485d16809ccf584cb1ee0a53de28174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DirectionalInputRecordList: []
 --- !u!114 &9112828447883429365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,12 +671,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47c56e80f5283bd40926acbede40c91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerIndex: 0
+  MaxHealth: 980
+  MaxSpecialMeter: 1000
+  SpecialMeter: 50
   yukariArrowPrefab: {fileID: 3920821400113480562, guid: 970da521554034f449d683242cd318ab,
     type: 3}
   yukariArrowTransformReferenceList:
   - {fileID: 5450580602327996306}
   - {fileID: 2457022297807043721}
   - {fileID: 4174013464298900068}
+  associatedIsisMechanics: {fileID: 153583695}
 --- !u!114 &1847361021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,7 +705,7 @@ MonoBehaviour:
       HitDamage: 1
       OnHitFrames: 8
       HitMeterGain: 8
-      OnHitKnockback: {x: 1, y: 0}
+      OnHitKnockback: {x: 3.3, y: 0}
       ChipDamage: 2
       OnGuardFrames: 6
       ChipMeterGain: 8
@@ -713,11 +747,11 @@ MonoBehaviour:
       HitDamage: 1
       OnHitFrames: 15
       HitMeterGain: 20
-      OnHitKnockback: {x: 2, y: 0}
+      OnHitKnockback: {x: 2.5, y: 0}
       ChipDamage: 1
       OnGuardFrames: 10
       ChipMeterGain: 2
-      OnGuardKnockback: {x: 1, y: 0}
+      OnGuardKnockback: {x: 5, y: 0}
       GuardBreak: 0
   - MoveName: Yukari_PersonaCrouch01
     AnimationClip: {fileID: 7400000, guid: 1baedf250e0738c4291c067174dc51c1, type: 2}
@@ -737,11 +771,11 @@ MonoBehaviour:
     AnimationClip: {fileID: 7400000, guid: 4304b7559361cb945b4ecb43493b876c, type: 2}
     SpecialMeterRequired: 0
     Hits:
-    - HitType: 0
+    - HitType: 2
       HitDamage: 1
       OnHitFrames: 25
       HitMeterGain: 25
-      OnHitKnockback: {x: 0.5, y: 0}
+      OnHitKnockback: {x: 1, y: 0}
       ChipDamage: 2
       OnGuardFrames: 12
       ChipMeterGain: 5
@@ -798,6 +832,30 @@ MonoBehaviour:
       OnHitFrames: 15
       HitMeterGain: 12
       OnHitKnockback: {x: 1.5, y: 13}
+      ChipDamage: 1
+      OnGuardFrames: 8
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+  - MoveName: Yukari_StandArrowUp_Shoot3
+    AnimationClip: {fileID: 7400000, guid: 8a85aa78cec1ecc47a9e31c4f7b01c1b, type: 2}
+    SpecialMeterRequired: 0
+    Hits:
+    - HitType: 6
+      HitDamage: 1
+      OnHitFrames: 15
+      HitMeterGain: 12
+      OnHitKnockback: {x: 1.5, y: 9}
+      ChipDamage: 1
+      OnGuardFrames: 8
+      ChipMeterGain: 12
+      OnGuardKnockback: {x: 2, y: 0}
+      GuardBreak: 0
+    - HitType: 6
+      HitDamage: 1
+      OnHitFrames: 15
+      HitMeterGain: 12
+      OnHitKnockback: {x: 1.5, y: 15}
       ChipDamage: 1
       OnGuardFrames: 8
       ChipMeterGain: 12
@@ -1133,7 +1191,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 128930532001717862}
+    m_TransformParent: {fileID: 3846472705530932556}
     m_Modifications:
     - target: {fileID: 4887159595878229390, guid: 16522b2c1102a6e43a724ad25a62ffa4,
         type: 3}
@@ -1173,7 +1231,7 @@ PrefabInstance:
     - target: {fileID: 4887159595878229390, guid: 16522b2c1102a6e43a724ad25a62ffa4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4887159595878229390, guid: 16522b2c1102a6e43a724ad25a62ffa4,
         type: 3}
@@ -1202,12 +1260,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16522b2c1102a6e43a724ad25a62ffa4, type: 3}
+--- !u!1 &4887159595518277565 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4887159595878229391, guid: 16522b2c1102a6e43a724ad25a62ffa4,
+    type: 3}
+  m_PrefabInstance: {fileID: 460624434}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4887159595518277564 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4887159595878229390, guid: 16522b2c1102a6e43a724ad25a62ffa4,
     type: 3}
   m_PrefabInstance: {fileID: 460624434}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &153583695 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 307434109, guid: 16522b2c1102a6e43a724ad25a62ffa4,
+    type: 3}
+  m_PrefabInstance: {fileID: 460624434}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4887159595518277565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c1876b0c735c1498c1dec7ab1e9380, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3431482886603969493
 PrefabInstance:
   m_ObjectHideFlags: 0

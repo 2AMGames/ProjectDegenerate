@@ -88,8 +88,4 @@ public class YukariArrow : BaseProjectile
     }
 
     #endregion override methods
-
-    #region private methods
-
-    #endregion private methods
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// This class is used to carry out specific functions and mechanics that would only apply to the Character 'Yukari'
 /// </summary>
-public class YukariMechanics : MonoBehaviour
+public class YukariMechanics : CharacterStats
 {
     #region const variables
     /// <summary>
@@ -16,22 +16,25 @@ public class YukariMechanics : MonoBehaviour
     #endregion const variables
 
     #region main variables
+    [Header("Yukari Specific Values")]
     [Tooltip("A prefab reference to Yukaris Arrow projectile")]
     public YukariArrow yukariArrowPrefab;
     [Tooltip("A list of placeholder arrows that wil be swapped out for YukariArrowPrefab when it is shot. This simply shows a sprite representation of where the prefab will appear")]
     public Transform[] yukariArrowTransformReferenceList = new Transform[3];
+    [Tooltip("The associated Isis mechanics prefab that will be used with this character")]
+    public IsisMechanics associatedIsisMechanics;
 
     /// <summary>
     /// A reference to Yukari's Character Stats
     /// </summary>
-    private CharacterStats associatedCharacterStats;
     #endregion main variables
 
     #region monobehaivour methods
-    private void Awake()
+    protected override void Awake()
     {
-        associatedCharacterStats = GetComponent<CharacterStats>();
+        base.Awake();
         SpawnPool.Instance.InitializeSpawnPool(yukariArrowPrefab, INITIAL_YUKARI_ARROW_COUNT);//Initialize spawn pool so that we can appropriately use Yukari's arrows
+        associatedIsisMechanics.SetupIsis(this);
     }
     #endregion monobehaviour methods
 
@@ -49,7 +52,7 @@ public class YukariMechanics : MonoBehaviour
                 YukariArrow newlySpawnedArrow = SpawnPool.Instance.Spawn(yukariArrowPrefab);
 
                 newlySpawnedArrow.transform.SetParent(null);
-                newlySpawnedArrow.SetupProjectile(associatedCharacterStats);
+                newlySpawnedArrow.SetupProjectile(this);
 
                 newlySpawnedArrow.transform.position = yukariArrowTransformReference.position;
                 newlySpawnedArrow.transform.localScale = yukariArrowTransformReference.localScale;
@@ -59,9 +62,14 @@ public class YukariMechanics : MonoBehaviour
                 newlySpawnedArrow.LaunchProjectile();
             }
         }
-        
     }
 
-
+    /// <summary>
+    /// Call this event every time we attempt to call out Isis
+    /// </summary>
+    public void OnLaunchIsis(int attackID)
+    {
+        associatedIsisMechanics.BeginIsisAttack((IsisMechanics.IsisAttackAnimation)attackID);
+    }
     #endregion event methods
 }

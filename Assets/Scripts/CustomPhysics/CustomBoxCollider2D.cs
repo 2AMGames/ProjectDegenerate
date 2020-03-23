@@ -30,30 +30,16 @@ public class CustomBoxCollider2D : CustomCollider2D
 
     protected virtual void OnDrawGizmos()
     {
-        if (!Application.isPlaying)
-        {
-            UpdateBoundsOfCollider();
-        }
-
-
-        
-
 #if UNITY_EDITOR
-        //if (!isStatic)
-        //{
-        //    UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.verticalCheckBounds.topLeft.x, this.verticalCheckBounds.topLeft.y, verticalCheckBounds.bottomRight.x - verticalCheckBounds.topLeft.x, verticalCheckBounds.bottomRight.y - verticalCheckBounds.topLeft.y),
-        //        Color.cyan, Color.blue);
-        //    UnityEditor.Handles.DrawSolidRectangleWithOutline(new Rect(this.horizontalCheckBounds.topLeft.x, this.horizontalCheckBounds.topLeft.y, horizontalCheckBounds.bottomRight.x - horizontalCheckBounds.topLeft.x, horizontalCheckBounds.bottomRight.y - horizontalCheckBounds.topLeft.y),
-        //        Color.red, Color.yellow);
-        //}
+        UpdateBoundsOfCollider();
 
-#endif
         Color colorToDraw = GIZMO_COLOR;
 
         DebugSettings.DrawLine(bounds.bottomLeft, bounds.bottomRight, colorToDraw);
         DebugSettings.DrawLine(bounds.bottomRight, bounds.topRight, colorToDraw);
         DebugSettings.DrawLine(bounds.topRight, bounds.topLeft, colorToDraw);
         DebugSettings.DrawLine(bounds.topLeft, bounds.bottomLeft, colorToDraw);
+#endif
     }
 
 

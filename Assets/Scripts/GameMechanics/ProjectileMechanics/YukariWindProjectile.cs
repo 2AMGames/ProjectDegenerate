@@ -15,6 +15,8 @@ public class YukariWindProjectile : BaseProjectile
     public float bobbingFrequency = 100;
 
 
+
+
     #region monobehaviour methods
     private void Awake()
     {
