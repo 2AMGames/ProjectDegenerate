@@ -26,6 +26,15 @@ public class AnimationSpeedController : MonoBehaviour
         StartCoroutine(UpdateAnimatorCoroutine);
     }
 
+    public void OnDisable()
+    {
+        if (UpdateAnimatorCoroutine != null)
+        {
+            StopCoroutine(UpdateAnimatorCoroutine);
+        }
+
+    }
+
     #endregion
 
     #region private methods
