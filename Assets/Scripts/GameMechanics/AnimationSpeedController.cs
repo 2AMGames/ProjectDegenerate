@@ -35,7 +35,7 @@ public class AnimationSpeedController : MonoBehaviour
 
     private void SetAnimationSpeed()
     {
-        if (Overseer.Instance.GameReady && CharacterStats.ShouldCharacterMove)
+        if (Overseer.Instance.GameReady)
         {
             Anim.Update(Overseer.DELTA_TIME);
         }

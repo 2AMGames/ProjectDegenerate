@@ -91,6 +91,8 @@ public class CharacterStats : MonoBehaviour
 
     private Animator Anim;
 
+    private AnimationSpeedController AnimationSpeedController;
+
     [HideInInspector]
     public int PlayerIndex;
 
@@ -98,11 +100,10 @@ public class CharacterStats : MonoBehaviour
 
     #region main variables
 
-    [System.NonSerialized]
     /// <summary>
     /// If we are pausing the game due to the character being hit, this should be false.
     /// </summary>
-    public bool ShouldCharacterMove = true;
+    public bool ShouldCharacterMove { get; private set; }
 
     private IEnumerator ChipDamageCoroutine;
 
@@ -144,11 +145,13 @@ public class CharacterStats : MonoBehaviour
         CharacterInteractionHandler = GetComponent<CharacterInteractionHandler>();
         CharacterSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         Anim = GetComponent<Animator>();
+        AnimationSpeedController = GetComponent<AnimationSpeedController>();
 
         CurrentHealth = MaxHealth;
 
         SpecialMeter = MaxSpecialMeter / 2f;
         Anim.SetInteger(SpecialMeterParameter, (int)(SpecialMeter / SpecialMeterStockCount));
+        SetCharacterShouldMove(true);
 
         OnCharacterHealthChanged.Invoke();
     }
@@ -252,6 +255,12 @@ public class CharacterStats : MonoBehaviour
         OnCharacterHealthChanged.Invoke();
     }
 
+    public void SetCharacterShouldMove(bool shouldMove)
+    {
+        ShouldCharacterMove = shouldMove;
+        AnimationSpeedController.enabled = shouldMove;
+    }
+
     public void ApplyPlayerState(GameState.PlayerState playerState)
     {
         this.transform.position = playerState.PlayerPosition;
@@ -313,7 +322,6 @@ public class CharacterStats : MonoBehaviour
 
     private IEnumerator RecoverChipDamage()
     {
-
         float secondsToWait = ChipDamageRecoveryDelay;
         
         while (secondsToWait > 0.0f)

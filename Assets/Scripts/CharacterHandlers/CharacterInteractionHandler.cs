@@ -315,14 +315,15 @@ public class CharacterInteractionHandler : InteractionHandler
     {
         yield return new WaitForEndOfFrame();
         int framesToPause = GameStateManager.Instance.HitConfirmFrameDelay;
+        AssociatedCharacterStats.SetCharacterShouldMove(false);
 
         while (framesToPause > 0)
         {
             yield return new WaitForEndOfFrame();
-            AssociatedCharacterStats.ShouldCharacterMove = false;
             framesToPause -= Overseer.Instance.GameReady ? 1 : 0;
         }
-        AssociatedCharacterStats.ShouldCharacterMove = true;
+
+        AssociatedCharacterStats.SetCharacterShouldMove(true);
         onPauseComplete?.Invoke();
     }
 
