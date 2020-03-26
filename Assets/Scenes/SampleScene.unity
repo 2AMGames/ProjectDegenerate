@@ -2642,6 +2642,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 153583692, guid: bb69ae1c3a665e048bd18c0f64db7751, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847361021, guid: bb69ae1c3a665e048bd18c0f64db7751, type: 3}
       propertyPath: CharacterMoves.Array.data[3].Hits.Array.data[0].OnHitKnockback.x
       value: 2.5
@@ -2718,6 +2722,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2589265416992684665, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2595894961713865617, guid: bb69ae1c3a665e048bd18c0f64db7751,
         type: 3}
       propertyPath: boxColliderSize.x
@@ -2732,6 +2741,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846472705530932556, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846472705530932556, guid: bb69ae1c3a665e048bd18c0f64db7751,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.348
       objectReference: {fileID: 0}
     - target: {fileID: 4887159595518277565, guid: bb69ae1c3a665e048bd18c0f64db7751,
         type: 3}

@@ -14,10 +14,9 @@ public class AnimationSpeedController : MonoBehaviour
 
     #region monobehaviour methods
 
-    public void Start()
+    public void Awake()
     {
-        Anim = GetComponent<Animator>();
-        Anim.enabled = false;
+        RunAnimSpeedControllerSetup();
     }
 
     public void OnEnable()
@@ -37,17 +36,23 @@ public class AnimationSpeedController : MonoBehaviour
 
     #endregion
 
+    public void RunAnimSpeedControllerSetup()
+    {
+        Anim = GetComponent<Animator>();
+        Anim.enabled = false;
+    }
+
     #region private methods
 
     private IEnumerator UpdateAnimator()
     {
         while (true)
         {
-            yield return null;
-            if (Overseer.Instance.GameReady)
+            if (Overseer.Instance.GameReady && this.enabled)
             {
                 Anim.Update(Overseer.DELTA_TIME);
             }
+            yield return null;
         }
     }
 

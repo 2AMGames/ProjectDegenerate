@@ -459,7 +459,7 @@ Animator:
   m_GameObject: {fileID: 4887159595878229391}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ce4e3077a145e2b4dbceca58e7eeb73a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -480,6 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c1876b0c735c1498c1dec7ab1e9380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entranceAnimationScalingTime: 0.3
+  exitAnimationScalingTime: 0.3
   entryExitGoalScaling: {x: 0.01, y: 1.6, z: 1}
   entryAnimationCurve:
     serializedVersion: 2
@@ -530,6 +532,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   hoverSpeed: 1
+  isisAnim: {fileID: 0}
+  isisContainer: {fileID: 0}
   isisSpriteRenderer: {fileID: 4887159596114581163}
 --- !u!114 &2589265417419221067
 MonoBehaviour:

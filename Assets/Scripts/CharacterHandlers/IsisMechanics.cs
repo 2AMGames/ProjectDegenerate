@@ -34,10 +34,18 @@ public class IsisMechanics : MonoBehaviour
     private AnimationCurve exitAnimationCurve;
     [Tooltip("Set the speed of the hover frequency. This is how fast isis will move up and down")]
     public float hoverSpeed = 1;
-    public Animator isisAnim;
-    public Transform isisContainer;
-
+    /// <summary>
+    /// The animator component for Isis
+    /// </summary>
+    private Animator isisAnim;
+    [Tooltip("This is the container object where isis will be stored when returned to yukari. This is what determines Isis' placement when used")]
+    private Transform isisContainer;
+    [Tooltip("The sprite renderer component of Isis")]
     public SpriteRenderer isisSpriteRenderer;
+    /// <summary>
+    /// The associated animation speed controller for Isis
+    /// </summary>
+    private AnimationSpeedController isisAnimSpeedController;
     
 
     /// <summary>
@@ -66,7 +74,9 @@ public class IsisMechanics : MonoBehaviour
     public void SetupIsis(YukariMechanics associatedYukariMechanics)
     {
         this.associatedYukariMechanics = associatedYukariMechanics;
+        this.isisContainer = this.transform.parent;
         this.isisAnim = GetComponent<Animator>();
+        this.isisAnimSpeedController = GetComponent<AnimationSpeedController>();
         this.projectileInteractionHandler = GetComponent<ProjectileInteractionHandler>();
         this.gameObject.SetActive(false);//Turn off isis on start
     }
@@ -96,6 +106,7 @@ public class IsisMechanics : MonoBehaviour
             timeThatHasPassed += Overseer.DELTA_TIME;
         }
         this.transform.localScale = Vector3.one;
+        this.isisAnimSpeedController.enabled = true;
     }
 
     /// <summary>
@@ -108,7 +119,7 @@ public class IsisMechanics : MonoBehaviour
 
         while (timeThatHasPassed < exitAnimationScalingTime)
         {
-            this.transform.localScale = Vector3.Lerp(Vector3.one, entryExitGoalScaling, exitAnimationCurve.Evaluate(timeThatHasPassed / exitAnimationScalingTime));
+            this.transform.localScale = Vector3.Lerp(Vector3.one, entryExitGoalScaling, exitAnimationCurve.Evaluate((exitAnimationScalingTime - timeThatHasPassed) / exitAnimationScalingTime));
             yield return null;
             timeThatHasPassed += Overseer.DELTA_TIME;
 
@@ -127,8 +138,9 @@ public class IsisMechanics : MonoBehaviour
             return;
         }
 
-        isisAnim.SetInteger(ISIS_ATTACK_STATE, (int)isisAttackAnimation);
         this.gameObject.SetActive(true);
+        this.isisAnimSpeedController.enabled = false;
+        isisAnim.SetInteger(ISIS_ATTACK_STATE, (int)isisAttackAnimation);
         this.transform.SetParent(null);
         StartCoroutine(EnterIsisScalingAnimation());
     }
@@ -139,7 +151,7 @@ public class IsisMechanics : MonoBehaviour
     private void EndIsisAttack()
     {
         this.gameObject.SetActive(false);
-        this.transform.SetParent(associatedYukariMechanics.transform);
+        this.transform.SetParent(this.isisContainer);
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.Euler(Vector3.zero);
     }
@@ -150,7 +162,9 @@ public class IsisMechanics : MonoBehaviour
     /// </summary>
     public void OnIsisAttackAnimationEnd()
     {
+        this.isisAnimSpeedController.enabled = false;
         StartCoroutine(ExitIsisScalingAnimation());
+
     }
     #endregion animation events
 }

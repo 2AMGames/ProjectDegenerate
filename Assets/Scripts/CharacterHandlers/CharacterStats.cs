@@ -307,7 +307,7 @@ public class CharacterStats : MonoBehaviour
         CommandInterpreter.ResetInterpreter();
         Anim.SetInteger(Win_State, 0);
 
-        gameObject.GetComponent<AnimationSpeedController>().Start();
+        gameObject.GetComponent<AnimationSpeedController>().RunAnimSpeedControllerSetup();
     }
 
     public void OnRoundEnd(bool playerWon)
